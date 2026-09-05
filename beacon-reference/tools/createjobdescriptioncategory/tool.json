@@ -1,0 +1,75 @@
+{
+  "id": "690dc563931a2d61ba0b144e",
+  "slug": "createjobdescriptioncategory",
+  "name": "createJobDescriptionCategory",
+  "description": "in this tool create job description.",
+  "instructions": null,
+  "taskName": "Create Job Description Category",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createJobDescriptionCategory",
+  "createdAt": "2025-04-30T04:27:24.480Z",
+  "updatedAt": "2025-04-30T04:27:24.480Z",
+  "assignedAgents": [],
+  "contentHash": "9d552a7da91318a72ea5dea576dadda370e687db5a87b290ff3dd90f7c4885ab",
+  "lastExportedAt": "2026-09-05T19:39:24.422Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc563931a2d61ba0b144e",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createJobDescriptionCategory",
+      "description": "in this tool create job description.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createJobDescriptionCategory",
+        "args": [
+          {
+            "name": "jobDescriptionCategoryName",
+            "type": "string",
+            "description": "to create a job Description Category first give the Description Category Name then will be create.",
+            "required": true,
+            "_id": "6811a6ac8f0c9af526c40729"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6811a6ac8f0c9af526c40728"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"JdCategory\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__SCROLLPOSITIONX\", \"0\");\n  urlencoded1.append(\"__SCROLLPOSITIONY\", \"0\");\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"JDCAT_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"7\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$butNew\", \"New\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/hr/EIM/JdCategory.aspx`, requestOptions1);\n  const html1 = await response1.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html1, 'text/html');\n\n  const viewState = doc.querySelector('#__VIEWSTATE')?.value || '';\n  const eventValidation = doc.querySelector('#__EVENTVALIDATION')?.value || '';\n  const viewStateGen = doc.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", \"\");\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n  urlencoded2.append(\"__SCROLLPOSITIONX\", \"0\");\n  urlencoded2.append(\"__SCROLLPOSITIONY\", \"0\");\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00$body$txtName\", args.jobDescriptionCategoryName);\n  urlencoded2.append(\"ctl00$body$butSave\", \"Save\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(`${location.origin}/hr/EIM/JdCategory.aspx`, requestOptions2);\n  const html2 = await response2.text();\n\n  return \"Create Successfully!!\";\n})\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create Job Description Category",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-30T04:27:24.480Z",
+      "updatedAt": "2025-04-30T04:27:24.480Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createJobDescriptionCategory",
+      "args": [
+        {
+          "name": "jobDescriptionCategoryName",
+          "type": "string",
+          "description": "to create a job Description Category first give the Description Category Name then will be create.",
+          "required": true,
+          "_id": "6811a6ac8f0c9af526c40729"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6811a6ac8f0c9af526c40728"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"JdCategory\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__SCROLLPOSITIONX\", \"0\");\n  urlencoded1.append(\"__SCROLLPOSITIONY\", \"0\");\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"JDCAT_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"7\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$butNew\", \"New\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/hr/EIM/JdCategory.aspx`, requestOptions1);\n  const html1 = await response1.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html1, 'text/html');\n\n  const viewState = doc.querySelector('#__VIEWSTATE')?.value || '';\n  const eventValidation = doc.querySelector('#__EVENTVALIDATION')?.value || '';\n  const viewStateGen = doc.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", \"\");\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n  urlencoded2.append(\"__SCROLLPOSITIONX\", \"0\");\n  urlencoded2.append(\"__SCROLLPOSITIONY\", \"0\");\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00$body$txtName\", args.jobDescriptionCategoryName);\n  urlencoded2.append(\"ctl00$body$butSave\", \"Save\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(`${location.origin}/hr/EIM/JdCategory.aspx`, requestOptions2);\n  const html2 = await response2.text();\n\n  return \"Create Successfully!!\";\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

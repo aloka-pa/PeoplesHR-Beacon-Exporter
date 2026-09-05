@@ -1,0 +1,24 @@
+{
+  "id": "690dc577931a2d61ba0b1f77",
+  "slug": "designationattachmentdownload",
+  "name": "DesignationAttachmentDownload",
+  "status": "live",
+  "createdAt": "2025-06-13T11:22:08.403Z",
+  "updatedAt": "2025-06-13T11:22:08.403Z",
+  "contentHash": "f12c72c33b7d45c2e62c396c48dc4101ca54e78b6f95d94b1bce608033702608",
+  "lastExportedAt": "2026-09-05T19:41:35.660Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc577931a2d61ba0b1f77",
+    "name": "DesignationAttachmentDownload",
+    "status": "live",
+    "code": "(async function (args) {\n   await BeaconBar.executeFunction(\"loadOrGetLibrary\")(\"pdf\");\n  const myHeaders = new Headers();\n  myHeaders.append(\n    \"accept\",\n    \"application/pdf,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\"\n  );\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const url = `${reqOptions}EIMV9/Personal/DesignationAttachmentDownload?id=${args.DsgCode}`;\n\n  const response = await fetch(url, requestOptions);\n  // if (!response.ok || !response.headers.get(\"Content-Type\")?.includes(\"application/pdf\")) {\n  //   throw new Error(\" Failed to fetch a valid PDF response.\");\n  // }\n\n  const pdfData = await response.arrayBuffer(); \n\n \n\n  const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;\n\n  let textContent = '';\n\n  for (let i = 1; i <= pdf.numPages; i++) {\n    const page = await pdf.getPage(i);\n    const content = await page.getTextContent();\n    const pageText = content.items.map(item => item.str).join(' ');\n    textContent += pageText + '\\n';\n  }\n\n  const jobcontent = textContent.trim();\n\n  return {\n    designation: args.DsgName,\n    jobcontent\n  };\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

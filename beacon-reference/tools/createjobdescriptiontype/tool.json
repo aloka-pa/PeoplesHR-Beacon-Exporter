@@ -1,0 +1,89 @@
+{
+  "id": "690dc564931a2d61ba0b1491",
+  "slug": "createjobdescriptiontype",
+  "name": "createJobDescriptionType",
+  "description": "in this tool create Job Description Type. first execute the getJdCategory tool to get the job Category Details then display the all category details and select one corresponding value will be take.",
+  "instructions": null,
+  "taskName": "Create Job Description Type",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createJobDescriptionType",
+  "createdAt": "2025-04-30T06:25:56.570Z",
+  "updatedAt": "2025-04-30T06:25:56.570Z",
+  "assignedAgents": [],
+  "contentHash": "27b3367022ffcc57db802ef946a5fb0cad9b2b9bec7bf670ca93960bafcc2000",
+  "lastExportedAt": "2026-09-05T19:39:24.401Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b1491",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createJobDescriptionType",
+      "description": "in this tool create Job Description Type. first execute the getJdCategory tool to get the job Category Details then display the all category details and select one corresponding value will be take.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createJobDescriptionType",
+        "args": [
+          {
+            "name": "jobDescriptionTypeName",
+            "type": "string",
+            "description": "to give the  Job Description Type Name then will be create the Job Description Type",
+            "required": true,
+            "_id": "6811c2747b792c31fa89df69"
+          },
+          {
+            "name": "jobDescriptionCategory",
+            "type": "string",
+            "description": "to create job Description Category display the all job Description Category then select one corresponding value will be take. data available for getJdCategory Api . Example:-\"000001\"",
+            "required": true,
+            "_id": "6811c2747b792c31fa89df6a"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6811c2747b792c31fa89df68"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", window.ca.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", window.ca.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", window.ca.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded.append(\"ctl00$body$txtName\", args.jobDescriptionTypeName);\n  urlencoded.append(\"ctl00$body$dpSalary\", args.jobDescriptionCategory);\n  urlencoded.append(\"ctl00$body$butSave\", \"Save\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/hr/EIM/JdType.aspx`, requestOptions);\n  const html = await response.text();\n  return \"Create Successfully!!\";\n})\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create Job Description Type",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-30T06:25:56.570Z",
+      "updatedAt": "2025-04-30T06:25:56.570Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createJobDescriptionType",
+      "args": [
+        {
+          "name": "jobDescriptionTypeName",
+          "type": "string",
+          "description": "to give the  Job Description Type Name then will be create the Job Description Type",
+          "required": true,
+          "_id": "6811c2747b792c31fa89df69"
+        },
+        {
+          "name": "jobDescriptionCategory",
+          "type": "string",
+          "description": "to create job Description Category display the all job Description Category then select one corresponding value will be take. data available for getJdCategory Api . Example:-\"000001\"",
+          "required": true,
+          "_id": "6811c2747b792c31fa89df6a"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6811c2747b792c31fa89df68"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", window.ca.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", window.ca.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", window.ca.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded.append(\"ctl00$body$txtName\", args.jobDescriptionTypeName);\n  urlencoded.append(\"ctl00$body$dpSalary\", args.jobDescriptionCategory);\n  urlencoded.append(\"ctl00$body$butSave\", \"Save\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/hr/EIM/JdType.aspx`, requestOptions);\n  const html = await response.text();\n  return \"Create Successfully!!\";\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

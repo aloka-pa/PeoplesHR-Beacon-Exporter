@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "subjectName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The name of the subject to create (e.g.: \"Trigonometry\")",
+      "advanced": false,
+      "raw": {
+        "name": "subjectName",
+        "type": "string",
+        "description": "The name of the subject to create (e.g.: \"Trigonometry\")",
+        "required": false,
+        "_id": "6954dfcfadcdbcc09d27a19e"
+      }
+    },
+    {
+      "name": "qualificationCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "the 6-digit qualification code (e.g., '000008'). ",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationCode",
+        "type": "string",
+        "description": "the 6-digit qualification code (e.g., '000008'). ",
+        "required": false,
+        "_id": "6954dfcfadcdbcc09d27a19f"
+      }
+    },
+    {
+      "name": "qualificationName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The full or partial name of the qualification (e.g., 'BSc', 'Computer Science', 'hons comp sci'). Case-insensitive partial match. Either qualificationCode or qualificationName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationName",
+        "type": "string",
+        "description": "The full or partial name of the qualification (e.g., 'BSc', 'Computer Science', 'hons comp sci'). Case-insensitive partial match. Either qualificationCode or qualificationName must be provided.",
+        "required": false,
+        "_id": "6954dfcfadcdbcc09d27a1a0"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

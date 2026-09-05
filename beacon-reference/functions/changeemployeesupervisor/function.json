@@ -1,0 +1,24 @@
+{
+  "id": "690dc57b931a2d61ba0b2356",
+  "slug": "changeemployeesupervisor",
+  "name": "changeEmployeeSupervisor",
+  "status": "live",
+  "createdAt": "2025-06-12T05:01:25.818Z",
+  "updatedAt": "2025-06-12T05:01:25.818Z",
+  "contentHash": "88013bc1900bb60b0120704b92e3118057c9445b5f3f69cfffb498b2b4037285",
+  "lastExportedAt": "2026-09-05T19:41:36.098Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57b931a2d61ba0b2356",
+    "name": "changeEmployeeSupervisor",
+    "status": "live",
+    "code": "(async function (id) {\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n    myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n    const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n\n    const digest = await BeaconBar.executeFunction('getDigest')(\"sid=0&sln=single&mode=basic&sm=activeonly&table=false&iv=getSearchResult&CloseMethod=getSearchResultSup()\");\n    const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n\n    const response = await fetch(`${reqOptions}/EIM/EmployeeSearch.aspx?sid=0&sln=single&mode=basic&sm=activeonly&table=false&iv=getSearchResult&CloseMethod=getSearchResultSup()&digest=${digest.digest}`, requestOptions);\n    const text = await response.text();\n    const state = await BeaconBar.executeFunction(\"getDomExtract\")(text);\n\n    const urlencoded = new URLSearchParams();\n    urlencoded.append(\"__EVENTTARGET\", \"\");\n    urlencoded.append(\"__EVENTARGUMENT\", \"\");\n    urlencoded.append(\"__LASTFOCUS\", \"\");\n    urlencoded.append(\"__VIEWSTATE\", state.viewState);\n    urlencoded.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\n    urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    urlencoded.append(\"__EVENTVALIDATION\", state.eventValidation);\n    urlencoded.append(\"RadWindowManager2_ClientState\", \"\");\n    urlencoded.append(\"EmployeeSearch$ctl05$RadioButtonGroup1\", \"ctl12\");\n    urlencoded.append(\"EmployeeSearch$ctl05$ctl14\", \"0\");\n    urlencoded.append(\"EmployeeSearch$ctl05$ctl16\", id);\n    urlencoded.append(\"EmployeeSearch$ctl05$ctl21\", \"\");\n    urlencoded.append(\"EmployeeSearch$ctl05$ctl37\", \"Search\");\n    urlencoded.append(\"EmployeeSearch_ctl06_ClientState\", \"\");\n    urlencoded.append(\"hdnReturnId\", \"\");\n\n    const requestOptions1 = {\n        method: \"POST\",\n        headers: myHeaders,\n        body: urlencoded,\n        redirect: \"follow\"\n    };\n\n    const response2 = await fetch(`${reqOptions}/EIM/EmployeeSearch.aspx?sid=0&sln=single&mode=basic&sm=activeonly&table=false&iv=getSearchResult&CloseMethod=getSearchResultSup()&digest=${digest.digest}`, requestOptions1);\n    const text2 = await response2.text();\n    const state2 = await BeaconBar.executeFunction(\"getDomExtract\")(text2);\n\n    const urlencoded2 = new URLSearchParams();\n    urlencoded2.append(\"__EVENTTARGET\", \"EmployeeSearch$ctl06$ctl00$ctl04$ctl01\");\n    urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n    urlencoded2.append(\"__LASTFOCUS\", \"\");\n    urlencoded2.append(\"__VIEWSTATE\", state2.viewState);\n    urlencoded2.append(\"__VIEWSTATEGENERATOR\", state2.viewStateGen);\n    urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    urlencoded2.append(\"__EVENTVALIDATION\", state2.eventValidation);\n    urlencoded2.append(\"RadWindowManager2_ClientState\", \"\");\n    urlencoded2.append(\"EmployeeSearch$ctl05$RadioButtonGroup1\", \"ctl12\");\n    urlencoded2.append(\"EmployeeSearch$ctl05$ctl14\", \"0\");\n    urlencoded2.append(\"EmployeeSearch$ctl05$ctl16\", id);\n    urlencoded2.append(\"EmployeeSearch$ctl05$ctl21\", \"\");\n    urlencoded2.append(\"EmployeeSearch_ctl06_ClientState\", \"\");\n    urlencoded2.append(\"hdnReturnId\", \"\");\n\n    const requestOptions2 = {\n        method: \"POST\",\n        headers: myHeaders,\n        body: urlencoded2,\n        redirect: \"follow\"\n    };\n\n    const response3 = await fetch(`${reqOptions}/EIM/EmployeeSearch.aspx?sid=0&sln=single&mode=basic&sm=activeonly&table=false&iv=getSearchResult&CloseMethod=getSearchResultSup()&digest=${digest.digest}`, requestOptions2);\n    const text3 = await response3.text();\n\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(text3, \"text/html\");\n\n    const row = doc.querySelector('tr[id^=\"EmployeeSearch_ctl06_ctl00__\"]');\n    const cells = row?.querySelectorAll(\"td\");\n\n    return {\n        employeeId: cells?.[0]?.textContent.trim(),\n        employeeName: cells?.[1]?.textContent.trim()\n    };\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

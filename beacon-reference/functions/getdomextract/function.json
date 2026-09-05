@@ -1,0 +1,24 @@
+{
+  "id": "690dc580931a2d61ba0b27e4",
+  "slug": "getdomextract",
+  "name": "getDomExtract",
+  "status": "live",
+  "createdAt": "2025-04-25T13:03:54.316Z",
+  "updatedAt": "2025-04-25T13:03:54.316Z",
+  "contentHash": "c2d2b3ebb0e1848b73668c21050dcab4d96828cfcd6915f8f5879bc53151d75b",
+  "lastExportedAt": "2026-09-05T19:41:44.361Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc580931a2d61ba0b27e4",
+    "name": "getDomExtract",
+    "status": "live",
+    "code": "(function (html){\n    //done\n    const parser = new DOMParser();\n    const document = parser.parseFromString(html, 'text/html');\n\n    const details = {\n        viewState: document.querySelector('#__VIEWSTATE')?.value || '',\n        eventValidation: document.querySelector('#__EVENTVALIDATION')?.value || '',\n        viewStateGen: document.querySelector('#__VIEWSTATEGENERATOR')?.value || '',\n        publicKey : document.querySelector(\"#ctl00_body_txtPublicKey\")?.value || \"\",\n        rawData:html\n    }\n\n    return details\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

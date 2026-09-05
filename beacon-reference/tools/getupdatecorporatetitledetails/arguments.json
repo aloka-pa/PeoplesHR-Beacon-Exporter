@@ -1,0 +1,84 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "ctl00_body_txtName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Corporate Title Name (e.g., 'Middle Management').",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Corporate Title Name (e.g., 'Middle Management')."
+      }
+    },
+    {
+      "name": "ctl00_body_dpSalary",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Selected Salary Grade code (e.g., '000005'). All Salary Grades will be displayed for the user to select, and the corresponding value must be picked. to get corresponding value take for salary grade.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Selected Salary Grade code (e.g., '000005'). All Salary Grades will be displayed for the user to select, and the corresponding value must be picked. to get corresponding value take for salary grade."
+      }
+    },
+    {
+      "name": "ctl00_body_chkTop",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Top in Hierarchy flag. If provided as 'on', 'Next Upgrade Level' must NOT be passed.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on"
+        ],
+        "description": "Top in Hierarchy flag. If provided as 'on', 'Next Upgrade Level' must NOT be passed."
+      }
+    },
+    {
+      "name": "ctl00_body_dpNextUpgrade",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Next Upgrade Level code (e.g., '000008'). This must be provided if 'Top in Hierarchy' is not 'on'.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Next Upgrade Level code (e.g., '000008'). This must be provided if 'Top in Hierarchy' is not 'on'."
+      }
+    },
+    {
+      "name": "ctl00_body_nuLevel",
+      "type": "integer",
+      "required": true,
+      "defaultValue": null,
+      "description": "Level number (e.g., 3).",
+      "advanced": true,
+      "raw": {
+        "type": "integer",
+        "description": "Level number (e.g., 3)."
+      }
+    },
+    {
+      "name": "ctl00_body_ManagePos",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Indicates whether it is a Managerial Position. on or off",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on",
+          "off"
+        ],
+        "description": "Indicates whether it is a Managerial Position. on or off"
+      }
+    }
+  ]
+}

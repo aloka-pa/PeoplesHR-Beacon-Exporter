@@ -1,0 +1,24 @@
+{
+  "id": "690dc57d931a2d61ba0b26a1",
+  "slug": "generatepayslippdfblob",
+  "name": "generatePayslipPDFBlob",
+  "status": "live",
+  "createdAt": "2025-07-28T17:39:23.118Z",
+  "updatedAt": "2026-07-17T12:55:51.777Z",
+  "contentHash": "eb740b2150e5c3aae2c4f3e6b0d1fe4a74d795ddc4782846ece11b8a266ef949",
+  "lastExportedAt": "2026-09-05T19:41:21.911Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57d931a2d61ba0b26a1",
+    "name": "generatePayslipPDFBlob",
+    "status": "live",
+    "code": "(async function (data) {\n    await Promise.all([\n        new Promise(resolve => {\n            const s = document.createElement('script');\n            s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';\n            s.onload = resolve;\n            document.head.appendChild(s);\n        }),\n        new Promise(resolve => {\n            const s = document.createElement('script');\n            s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js';\n            s.onload = resolve;\n            document.head.appendChild(s);\n        })\n    ]);\n\n    await new Promise(resolve => {\n        const check = () => {\n            if (window.jspdf && window.jspdf.jsPDF) return resolve();\n            setTimeout(check, 100);\n        };\n        check();\n    });\n\n    const { jsPDF } = window.jspdf;\n    const doc = new jsPDF();\n\n    doc.setFontSize(18);\n    doc.setTextColor(40, 90, 150);\n    doc.text('Payslip Summary', 14, 20);\n\n    doc.setFontSize(12);\n    doc.setTextColor(0, 0, 0);\n    doc.text(`Employee Name: ${data.employeeName}`, 14, 30);\n    doc.text(`Pay Period: ${data.payPeriod}`, 14, 38);\n\n    const tableData = Object.entries(data.payslipDetails).map(([key, value]) => [\n        key,\n        typeof value === 'number' ? value.toLocaleString() : value\n    ]);\n\n    doc.autoTable({\n        startY: 45,\n        head: [['Description', 'Amount']],\n        body: tableData,\n        styles: { halign: 'right' },\n        headStyles: { fillColor: [41, 128, 185], textColor: 255 },\n        alternateRowStyles: { fillColor: [240, 240, 240] },\n        columnStyles: {\n            0: { halign: 'left' },\n            1: { halign: 'right' }\n        }\n    });\n\n    const blob = doc.output('blob');\n    const url = URL.createObjectURL(blob);\n\n    return url;\n\n});",
+    "by": "34476",
+    "__v": 1
+  }
+}

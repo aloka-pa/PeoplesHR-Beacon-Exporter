@@ -1,0 +1,95 @@
+{
+  "id": "690dc568931a2d61ba0b18e2",
+  "slug": "getworkflowtypes",
+  "name": "getWorkFlowTypes",
+  "description": "getWorkFlowTypes",
+  "instructions": null,
+  "taskName": "fetchingWorkFlowTypes",
+  "tags": [
+    "workFlow",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getWorkFlowTypes",
+  "createdAt": "2025-06-02T04:27:02.200Z",
+  "updatedAt": "2026-07-17T12:54:41.002Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c34",
+      "name": "WorkfLows"
+    }
+  ],
+  "contentHash": "53dae3a57b186041dbf5d2db46a23c74e95a8069d4a99be47ab263ceacb5a336",
+  "lastExportedAt": "2026-09-05T19:39:22.061Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b18e2",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getWorkFlowTypes",
+      "description": "getWorkFlowTypes",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getWorkFlowTypes",
+        "args": [],
+        "isAdvanced": false,
+        "_id": "6a5a261173573ddf39731b3b"
+      },
+      "by": "34476",
+      "fetcher": "(function(){    \n     return {\n    code: `(function(){\n      return [];\n    })`\n  }\n});\n",
+      "transformer": "(async function (data, args) {\n  if (!BeaconBar.user.metaData.menus.includes(\"WorkFlow_v6/DefineWorkflowType.aspx\")) {\n    return \"you don't have access to get the workflow details . Please check with the HR Admin\";\n  }\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('WorkFlow_v6/DefineWorkflowType.aspx');\n  const baseUrl = `${reqOptions}${updateurl.updateUrl}`;\n\n  const headers = new Headers({\n    \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\",\n    \"accept-language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n    \"content-type\": \"application/x-www-form-urlencoded\",\n    \"x-requested-with\" : \"XMLHttpRequest\"\n  });\n\n  const buildPostBody = (pageNumber, viewStateInfo) => {\n    const body = new URLSearchParams();\n    body.append(\"ctl00_body_RadScriptManager1_HiddenField\", \"\");\n    body.append(\"__EVENTTARGET\", \"ctl00$body$grdWFTypes\");\n    body.append(\"__EVENTARGUMENT\", `Page$${pageNumber}`);\n    body.append(\"__VIEWSTATE\", viewStateInfo.viewState);\n    body.append(\"__VIEWSTATEGENERATOR\", viewStateInfo.viewStateGenerator);\n    body.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    body.append(\"__EVENTVALIDATION\", viewStateInfo.eventValidation);\n    body.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n    body.append(\"ctl00$body$hdnFlModID\", \"\");\n    body.append(\"ctl00$body$hdnFldTypeCodeStatus\", \"\");\n    body.append(\"ctl00$body$hdnFldTypeCode\", \"\");\n    return body;\n  };\n\n  const extractHiddenFields = (htmlString) => {\n    const doc = new DOMParser().parseFromString(htmlString, \"text/html\");\n    return {\n      viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n      viewStateGenerator: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n      eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\",\n    };\n  };\n\n  const extractTableData = (htmlString, viewStateInfo, pageNumber) => {\n    const doc = new DOMParser().parseFromString(htmlString, \"text/html\");\n    const table = doc.getElementById(\"ctl00_body_grdWFTypes\");\n    if (!table) return [];\n\n    const rows = table.querySelectorAll(\"tr\");\n    const results = [];\n\n    for (let i = 1; i < rows.length; i++) {\n      const cols = rows[i].querySelectorAll(\"td\");\n\n      if (cols.length >= 2) {\n        const module = cols[0].textContent.trim();\n        const workflowType = cols[1].textContent.trim();\n        const editButton = cols[2]?.querySelector('input[title=\"Edit\"]');\n        const eventKey = editButton?.getAttribute(\"name\") || \"\";\n\n        if (/^\\d+$/.test(module) || /^\\d+$/.test(workflowType)) continue;\n\n        results.push({\n          Module: module,\n          WorkflowType: workflowType,\n          EventKey: eventKey,\n          PageNumber: pageNumber,\n          ViewState: {\n            viewState: viewStateInfo.viewState,\n            viewStateGenerator: viewStateInfo.viewStateGenerator,\n            eventValidation: viewStateInfo.eventValidation\n          }\n        });\n      }\n    }\n\n    return results;\n  };\n\n  let allResults = [];\n\n  const initialResponse = await fetch(baseUrl, { method: \"GET\", headers });\n  const initialHtml = await initialResponse.text();\n\n  let page = 1;\n  let hasMorePages = true;\n  let currentHtml = initialHtml;\n\n  const maxPages = 50;\n  let pagesFetched = 0;\n\n  while (hasMorePages && pagesFetched < maxPages) {\n    const viewStateInfo = extractHiddenFields(currentHtml);\n    const pageData = extractTableData(currentHtml, viewStateInfo, page);\n\n    if (!pageData || pageData.length === 0) {\n      hasMorePages = false;\n      break;\n    }\n\n    allResults = allResults.concat(pageData);\n    pagesFetched += 1;\n\n    const payloadBody = buildPostBody(page + 1, viewStateInfo);\n\n    try {\n      const response = await fetch(baseUrl, {\n        method: \"POST\",\n        headers,\n        body: payloadBody,\n        redirect: \"follow\",\n      });\n\n      if (!response.ok) {\n        const errorHtml = await response.text();\n        throw {\n          page,\n          status: response.status,\n          statusText: response.statusText,\n          viewState: viewStateInfo,\n          payload: payloadBody.toString(),\n          html: errorHtml\n        };\n      }\n\n      currentHtml = await response.text();\n      page += 1;\n\n    } catch (err) {\n      BeaconBar.setSharedData(\"failedViewState_WFType\", err.viewState);\n      break;\n    }\n  }\n  BeaconBar.setSharedData(\"allWorkflowTypesWithViewState\", allResults);\n\n  return allResults.map(x => {\n    return {\n      Module: x.Module,\n      WorkflowType: x.WorkflowType\n    };\n  });\n\n});",
+      "groupName": "",
+      "tags": [
+        "workFlow",
+        "Headers"
+      ],
+      "taskName": "fetchingWorkFlowTypes",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-02T04:27:02.200Z",
+      "updatedAt": "2026-07-17T12:54:41.002Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c34",
+          "name": "WorkfLows"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getWorkFlowTypes",
+      "args": [],
+      "isAdvanced": false,
+      "_id": "6a5a261173573ddf39731b3b"
+    },
+    "fetcher": "(function(){    \n     return {\n    code: `(function(){\n      return [];\n    })`\n  }\n});\n",
+    "transformer": "(async function (data, args) {\n  if (!BeaconBar.user.metaData.menus.includes(\"WorkFlow_v6/DefineWorkflowType.aspx\")) {\n    return \"you don't have access to get the workflow details . Please check with the HR Admin\";\n  }\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('WorkFlow_v6/DefineWorkflowType.aspx');\n  const baseUrl = `${reqOptions}${updateurl.updateUrl}`;\n\n  const headers = new Headers({\n    \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\",\n    \"accept-language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n    \"content-type\": \"application/x-www-form-urlencoded\",\n    \"x-requested-with\" : \"XMLHttpRequest\"\n  });\n\n  const buildPostBody = (pageNumber, viewStateInfo) => {\n    const body = new URLSearchParams();\n    body.append(\"ctl00_body_RadScriptManager1_HiddenField\", \"\");\n    body.append(\"__EVENTTARGET\", \"ctl00$body$grdWFTypes\");\n    body.append(\"__EVENTARGUMENT\", `Page$${pageNumber}`);\n    body.append(\"__VIEWSTATE\", viewStateInfo.viewState);\n    body.append(\"__VIEWSTATEGENERATOR\", viewStateInfo.viewStateGenerator);\n    body.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    body.append(\"__EVENTVALIDATION\", viewStateInfo.eventValidation);\n    body.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n    body.append(\"ctl00$body$hdnFlModID\", \"\");\n    body.append(\"ctl00$body$hdnFldTypeCodeStatus\", \"\");\n    body.append(\"ctl00$body$hdnFldTypeCode\", \"\");\n    return body;\n  };\n\n  const extractHiddenFields = (htmlString) => {\n    const doc = new DOMParser().parseFromString(htmlString, \"text/html\");\n    return {\n      viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n      viewStateGenerator: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n      eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\",\n    };\n  };\n\n  const extractTableData = (htmlString, viewStateInfo, pageNumber) => {\n    const doc = new DOMParser().parseFromString(htmlString, \"text/html\");\n    const table = doc.getElementById(\"ctl00_body_grdWFTypes\");\n    if (!table) return [];\n\n    const rows = table.querySelectorAll(\"tr\");\n    const results = [];\n\n    for (let i = 1; i < rows.length; i++) {\n      const cols = rows[i].querySelectorAll(\"td\");\n\n      if (cols.length >= 2) {\n        const module = cols[0].textContent.trim();\n        const workflowType = cols[1].textContent.trim();\n        const editButton = cols[2]?.querySelector('input[title=\"Edit\"]');\n        const eventKey = editButton?.getAttribute(\"name\") || \"\";\n\n        if (/^\\d+$/.test(module) || /^\\d+$/.test(workflowType)) continue;\n\n        results.push({\n          Module: module,\n          WorkflowType: workflowType,\n          EventKey: eventKey,\n          PageNumber: pageNumber,\n          ViewState: {\n            viewState: viewStateInfo.viewState,\n            viewStateGenerator: viewStateInfo.viewStateGenerator,\n            eventValidation: viewStateInfo.eventValidation\n          }\n        });\n      }\n    }\n\n    return results;\n  };\n\n  let allResults = [];\n\n  const initialResponse = await fetch(baseUrl, { method: \"GET\", headers });\n  const initialHtml = await initialResponse.text();\n\n  let page = 1;\n  let hasMorePages = true;\n  let currentHtml = initialHtml;\n\n  const maxPages = 50;\n  let pagesFetched = 0;\n\n  while (hasMorePages && pagesFetched < maxPages) {\n    const viewStateInfo = extractHiddenFields(currentHtml);\n    const pageData = extractTableData(currentHtml, viewStateInfo, page);\n\n    if (!pageData || pageData.length === 0) {\n      hasMorePages = false;\n      break;\n    }\n\n    allResults = allResults.concat(pageData);\n    pagesFetched += 1;\n\n    const payloadBody = buildPostBody(page + 1, viewStateInfo);\n\n    try {\n      const response = await fetch(baseUrl, {\n        method: \"POST\",\n        headers,\n        body: payloadBody,\n        redirect: \"follow\",\n      });\n\n      if (!response.ok) {\n        const errorHtml = await response.text();\n        throw {\n          page,\n          status: response.status,\n          statusText: response.statusText,\n          viewState: viewStateInfo,\n          payload: payloadBody.toString(),\n          html: errorHtml\n        };\n      }\n\n      currentHtml = await response.text();\n      page += 1;\n\n    } catch (err) {\n      BeaconBar.setSharedData(\"failedViewState_WFType\", err.viewState);\n      break;\n    }\n  }\n  BeaconBar.setSharedData(\"allWorkflowTypesWithViewState\", allResults);\n\n  return allResults.map(x => {\n    return {\n      Module: x.Module,\n      WorkflowType: x.WorkflowType\n    };\n  });\n\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

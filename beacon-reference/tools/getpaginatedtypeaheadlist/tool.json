@@ -1,0 +1,80 @@
+{
+  "id": "690dc567931a2d61ba0b1715",
+  "slug": "getpaginatedtypeaheadlist",
+  "name": "getPaginatedTypeaheadList",
+  "description": "Determines the query type based on the user's request. For example, if the user asks about \"attendance in and out,\" \"team attendance,\" \"team shift adjustment,\" or \"attendance summary,\" \"team attendance in and out,\" \"shift adjustment,\" \"prior overtime application,\" \"team attendance approval,\" \"attendance approval,\" etc., the system will automatically identify the query type as \"attendance summary\" for attendance-related summaries and \"team attendance\" for team-related summaries. The query type is determined based on the specific context of the user's request without any confusion.",
+  "instructions": null,
+  "taskName": "Employee Information",
+  "tags": [
+    "Attendance",
+    "Headers",
+    "ModifiedAloka"
+  ],
+  "status": "live",
+  "signature": "getPaginatedTypeaheadList",
+  "createdAt": "2025-05-14T07:43:16.321Z",
+  "updatedAt": "2026-01-08T03:31:02.679Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "38bf8ec70e12156eae5d7ce70e7aeab53ef58fe54d70aa0d7dcb74751c17f4c9",
+  "lastExportedAt": "2026-09-05T19:39:23.121Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc567931a2d61ba0b1715",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getPaginatedTypeaheadList",
+      "description": "Determines the query type based on the user's request. For example, if the user asks about \"attendance in and out,\" \"team attendance,\" \"team shift adjustment,\" or \"attendance summary,\" \"team attendance in and out,\" \"shift adjustment,\" \"prior overtime application,\" \"team attendance approval,\" \"attendance approval,\" etc., the system will automatically identify the query type as \"attendance summary\" for attendance-related summaries and \"team attendance\" for team-related summaries. The query type is determined based on the specific context of the user's request without any confusion.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getPaginatedTypeaheadList",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"empId\": {\n      \"type\": \"string\",\n      \"description\": \"Specifies the employee ID, for example, 'A00006' or '000013'.\"\n    },\n    \"type\": {\n      \"type\": \"string\",\n      \"enum\": [\"attendance in and out\", \n      \"team attendance\", \n      \"team shift adjustment\",\n      \"attendance summary\",\n      \"shift adjustment\",\n      \"team attendance in and out\",\n      \"prior overtime application\",\n      \"team attendance approval\",\n      \"attendance approval\"],\n      \"description\": \"Determines the type of query. The value is chosen based on the user's request. For instance, if the user requests 'give me the team attendance for 000003', the value selected would be 'team attendance'.\"\n    }\n  },\n  \"required\": [\"empId\", \"type\"]\n}\n",
+        "_id": "6824499498b05d8405e8ab55"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  }\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await (args.type === \"attendance in and out\"\n  ? await BeaconBar.executeFunction('Attendance')() \n  : args.type === \"team attendance\"\n  ? await BeaconBar.executeFunction('teamAttenadnce')()\n  : args.type === \"attendance summary\" \n  ? await BeaconBar.executeFunction('Attendance1')() \n  : args.type === \"shift adjustment\" \n  ? await BeaconBar.executeFunction('shiftAdjustment1')() \n  : args.type === \"team attendance in and out\" \n  ? await BeaconBar.executeFunction('Attendance2')()\n  : args.type === \"prior overtime application\"\n  ? await BeaconBar.executeFunction('priorOvertime')()\n  :args.type === \"team shift adjustment\"\n  ? await BeaconBar.executeFunction('teamShift')()\n  : await BeaconBar.executeFunction('AttendanceSummary')());\n  if(!details.empNumber2){\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(\n    `${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetPaginatedTypeaheadList/?term=${args.empId}&empNumber=${details.empNumber2}&key=${details.keyValue}&_=${Date.now()}`,\n    requestOptions\n  );\n\n  const employeeDetails = await response.json();\n  if(employeeDetails.results.length === 0){\n    return \"It seems you don't have access in this employee. Please check with the HR Admin\"\n  }else{\n    return employeeDetails.results;\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "Headers",
+        "ModifiedAloka"
+      ],
+      "taskName": "Employee Information",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-14T07:43:16.321Z",
+      "updatedAt": "2026-01-08T03:31:02.679Z",
+      "__v": 4,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getPaginatedTypeaheadList",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"empId\": {\n      \"type\": \"string\",\n      \"description\": \"Specifies the employee ID, for example, 'A00006' or '000013'.\"\n    },\n    \"type\": {\n      \"type\": \"string\",\n      \"enum\": [\"attendance in and out\", \n      \"team attendance\", \n      \"team shift adjustment\",\n      \"attendance summary\",\n      \"shift adjustment\",\n      \"team attendance in and out\",\n      \"prior overtime application\",\n      \"team attendance approval\",\n      \"attendance approval\"],\n      \"description\": \"Determines the type of query. The value is chosen based on the user's request. For instance, if the user requests 'give me the team attendance for 000003', the value selected would be 'team attendance'.\"\n    }\n  },\n  \"required\": [\"empId\", \"type\"]\n}\n",
+      "_id": "6824499498b05d8405e8ab55"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  }\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await (args.type === \"attendance in and out\"\n  ? await BeaconBar.executeFunction('Attendance')() \n  : args.type === \"team attendance\"\n  ? await BeaconBar.executeFunction('teamAttenadnce')()\n  : args.type === \"attendance summary\" \n  ? await BeaconBar.executeFunction('Attendance1')() \n  : args.type === \"shift adjustment\" \n  ? await BeaconBar.executeFunction('shiftAdjustment1')() \n  : args.type === \"team attendance in and out\" \n  ? await BeaconBar.executeFunction('Attendance2')()\n  : args.type === \"prior overtime application\"\n  ? await BeaconBar.executeFunction('priorOvertime')()\n  :args.type === \"team shift adjustment\"\n  ? await BeaconBar.executeFunction('teamShift')()\n  : await BeaconBar.executeFunction('AttendanceSummary')());\n  if(!details.empNumber2){\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(\n    `${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetPaginatedTypeaheadList/?term=${args.empId}&empNumber=${details.empNumber2}&key=${details.keyValue}&_=${Date.now()}`,\n    requestOptions\n  );\n\n  const employeeDetails = await response.json();\n  if(employeeDetails.results.length === 0){\n    return \"It seems you don't have access in this employee. Please check with the HR Admin\"\n  }else{\n    return employeeDetails.results;\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    {
+      "name": "PayGrpCode",
+      "type": "number",
+      "required": true,
+      "defaultValue": null,
+      "description": "Pay Group Code",
+      "advanced": false,
+      "raw": {
+        "name": "PayGrpCode",
+        "type": "number",
+        "description": "Pay Group Code",
+        "required": true,
+        "_id": "69eebcd5743bb0b544db69c7"
+      }
+    },
+    {
+      "name": "PayStartDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Pay Start Date",
+      "advanced": false,
+      "raw": {
+        "name": "PayStartDate",
+        "type": "string",
+        "description": "Pay Start Date",
+        "required": true,
+        "_id": "69eebcd5743bb0b544db69c8"
+      }
+    },
+    {
+      "name": "PayEndDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Pay End Date",
+      "advanced": false,
+      "raw": {
+        "name": "PayEndDate",
+        "type": "string",
+        "description": "Pay End Date",
+        "required": true,
+        "_id": "69eebcd5743bb0b544db69c9"
+      }
+    },
+    {
+      "name": "PayGrpNum",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Pay Group Number (PayType)",
+      "advanced": false,
+      "raw": {
+        "name": "PayGrpNum",
+        "type": "string",
+        "description": "Pay Group Number (PayType)",
+        "required": true,
+        "_id": "69eebcd5743bb0b544db69ca"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

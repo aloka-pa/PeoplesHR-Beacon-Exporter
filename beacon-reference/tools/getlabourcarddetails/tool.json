@@ -1,0 +1,75 @@
+{
+  "id": "690dc56a931a2d61ba0b1a1b",
+  "slug": "getlabourcarddetails",
+  "name": "getLabourCardDetails",
+  "description": "This tool returns Labour Card details. When a user submits a query related to Labour Card information, the first tool should be executed for \"getLabourCardDetails\" tool. then after check details.It provides specific details such as WPS ID No, Employee Number, Employee Name, Company/Sponsor, Occupation/Designation, Labour Card Issue Date, Labour Card Validity, and Work Permit No, among others. If the query is to check the availability of specific information, the tool should return the relevant data if available; otherwise, it should return a message indicating that no data was found. Unrelated or irrelevant details should not be displayed. and employee id means employee name.\n",
+  "instructions": null,
+  "taskName": "Fetching The Labour Card Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getLabourCardDetails",
+  "createdAt": "2025-06-15T07:34:57.826Z",
+  "updatedAt": "2025-06-15T07:34:57.826Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "ccbc5ee56c1b16fe07b17e95ad566b24fc9cd8663bfe3b3404b2a982253de082",
+  "lastExportedAt": "2026-09-05T19:39:23.555Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56a931a2d61ba0b1a1b",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getLabourCardDetails",
+      "description": "This tool returns Labour Card details. When a user submits a query related to Labour Card information, the first tool should be executed for \"getLabourCardDetails\" tool. then after check details.It provides specific details such as WPS ID No, Employee Number, Employee Name, Company/Sponsor, Occupation/Designation, Labour Card Issue Date, Labour Card Validity, and Work Permit No, among others. If the query is to check the availability of specific information, the tool should return the relevant data if available; otherwise, it should return a message indicating that no data was found. Unrelated or irrelevant details should not be displayed. and employee id means employee name.\n",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getLabourCardDetails",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "684e77a1f67d660a4fe58a0f"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"home/rendermodulemenus?mid=2\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"home/rendermodulemenus?mid=2\");\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}&_=${Date.now()}`, requestOptions);\n  const text = await response.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(text, 'text/html');\n\n  const anchors = doc.querySelectorAll('a');\n  let customPageId = null;\n\n  anchors.forEach(anchor => {\n    const onclick = anchor.getAttribute('onclick');\n    const match = onclick?.match(/customPage=(\\d+)/);\n    if (match) customPageId = match[1];\n  });\n\n  const url = `${location.origin}/${reqOptions.sl}/Dynamic-PG/service/api/DynamicClientApi/GetDynamicSummaryPageRecords`;\n\n  const headers = {\n    'accept': 'application/json, text/plain, */*',\n    'content-type': 'application/json;charset=UTF-8',\n    \"x-requested-with\": \"XMLHttpRequest\"\n  };\n\n  const body = {\n    sort: \"\",\n    page: 1,\n    per_page: 1000,\n    customPage: customPageId,\n    selfService: \"0\"\n  };\n\n  const response1 = await fetch(url, {\n    method: 'POST',\n    headers: headers,\n    body: JSON.stringify(body),\n    credentials: 'include'\n  });\n\n  const labourCardDetails = await response1.json();\n  return labourCardDetails.DataObj;\n})\n",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Fetching The Labour Card Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-15T07:34:57.826Z",
+      "updatedAt": "2025-06-15T07:34:57.826Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getLabourCardDetails",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "684e77a1f67d660a4fe58a0f"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"home/rendermodulemenus?mid=2\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"home/rendermodulemenus?mid=2\");\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}&_=${Date.now()}`, requestOptions);\n  const text = await response.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(text, 'text/html');\n\n  const anchors = doc.querySelectorAll('a');\n  let customPageId = null;\n\n  anchors.forEach(anchor => {\n    const onclick = anchor.getAttribute('onclick');\n    const match = onclick?.match(/customPage=(\\d+)/);\n    if (match) customPageId = match[1];\n  });\n\n  const url = `${location.origin}/${reqOptions.sl}/Dynamic-PG/service/api/DynamicClientApi/GetDynamicSummaryPageRecords`;\n\n  const headers = {\n    'accept': 'application/json, text/plain, */*',\n    'content-type': 'application/json;charset=UTF-8',\n    \"x-requested-with\": \"XMLHttpRequest\"\n  };\n\n  const body = {\n    sort: \"\",\n    page: 1,\n    per_page: 1000,\n    customPage: customPageId,\n    selfService: \"0\"\n  };\n\n  const response1 = await fetch(url, {\n    method: 'POST',\n    headers: headers,\n    body: JSON.stringify(body),\n    credentials: 'include'\n  });\n\n  const labourCardDetails = await response1.json();\n  return labourCardDetails.DataObj;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

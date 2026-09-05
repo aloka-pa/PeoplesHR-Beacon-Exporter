@@ -1,0 +1,24 @@
+{
+  "id": "690dc58c931a2d61ba0b3405",
+  "slug": "tokengenarate",
+  "name": "tokengenarate",
+  "status": "live",
+  "createdAt": "2025-05-26T11:11:48.502Z",
+  "updatedAt": "2025-05-26T11:11:48.502Z",
+  "contentHash": "adea3206e069a8dd9e8df8b6cf1cee4dd40ae785bea13bf925459e7dabb7369e",
+  "lastExportedAt": "2026-09-05T19:41:40.622Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58c931a2d61ba0b3405",
+    "name": "tokengenarate",
+    "status": "live",
+    "code": "(async function(tokenName){\n          const reqOptions = await BeaconBar.executeFunction('reqOptions')();\n\n    const myHeaders = new Headers();\nmyHeaders.append(\"accept\", \"*/*\");\nmyHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\nconst requestOptions = {\n  method: \"GET\",\n  headers: myHeaders,\n  redirect: \"follow\"\n};\n\n\nconst response = await fetch(`${reqOptions}recruitmentv9/Common/GetToken?tokenName=RctAppViewTokenName&_=${Date.now()}`, requestOptions)\nconst data = await response.text();\n return data; \n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

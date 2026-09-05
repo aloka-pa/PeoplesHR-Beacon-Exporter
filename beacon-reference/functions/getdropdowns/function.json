@@ -1,0 +1,24 @@
+{
+  "id": "690dc580931a2d61ba0b27e6",
+  "slug": "getdropdowns",
+  "name": "getDropDowns",
+  "status": "live",
+  "createdAt": "2025-06-09T09:13:34.971Z",
+  "updatedAt": "2026-07-17T12:55:53.915Z",
+  "contentHash": "f25709dbeac0e49b5fbd2c434aa3d3683bffc56599e9b13094117c76e2591319",
+  "lastExportedAt": "2026-09-05T19:41:20.950Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc580931a2d61ba0b27e6",
+    "name": "getDropDowns",
+    "status": "live",
+    "code": "(async function(){\n    const myHeaders = new Headers();\nmyHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\nmyHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\n\nconst requestOptions = {\n  method: \"GET\",\n  headers: myHeaders,\n  redirect: \"follow\"\n};\nconst reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\nconst response = await fetch(`${reqOptions}recruitmentv9/Common/GetAllHierarchyData?activeOnly=true&_=${Date.now()}`, requestOptions)\n  const data = await response.text()\nfunction buildHierarchyFlat(datas) {\n  const data = JSON.parse(datas);\n  if (!Array.isArray(data)) {\n    throw new Error(\"Input must be an array.\");\n  }\n\n  const flatList = [];\n\n  function traverse(node, parentCode = null, level = 0) {\n    const { Code, Name, Relation } = node;\n    flatList.push({\n      Code,\n      Name,\n      Parent: parentCode,\n      Level: level\n    });\n\n    if (node.children && node.children.length) {\n      node.children.forEach(child => traverse(child, Code, level + 1));\n    }\n  }\n\n  // First build the tree\n  const nodeMap = {};\n  data.forEach(item => {\n    nodeMap[item.Code] = { ...item, children: [] };\n  });\n\n  data.forEach(item => {\n    if (item.Relation && nodeMap[item.Relation]) {\n      nodeMap[item.Relation].children.push(nodeMap[item.Code]);\n    }\n  });\n\n  // Traverse from roots (items without Relation)\n  Object.values(nodeMap).forEach(item => {\n    if (item.Relation === null) {\n      traverse(item);\n    }\n  });\n\n  return flatList;\n}\n\n\n\nconst dropdownTree = buildHierarchyFlat(data);\n\n  return dropdownTree ;\n})",
+    "by": "34476",
+    "__v": 1
+  }
+}

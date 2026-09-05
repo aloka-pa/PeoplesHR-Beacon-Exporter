@@ -1,0 +1,75 @@
+{
+  "id": "690dc566931a2d61ba0b162b",
+  "slug": "getmaritalstatusdetails",
+  "name": "getMaritalStatusDetails",
+  "description": "in this tool generate the Marital Status Details.",
+  "instructions": null,
+  "taskName": "Marital Status Details",
+  "tags": [],
+  "status": "unlive",
+  "signature": "getMaritalStatusDetails",
+  "createdAt": "2025-05-04T17:01:16.763Z",
+  "updatedAt": "2025-05-04T17:01:16.763Z",
+  "assignedAgents": [],
+  "contentHash": "44f600527efd2cb6cfe0641364401cf988e3fe686d267f390c6f24b1015729f4",
+  "lastExportedAt": "2026-09-05T19:39:24.145Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b162b",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getMaritalStatusDetails",
+      "description": "in this tool generate the Marital Status Details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getMaritalStatusDetails",
+        "args": [
+          {
+            "name": "maritalStatusCode",
+            "type": "string",
+            "description": "to give the maritalStatusCode.",
+            "required": true,
+            "_id": "68179d5c5b9fb869c57f4c34"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68179d5c5b9fb869c57f4c33"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"MaritalStatus\");\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"MARST_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": args.maritalStatusCode,\n    \"ctl00$body$ContentSearch$butSearch\": \"Search\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"8\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"MaritalStatus\");\n\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: searchResponse.postBackCode,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: searchResponse.viewState,\n    __VIEWSTATEGENERATOR: searchResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: searchResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"MARST_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": args.maritalStatusCode,\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"MaritalStatus\");\n\n  window.ms = postBackResponse;\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(postBackResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const maritalStatus = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const result = {\n    code,\n    maritalStatus\n  };\n  return result;\n});\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Marital Status Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-04T17:01:16.763Z",
+      "updatedAt": "2025-05-04T17:01:16.763Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getMaritalStatusDetails",
+      "args": [
+        {
+          "name": "maritalStatusCode",
+          "type": "string",
+          "description": "to give the maritalStatusCode.",
+          "required": true,
+          "_id": "68179d5c5b9fb869c57f4c34"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68179d5c5b9fb869c57f4c33"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"MaritalStatus\");\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"MARST_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": args.maritalStatusCode,\n    \"ctl00$body$ContentSearch$butSearch\": \"Search\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"8\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"MaritalStatus\");\n\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: searchResponse.postBackCode,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: searchResponse.viewState,\n    __VIEWSTATEGENERATOR: searchResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: searchResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"MARST_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": args.maritalStatusCode,\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"MaritalStatus\");\n\n  window.ms = postBackResponse;\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(postBackResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const maritalStatus = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const result = {\n    code,\n    maritalStatus\n  };\n  return result;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

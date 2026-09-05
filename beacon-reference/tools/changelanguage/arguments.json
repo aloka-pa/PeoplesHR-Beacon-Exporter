@@ -1,0 +1,110 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "languageCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The selected language code. Example: '000001' for English. to get before api example value as return",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The selected language code. Example: '000001' for English. to get before api example value as return"
+      }
+    },
+    {
+      "name": "readingEnabled",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Checkbox indicating if READING is selected. Value is 'on' if checked. to get before api value do not dynamically filled",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on"
+        ],
+        "description": "Checkbox indicating if READING is selected. Value is 'on' if checked. to get before api value do not dynamically filled"
+      }
+    },
+    {
+      "name": "readingRating",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Rating selected for READING. Examples: '5' = Excellent, '8' = Average. to get before api value what user select corresponding value return",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Rating selected for READING. Examples: '5' = Excellent, '8' = Average. to get before api value what user select corresponding value return"
+      }
+    },
+    {
+      "name": "writingEnabled",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Checkbox indicating if WRITING is selected. Value is 'on' if checked.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on"
+        ],
+        "description": "Checkbox indicating if WRITING is selected. Value is 'on' if checked."
+      }
+    },
+    {
+      "name": "writingRating",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Rating selected for WRITING. Examples: '5' = Excellent, '8' = Average.to get before api value what user select corresponding value return",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Rating selected for WRITING. Examples: '5' = Excellent, '8' = Average.to get before api value what user select corresponding value return"
+      }
+    },
+    {
+      "name": "speakingEnabled",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Checkbox indicating if SPEAKING is selected. Value is 'on' if checked.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on"
+        ],
+        "description": "Checkbox indicating if SPEAKING is selected. Value is 'on' if checked."
+      }
+    },
+    {
+      "name": "speakingRating",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Rating selected for SPEAKING. Examples: '5' = Excellent, '8' = Average.to get before api value what user select corresponding value return",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Rating selected for SPEAKING. Examples: '5' = Excellent, '8' = Average.to get before api value what user select corresponding value return"
+      }
+    },
+    {
+      "name": "employeeNumber",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Unique identifier assigned to the employee. Example: '000001'.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Unique identifier assigned to the employee. Example: '000001'."
+      }
+    }
+  ]
+}

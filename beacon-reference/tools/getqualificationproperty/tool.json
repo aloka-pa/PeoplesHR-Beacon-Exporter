@@ -1,0 +1,225 @@
+{
+  "id": "6954babd58fa694a25a732a9",
+  "slug": "getqualificationproperty",
+  "name": "getQualificationProperty",
+  "description": "Searches and retrieves qualification property information. Users can search by property code, property name, or qualification name. Returns all matching qualification properties with their codes, property names, and associated qualification names.\nAt least one argument (propertyCode, propertyName, OR qualificationName) must be provided by the user.\nAlways show the user examples of inputs.\nIf user requests a full list (all/available/existing), provide returnAll as a truthy string (e.g., \"all\"), and the tool clicks Show All and returns all records currently available in the grid.\nReturns a structured response including count and list of matching records with:\npropertyCode\npropertyName\nqualificationName\n\nSupports listing all records via returnAll. Uses RadGrid pager postbacks for pagination and can either return a single page (with nextPage guidance) or automatically fetch all pages when autoFetchAllPages is enabled.",
+  "instructions": null,
+  "taskName": "Fetching Qualification Properties",
+  "tags": [
+    "EIMAdmin",
+    "QualificationInformation"
+  ],
+  "status": "live",
+  "signature": "getQualificationProperty",
+  "createdAt": "2025-12-31T05:55:09.736Z",
+  "updatedAt": "2026-06-15T07:35:10.909Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "9598ac5db607c8f1a61d19f1f6b54f1047da735d5a84de2dbbb392d045aa07f8",
+  "lastExportedAt": "2026-09-05T19:39:22.335Z",
+  "raw": {
+    "basic": {
+      "_id": "6954babd58fa694a25a732a9",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getQualificationProperty",
+      "description": "Searches and retrieves qualification property information. Users can search by property code, property name, or qualification name. Returns all matching qualification properties with their codes, property names, and associated qualification names.\nAt least one argument (propertyCode, propertyName, OR qualificationName) must be provided by the user.\nAlways show the user examples of inputs.\nIf user requests a full list (all/available/existing), provide returnAll as a truthy string (e.g., \"all\"), and the tool clicks Show All and returns all records currently available in the grid.\nReturns a structured response including count and list of matching records with:\npropertyCode\npropertyName\nqualificationName\n\nSupports listing all records via returnAll. Uses RadGrid pager postbacks for pagination and can either return a single page (with nextPage guidance) or automatically fetch all pages when autoFetchAllPages is enabled.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getQualificationProperty",
+        "args": [
+          {
+            "name": "propertyCode",
+            "type": "string",
+            "description": "The unique qualification property code to search for (e.g., \"000003\")",
+            "required": false,
+            "_id": "6954babd58fa694a25a732ab"
+          },
+          {
+            "name": "propertyName",
+            "type": "string",
+            "description": "The qualification property name or partial name to search for (e.g., \"Grade\", \"Level A\")",
+            "required": false,
+            "_id": "6954babd58fa694a25a732ac"
+          },
+          {
+            "name": "qualificationName",
+            "type": "string",
+            "description": "The qualification name or partial name to search for (e.g., \"Bachelor\", \"Master Degree\")",
+            "required": false,
+            "_id": "6954babd58fa694a25a732ad"
+          },
+          {
+            "name": "returnAll",
+            "type": "string",
+            "description": "If user wants all records, pass a truthy string like:\n\"true\" / \"all\" / \"show all\" / \"list\" / \"available\" / \"existing\"",
+            "required": false,
+            "_id": "697e308b32be68838ce332b3"
+          },
+          {
+            "name": "qualificationCode",
+            "type": "string",
+            "description": "partial match (optional; only if criteria exists in dropdown)",
+            "required": false,
+            "_id": "6980879032be68838ce7e73b"
+          },
+          {
+            "name": "pageNumber",
+            "type": "string",
+            "description": "which page to return (default \"1\")",
+            "required": false,
+            "_id": "6980879032be68838ce7e73c"
+          },
+          {
+            "name": "pageSize",
+            "type": "string",
+            "description": "requested page size (default \"100\"",
+            "required": false,
+            "_id": "6980879032be68838ce7e73d"
+          },
+          {
+            "name": "autoFetchAllPages",
+            "type": "string",
+            "description": "if truthy, fetch all pages (default \"false\")",
+            "required": false,
+            "_id": "6980879032be68838ce7e73e"
+          },
+          {
+            "name": "maxPages",
+            "type": "string",
+            "description": "safety limit (default \"70\")",
+            "required": false,
+            "_id": "6980879032be68838ce7e73f"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6954babd58fa694a25a732aa"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/QualificationProperty.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Qualification Property screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Helpers (STRING ARGS ONLY)\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const toLower = (v) => okText(v).toLowerCase();\n    const isTruthy = (v) => {\n      const t = toLower(v);\n      return [\"true\",\"1\",\"yes\",\"y\",\"all\",\"showall\",\"show all\",\"list\",\"a list\",\"available\",\"existing\"].includes(t);\n    };\n\n    const returnAll = isTruthy(args?.returnAll);\n\n    const propertyCode = okText(args?.propertyCode);\n    const propertyName = okText(args?.propertyName);\n    const qualificationName = okText(args?.qualificationName);\n    const qualificationCode = okText(args?.qualificationCode);\n\n    const pageNumberRaw = okText(args?.pageNumber) || \"1\";\n    const pageNumber = Number.isFinite(Number(pageNumberRaw)) ? Math.max(1, parseInt(pageNumberRaw, 10)) : 1;\n\n    const pageSizeRaw = okText(args?.pageSize) || \"100\";\n    const pageSize = Number.isFinite(Number(pageSizeRaw)) ? Math.max(1, parseInt(pageSizeRaw, 10)) : 100;\n\n    const autoFetchAllPages = isTruthy(args?.autoFetchAllPages);\n    const maxPagesRaw = okText(args?.maxPages) || \"20\";\n    const maxPages = Number.isFinite(Number(maxPagesRaw)) ? Math.max(1, parseInt(maxPagesRaw, 10)) : 20;\n\n    if (!returnAll && !propertyCode && !propertyName && !qualificationName && !qualificationCode) {\n      return {\n        status: \"INVALID_ARGS\",\n        message:\n          \"Please provide propertyCode, propertyName, qualificationName, or qualificationCode. Or set returnAll to 'all/show all/list/existing/available'.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Initial page state (hidden fields)\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"QualificationProperty\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/QualificationProperty.aspx\");\n    const url = updateUrl?.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/QualificationProperty.aspx`;\n\n    const parser = new DOMParser();\n\n    const extractState = (doc) => ({\n      viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n      viewStateGen: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n      eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\"\n    });\n\n    const extractPagerInfo = (doc) => {\n      const pagerText = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\n      const m = pagerText.match(/Displaying page\\s+(\\d+)\\s+of\\s+(\\d+).*?of\\s+(\\d+)/i);\n\n      const currentPage = m ? parseInt(m[1], 10) : 1;\n      const totalPages = m ? parseInt(m[2], 10) : 1;\n      const totalItems = m ? parseInt(m[3], 10) : null;\n\n      const pageTargets = {};\n      doc.querySelectorAll(\".PagerLeft_Default a\").forEach((a) => {\n        const pageNo = (a.textContent || \"\").trim();\n        const href = a.getAttribute(\"href\") || \"\";\n        const mm = href.match(/__doPostBack\\('([^']+)','([^']*)'\\)/);\n        if (pageNo && mm) pageTargets[pageNo] = { target: mm[1], arg: mm[2] || \"\" };\n      });\n\n      return { currentPage, totalPages, totalItems, pageTargets };\n    };\n\n    const extractRows = (doc) => {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const out = [];\n\n      for (const row of rows) {\n        const cells = row.querySelectorAll(\"td\");\n        // You used <td colspan=\"4\"> in pager, so grid likely has 4 columns or more.\n        // We only need first 3 textual columns: code, property name, qualification name\n        if (cells.length < 3) continue;\n\n        const rowPropertyCode = (cells[0]?.textContent || \"\").trim();\n        const rowPropertyName = (cells[1]?.textContent || \"\").trim();\n        const rowQualificationName = (cells[2]?.textContent || \"\").trim();\n\n        if (!rowPropertyCode && !rowPropertyName && !rowQualificationName) continue;\n\n        out.push({\n          propertyCode: rowPropertyCode,\n          propertyName: rowPropertyName,\n          qualificationName: rowQualificationName\n        });\n      }\n      return out;\n    };\n\n    const applyFilter = (items) => {\n      if (returnAll) return items;\n\n      if (propertyCode) {\n        return items.filter((x) => x.propertyCode === propertyCode);\n      }\n\n      if (propertyName) {\n        const n = propertyName.toLowerCase();\n        return items.filter((x) => (x.propertyName || \"\").toLowerCase().includes(n));\n      }\n\n      if (qualificationCode) {\n        // Qualification code may not be in grid columns. If your grid doesn't show it,\n        // then code filtering must be done by searchCriteria, not in-row filtering.\n        // Here, keep all results returned by server.\n        return items;\n      }\n\n      const qn = qualificationName.toLowerCase();\n      return items.filter((x) => (x.qualificationName || \"\").toLowerCase().includes(qn));\n    };\n\n    /* -------------------------------------------------\n     * 4) Determine search criteria + value\n     *    Based on your request payload:\n     *      QATT.QATT_CODE, QATT.QATT_NAME, QUA.QUALIFI_NAME\n     * ------------------------------------------------- */\n    let searchCriteria = \"QATT.QATT_CODE\";\n    let searchValue = \"\";\n\n    if (!returnAll) {\n      if (propertyCode) {\n        searchCriteria = \"QATT.QATT_CODE\";\n        searchValue = propertyCode;\n      } else if (propertyName) {\n        searchCriteria = \"QATT.QATT_NAME\";\n        searchValue = propertyName;\n      } else if (qualificationCode) {\n        // Only use this if your dropdown actually supports qualification code.\n        // If it doesn't, you should remove this branch.\n        searchCriteria = \"QUA.QUALIFI_CODE\";\n        searchValue = qualificationCode;\n      } else {\n        searchCriteria = \"QUA.QUALIFI_NAME\";\n        searchValue = qualificationName;\n      }\n    }\n\n    /* -------------------------------------------------\n     * 5) POST #1: Search or Show All (gets page 1 + pager targets)\n     * ------------------------------------------------- */\n    const postSearchOrAll = async () => {\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", \"\");\n      formData.append(\"__EVENTARGUMENT\", \"\");\n      formData.append(\"__VIEWSTATE\", details.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", details.eventValidation);\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      if (returnAll) {\n        formData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n      } else {\n        formData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n      }\n\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n      return parser.parseFromString(html, \"text/html\");\n    };\n\n    const firstDoc = await postSearchOrAll();\n\n    /* -------------------------------------------------\n     * 6) Pager postback to navigate to a specific page (REAL FIX)\n     * ------------------------------------------------- */\n    const postToPage = async (fromDoc, targetPage) => {\n      const state = extractState(fromDoc);\n      const pager = extractPagerInfo(fromDoc);\n      const key = String(targetPage);\n      const event = pager.pageTargets[key];\n\n      if (!event?.target) return null;\n\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", event.target);\n      formData.append(\"__EVENTARGUMENT\", event.arg || \"\");\n      formData.append(\"__VIEWSTATE\", state.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", state.eventValidation);\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      // Keep search context fields (safe)\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      // Keep pager fields (safe)\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", key);\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n      return parser.parseFromString(html, \"text/html\");\n    };\n\n    /* -------------------------------------------------\n     * 7) Single-page mode (prompt user for next page)\n     * ------------------------------------------------- */\n    const runSinglePage = async () => {\n      let doc = firstDoc;\n      const pager1 = extractPagerInfo(firstDoc);\n      const safeTarget = Math.min(pageNumber, pager1.totalPages || pageNumber);\n\n      if (safeTarget > 1) {\n        const paged = await postToPage(firstDoc, safeTarget);\n        if (paged) doc = paged;\n      }\n\n      const pager = extractPagerInfo(doc);\n      const rows = extractRows(doc);\n      const filtered = applyFilter(rows);\n\n      const moreAvailable = pager.currentPage < pager.totalPages;\n      const nextPage = moreAvailable ? String(pager.currentPage + 1) : \"\";\n\n      if (!filtered.length) {\n        return {\n          status: \"NOT_FOUND\",\n          message: returnAll\n            ? `No Qualification Property records found on page ${pager.currentPage}.`\n            : \"No Qualification Properties found matching the search criteria.\",\n          returnAll: returnAll ? \"true\" : \"false\",\n          pageNumber: String(pager.currentPage),\n          totalPages: String(pager.totalPages || 1),\n          moreAvailable: moreAvailable ? \"true\" : \"false\",\n          nextPage\n        };\n      }\n\n      const msg =\n        returnAll && moreAvailable\n          ? `Here are the qualification properties (page ${pager.currentPage} of ${pager.totalPages}). More records are available. Would you like to see the next page?`\n          : returnAll\n            ? `Here are the qualification properties (page ${pager.currentPage} of ${pager.totalPages}).`\n            : `Found ${filtered.length} matching Qualification Property record(s) on page ${pager.currentPage} of ${pager.totalPages}.`;\n\n      return {\n        status: \"SUCCESS\",\n        message: msg,\n        returnAll: returnAll ? \"true\" : \"false\",\n        pageNumber: String(pager.currentPage),\n        totalPages: String(pager.totalPages || 1),\n        moreAvailable: moreAvailable ? \"true\" : \"false\",\n        nextPage,\n        count: filtered.length,\n        qualificationProperties: filtered\n      };\n    };\n\n    /* -------------------------------------------------\n     * 8) Auto-fetch-all-pages mode (optional)\n     * ------------------------------------------------- */\n    const runAutoFetchAll = async () => {\n      const all = [];\n\n      // Start from page 1\n      let currentDoc = firstDoc;\n      let pager = extractPagerInfo(currentDoc);\n\n      let safety = 0;\n      while (safety < maxPages) {\n        safety += 1;\n\n        const rows = extractRows(currentDoc);\n        const filtered = applyFilter(rows);\n        all.push(...filtered);\n\n        if (!(pager.currentPage < pager.totalPages)) break;\n\n        const next = pager.currentPage + 1;\n        const nextDoc = await postToPage(currentDoc, next);\n        if (!nextDoc) break;\n\n        currentDoc = nextDoc;\n        pager = extractPagerInfo(currentDoc);\n      }\n\n      if (!all.length) {\n        return {\n          status: \"NOT_FOUND\",\n          message: returnAll\n            ? \"No Qualification Property records found.\"\n            : \"No Qualification Properties found matching the search criteria.\",\n          returnAll: returnAll ? \"true\" : \"false\"\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: `Returned ${all.length} Qualification Property record(s).`,\n        returnAll: returnAll ? \"true\" : \"false\",\n        count: all.length,\n        qualificationProperties: all\n      };\n    };\n\n    // Choose mode\n    if (autoFetchAllPages) return await runAutoFetchAll();\n    return await runSinglePage();\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unknown error\",\n      error: String(err)\n    };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "QualificationInformation"
+      ],
+      "taskName": "Fetching Qualification Properties",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-31T05:55:09.736Z",
+      "updatedAt": "2026-06-15T07:35:10.909Z",
+      "__v": 5,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getQualificationProperty",
+      "args": [
+        {
+          "name": "propertyCode",
+          "type": "string",
+          "description": "The unique qualification property code to search for (e.g., \"000003\")",
+          "required": false,
+          "_id": "6954babd58fa694a25a732ab"
+        },
+        {
+          "name": "propertyName",
+          "type": "string",
+          "description": "The qualification property name or partial name to search for (e.g., \"Grade\", \"Level A\")",
+          "required": false,
+          "_id": "6954babd58fa694a25a732ac"
+        },
+        {
+          "name": "qualificationName",
+          "type": "string",
+          "description": "The qualification name or partial name to search for (e.g., \"Bachelor\", \"Master Degree\")",
+          "required": false,
+          "_id": "6954babd58fa694a25a732ad"
+        },
+        {
+          "name": "returnAll",
+          "type": "string",
+          "description": "If user wants all records, pass a truthy string like:\n\"true\" / \"all\" / \"show all\" / \"list\" / \"available\" / \"existing\"",
+          "required": false,
+          "_id": "697e308b32be68838ce332b3"
+        },
+        {
+          "name": "qualificationCode",
+          "type": "string",
+          "description": "partial match (optional; only if criteria exists in dropdown)",
+          "required": false,
+          "_id": "6980879032be68838ce7e73b"
+        },
+        {
+          "name": "pageNumber",
+          "type": "string",
+          "description": "which page to return (default \"1\")",
+          "required": false,
+          "_id": "6980879032be68838ce7e73c"
+        },
+        {
+          "name": "pageSize",
+          "type": "string",
+          "description": "requested page size (default \"100\"",
+          "required": false,
+          "_id": "6980879032be68838ce7e73d"
+        },
+        {
+          "name": "autoFetchAllPages",
+          "type": "string",
+          "description": "if truthy, fetch all pages (default \"false\")",
+          "required": false,
+          "_id": "6980879032be68838ce7e73e"
+        },
+        {
+          "name": "maxPages",
+          "type": "string",
+          "description": "safety limit (default \"70\")",
+          "required": false,
+          "_id": "6980879032be68838ce7e73f"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6954babd58fa694a25a732aa"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/QualificationProperty.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Qualification Property screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Helpers (STRING ARGS ONLY)\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const toLower = (v) => okText(v).toLowerCase();\n    const isTruthy = (v) => {\n      const t = toLower(v);\n      return [\"true\",\"1\",\"yes\",\"y\",\"all\",\"showall\",\"show all\",\"list\",\"a list\",\"available\",\"existing\"].includes(t);\n    };\n\n    const returnAll = isTruthy(args?.returnAll);\n\n    const propertyCode = okText(args?.propertyCode);\n    const propertyName = okText(args?.propertyName);\n    const qualificationName = okText(args?.qualificationName);\n    const qualificationCode = okText(args?.qualificationCode);\n\n    const pageNumberRaw = okText(args?.pageNumber) || \"1\";\n    const pageNumber = Number.isFinite(Number(pageNumberRaw)) ? Math.max(1, parseInt(pageNumberRaw, 10)) : 1;\n\n    const pageSizeRaw = okText(args?.pageSize) || \"100\";\n    const pageSize = Number.isFinite(Number(pageSizeRaw)) ? Math.max(1, parseInt(pageSizeRaw, 10)) : 100;\n\n    const autoFetchAllPages = isTruthy(args?.autoFetchAllPages);\n    const maxPagesRaw = okText(args?.maxPages) || \"20\";\n    const maxPages = Number.isFinite(Number(maxPagesRaw)) ? Math.max(1, parseInt(maxPagesRaw, 10)) : 20;\n\n    if (!returnAll && !propertyCode && !propertyName && !qualificationName && !qualificationCode) {\n      return {\n        status: \"INVALID_ARGS\",\n        message:\n          \"Please provide propertyCode, propertyName, qualificationName, or qualificationCode. Or set returnAll to 'all/show all/list/existing/available'.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Initial page state (hidden fields)\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"QualificationProperty\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/QualificationProperty.aspx\");\n    const url = updateUrl?.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/QualificationProperty.aspx`;\n\n    const parser = new DOMParser();\n\n    const extractState = (doc) => ({\n      viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n      viewStateGen: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n      eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\"\n    });\n\n    const extractPagerInfo = (doc) => {\n      const pagerText = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\n      const m = pagerText.match(/Displaying page\\s+(\\d+)\\s+of\\s+(\\d+).*?of\\s+(\\d+)/i);\n\n      const currentPage = m ? parseInt(m[1], 10) : 1;\n      const totalPages = m ? parseInt(m[2], 10) : 1;\n      const totalItems = m ? parseInt(m[3], 10) : null;\n\n      const pageTargets = {};\n      doc.querySelectorAll(\".PagerLeft_Default a\").forEach((a) => {\n        const pageNo = (a.textContent || \"\").trim();\n        const href = a.getAttribute(\"href\") || \"\";\n        const mm = href.match(/__doPostBack\\('([^']+)','([^']*)'\\)/);\n        if (pageNo && mm) pageTargets[pageNo] = { target: mm[1], arg: mm[2] || \"\" };\n      });\n\n      return { currentPage, totalPages, totalItems, pageTargets };\n    };\n\n    const extractRows = (doc) => {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const out = [];\n\n      for (const row of rows) {\n        const cells = row.querySelectorAll(\"td\");\n        // You used <td colspan=\"4\"> in pager, so grid likely has 4 columns or more.\n        // We only need first 3 textual columns: code, property name, qualification name\n        if (cells.length < 3) continue;\n\n        const rowPropertyCode = (cells[0]?.textContent || \"\").trim();\n        const rowPropertyName = (cells[1]?.textContent || \"\").trim();\n        const rowQualificationName = (cells[2]?.textContent || \"\").trim();\n\n        if (!rowPropertyCode && !rowPropertyName && !rowQualificationName) continue;\n\n        out.push({\n          propertyCode: rowPropertyCode,\n          propertyName: rowPropertyName,\n          qualificationName: rowQualificationName\n        });\n      }\n      return out;\n    };\n\n    const applyFilter = (items) => {\n      if (returnAll) return items;\n\n      if (propertyCode) {\n        return items.filter((x) => x.propertyCode === propertyCode);\n      }\n\n      if (propertyName) {\n        const n = propertyName.toLowerCase();\n        return items.filter((x) => (x.propertyName || \"\").toLowerCase().includes(n));\n      }\n\n      if (qualificationCode) {\n        // Qualification code may not be in grid columns. If your grid doesn't show it,\n        // then code filtering must be done by searchCriteria, not in-row filtering.\n        // Here, keep all results returned by server.\n        return items;\n      }\n\n      const qn = qualificationName.toLowerCase();\n      return items.filter((x) => (x.qualificationName || \"\").toLowerCase().includes(qn));\n    };\n\n    /* -------------------------------------------------\n     * 4) Determine search criteria + value\n     *    Based on your request payload:\n     *      QATT.QATT_CODE, QATT.QATT_NAME, QUA.QUALIFI_NAME\n     * ------------------------------------------------- */\n    let searchCriteria = \"QATT.QATT_CODE\";\n    let searchValue = \"\";\n\n    if (!returnAll) {\n      if (propertyCode) {\n        searchCriteria = \"QATT.QATT_CODE\";\n        searchValue = propertyCode;\n      } else if (propertyName) {\n        searchCriteria = \"QATT.QATT_NAME\";\n        searchValue = propertyName;\n      } else if (qualificationCode) {\n        // Only use this if your dropdown actually supports qualification code.\n        // If it doesn't, you should remove this branch.\n        searchCriteria = \"QUA.QUALIFI_CODE\";\n        searchValue = qualificationCode;\n      } else {\n        searchCriteria = \"QUA.QUALIFI_NAME\";\n        searchValue = qualificationName;\n      }\n    }\n\n    /* -------------------------------------------------\n     * 5) POST #1: Search or Show All (gets page 1 + pager targets)\n     * ------------------------------------------------- */\n    const postSearchOrAll = async () => {\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", \"\");\n      formData.append(\"__EVENTARGUMENT\", \"\");\n      formData.append(\"__VIEWSTATE\", details.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", details.eventValidation);\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      if (returnAll) {\n        formData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n      } else {\n        formData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n      }\n\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n      return parser.parseFromString(html, \"text/html\");\n    };\n\n    const firstDoc = await postSearchOrAll();\n\n    /* -------------------------------------------------\n     * 6) Pager postback to navigate to a specific page (REAL FIX)\n     * ------------------------------------------------- */\n    const postToPage = async (fromDoc, targetPage) => {\n      const state = extractState(fromDoc);\n      const pager = extractPagerInfo(fromDoc);\n      const key = String(targetPage);\n      const event = pager.pageTargets[key];\n\n      if (!event?.target) return null;\n\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", event.target);\n      formData.append(\"__EVENTARGUMENT\", event.arg || \"\");\n      formData.append(\"__VIEWSTATE\", state.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", state.eventValidation);\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      // Keep search context fields (safe)\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      // Keep pager fields (safe)\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", key);\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n      return parser.parseFromString(html, \"text/html\");\n    };\n\n    /* -------------------------------------------------\n     * 7) Single-page mode (prompt user for next page)\n     * ------------------------------------------------- */\n    const runSinglePage = async () => {\n      let doc = firstDoc;\n      const pager1 = extractPagerInfo(firstDoc);\n      const safeTarget = Math.min(pageNumber, pager1.totalPages || pageNumber);\n\n      if (safeTarget > 1) {\n        const paged = await postToPage(firstDoc, safeTarget);\n        if (paged) doc = paged;\n      }\n\n      const pager = extractPagerInfo(doc);\n      const rows = extractRows(doc);\n      const filtered = applyFilter(rows);\n\n      const moreAvailable = pager.currentPage < pager.totalPages;\n      const nextPage = moreAvailable ? String(pager.currentPage + 1) : \"\";\n\n      if (!filtered.length) {\n        return {\n          status: \"NOT_FOUND\",\n          message: returnAll\n            ? `No Qualification Property records found on page ${pager.currentPage}.`\n            : \"No Qualification Properties found matching the search criteria.\",\n          returnAll: returnAll ? \"true\" : \"false\",\n          pageNumber: String(pager.currentPage),\n          totalPages: String(pager.totalPages || 1),\n          moreAvailable: moreAvailable ? \"true\" : \"false\",\n          nextPage\n        };\n      }\n\n      const msg =\n        returnAll && moreAvailable\n          ? `Here are the qualification properties (page ${pager.currentPage} of ${pager.totalPages}). More records are available. Would you like to see the next page?`\n          : returnAll\n            ? `Here are the qualification properties (page ${pager.currentPage} of ${pager.totalPages}).`\n            : `Found ${filtered.length} matching Qualification Property record(s) on page ${pager.currentPage} of ${pager.totalPages}.`;\n\n      return {\n        status: \"SUCCESS\",\n        message: msg,\n        returnAll: returnAll ? \"true\" : \"false\",\n        pageNumber: String(pager.currentPage),\n        totalPages: String(pager.totalPages || 1),\n        moreAvailable: moreAvailable ? \"true\" : \"false\",\n        nextPage,\n        count: filtered.length,\n        qualificationProperties: filtered\n      };\n    };\n\n    /* -------------------------------------------------\n     * 8) Auto-fetch-all-pages mode (optional)\n     * ------------------------------------------------- */\n    const runAutoFetchAll = async () => {\n      const all = [];\n\n      // Start from page 1\n      let currentDoc = firstDoc;\n      let pager = extractPagerInfo(currentDoc);\n\n      let safety = 0;\n      while (safety < maxPages) {\n        safety += 1;\n\n        const rows = extractRows(currentDoc);\n        const filtered = applyFilter(rows);\n        all.push(...filtered);\n\n        if (!(pager.currentPage < pager.totalPages)) break;\n\n        const next = pager.currentPage + 1;\n        const nextDoc = await postToPage(currentDoc, next);\n        if (!nextDoc) break;\n\n        currentDoc = nextDoc;\n        pager = extractPagerInfo(currentDoc);\n      }\n\n      if (!all.length) {\n        return {\n          status: \"NOT_FOUND\",\n          message: returnAll\n            ? \"No Qualification Property records found.\"\n            : \"No Qualification Properties found matching the search criteria.\",\n          returnAll: returnAll ? \"true\" : \"false\"\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: `Returned ${all.length} Qualification Property record(s).`,\n        returnAll: returnAll ? \"true\" : \"false\",\n        count: all.length,\n        qualificationProperties: all\n      };\n    };\n\n    // Choose mode\n    if (autoFetchAllPages) return await runAutoFetchAll();\n    return await runSinglePage();\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unknown error\",\n      error: String(err)\n    };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

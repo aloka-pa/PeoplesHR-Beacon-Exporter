@@ -1,0 +1,696 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "updateType",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Specifies the entity based on the query. This is used to determine the update feature.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "educationalAndProfessionalQualifications",
+          "workExperienceDetails",
+          "membershipDetails",
+          "bankDetails",
+          "creditCardDetails",
+          "passportAndOtherArticles",
+          "assigendNonCashBenefit",
+          "assignLanguage"
+        ],
+        "description": "Specifies the entity based on the query. This is used to determine the update feature."
+      }
+    },
+    {
+      "name": "educationalAndProfessionalQualifications",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Before proceeding with the update, if the user ask query qualificationd details first qualification type exist record or not the after update. no qualification type record no update.first check whether the user is invoking the 'next qualification' API. If so, execute the 'qualificationTypesandQualification' API to fetch the relevant data. The AI must not generate any random dates during this process. The fields 'qualificationEffectStartDate' and 'qualificationEffectEndDate' must be derived solely from qualification data and must not be taken from any reimbursement-related records. All dates should follow the 'dd/mm/yyyy' format.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Before proceeding with the update, if the user ask query qualificationd details first qualification type exist record or not the after update. no qualification type record no update.first check whether the user is invoking the 'next qualification' API. If so, execute the 'qualificationTypesandQualification' API to fetch the relevant data. The AI must not generate any random dates during this process. The fields 'qualificationEffectStartDate' and 'qualificationEffectEndDate' must be derived solely from qualification data and must not be taken from any reimbursement-related records. All dates should follow the 'dd/mm/yyyy' format.",
+        "properties": {
+          "employeeNumber": {
+            "type": "string",
+            "description": "Unique identifier for the employee."
+          },
+          "skipType": {
+            "type": "string",
+            "description": "If the user updates the qualification type or qualification, the 'next qualification type' tool must be executed before updating 'educationalAndProfessionalQualifications'—but only if the user explicitly requests changes to education or qualification details. Otherwise, skip the 'next qualification type' tool and directly execute 'updateEmployeeInformationDetails'. If skipped, return the keyword 'skip'."
+          },
+          "qualificationTypeId": {
+            "type": "string",
+            "description": "ID for the selected qualification type. This is obtained from the list displayed by the 'qualificationTypes' tool."
+          },
+          "qualificationEffectStartDate": {
+            "type": "string",
+            "description": "Start date for the qualification's effect. This must follow the 'dd/mm/yyyy' format (e.g., '01/04/2025'). The value should be retrieved from qualification data only, not from reimbursement-related data. Random dates must not be generated."
+          },
+          "qualificationEffectEndDate": {
+            "type": "string",
+            "description": "End date for the qualification's effect. This must follow the 'dd/mm/yyyy' format (e.g., '01/04/2025'). The value should be retrieved from qualification data only. Do not use reimbursement-related dates, and do not generate any random dates."
+          },
+          "qualificationId": {
+            "type": "string",
+            "description": "ID for the selected qualification. This value is derived from the user's selection after displaying data using the 'qualificationTypes' tool. If the user manually updates the qualification input, the corresponding value should be captured. Otherwise, use the most recently fetched value."
+          },
+          "institutionName": {
+            "type": "string",
+            "description": "Name of the school or institution where the qualification was obtained. This is a required field and must be asked explicitly."
+          },
+          "highestQualification": {
+            "type": "string",
+            "enum": [
+              "on",
+              "off"
+            ],
+            "description": "Indicates whether this is the highest qualification. The value should be derived after calling the 'qualificationTypes' API."
+          },
+          "qualificationStatus": {
+            "type": "string",
+            "enum": [
+              "0",
+              "1",
+              "2"
+            ],
+            "description": "Status of the qualification (0 = Pass, 1 = First Class, 2 = Second Class). This is a required field and must be asked explicitly. If the user provides an updated value, it should be used."
+          },
+          "jobRelated": {
+            "type": "string",
+            "enum": [
+              "0",
+              "1"
+            ],
+            "description": "Indicates whether the qualification is job-related (0 = No, 1 = Yes). This value should be fetched from previously obtained API data."
+          },
+          "durationValue": {
+            "type": "string",
+            "description": "Numeric duration of the qualification (e.g., '3.00' or '5.00'). If the user provides a number, format it accordingly."
+          },
+          "durationType": {
+            "type": "string",
+            "enum": [
+              "000001",
+              "000002",
+              "000003",
+              "000004",
+              "000005"
+            ],
+            "description": "Type of duration. Values represent: 000001 = Years, 000002 = Months, 000003 = Weeks, 000004 = Days, 000005 = Hours."
+          },
+          "yearOfPassing": {
+            "type": "string",
+            "description": "Year in which the qualification was completed (e.g., '2023'). This is a required field and must be asked explicitly. It should be derived using the 'qualificationTypes' API."
+          },
+          "comments": {
+            "type": "string",
+            "description": "Any additional comments related to the qualification."
+          },
+          "totalCost": {
+            "type": "string",
+            "description": "Total cost incurred for obtaining the qualification. This value is retrieved using the 'qualificationTypes' API."
+          },
+          "currencyForTotalCost": {
+            "type": "string",
+            "description": "Currency code for the total cost. This is selected from the currency list provided by the 'qualificationTypes' API."
+          },
+          "CostEffectDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Effective date of the total cost. Must be in 'dd/mm/yyyy' format (e.g., '12/06/2025')."
+          },
+          "reimbursedAmount": {
+            "type": "string",
+            "description": "Amount reimbursed by the company. Retrieved using the 'qualificationTypes' API."
+          },
+          "currencyForReimbursement": {
+            "type": "string",
+            "description": "Currency code for the reimbursed amount. This is selected from the currency list retrieved via the 'qualificationTypes' API."
+          },
+          "reimbursementEffectDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Effective date of the reimbursement. Must follow the 'dd/mm/yyyy' format (e.g., '12/06/2025')."
+          }
+        },
+        "required": [
+          "employeeNumber",
+          "qualificationTypeId",
+          "qualificationId",
+          "institutionName",
+          "qualificationStatus",
+          "durationValue",
+          "durationType",
+          "CostEffectDate",
+          "reimbursementEffectDate",
+          "highestQualification",
+          "jobRelated",
+          "skipType",
+          "qualificationEffectStartDate",
+          "qualificationEffectEndDate"
+        ]
+      }
+    },
+    {
+      "name": "workExperienceDetails",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "To populate this schema, first execute the 'workExpDetails' API to fetch all existing work experience data. If the user does not update a specific field, use the corresponding value from the 'workExpDetails' API. must should analize what is human update message or what is before api get data to analize the date range corresponding data types return.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "To populate this schema, first execute the 'workExpDetails' API to fetch all existing work experience data. If the user does not update a specific field, use the corresponding value from the 'workExpDetails' API. must should analize what is human update message or what is before api get data to analize the date range corresponding data types return.",
+        "properties": {
+          "employeeNumber": {
+            "type": "string",
+            "description": "Unique identifier for the employee."
+          },
+          "category": {
+            "type": "string",
+            "description": "before api get in this filed like 'Internal' or 'External' category type"
+          },
+          "companyname": {
+            "type": "string",
+            "description": "Company name entered by the user. If not provided, use the value from the 'workExpDetails' API.if the user update category type for external must should give the compan name and you ask user campany name will take name."
+          },
+          "isWorkRelated": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Indicates whether the experience is work-related. If not provided, use the value from the 'workExpDetails' API."
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Start date of the employment. If not provided, use the value from the 'workExpDetails' API."
+          },
+          "startDateType": {
+            "type": "string",
+            "enum": [
+              "updateStartDate"
+            ],
+            "description": "Analyze the user query, and if the updated message includes a date reference for a human message, return it under the 'updateStartDate' key. If there is no date mentioned in the human message update, do not return updateStartDate."
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "description": "End date of the employment. If not provided, use the value from the 'workExpDetails' API."
+          },
+          "endDateType": {
+            "type": "string",
+            "enum": [
+              "updateEndDate"
+            ],
+            "description": "Analyze the user query, and if the updated human message includes an end date, return it under the 'updateEndDate' key. If no end date is mentioned in the human message update, do not return updateEndDate."
+          },
+          "confirmationDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Confirmation date of the job. If not provided, use the value from the 'workExpDetails' API."
+          },
+          "contactPerson": {
+            "type": "string",
+            "description": "Name of the contact person at the organization. if the user update contract persion take new update value. If not provided, use the value from the 'workExpDetails' API. if the user update value will be takr else dont dynamic genarate the value. to get the related for 'workExpDetails' api"
+          },
+          "department": {
+            "type": "string",
+            "description": "Department and devision in this field where the user worked. If not provided, use the value from the 'workExpDetails' API. if the user update value will be takr else dont dynamic genarate the value. to get the related for 'workExpDetails' api"
+          },
+          "position": {
+            "type": "string",
+            "description": "Position held by the user. If not provided, use the value from the 'workExpDetails' API."
+          },
+          "reasonForLeaving": {
+            "type": "string",
+            "description": "Reason for leaving the job. If not provided, use the value from the 'workExpDetails' API."
+          },
+          "salaryAllowanceLeaving": {
+            "type": "string",
+            "description": "Salary at the Salary/ Allowance on Leaving. If not provided, use the value from the 'workExpDetails' API. if the user are get before must in this format for user give 5 to convert in this format 5.00 etc."
+          },
+          "benefitsofLiving": {
+            "type": "string",
+            "description": "Benefit of leaving. If not provided, use the value from the 'workExpDetails' API."
+          },
+          "companyAddress": {
+            "type": "string",
+            "description": "Address of the company. If not provided, use the value from the 'workExpDetails' API."
+          },
+          "contactNumber": {
+            "type": "string",
+            "description": "Contact phone number. If not provided, use the value from the 'workExpDetails' API."
+          },
+          "responsibilities": {
+            "type": "string",
+            "description": "Job responsibilities. If not provided, use the value from the 'workExpDetails' API."
+          },
+          "achievements": {
+            "type": "string",
+            "description": "Key achievements during tenure. If not provided, use the value from the 'workExpDetails' API."
+          },
+          "hasBenefits": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Indicates whether the user received any benefits. If not provided, use the value from the 'workExpDetails' API."
+          }
+        },
+        "required": [
+          "companyname",
+          "isWorkRelated",
+          "startDate",
+          "endDate",
+          "confirmationDate",
+          "contactPerson",
+          "department",
+          "position",
+          "reasonForLeaving",
+          "lastDrawnSalary",
+          "benefitsReceived",
+          "companyAddress",
+          "contactNumber",
+          "responsibilities",
+          "achievements",
+          "hasBenefits"
+        ]
+      }
+    },
+    {
+      "name": "membershipDetails",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Before execute in the membership details api, first execute the 'getMembershipDetails' api, then next execute the 'updateMemberShipDetails' api, then finl execute in the api.Schema for validating data submitted to the 'updateMemberShipDetails' api. 'updateMemberShipDetails' api is used to update only the fields explicitly provided by the user. If any field is missing, the API will use corresponding existing values — do not generate or assume dynamic/default values. and some fields are hiden fields cant not update membership type and membership if the user update for check and return validation message return. Note : in the particular use cased no need execute the 'getEmployeeInformationDetails' api.",
+      "advanced": true,
+      "raw": {
+        "title": "Update Membership Details",
+        "description": "Before execute in the membership details api, first execute the 'getMembershipDetails' api, then next execute the 'updateMemberShipDetails' api, then finl execute in the api.Schema for validating data submitted to the 'updateMemberShipDetails' api. 'updateMemberShipDetails' api is used to update only the fields explicitly provided by the user. If any field is missing, the API will use corresponding existing values — do not generate or assume dynamic/default values. and some fields are hiden fields cant not update membership type and membership if the user update for check and return validation message return. Note : in the particular use cased no need execute the 'getEmployeeInformationDetails' api.",
+        "type": "object",
+        "properties": {
+          "empEmpNumber": {
+            "type": "string",
+            "description": "Unique employee number. Example: '000001'."
+          },
+          "membershipNum": {
+            "type": "string",
+            "description": "Membership numbers if the user given update value will be take the update value if the the user not update to get the corresponding data value for 'updateMemberShipDetails' tool (e.g., 0, 1, 2)."
+          },
+          "subscriptionOwnership": {
+            "type": "string",
+            "description": "Ownership of the subscription. Accepted values: 'Company' or 'Individual'. will be take the name dont data corresponding value. if the user given update value will be take the update value if the the user not update to get the corresponding data value for 'updateMemberShipDetails' tool"
+          },
+          "membershipTitleId": {
+            "type": "string",
+            "description": "Selected membership title ID from dropdown. Example: '000001' if the user given update value will be take the update value if the the user not update to get the corresponding data for 'updateMemberShipDetails' tool."
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Membership Commencement Date in DD/MM/YYYY format. Example: '22/12/2023'. if the user given update value will be take the update value if the the user not update to get the corresponding date for 'updateMemberShipDetails' tool"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Membership end or renewal date in DD/MM/YYYY format. Example: '22/12/2023'. if the user given update value will be take the update value if the the user not update to get the corresponding date for 'updateMemberShipDetails' tool"
+          },
+          "paidbyIndividualAmount": {
+            "type": "string",
+            "description": "Amount paid by the individual.if the user given update value will be take the update value if the the user not update to get the corresponding data value for 'updateMemberShipDetails' tool"
+          },
+          "individualCurrency": {
+            "type": "string",
+            "description": "Currency code for individual payment. Use the corresponding value for the selected currency. Example: '000001'. if the user given update value will be take the update value if the the user not update to get the corresponding data value for 'updateMemberShipDetails' tool"
+          },
+          "individualEffDate": {
+            "type": "string",
+            "description": "Effective date for individual payment in DD/MM/YYYY format. Example: '22/12/2023'. if the user given update value will be take the update value if the the user not update to get the corresponding date for 'updateMemberShipDetails' tool"
+          },
+          "paidbyCompanyAmount": {
+            "type": "string",
+            "description": "Amount paid by the company.if the user given update value will be take the update value if the the user not update to get the corresponding data value for 'updateMemberShipDetails' tool"
+          },
+          "companyCurrency": {
+            "type": "string",
+            "description": "Currency code for company payment. Use the corresponding value for the selected currency. Example: '000001'. if the user given update value will be take the update value if the the user not update to get the corresponding data value for 'updateMemberShipDetails' tool"
+          },
+          "companyEffDate": {
+            "type": "string",
+            "description": "Effective date for company payment in DD/MM/YYYY format. Example: '22/12/2023'. if the user given update value will be take the update value if the the user not update to get the corresponding data for 'updateMemberShipDetails' tool"
+          }
+        },
+        "required": [
+          "empEmpNumber",
+          "membershipNum",
+          "subscriptionOwnership",
+          "membershipTitleId",
+          "startDate",
+          "endDate",
+          "individualAmount",
+          "individualCurrency",
+          "individualEffDate",
+          "companyAmount",
+          "companyCurrency",
+          "companyEffDate",
+          "paidbyCompanyAmount",
+          "paidbyIndividualAmount"
+        ]
+      }
+    },
+    {
+      "name": "bankDetails",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "if the user update credit card details must be updateType value is 'bankDetails'.First, execute the 'specificBankEmployeeDetails' tool to retrieve the initial set of bank details for the employee. If the user does not provide an updated value for a particular field, retain the existing value from the 'specificBankEmployeeDetails' response. No dynamic or inferred data should be added to the schema—only explicitly provided or existing values should be used. If the user requests or refers to an order number (e.g., 1, 2, 3, etc.) that does not match any records, the system should still store the request as a reference but flag that the order number does not match the available records. Additionally, whenever the user intends to update any bank detail fields, they must be prompted to provide a valid order number to ensure accurate record identification and update.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "if the user update credit card details must be updateType value is 'bankDetails'.First, execute the 'specificBankEmployeeDetails' tool to retrieve the initial set of bank details for the employee. If the user does not provide an updated value for a particular field, retain the existing value from the 'specificBankEmployeeDetails' response. No dynamic or inferred data should be added to the schema—only explicitly provided or existing values should be used. If the user requests or refers to an order number (e.g., 1, 2, 3, etc.) that does not match any records, the system should still store the request as a reference but flag that the order number does not match the available records. Additionally, whenever the user intends to update any bank detail fields, they must be prompted to provide a valid order number to ensure accurate record identification and update.",
+        "properties": {
+          "accountType": {
+            "type": "string",
+            "description": "Account Type (e.g., 0 = Current, 1 = Savings, 2 = Third Party, 3 = Bonus, 4 = External). Use the user's updated value if provided; otherwise, use the value from the 'specificBankEmployeeDetails' tool."
+          },
+          "currency": {
+            "type": "string",
+            "description": "Currency Code (e.g., 000081 for Sri Lanka Rupee). Use the user's updated value if provided; otherwise, use the value from the 'specificBankEmployeeDetails' tool."
+          },
+          "accountName": {
+            "type": "string",
+            "description": "Name provided to the bank for the account.to get the account name for 'specificBankEmployeeDetails' tool."
+          },
+          "amountType": {
+            "type": "string",
+            "description": "Amount Type (0 = Fixed Amount, 1 = Percentage). Use the user's updated value if provided; otherwise, use the value from the 'specificBankEmployeeDetails' tool."
+          },
+          "order": {
+            "type": "string",
+            "description": "if the any update bank details must be ask the order number.Priority order for the bank account. This value must be explicitly provided by the user before calling this API. must should ask the user order number example 1,2,3 etc..."
+          },
+          "isActive": {
+            "type": "string",
+            "enum": [
+              "on",
+              "off"
+            ],
+            "description": "Whether the bank account is active ('on') or inactive ('off'). Use the user's updated value if provided; otherwise, use the value from the 'specificBankEmployeeDetails' tool."
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Start date of the bank account (format: m/d/yyyy). Use the user's updated value if provided; otherwise, use the value from the 'specificBankEmployeeDetails' tool."
+          },
+          "endDate": {
+            "type": "string",
+            "description": "End date of the bank account (format: m/d/yyyy). Use the user's updated value if provided; otherwise, use the value from the 'specificBankEmployeeDetails' tool."
+          },
+          "comment": {
+            "type": "string",
+            "description": "Additional comments provided by the user."
+          },
+          "currentAmount": {
+            "type": "string",
+            "description": "Current amount value used for internal comparison. to get the current to use the ammount value from the 'specificBankEmployeeDetails' tool."
+          },
+          "updateAmount": {
+            "type": "string",
+            "description": "update amount type (typically mirrors 'update amount value', used internally). Use the user's updated value if provided"
+          },
+          "employeeNumber": {
+            "type": "string",
+            "description": "Unique identifier for the employee."
+          },
+          "accountNumber": {
+            "type": "string",
+            "description": "to get the account number for 'specificBankEmployeeDetails' api data"
+          }
+        },
+        "required": [
+          "accountType",
+          "currency",
+          "accountName",
+          "amountType",
+          "order",
+          "isActive",
+          "startDate",
+          "endDate",
+          "comment",
+          "currentAmount",
+          "updateAmount",
+          "employeeNumber",
+          "accountNumber"
+        ]
+      }
+    },
+    {
+      "name": "creditCardDetails",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "if the user update credit card details must be updateType value is 'creditCardDetails'. if the user update the credit card update related query updateType name is 'creditCardDetails'. execute the dateFormat api using date format. First, execute the 'specificCreditCardDetails' tool to retrieve the initial data. If the user does not provide an updated value for any field, use the value from the 'specificCreditCardDetails' response. Do not include any dynamically generated or inferred data. all data schema get then execute finall execute in this tool 'updateEmployeeInformationDetails' tool.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "if the user update credit card details must be updateType value is 'creditCardDetails'. if the user update the credit card update related query updateType name is 'creditCardDetails'. execute the dateFormat api using date format. First, execute the 'specificCreditCardDetails' tool to retrieve the initial data. If the user does not provide an updated value for any field, use the value from the 'specificCreditCardDetails' response. Do not include any dynamically generated or inferred data. all data schema get then execute finall execute in this tool 'updateEmployeeInformationDetails' tool.",
+        "properties": {
+          "creditCardNumber": {
+            "type": "string",
+            "description": "This field is read-only and should be retrieved from the 'specificCreditCardDetails' tool. Users cannot edit this value."
+          },
+          "creditCardType": {
+            "type": "string",
+            "description": "The credit card type selected by the user. Valid values: '1' for Master and '0' for Visa. If the user does not update this, use the value from the 'specificCreditCardDetails' tool."
+          },
+          "issuedDate": {
+            "type": "string",
+            "description": "execute the dateFormat api using date format.The issue date of the card in 'dd/mm/yyyy' format. If the user does not update this, use the value from the 'specificCreditCardDetails' tool."
+          },
+          "expiryDate": {
+            "type": "string",
+            "description": "execute the dateFormat api using date format.The expiry date of the card in 'dd/mm/yyyy' format. If the user does not update this, use the value from the 'specificCreditCardDetails' tool."
+          },
+          "employeeNumber": {
+            "type": "string",
+            "description": "Unique identifier of the employee."
+          }
+        },
+        "required": [
+          "employeeNumber",
+          "creditCardNumber",
+          "creditCardType",
+          "issuedDate",
+          "expiryDate"
+        ]
+      }
+    },
+    {
+      "name": "passportAndOtherArticles",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Before executing this API, you must first run the 'specificPassportAndOtherArticlesDetails' tool to retrieve the necessary data. If any fields are missing in the user's input, fetch the corresponding values from that tool. After ensuring all required fields are populated, proceed to call the 'updateEmployeeInformationDetails' tool.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "title": "Passport and Other Article Details",
+        "description": "Before executing this API, you must first run the 'specificPassportAndOtherArticlesDetails' tool to retrieve the necessary data. If any fields are missing in the user's input, fetch the corresponding values from that tool. After ensuring all required fields are populated, proceed to call the 'updateEmployeeInformationDetails' tool.",
+        "properties": {
+          "employeeNumber": {
+            "type": "string",
+            "description": "Unique identifier assigned to the employee. Example: '000001'."
+          },
+          "articleCategory": {
+            "type": "string",
+            "description": "Code corresponding to the selected article category (e.g., Visa, Passport, Driving License). The value should be taken based on the selected display name. Example values: '0', '1', etc."
+          },
+          "documentNumber": {
+            "type": "string",
+            "description": "Unique identifier or number of the document. If not updated by the user, fetch the existing value using the 'specificPassportAndOtherArticlesDetails' tool."
+          },
+          "articleSubcategory": {
+            "type": "string",
+            "description": "Subcategory or detailed classification of the article (e.g., Barangay clearance type). If not provided by the user, retrieve the value using the 'specificPassportAndOtherArticlesDetails' tool."
+          },
+          "countryOfOrigin": {
+            "type": "string",
+            "description": "Code of the country where the document was issued. The value should correspond to the selected country name. Example: '000176' for Pitcairn. If not provided, retrieve it using the 'specificPassportAndOtherArticlesDetails' tool."
+          },
+          "numberOfEntries": {
+            "type": "string",
+            "description": "Indicates how many entries the document allows (commonly for visas). If not provided, get the value from the 'specificPassportAndOtherArticlesDetails' tool."
+          },
+          "placeOfIssue": {
+            "type": "string",
+            "description": "The place or authority that issued the document. If not updated by the user, fetch the value using the 'specificPassportAndOtherArticlesDetails' tool."
+          },
+          "issueDate": {
+            "type": "string",
+            "description": "execute the dateFormat api using date format.The issue date of the card in 'dd/mm/yyyy' format.. If not updated by the user, fetch it from the 'specificPassportAndOtherArticlesDetails' tool."
+          },
+          "expiryDate": {
+            "type": "string",
+            "description": "execute the dateFormat api using date format.The issue date of the card in 'dd/mm/yyyy' format.. If not provided, retrieve it using the 'specificPassportAndOtherArticlesDetails' tool."
+          },
+          "comments": {
+            "type": "string",
+            "description": "Any additional remarks or information related to the document. If not provided by the user, fetch it from the 'specificPassportAndOtherArticlesDetails' tool."
+          }
+        },
+        "required": [
+          "employeeNumber",
+          "articleCategory",
+          "documentNumber",
+          "articleSubcategory",
+          "countryOfOrigin",
+          "numberOfEntries",
+          "placeOfIssue",
+          "issueDate",
+          "expiryDate",
+          "comments"
+        ]
+      }
+    },
+    {
+      "name": "assigendNonCashBenefit",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Before using this API, must be take updateType value is 'assigendNonCashBenefit' first call the 'specificAssignNonCashBenefitDetails' tool to fetch existing data. If any field is missing from the user’s input, retrieve its value from that tool. Once all required fields are filled, call the 'updateEmployeeInformationDetails' tool.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Before using this API, must be take updateType value is 'assigendNonCashBenefit' first call the 'specificAssignNonCashBenefitDetails' tool to fetch existing data. If any field is missing from the user’s input, retrieve its value from that tool. Once all required fields are filled, call the 'updateEmployeeInformationDetails' tool.",
+        "properties": {
+          "employeeNumber": {
+            "type": "string",
+            "description": "Unique identifier for the employee. Example: '000001'."
+          },
+          "issueDate": {
+            "type": "string",
+            "description": "Before take the date first execute the date format api reposne date format will be take,Date the item was issued (format: dd/mm/yyyy). Example: '26/02/2025'. If the user does not provide this, fetch it from the 'specificAssignNonCashBenefitDetails' tool."
+          },
+          "quantity": {
+            "type": "string",
+            "enum": [
+              "0",
+              "1"
+            ],
+            "description": "Number of items issued. Must be '0' or '1'. If any other value is given, return an error: 'The Quantity entered exceeds the Quantity allocated'."
+          },
+          "returnable": {
+            "type": "string",
+            "description": "Indicates whether the issued item is returnable. Value is 'on' if checked."
+          },
+          "returnableDate": {
+            "type": "string",
+            "description": "Date when the item must be returned. May be blank if not applicable. If the user does not provide this, fetch it from the 'specificAssignNonCashBenefitDetails' tool."
+          },
+          "serialNumber": {
+            "type": "string",
+            "description": "Serial number of the issued item. May be blank if not applicable. If not provided, retrieve it from the 'specificAssignNonCashBenefitDetails' tool."
+          },
+          "model": {
+            "type": "string",
+            "description": "Model name or number of the item. If not provided, retrieve it from the 'specificAssignNonCashBenefitDetails' tool."
+          },
+          "condition": {
+            "type": "string",
+            "description": "Condition of the item at issuance (e.g., 'New', 'Used'). If not provided, fetch from the 'specificAssignNonCashBenefitDetails' tool."
+          },
+          "remarks": {
+            "type": "string",
+            "description": "Additional notes about the item. If not provided, fetch from the 'specificAssignNonCashBenefitDetails' tool."
+          },
+          "beneficiaryHead": {
+            "type": "string",
+            "description": "ID of the department or individual receiving the item (e.g., '1', '2'). If not provided, fetch from the 'specificAssignNonCashBenefitDetails' tool."
+          }
+        },
+        "required": [
+          "issueDate",
+          "quantity",
+          "returnable",
+          "serialNumber",
+          "model",
+          "condition",
+          "remarks",
+          "beneficiaryHead",
+          "returnableDate"
+        ]
+      }
+    },
+    {
+      "name": "assignLanguage",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "if the user update assign language will be take entity value is 'assignLanguage'.if the user any value missing update data value to get for 'updateLanguagesDetails' tool to get all related data. and first execute in this tool 'updateLanguagesDetails' then after related data get after in this tool execute 'updateEmployeeInformationDetails' tool. and if the user change or update language,dont take for before api date gardes. new language gardes are provide for 'languagechange' tool then display new language grades and user selected new grades.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "if the user update assign language will be take entity value is 'assignLanguage'.if the user any value missing update data value to get for 'updateLanguagesDetails' tool to get all related data. and first execute in this tool 'updateLanguagesDetails' then after related data get after in this tool execute 'updateEmployeeInformationDetails' tool. and if the user change or update language,dont take for before api date gardes. new language gardes are provide for 'languagechange' tool then display new language grades and user selected new grades.",
+        "properties": {
+          "languageChange": {
+            "type": "string",
+            "description": "if the user change the language return for 'change'"
+          },
+          "languageCode": {
+            "type": "string",
+            "description": "The selected language code. Example: '000001' for English. to get before api example value as return"
+          },
+          "readingEnabled": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Checkbox indicating if READING is selected. Value is 'on' if checked. to get before api value do not dynamically filled"
+          },
+          "readingRating": {
+            "type": "string",
+            "description": "Rating selected for READING. Examples: '5' = Excellent, '8' = Average. to get before api value what user select corresponding value return"
+          },
+          "writingEnabled": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Checkbox indicating if WRITING is selected. Value is 'on' if checked."
+          },
+          "writingRating": {
+            "type": "string",
+            "description": "Rating selected for WRITING. Examples: '5' = Excellent, '8' = Average.to get before api value what user select corresponding value return"
+          },
+          "speakingEnabled": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Checkbox indicating if SPEAKING is selected. Value is 'on' if checked."
+          },
+          "speakingRating": {
+            "type": "string",
+            "description": "Rating selected for SPEAKING. Examples: '5' = Excellent, '8' = Average.to get before api value what user select corresponding value return"
+          },
+          "employeeNumber": {
+            "type": "string",
+            "description": "Unique identifier assigned to the employee. Example: '000001'."
+          }
+        },
+        "required": [
+          "languageCode",
+          "readingEnabled",
+          "readingRating",
+          "writingEnabled",
+          "writingRating",
+          "speakingEnabled",
+          "speakingRating",
+          "employeeNumber"
+        ]
+      }
+    }
+  ]
+}

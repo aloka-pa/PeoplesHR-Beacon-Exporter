@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    {
+      "name": "provinceCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Province code to search by exact match (e.g., \"000005\").\nIf provided, it takes priority over provinceName.",
+      "advanced": false,
+      "raw": {
+        "name": "provinceCode",
+        "type": "string",
+        "description": "Province code to search by exact match (e.g., \"000005\").\nIf provided, it takes priority over provinceName.",
+        "required": false,
+        "_id": "695257475e9ac55674393d23"
+      }
+    },
+    {
+      "name": "provinceName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Province name to search by partial match, case-insensitive (e.g., \"magui\" matches \"Maguindanao\").\nReturns the first match for editing, and includes all matches in the response for visibility.",
+      "advanced": false,
+      "raw": {
+        "name": "provinceName",
+        "type": "string",
+        "description": "Province name to search by partial match, case-insensitive (e.g., \"magui\" matches \"Maguindanao\").\nReturns the first match for editing, and includes all matches in the response for visibility.",
+        "required": false,
+        "_id": "695257475e9ac55674393d24"
+      }
+    },
+    {
+      "name": "newProvinceName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "New province name to set.\nIf not provided (or empty), the existing name remains unchanged.",
+      "advanced": false,
+      "raw": {
+        "name": "newProvinceName",
+        "type": "string",
+        "description": "New province name to set.\nIf not provided (or empty), the existing name remains unchanged.",
+        "required": false,
+        "_id": "695257475e9ac55674393d25"
+      }
+    },
+    {
+      "name": "country",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Country to assign to the Province. Accepts either: a 6-digit country code (e.g., \"000175\"), or an exact country name as shown in the dropdown (case-insensitive match).\nIf not provided (or empty), the existing country remains unchanged.",
+      "advanced": false,
+      "raw": {
+        "name": "country",
+        "type": "string",
+        "description": "Country to assign to the Province. Accepts either: a 6-digit country code (e.g., \"000175\"), or an exact country name as shown in the dropdown (case-insensitive match).\nIf not provided (or empty), the existing country remains unchanged.",
+        "required": false,
+        "_id": "695257475e9ac55674393d26"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

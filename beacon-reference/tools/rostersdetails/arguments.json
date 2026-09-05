@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "rosetrId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get roster group id example \"10\".",
+      "advanced": false,
+      "raw": {
+        "name": "rosetrId",
+        "type": "string",
+        "description": "to get roster group id example \"10\".",
+        "required": true,
+        "_id": "6841834e1ed253048a7610ed"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

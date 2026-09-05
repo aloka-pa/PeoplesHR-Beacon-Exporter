@@ -1,0 +1,192 @@
+{
+  "id": "695424e4582bc4265d51607d",
+  "slug": "getdwellingtype",
+  "name": "getDwellingType",
+  "description": "Retrieves Dwelling Type records from EIM → Dwelling Types (DwilingTypes.aspx).\nThe user can search by dwelling code (exact match) or dwelling name (partial match). If the user asks to see all/available/existing dwelling types, the tool triggers the Show All action and returns every record from the results grid.",
+  "instructions": null,
+  "taskName": "Fetching Dwelling Types",
+  "tags": [
+    "EIMAdmin",
+    "CensusInformation"
+  ],
+  "status": "live",
+  "signature": "getDwellingType",
+  "createdAt": "2025-12-30T19:15:48.879Z",
+  "updatedAt": "2026-02-02T14:36:43.201Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "762ef756efdb79e6196837731a9a8ae401e7e1acd9a754b9086e2e186e7d43a8",
+  "lastExportedAt": "2026-09-05T19:39:23.002Z",
+  "raw": {
+    "basic": {
+      "_id": "695424e4582bc4265d51607d",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getDwellingType",
+      "description": "Retrieves Dwelling Type records from EIM → Dwelling Types (DwilingTypes.aspx).\nThe user can search by dwelling code (exact match) or dwelling name (partial match). If the user asks to see all/available/existing dwelling types, the tool triggers the Show All action and returns every record from the results grid.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getDwellingType",
+        "args": [
+          {
+            "name": "dwellingCode",
+            "type": "string",
+            "description": "the dwelling type code to search for (e.g., \"000006\")",
+            "required": false,
+            "_id": "695424e4582bc4265d51607f"
+          },
+          {
+            "name": "dwellingName",
+            "type": "string",
+            "description": "The dwelling type name to search for (e.g., \"Annex / Portion\", \"Apartment\"). Either dwellingCode or dwellingType must be provided.",
+            "required": false,
+            "_id": "695424e4582bc4265d516080"
+          },
+          {
+            "name": "returnAll",
+            "type": "string",
+            "description": "When user asks to return all/available/existing dwelling types, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\"\nTriggers Show All (ctl00$body$ContentSearch$butAll) and returns every grid row.",
+            "required": false,
+            "_id": "697e41e842b57a258adc995c"
+          },
+          {
+            "name": "showAll",
+            "type": "string",
+            "description": "Same behavior as returnAll (alias).",
+            "required": false,
+            "_id": "6980b67bfc334c01e18c40e9"
+          },
+          {
+            "name": "pageNumber",
+            "type": "string",
+            "description": "Specific page number to fetch (used when not auto-fetching all pages). Default \"1\".",
+            "required": false,
+            "_id": "6980b67bfc334c01e18c40ea"
+          },
+          {
+            "name": "pageSize",
+            "type": "string",
+            "description": "Number of rows requested per page. Server may cap it. Default \"100\".",
+            "required": false,
+            "_id": "6980b67bfc334c01e18c40eb"
+          },
+          {
+            "name": "autoFetchAllPages",
+            "type": "string",
+            "description": "If \"true\", tool loops through all pages. Defaults to true when returnAll is used.",
+            "required": false,
+            "_id": "6980b67bfc334c01e18c40ec"
+          },
+          {
+            "name": "maxPages",
+            "type": "string",
+            "description": "Safety limit to avoid infinite loops. Default \"50\".",
+            "required": false,
+            "_id": "6980b67bfc334c01e18c40ed"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "695424e4582bc4265d51607e"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/DwilingTypes.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Dwelling Types screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Helpers (STRING ONLY)\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const toLower = (v) => okText(v).toLowerCase();\n    const isTruthy = (v) => {\n      const t = toLower(v);\n      return [\n        \"true\", \"yes\", \"y\", \"1\",\n        \"all\", \"available\", \"existing\",\n        \"list\", \"showall\", \"show all\", \"returnall\"\n      ].includes(t);\n    };\n\n    const dwellingCode = okText(args?.dwellingCode);\n    const dwellingName = okText(args?.dwellingName);\n\n    const returnAll = isTruthy(args?.returnAll) || isTruthy(args?.showAll);\n\n    // For returnAll => default to auto-fetch ALL pages\n    const autoFetchAllPages = returnAll ? true : isTruthy(args?.autoFetchAllPages);\n\n    const pageNumberRaw = okText(args?.pageNumber) || \"1\";\n    const pageNumber = Number.isFinite(Number(pageNumberRaw)) ? Math.max(1, parseInt(pageNumberRaw, 10)) : 1;\n\n    // Request a large page size, server may clamp; still OK because we will paginate\n    const pageSizeRaw = okText(args?.pageSize) || \"100\";\n    const pageSize = Number.isFinite(Number(pageSizeRaw)) ? Math.max(1, parseInt(pageSizeRaw, 10)) : 100;\n\n    const maxPagesRaw = okText(args?.maxPages) || \"50\";\n    const maxPages = Number.isFinite(Number(maxPagesRaw)) ? Math.max(1, parseInt(maxPagesRaw, 10)) : 50;\n\n    if (!returnAll && !dwellingCode && !dwellingName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message:\n          \"Please provide either dwellingCode or dwellingName. To return all records, pass returnAll as 'all'/'true'/'yes'/'available'/'existing'/'list'.\",\n        examples: {\n          searchByCode: { dwellingCode: \"000001\" },\n          searchByName: { dwellingName: \"House\" },\n          returnAll: { returnAll: \"all\" }\n        }\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Initial page state + URL\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"DwilingTypes\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/DwilingTypes.aspx\");\n    const url = updateUrl?.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/DwilingTypes.aspx`;\n\n    const parser = new DOMParser();\n\n    const extractState = (doc) => ({\n      viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n      viewStateGen: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n      eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\"\n    });\n\n    const extractPagerInfo = (doc) => {\n      const pagerText = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\n      // \"Displaying page 2 of 2, items 6 to 10 of 10.\"\n      const m = pagerText.match(/Displaying page\\s+(\\d+)\\s+of\\s+(\\d+).*?of\\s+(\\d+)/i);\n      const currentPage = m ? parseInt(m[1], 10) : 1;\n      const totalPages = m ? parseInt(m[2], 10) : 1;\n      const totalItems = m ? parseInt(m[3], 10) : null;\n\n      // Map \"2\" -> {target, arg}\n      const pageTargets = {};\n      doc.querySelectorAll(\".PagerLeft_Default a\").forEach((a) => {\n        const pageNo = (a.textContent || \"\").trim();\n        const href = a.getAttribute(\"href\") || \"\";\n        const mm = href.match(/__doPostBack\\('([^']+)','([^']*)'\\)/);\n        if (pageNo && mm) pageTargets[pageNo] = { target: mm[1], arg: mm[2] || \"\" };\n      });\n\n      return { currentPage, totalPages, totalItems, pageTargets };\n    };\n\n    const extractRows = (doc) => {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const out = [];\n\n      for (const row of rows) {\n        const cells = row.querySelectorAll(\"td\");\n        if (cells.length < 2) continue;\n\n        const code = (cells[0]?.textContent || \"\").trim();\n        const name = (cells[1]?.textContent || \"\").trim();\n\n        if (!code && !name) continue;\n        out.push({ code, dwellingName: name });\n      }\n\n      return out;\n    };\n\n    const applyFilter = (items) => {\n      if (returnAll) return items;\n\n      if (dwellingCode) {\n        return items.filter((x) => x.code === dwellingCode); // exact\n      }\n\n      const needle = dwellingName.toLowerCase();\n      return items.filter((x) => (x.dwellingName || \"\").toLowerCase().includes(needle)); // partial\n    };\n\n    /* -------------------------------------------------\n     * 4) Determine search criteria/value (only if not returnAll)\n     * ------------------------------------------------- */\n    let searchCriteria = \"DWELLING_CODE\";\n    let searchValue = \"\";\n\n    if (!returnAll) {\n      if (dwellingCode) {\n        searchCriteria = \"DWELLING_CODE\";\n        searchValue = dwellingCode;\n      } else {\n        searchCriteria = \"DWELLING_NAME\";\n        searchValue = dwellingName;\n      }\n    }\n\n    /* -------------------------------------------------\n     * 5) POST #1: Search or Show All (page 1)\n     * ------------------------------------------------- */\n    const postSearchOrAll = async () => {\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", \"\");\n      formData.append(\"__EVENTARGUMENT\", \"\");\n      formData.append(\"__VIEWSTATE\", details.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", returnAll ? \"\" : searchValue);\n\n      if (returnAll) {\n        formData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n      } else {\n        formData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n      }\n\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n      return parser.parseFromString(html, \"text/html\");\n    };\n\n    /* -------------------------------------------------\n     * 6) Pager postback to specific page (REAL FIX)\n     * ------------------------------------------------- */\n    const postToPage = async (fromDoc, targetPage) => {\n      const state = extractState(fromDoc);\n      const pager = extractPagerInfo(fromDoc);\n\n      const key = String(targetPage);\n      const event = pager.pageTargets[key];\n      if (!event?.target) return null;\n\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", event.target);\n      formData.append(\"__EVENTARGUMENT\", event.arg || \"\");\n      formData.append(\"__VIEWSTATE\", state.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", state.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      // keep context\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", returnAll ? \"\" : searchValue);\n\n      // keep pager fields stable\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", key);\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n      return parser.parseFromString(html, \"text/html\");\n    };\n\n    /* -------------------------------------------------\n     * 7) Execute\n     * ------------------------------------------------- */\n    const firstDoc = await postSearchOrAll();\n    const pager1 = extractPagerInfo(firstDoc);\n\n    // ALL pages (returnAll) => loop pages 1..N using numbered pager targets\n    if (autoFetchAllPages) {\n      const all = [];\n\n      let currentDoc = firstDoc;\n      let pager = pager1;\n\n      let safety = 0;\n      while (safety < maxPages) {\n        safety += 1;\n\n        const pageRows = extractRows(currentDoc);\n        const filtered = applyFilter(pageRows);\n        all.push(...filtered);\n\n        if (!(pager.currentPage < pager.totalPages)) break;\n\n        const next = pager.currentPage + 1;\n        const nextDoc = await postToPage(currentDoc, next);\n        if (!nextDoc) break;\n\n        currentDoc = nextDoc;\n        pager = extractPagerInfo(currentDoc);\n      }\n\n      if (!all.length) {\n        return {\n          status: \"NOT_FOUND\",\n          message: returnAll\n            ? \"No Dwelling Type records found.\"\n            : \"No Dwelling Types found matching the search criteria.\",\n          searchBy: returnAll ? \"all\" : (searchCriteria === \"DWELLING_CODE\" ? \"code\" : \"name\"),\n          searchValue: returnAll ? \"\" : searchValue\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: returnAll\n          ? `Returned ${all.length} Dwelling Type record(s).`\n          : `Found ${all.length} matching Dwelling Type record(s).`,\n        searchBy: returnAll ? \"all\" : (searchCriteria === \"DWELLING_CODE\" ? \"code\" : \"name\"),\n        searchValue: returnAll ? \"\" : searchValue,\n        count: all.length,\n        records: all\n      };\n    }\n\n    // Single page mode (for agent prompting)\n    let finalDoc = firstDoc;\n    const safeTarget = Math.min(pageNumber, pager1.totalPages || pageNumber);\n\n    if (safeTarget > 1) {\n      const paged = await postToPage(firstDoc, safeTarget);\n      if (paged) finalDoc = paged;\n    }\n\n    const pager = extractPagerInfo(finalDoc);\n    const rows = extractRows(finalDoc);\n    const filtered = applyFilter(rows);\n\n    const moreAvailable = pager.currentPage < pager.totalPages;\n    const nextPage = moreAvailable ? String(pager.currentPage + 1) : \"\";\n\n    if (!filtered.length) {\n      return {\n        status: \"NOT_FOUND\",\n        message: returnAll\n          ? `No Dwelling Type records found on page ${pager.currentPage}.`\n          : \"No Dwelling Types found matching the search criteria.\",\n        pageNumber: String(pager.currentPage),\n        totalPages: String(pager.totalPages || 1),\n        moreAvailable: moreAvailable ? \"true\" : \"false\",\n        nextPage\n      };\n    }\n\n    return {\n      status: \"SUCCESS\",\n      message: returnAll && moreAvailable\n        ? `Here are the dwelling types (page ${pager.currentPage} of ${pager.totalPages}). More are available. Would you like the next page?`\n        : returnAll\n          ? `Here are the dwelling types (page ${pager.currentPage} of ${pager.totalPages}).`\n          : `Found ${filtered.length} matching Dwelling Type record(s) on page ${pager.currentPage} of ${pager.totalPages}.`,\n      pageNumber: String(pager.currentPage),\n      totalPages: String(pager.totalPages || 1),\n      moreAvailable: moreAvailable ? \"true\" : \"false\",\n      nextPage,\n      searchBy: returnAll ? \"all\" : (searchCriteria === \"DWELLING_CODE\" ? \"code\" : \"name\"),\n      searchValue: returnAll ? \"\" : searchValue,\n      count: filtered.length,\n      records: filtered\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unexpected error\",\n      error: err?.toString?.() || String(err)\n    };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "CensusInformation"
+      ],
+      "taskName": "Fetching Dwelling Types",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-30T19:15:48.879Z",
+      "updatedAt": "2026-02-02T14:36:43.201Z",
+      "__v": 13,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getDwellingType",
+      "args": [
+        {
+          "name": "dwellingCode",
+          "type": "string",
+          "description": "the dwelling type code to search for (e.g., \"000006\")",
+          "required": false,
+          "_id": "695424e4582bc4265d51607f"
+        },
+        {
+          "name": "dwellingName",
+          "type": "string",
+          "description": "The dwelling type name to search for (e.g., \"Annex / Portion\", \"Apartment\"). Either dwellingCode or dwellingType must be provided.",
+          "required": false,
+          "_id": "695424e4582bc4265d516080"
+        },
+        {
+          "name": "returnAll",
+          "type": "string",
+          "description": "When user asks to return all/available/existing dwelling types, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\"\nTriggers Show All (ctl00$body$ContentSearch$butAll) and returns every grid row.",
+          "required": false,
+          "_id": "697e41e842b57a258adc995c"
+        },
+        {
+          "name": "showAll",
+          "type": "string",
+          "description": "Same behavior as returnAll (alias).",
+          "required": false,
+          "_id": "6980b67bfc334c01e18c40e9"
+        },
+        {
+          "name": "pageNumber",
+          "type": "string",
+          "description": "Specific page number to fetch (used when not auto-fetching all pages). Default \"1\".",
+          "required": false,
+          "_id": "6980b67bfc334c01e18c40ea"
+        },
+        {
+          "name": "pageSize",
+          "type": "string",
+          "description": "Number of rows requested per page. Server may cap it. Default \"100\".",
+          "required": false,
+          "_id": "6980b67bfc334c01e18c40eb"
+        },
+        {
+          "name": "autoFetchAllPages",
+          "type": "string",
+          "description": "If \"true\", tool loops through all pages. Defaults to true when returnAll is used.",
+          "required": false,
+          "_id": "6980b67bfc334c01e18c40ec"
+        },
+        {
+          "name": "maxPages",
+          "type": "string",
+          "description": "Safety limit to avoid infinite loops. Default \"50\".",
+          "required": false,
+          "_id": "6980b67bfc334c01e18c40ed"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "695424e4582bc4265d51607e"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/DwilingTypes.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Dwelling Types screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Helpers (STRING ONLY)\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const toLower = (v) => okText(v).toLowerCase();\n    const isTruthy = (v) => {\n      const t = toLower(v);\n      return [\n        \"true\", \"yes\", \"y\", \"1\",\n        \"all\", \"available\", \"existing\",\n        \"list\", \"showall\", \"show all\", \"returnall\"\n      ].includes(t);\n    };\n\n    const dwellingCode = okText(args?.dwellingCode);\n    const dwellingName = okText(args?.dwellingName);\n\n    const returnAll = isTruthy(args?.returnAll) || isTruthy(args?.showAll);\n\n    // For returnAll => default to auto-fetch ALL pages\n    const autoFetchAllPages = returnAll ? true : isTruthy(args?.autoFetchAllPages);\n\n    const pageNumberRaw = okText(args?.pageNumber) || \"1\";\n    const pageNumber = Number.isFinite(Number(pageNumberRaw)) ? Math.max(1, parseInt(pageNumberRaw, 10)) : 1;\n\n    // Request a large page size, server may clamp; still OK because we will paginate\n    const pageSizeRaw = okText(args?.pageSize) || \"100\";\n    const pageSize = Number.isFinite(Number(pageSizeRaw)) ? Math.max(1, parseInt(pageSizeRaw, 10)) : 100;\n\n    const maxPagesRaw = okText(args?.maxPages) || \"50\";\n    const maxPages = Number.isFinite(Number(maxPagesRaw)) ? Math.max(1, parseInt(maxPagesRaw, 10)) : 50;\n\n    if (!returnAll && !dwellingCode && !dwellingName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message:\n          \"Please provide either dwellingCode or dwellingName. To return all records, pass returnAll as 'all'/'true'/'yes'/'available'/'existing'/'list'.\",\n        examples: {\n          searchByCode: { dwellingCode: \"000001\" },\n          searchByName: { dwellingName: \"House\" },\n          returnAll: { returnAll: \"all\" }\n        }\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Initial page state + URL\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"DwilingTypes\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/DwilingTypes.aspx\");\n    const url = updateUrl?.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/DwilingTypes.aspx`;\n\n    const parser = new DOMParser();\n\n    const extractState = (doc) => ({\n      viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n      viewStateGen: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n      eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\"\n    });\n\n    const extractPagerInfo = (doc) => {\n      const pagerText = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\n      // \"Displaying page 2 of 2, items 6 to 10 of 10.\"\n      const m = pagerText.match(/Displaying page\\s+(\\d+)\\s+of\\s+(\\d+).*?of\\s+(\\d+)/i);\n      const currentPage = m ? parseInt(m[1], 10) : 1;\n      const totalPages = m ? parseInt(m[2], 10) : 1;\n      const totalItems = m ? parseInt(m[3], 10) : null;\n\n      // Map \"2\" -> {target, arg}\n      const pageTargets = {};\n      doc.querySelectorAll(\".PagerLeft_Default a\").forEach((a) => {\n        const pageNo = (a.textContent || \"\").trim();\n        const href = a.getAttribute(\"href\") || \"\";\n        const mm = href.match(/__doPostBack\\('([^']+)','([^']*)'\\)/);\n        if (pageNo && mm) pageTargets[pageNo] = { target: mm[1], arg: mm[2] || \"\" };\n      });\n\n      return { currentPage, totalPages, totalItems, pageTargets };\n    };\n\n    const extractRows = (doc) => {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const out = [];\n\n      for (const row of rows) {\n        const cells = row.querySelectorAll(\"td\");\n        if (cells.length < 2) continue;\n\n        const code = (cells[0]?.textContent || \"\").trim();\n        const name = (cells[1]?.textContent || \"\").trim();\n\n        if (!code && !name) continue;\n        out.push({ code, dwellingName: name });\n      }\n\n      return out;\n    };\n\n    const applyFilter = (items) => {\n      if (returnAll) return items;\n\n      if (dwellingCode) {\n        return items.filter((x) => x.code === dwellingCode); // exact\n      }\n\n      const needle = dwellingName.toLowerCase();\n      return items.filter((x) => (x.dwellingName || \"\").toLowerCase().includes(needle)); // partial\n    };\n\n    /* -------------------------------------------------\n     * 4) Determine search criteria/value (only if not returnAll)\n     * ------------------------------------------------- */\n    let searchCriteria = \"DWELLING_CODE\";\n    let searchValue = \"\";\n\n    if (!returnAll) {\n      if (dwellingCode) {\n        searchCriteria = \"DWELLING_CODE\";\n        searchValue = dwellingCode;\n      } else {\n        searchCriteria = \"DWELLING_NAME\";\n        searchValue = dwellingName;\n      }\n    }\n\n    /* -------------------------------------------------\n     * 5) POST #1: Search or Show All (page 1)\n     * ------------------------------------------------- */\n    const postSearchOrAll = async () => {\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", \"\");\n      formData.append(\"__EVENTARGUMENT\", \"\");\n      formData.append(\"__VIEWSTATE\", details.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", returnAll ? \"\" : searchValue);\n\n      if (returnAll) {\n        formData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n      } else {\n        formData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n      }\n\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n      return parser.parseFromString(html, \"text/html\");\n    };\n\n    /* -------------------------------------------------\n     * 6) Pager postback to specific page (REAL FIX)\n     * ------------------------------------------------- */\n    const postToPage = async (fromDoc, targetPage) => {\n      const state = extractState(fromDoc);\n      const pager = extractPagerInfo(fromDoc);\n\n      const key = String(targetPage);\n      const event = pager.pageTargets[key];\n      if (!event?.target) return null;\n\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", event.target);\n      formData.append(\"__EVENTARGUMENT\", event.arg || \"\");\n      formData.append(\"__VIEWSTATE\", state.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", state.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      // keep context\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", returnAll ? \"\" : searchValue);\n\n      // keep pager fields stable\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", key);\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n      return parser.parseFromString(html, \"text/html\");\n    };\n\n    /* -------------------------------------------------\n     * 7) Execute\n     * ------------------------------------------------- */\n    const firstDoc = await postSearchOrAll();\n    const pager1 = extractPagerInfo(firstDoc);\n\n    // ALL pages (returnAll) => loop pages 1..N using numbered pager targets\n    if (autoFetchAllPages) {\n      const all = [];\n\n      let currentDoc = firstDoc;\n      let pager = pager1;\n\n      let safety = 0;\n      while (safety < maxPages) {\n        safety += 1;\n\n        const pageRows = extractRows(currentDoc);\n        const filtered = applyFilter(pageRows);\n        all.push(...filtered);\n\n        if (!(pager.currentPage < pager.totalPages)) break;\n\n        const next = pager.currentPage + 1;\n        const nextDoc = await postToPage(currentDoc, next);\n        if (!nextDoc) break;\n\n        currentDoc = nextDoc;\n        pager = extractPagerInfo(currentDoc);\n      }\n\n      if (!all.length) {\n        return {\n          status: \"NOT_FOUND\",\n          message: returnAll\n            ? \"No Dwelling Type records found.\"\n            : \"No Dwelling Types found matching the search criteria.\",\n          searchBy: returnAll ? \"all\" : (searchCriteria === \"DWELLING_CODE\" ? \"code\" : \"name\"),\n          searchValue: returnAll ? \"\" : searchValue\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: returnAll\n          ? `Returned ${all.length} Dwelling Type record(s).`\n          : `Found ${all.length} matching Dwelling Type record(s).`,\n        searchBy: returnAll ? \"all\" : (searchCriteria === \"DWELLING_CODE\" ? \"code\" : \"name\"),\n        searchValue: returnAll ? \"\" : searchValue,\n        count: all.length,\n        records: all\n      };\n    }\n\n    // Single page mode (for agent prompting)\n    let finalDoc = firstDoc;\n    const safeTarget = Math.min(pageNumber, pager1.totalPages || pageNumber);\n\n    if (safeTarget > 1) {\n      const paged = await postToPage(firstDoc, safeTarget);\n      if (paged) finalDoc = paged;\n    }\n\n    const pager = extractPagerInfo(finalDoc);\n    const rows = extractRows(finalDoc);\n    const filtered = applyFilter(rows);\n\n    const moreAvailable = pager.currentPage < pager.totalPages;\n    const nextPage = moreAvailable ? String(pager.currentPage + 1) : \"\";\n\n    if (!filtered.length) {\n      return {\n        status: \"NOT_FOUND\",\n        message: returnAll\n          ? `No Dwelling Type records found on page ${pager.currentPage}.`\n          : \"No Dwelling Types found matching the search criteria.\",\n        pageNumber: String(pager.currentPage),\n        totalPages: String(pager.totalPages || 1),\n        moreAvailable: moreAvailable ? \"true\" : \"false\",\n        nextPage\n      };\n    }\n\n    return {\n      status: \"SUCCESS\",\n      message: returnAll && moreAvailable\n        ? `Here are the dwelling types (page ${pager.currentPage} of ${pager.totalPages}). More are available. Would you like the next page?`\n        : returnAll\n          ? `Here are the dwelling types (page ${pager.currentPage} of ${pager.totalPages}).`\n          : `Found ${filtered.length} matching Dwelling Type record(s) on page ${pager.currentPage} of ${pager.totalPages}.`,\n      pageNumber: String(pager.currentPage),\n      totalPages: String(pager.totalPages || 1),\n      moreAvailable: moreAvailable ? \"true\" : \"false\",\n      nextPage,\n      searchBy: returnAll ? \"all\" : (searchCriteria === \"DWELLING_CODE\" ? \"code\" : \"name\"),\n      searchValue: returnAll ? \"\" : searchValue,\n      count: filtered.length,\n      records: filtered\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unexpected error\",\n      error: err?.toString?.() || String(err)\n    };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

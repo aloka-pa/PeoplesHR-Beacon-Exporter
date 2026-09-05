@@ -1,0 +1,24 @@
+{
+  "id": "690dc578931a2d61ba0b20b1",
+  "slug": "processvacancyonclick",
+  "name": "Processvacancyonclick",
+  "status": "live",
+  "createdAt": "2025-05-28T09:16:07.115Z",
+  "updatedAt": "2026-07-17T12:55:59.432Z",
+  "contentHash": "a041450d57b9af8312aba299bf8599935191038e63a0b22313cf4ecc22f6d86f",
+  "lastExportedAt": "2026-09-05T19:41:16.629Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc578931a2d61ba0b20b1",
+    "name": "Processvacancyonclick",
+    "status": "live",
+    "code": "(async function (vacancy) {\n  try {\n    const iframe = document.querySelector(\"iframe\"); // Change selector if needed\n    const iframeWindow = iframe.contentWindow;\n\n    const requestId = vacancy.Id;\n    const url = iframeWindow.RctUrl(\"HiringManagerProcess/ProcessView\") \n              + \"?reqId=\" + encodeURIComponent(requestId);\n\n    const response = await iframeWindow.fetch(url, {\n      method: \"GET\",\n      headers: { \"Accept\": \"text/html\" },\n    });\n\n    if (!response.ok) {\n      throw new Error(`HTTP error! Status: ${response.status}`);\n    }\n\n    const html = await response.text();\n    iframeWindow.RctHiringMngrSum.ProFormData = html;\n\n    iframeWindow.document.getElementById('rct-sumPage').style.display = 'none';\n    const mainPage = iframeWindow.document.getElementById('rct-mainPage');\n    mainPage.innerHTML = html;\n    mainPage.style.display = 'block';\n\n  } catch (error) {\n    const iframe = document.querySelector(\"iframe\");\n    const iframeWindow = iframe.contentWindow;\n    vacancy.IsLoadingDetailedView(false);\n    iframeWindow.RctShowError(null, \"Error\", error.message);\n  }\n})\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

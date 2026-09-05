@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "empSearch",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "user to search for employee or code.",
+      "advanced": false,
+      "raw": {
+        "name": "empSearch",
+        "type": "string",
+        "description": "user to search for employee or code.",
+        "required": true,
+        "_id": "688231696b731b90e62bc554"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

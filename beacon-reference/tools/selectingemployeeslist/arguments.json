@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "reviewCycle",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "reviewCycle , takes only that value. Ex:- \"2\"  this reviewcycle no need to take the the user consent",
+      "advanced": false,
+      "raw": {
+        "name": "reviewCycle",
+        "type": "string",
+        "description": "reviewCycle , takes only that value. Ex:- \"2\"  this reviewcycle no need to take the the user consent",
+        "required": true,
+        "_id": "683eebe10b31dbd99b043892"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

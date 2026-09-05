@@ -1,0 +1,65 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "masterDataType",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Specifies the master data type. If not provided, the value will be fetched using the getDefineMasterDateDetails API.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Specifies the master data type. If not provided, the value will be fetched using the getDefineMasterDateDetails API."
+      }
+    },
+    {
+      "name": "editKey",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Specifies the edit key for the data. If not provided, it will be retrieved using the getDefineMasterDateDetails API.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Specifies the edit key for the data. If not provided, it will be retrieved using the getDefineMasterDateDetails API."
+      }
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Specifies the ID of the data. If not provided, it will be retrieved using the getDefineMasterDateDetails API.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Specifies the ID of the data. If not provided, it will be retrieved using the getDefineMasterDateDetails API."
+      }
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Specifies the currency description of the data. If changed, the updated value will be used. If not provided, it will be fetched using the getDefineMasterDateDetails API.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Specifies the currency description of the data. If changed, the updated value will be used. If not provided, it will be fetched using the getDefineMasterDateDetails API."
+      }
+    },
+    {
+      "name": "amount",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Specifies the update amount value. If changed, the updated value will be used. If not provided, it will be fetched using the getDefineMasterDateDetails API.Ex:3000,20,20 etc..",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Specifies the update amount value. If changed, the updated value will be used. If not provided, it will be fetched using the getDefineMasterDateDetails API.Ex:3000,20,20 etc.."
+      }
+    }
+  ]
+}

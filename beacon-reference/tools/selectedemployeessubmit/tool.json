@@ -1,0 +1,73 @@
+{
+  "id": "690dc569931a2d61ba0b195e",
+  "slug": "selectedemployeessubmit",
+  "name": "selectedEmployeesSubmit",
+  "description": "selectedEmployeesSubmit , before calling this you need execute creteriaBased Selection or all employeesselection and if selected user are the index numbers takes here.\n",
+  "instructions": null,
+  "taskName": "selectedEmployeesSubmitting",
+  "tags": [
+    "selectingCandidatePool"
+  ],
+  "status": "live",
+  "signature": "selectedEmployeesSubmit",
+  "createdAt": "2025-06-04T07:56:48.858Z",
+  "updatedAt": "2025-06-04T07:56:48.858Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c4f",
+      "name": "SelectLeaderShipCandiates"
+    }
+  ],
+  "contentHash": "3deb2500445040fe6c7ff25df082f5851c0e5c887eb4613681acb4e2364c28f4",
+  "lastExportedAt": "2026-09-05T19:39:23.691Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b195e",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selectedEmployeesSubmit",
+      "description": "selectedEmployeesSubmit , before calling this you need execute creteriaBased Selection or all employeesselection and if selected user are the index numbers takes here.\n",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selectedEmployeesSubmit",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"selectedIndexes\": {\n      \"type\": \"string\",\n      \"description\": \"From the given rows, return only the selectedIndexes as numbers. Indexing starts at 0. The output must be a single string of indexes separated by commas (e.g., 0,1,2,3).\"\n    }\n  },\n  \"required\": [\"selectedIndexes\"]\n}\n",
+        "_id": "683ffc40821cb330fd63a88d"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function(data, args, reqOptions) {\n  const submit = await BeaconBar.executeFunction(\"candidatesubmit\")(args);\n  await BeaconBar.executeFunction(\"selectLeaderShipaftersubmit\")();\n  return {submit , message : \"successfully added to the candidate pool\"};\n})",
+      "groupName": "",
+      "tags": [
+        "selectingCandidatePool"
+      ],
+      "taskName": "selectedEmployeesSubmitting",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-04T07:56:48.858Z",
+      "updatedAt": "2025-06-04T07:56:48.858Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c4f",
+          "name": "SelectLeaderShipCandiates"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selectedEmployeesSubmit",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"selectedIndexes\": {\n      \"type\": \"string\",\n      \"description\": \"From the given rows, return only the selectedIndexes as numbers. Indexing starts at 0. The output must be a single string of indexes separated by commas (e.g., 0,1,2,3).\"\n    }\n  },\n  \"required\": [\"selectedIndexes\"]\n}\n",
+      "_id": "683ffc40821cb330fd63a88d"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function(data, args, reqOptions) {\n  const submit = await BeaconBar.executeFunction(\"candidatesubmit\")(args);\n  await BeaconBar.executeFunction(\"selectLeaderShipaftersubmit\")();\n  return {submit , message : \"successfully added to the candidate pool\"};\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

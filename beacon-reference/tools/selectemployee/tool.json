@@ -1,0 +1,75 @@
+{
+  "id": "690dc568931a2d61ba0b1893",
+  "slug": "selectemployee",
+  "name": "selectEmployee",
+  "description": "selectEmployee of  for the to get the company leave details, if query is related to the absent employees and on leave employees on specific date the execute the tool and process further as showing leave history.",
+  "instructions": null,
+  "taskName": "selecting Employee",
+  "tags": [
+    "Absence Management",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "selectEmployee",
+  "createdAt": "2025-05-28T14:26:26.618Z",
+  "updatedAt": "2025-05-28T14:26:26.618Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be3",
+      "name": "AbsenceManagement"
+    }
+  ],
+  "contentHash": "fd1cff73bbbed3250f744c7d640a5a078a6a7b7e6cc7b5ef049f1c81f58f0daa",
+  "lastExportedAt": "2026-09-05T19:39:23.814Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b1893",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selectEmployee",
+      "description": "selectEmployee of  for the to get the company leave details, if query is related to the absent employees and on leave employees on specific date the execute the tool and process further as showing leave history.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selectEmployee",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68371d12cca0de394d6072e3"
+      },
+      "by": "1927",
+      "fetcher": "(function(){    \n   \n     return {\n    code: `(function(){\n      return [];\n    })`\n  }\n});\n",
+      "transformer": "(async function(data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"absence/ess/ViewSubbordinateLeaveDetail.aspx?subo=0\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  await BeaconBar.executeFunction(\"updateCustomPageSize\")();\n  const selectemployee  = await BeaconBar.executeFunction(\"getemployeelist\");\n  BeaconBar.setSharedData(\"selectEmployees\",selectemployee )\n\n  return { message :\"if user selects  all employees then take all employees or else take employee id or employee name call the tool 'get company leave details tool'\" }; \n})",
+      "groupName": "",
+      "tags": [
+        "Absence Management",
+        "Headers"
+      ],
+      "taskName": "selecting Employee",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-28T14:26:26.618Z",
+      "updatedAt": "2025-05-28T14:26:26.618Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be3",
+          "name": "AbsenceManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selectEmployee",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68371d12cca0de394d6072e3"
+    },
+    "fetcher": "(function(){    \n   \n     return {\n    code: `(function(){\n      return [];\n    })`\n  }\n});\n",
+    "transformer": "(async function(data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"absence/ess/ViewSubbordinateLeaveDetail.aspx?subo=0\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  await BeaconBar.executeFunction(\"updateCustomPageSize\")();\n  const selectemployee  = await BeaconBar.executeFunction(\"getemployeelist\");\n  BeaconBar.setSharedData(\"selectEmployees\",selectemployee )\n\n  return { message :\"if user selects  all employees then take all employees or else take employee id or employee name call the tool 'get company leave details tool'\" }; \n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

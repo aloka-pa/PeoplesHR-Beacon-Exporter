@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "statutoryClassificationCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the statutoryClassificationCode.",
+      "advanced": false,
+      "raw": {
+        "name": "statutoryClassificationCode",
+        "type": "string",
+        "description": "to give the statutoryClassificationCode.",
+        "required": true,
+        "_id": "6814aabb68ca7396dee59574"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

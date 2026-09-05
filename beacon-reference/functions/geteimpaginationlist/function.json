@@ -1,0 +1,24 @@
+{
+  "id": "690dc580931a2d61ba0b27ea",
+  "slug": "geteimpaginationlist",
+  "name": "getEIMPaginationList",
+  "status": "live",
+  "createdAt": "2025-06-19T10:46:23.449Z",
+  "updatedAt": "2025-06-19T10:46:23.449Z",
+  "contentHash": "da485ebff158d14c0a6d41c4df3b68b6a0e6325da6aa225e00a426497ef8955f",
+  "lastExportedAt": "2026-09-05T19:41:31.917Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc580931a2d61ba0b27ea",
+    "name": "getEIMPaginationList",
+    "status": "live",
+    "code": "(async function (params, url) {\n  //done\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const body = new URLSearchParams({ ...params });\n\n  const response = await fetch(`${location.origin}/${url}`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: body,\n    redirect: \"follow\"\n  });\n\n  const finalData = await response.text();\n  return finalData;\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

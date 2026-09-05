@@ -1,0 +1,24 @@
+{
+  "id": "6a17213ea56b0509e854fd54",
+  "slug": "segmentattendance",
+  "name": "segmentAttendance",
+  "status": "live",
+  "createdAt": "2026-05-27T16:52:14.028Z",
+  "updatedAt": "2026-05-28T07:40:58.638Z",
+  "contentHash": "1de6dd0fb6e06366f5ef8e6d6c5a6a829e15a3ca7cfb35e75923cc534a447220",
+  "lastExportedAt": "2026-09-05T19:41:26.011Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "6a17213ea56b0509e854fd54",
+    "name": "segmentAttendance",
+    "status": "live",
+    "code": "(function () {\n    const enabledAgents = JSON.parse(\n        localStorage.getItem('enabledAgents') || '[]'\n    );\n    return enabledAgents\n        .map(agent => String(agent).toLowerCase())\n        .includes('attendance'.toLowerCase());\n})",
+    "by": "7829",
+    "__v": 1
+  }
+}

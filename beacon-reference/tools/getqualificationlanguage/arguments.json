@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "languageCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The language code to search for (e.g., \"000006\"). If provided, searches by LANG_CODE field.",
+      "advanced": false,
+      "raw": {
+        "name": "languageCode",
+        "type": "string",
+        "description": "The language code to search for (e.g., \"000006\"). If provided, searches by LANG_CODE field.",
+        "required": false,
+        "_id": "6953ea19582bc4265d5113ba"
+      }
+    },
+    {
+      "name": "languageName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The language name to search for (e.g., \"Urdu\", \"English\"). If provided, searches by LANG_NAME field. Either code or languageName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "languageName",
+        "type": "string",
+        "description": "The language name to search for (e.g., \"Urdu\", \"English\"). If provided, searches by LANG_NAME field. Either code or languageName must be provided.",
+        "required": false,
+        "_id": "6953ea19582bc4265d5113bb"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "If the user asks to return all records, pass one of these values: \"true\", \"yes\", \"all\", \"1\", \"showall\", \"all\", \"available\", \"existing\", \"list\". When set, the transformer clicks Show All and returns all rows from the grid.",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "If the user asks to return all records, pass one of these values: \"true\", \"yes\", \"all\", \"1\", \"showall\", \"all\", \"available\", \"existing\", \"list\". When set, the transformer clicks Show All and returns all rows from the grid.",
+        "required": false,
+        "_id": "697e378a9b7f0800eaef8735"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

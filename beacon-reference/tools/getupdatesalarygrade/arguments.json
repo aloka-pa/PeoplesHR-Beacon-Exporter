@@ -1,0 +1,77 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "updateCurrency",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "if the user manually update the currency return the keywork the 'updateCurrency' ",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "if the user manually update the currency return the keywork the 'updateCurrency' "
+      }
+    },
+    {
+      "name": "ctl00_body_txtsalname",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Salary Grade Name (e.g., GCB Grade 04).",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Salary Grade Name (e.g., GCB Grade 04)."
+      }
+    },
+    {
+      "name": "ctl00_body_cboCurrType",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Selected currency code (e.g., 000001 for AED). display the currency list to selected the currency name to get corresponding value for getSalaryGrade api",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Selected currency code (e.g., 000001 for AED). display the currency list to selected the currency name to get corresponding value for getSalaryGrade api"
+      }
+    },
+    {
+      "name": "ctl00_body_txtMin",
+      "type": "number",
+      "required": true,
+      "defaultValue": null,
+      "description": "Minimum salary point. It must be less than equal to the Mid Point.",
+      "advanced": true,
+      "raw": {
+        "type": "number",
+        "description": "Minimum salary point. It must be less than equal to the Mid Point."
+      }
+    },
+    {
+      "name": "ctl00_body_txtMid",
+      "type": "number",
+      "required": true,
+      "defaultValue": null,
+      "description": "Mid salary point. It must be greater than the Min Point and less than equal to the Max Point.",
+      "advanced": true,
+      "raw": {
+        "type": "number",
+        "description": "Mid salary point. It must be greater than the Min Point and less than equal to the Max Point."
+      }
+    },
+    {
+      "name": "ctl00_body_txtMax",
+      "type": "number",
+      "required": true,
+      "defaultValue": null,
+      "description": "Maximum salary point. It must be greater than equal to the Mid Point.",
+      "advanced": true,
+      "raw": {
+        "type": "number",
+        "description": "Maximum salary point. It must be greater than equal to the Mid Point."
+      }
+    }
+  ]
+}

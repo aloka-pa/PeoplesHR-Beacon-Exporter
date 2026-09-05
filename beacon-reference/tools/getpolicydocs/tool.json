@@ -1,0 +1,100 @@
+{
+  "id": "690dc568931a2d61ba0b184b",
+  "slug": "getpolicydocs",
+  "name": "getPolicyDocs",
+  "description": "Get the policy docs and give the response",
+  "instructions": null,
+  "taskName": "Fetching policy docs",
+  "tags": [
+    "Company policies"
+  ],
+  "status": "live",
+  "signature": "getPolicyDocs",
+  "createdAt": "2025-05-26T05:07:24.621Z",
+  "updatedAt": "2025-11-12T11:54:51.465Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c56",
+      "name": "Policy docs"
+    },
+    {
+      "id": "690dc571931a2d61ba0b1be1",
+      "name": "Company Policies"
+    }
+  ],
+  "contentHash": "d413e6f7e80da9418b940266edcf88882bbebaaa423699a328d312ea1e05dcea",
+  "lastExportedAt": "2026-09-05T19:39:23.226Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b184b",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getPolicyDocs",
+      "description": "Get the policy docs and give the response",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getPolicyDocs",
+        "args": [
+          {
+            "name": "query",
+            "type": "string",
+            "description": "Query input from the user",
+            "required": true,
+            "_id": "6833f70c808c7c746a260ed9"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6833f70c808c7c746a260ed8"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"Accept\", \"application/json\");\n  myHeaders.append(\"Content-Type\", \"application/json\");\n  myHeaders.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n  // myHeaders.append(\"API-KEY\", \"abc123@@@\");\n  myHeaders.append(\"x-api-key\", \"your_secret_key\");\n\n  const raw = {\n    query: args.query,\n    is_custom: true\n  };\n\n\n    const response = await fetch(`${location.origin}/hr/chatbot/WebAPI/v3/Beacon/prompt_pdf_kb`, {\n      method: \"POST\",\n      headers: myHeaders,\n      body: JSON.stringify(raw),\n      redirect: \"follow\"\n    });\n\n    const result = await response.json();\n\n    const output = result.articles?.map(x => ({\n      fileName: x.filename,\n      content: x.content\n    })) || [];\n    return output;\n\n});\n",
+      "groupName": "",
+      "tags": [
+        "Company policies"
+      ],
+      "taskName": "Fetching policy docs",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-26T05:07:24.621Z",
+      "updatedAt": "2025-11-12T11:54:51.465Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c56",
+          "name": "Policy docs"
+        },
+        {
+          "_id": "690dc571931a2d61ba0b1be1",
+          "name": "Company Policies"
+        }
+      ],
+      "agentCount": 2
+    },
+    "arguments": {
+      "name": "getPolicyDocs",
+      "args": [
+        {
+          "name": "query",
+          "type": "string",
+          "description": "Query input from the user",
+          "required": true,
+          "_id": "6833f70c808c7c746a260ed9"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6833f70c808c7c746a260ed8"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"Accept\", \"application/json\");\n  myHeaders.append(\"Content-Type\", \"application/json\");\n  myHeaders.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n  // myHeaders.append(\"API-KEY\", \"abc123@@@\");\n  myHeaders.append(\"x-api-key\", \"your_secret_key\");\n\n  const raw = {\n    query: args.query,\n    is_custom: true\n  };\n\n\n    const response = await fetch(`${location.origin}/hr/chatbot/WebAPI/v3/Beacon/prompt_pdf_kb`, {\n      method: \"POST\",\n      headers: myHeaders,\n      body: JSON.stringify(raw),\n      redirect: \"follow\"\n    });\n\n    const result = await response.json();\n\n    const output = result.articles?.map(x => ({\n      fileName: x.filename,\n      content: x.content\n    })) || [];\n    return output;\n\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

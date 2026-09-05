@@ -1,0 +1,24 @@
+{
+  "id": "690dc588931a2d61ba0b2fca",
+  "slug": "selectemployees",
+  "name": "selectEmployees",
+  "status": "live",
+  "createdAt": "2025-06-02T17:39:36.209Z",
+  "updatedAt": "2026-07-17T12:56:00.542Z",
+  "contentHash": "b2763c2793399e2599737a924aefb1dde49f0829b06d8d6c27ad7a72e0d1ca87",
+  "lastExportedAt": "2026-09-05T19:41:15.571Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc588931a2d61ba0b2fca",
+    "name": "selectEmployees",
+    "status": "live",
+    "code": "(async function (args) {\n  try {\n    const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n    \n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n    myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n    myHeaders.append(\"cache-control\", \"max-age=0\");\n\n    const urlencoded = new URLSearchParams();\n    urlencoded.append(\"RadScriptManager1_HiddenField\", \";;Telerik.Web.UI, Version=2008.1.415.35, Culture=neutral, PublicKeyToken=121fae78165ba3d4:en-US:493502ac-fd18-4d2a-b4d2-e3cf218d0d84:fe8d4455:c7991a52:cc662d70:f52b3883:7e0e28a2\");\n    urlencoded.append(\"__EVENTTARGET\", \"\");\n    urlencoded.append(\"__EVENTARGUMENT\", \"\");\n    urlencoded.append(\"__LASTFOCUS\", \"\");\n    urlencoded.append(\"__VIEWSTATE\", args.viewState);\n    urlencoded.append(\"__VIEWSTATEGENERATOR\", args.viewStateGenerator);\n    urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    urlencoded.append(\"__EVENTVALIDATION\", args.eventValidation);\n    urlencoded.append(\"RadWindowManager1_ClientState\", \"\");\n    urlencoded.append(\"TalentEmployeeSearch$ctl05$RadioButtonGroup1\", args.talentemployee);\n    urlencoded.append(\"TalentEmployeeSearch$ctl05$ctl14\", \"0\");\n    urlencoded.append(\"TalentEmployeeSearch$ctl05$ctl16\", \"\");\n    urlencoded.append(\"TalentEmployeeSearch$ctl05$ctl21\", \"\");\n    urlencoded.append(\"TalentEmployeeSearch$ctl05$ctl35\", \"Search\");\n    urlencoded.append(\"TalentEmployeeSearch_ctl06_ClientState\", \"\");\n    \n    const eligibility = BeaconBar.getSharedData(\"eligibility\");\n\n    const digest = await BeaconBar.executeFunction(\"getDigest\")(eligibility);\n\n    const response = await fetch(\n      `${reqOptions}Talent/SearchDialog.aspx?${eligibility}&digest=${digest.digest}`,\n      {\n        method: \"POST\",\n        headers: myHeaders,\n        body: urlencoded,\n        redirect: \"follow\"\n      }\n    );\n\n    if (!response.ok) throw new Error(`Server responded with ${response.status}`);\n\n    const html = await response.text();\n\n    function extractViewStateFromHTML(html) {\n      const parser = new DOMParser();\n      const doc = parser.parseFromString(html, \"text/html\");\n\n      const SupervisorEmpNumber = doc.querySelector(\"#body_hdnSupervisorEmpNumber\")?.value || \"\";\n      const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n      const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n      const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n      const comapanydetails = doc.querySelector(\"#body_hdnIsCompanyDetail\")?.value || \"\";\n      const eventarguement = doc.querySelector(\"#__EVENTARGUMENT\")?.value || \"\";\n      const employeeSearch = doc.querySelector(\"label[for='TalentEmployeeSearch_ctl05_ctl07']\")?.innerText || \"\";\n      const talentemployee = doc.querySelector(\"#TalentEmployeeSearch_ctl05_ctl07\")?.value || \"\";\n      const searchCreteria = doc.querySelector('#TalentEmployeeSearch_ctl05_ctl19')?.value || \"\";\n      const totalSubmit = doc.querySelector('#TalentEmployeeSearch_ctl05_ctl07')?.value || \"\" ;\n\n      return {\n        viewState,\n        viewStateGenerator,\n        eventValidation,\n        SupervisorEmpNumber,\n        comapanydetails,\n        eventarguement,\n        employeeSearch,\n        talentemployee,\n        searchCreteria,\n        totalSubmit\n      };\n    }\n\n    const extractedData = extractViewStateFromHTML(html);\n     BeaconBar.setSharedData(\"selectEmployee\", extractedData);\n     BeaconBar.setSharedData(\"finaloutputViewState\" ,extractedData )\n    return html;\n  \n  } catch (error) {\n    return { success: false, message: error.message };\n  }\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

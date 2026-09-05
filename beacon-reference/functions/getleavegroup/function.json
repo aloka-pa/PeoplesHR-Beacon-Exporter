@@ -1,0 +1,24 @@
+{
+  "id": "690dc584931a2d61ba0b2bb9",
+  "slug": "getleavegroup",
+  "name": "getleaveGroup",
+  "status": "live",
+  "createdAt": "2025-07-22T16:06:55.649Z",
+  "updatedAt": "2026-07-17T12:55:55.081Z",
+  "contentHash": "7e34459cec534eebb851ef872e962e077c7f6725809dc459d42e42a0bbcd099c",
+  "lastExportedAt": "2026-09-05T19:41:19.339Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc584931a2d61ba0b2bb9",
+    "name": "getleaveGroup",
+    "status": "live",
+    "code": "(async function getShortLeaveType(year) {\n  //done\n  try {\n    const cfavalue = BeaconBar.getSharedData(\"token\");\n    const employeenumber = BeaconBar.getSharedData(\"EmpNumber\");\n    const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n    debugger;\n    const myHeaders = new Headers();\n    myHeaders.append(\"__cfafvalue\", cfavalue);\n    myHeaders.append(\"accept\", \"*/*\");\n    myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n    myHeaders.append(\"content-type\", \"application/json\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n    const raw = JSON.stringify({\n      EmpNumber: employeenumber,\n      LeaveYear: year\n    });\n\n    const response = await fetch(\n      `${reqOptions}AbsenceV9/api/ShortLeaveApplication/GetEntitledShortLeaveTypes/`,\n      {\n        method: \"POST\",\n        headers: myHeaders,\n        body: raw\n      }\n    );\n\n    if (!response.ok) {\n      throw new Error(`HTTP error ${response.status}`);\n    }\n\n    const data = await response.json();\n    if (Array.isArray(data) && data.length > 0) {\n      return {\n        typecode: data[0].TypeCode,\n        LGCode: data[0].LGCode\n      };\n    } else {\n      throw new Error(\"No leave types returned\");\n    }\n  } catch (error) {\n    return null;\n  }\n})\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

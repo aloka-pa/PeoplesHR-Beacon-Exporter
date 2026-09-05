@@ -1,0 +1,153 @@
+{
+  "id": "690dc569931a2d61ba0b1915",
+  "slug": "feedbackanddevelopmentplanfilling",
+  "name": "FeedbackAndDevelopmentPlanFilling",
+  "description": "FeedbackAndDevelopmentPlanFilling  , Rephrase the entire text provided. Keep the structure and formatting exactly the same, including line breaks, indentation, and bullet/numbering styles. Do not change or reformat anything except improving the wording for clarity, grammar, and professionalism. All comments, notes, and placeholders should remain in the same positions with the same formatting, only rewritten for better readability. dont show the json format text",
+  "instructions": null,
+  "taskName": "FeedbackAndDevelopmentPlanFilling",
+  "tags": [
+    "FeedbackAndDevelopmentPlanFilling"
+  ],
+  "status": "live",
+  "signature": "FeedbackAndDevelopmentPlanFilling",
+  "createdAt": "2025-06-02T17:00:46.828Z",
+  "updatedAt": "2026-07-17T12:50:48.740Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1c16",
+      "name": "FeedbackAndDevelopment"
+    }
+  ],
+  "contentHash": "b08f813c813985e9a55f5428a85f6c877e478cbfb791cf7a313b5a15c51b918d",
+  "lastExportedAt": "2026-09-05T19:39:22.216Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b1915",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "FeedbackAndDevelopmentPlanFilling",
+      "description": "FeedbackAndDevelopmentPlanFilling  , Rephrase the entire text provided. Keep the structure and formatting exactly the same, including line breaks, indentation, and bullet/numbering styles. Do not change or reformat anything except improving the wording for clarity, grammar, and professionalism. All comments, notes, and placeholders should remain in the same positions with the same formatting, only rewritten for better readability. dont show the json format text",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "FeedbackAndDevelopmentPlanFilling",
+        "args": [
+          {
+            "name": "Achievementsgrid",
+            "type": "string",
+            "description": "Achievementsgrid , Achievements as key-value pairs from the Achievements grid, and only include Achievement Learning, Strength, and Reviewer's Comment linked to each achievement.every one separated by semicolon",
+            "required": true,
+            "_id": "683dd8be02212d11937519a0"
+          },
+          {
+            "name": "DevelopmentAreasgrid",
+            "type": "string",
+            "description": "DevelopmentAreasgrid , DevelopmentArea as key-value pairs from the DevelopmentArea grid, and only include DevelopmentArea ,  Learning, Suggestionsforimprovement,and Reviewer'sComment linked to each DevelopmentArea. every separated by semicolon",
+            "required": true,
+            "_id": "68b1aafd61d5da91f382afaf"
+          },
+          {
+            "name": "JobPreferencesGrid",
+            "type": "string",
+            "description": "JobPreferencesGrid , Extract JobPreferencesGrid as key-value pairs; include only Position/Function, Key Skills/Areas, Suggestions for Improvement, Reason, and Assessor's Comment. Separate each entry with semicolons.",
+            "required": true,
+            "_id": "68b1aafd61d5da91f382afb0"
+          },
+          {
+            "name": "OverallCommentGrid",
+            "type": "string",
+            "description": "OverallCommentGrid ,Extract  only Assessors Overall Comment ",
+            "required": true,
+            "_id": "68b1aafd61d5da91f382afb1"
+          }
+        ],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"jobPreferencesSection\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"position\": {\n            \"type\": \"string\"\n          },\n          \"location\": {\n            \"type\": \"string\"\n          },\n          \"reason\": {\n            \"type\": \"string\"\n          },\n          \"assessorComment\": {\n            \"type\": \"string\"\n          },\n          \"reviewerComment\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"achievementBlocks\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"achievement\": {\n            \"type\": \"string\"\n          },\n          \"learning\": {\n            \"type\": \"string\"\n          },\n          \"strengths\": {\n            \"type\": \"string\"\n          },\n          \"reviewerComment\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"overallCommentsSection\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"comment\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"developmentArea\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"developmentArea\": {\n            \"type\": \"string\"\n          },\n          \"learning\": {\n            \"type\": \"string\"\n          },\n          \"suggestions\": {\n            \"type\": \"string\"\n          },\n          \"reviewerComment\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  }\n}",
+        "_id": "6a5a25285aa8b43ec1a7ff72"
+      },
+      "by": "34476",
+      "fetcher": "(function(args){\n    return{\n        code:`(function(){\n            return {}\n        })`\n    }\n});\n\n\n",
+      "transformer": "(function (_data, args, reqOptions) {\n  const iframe = document.querySelector(\"#ifrmPage\");\n\n  if (!iframe || !iframe.contentDocument) {\n    return { success: false, message: \"Iframe not found.\" };\n  }\n\n  const doc = iframe.contentDocument;\n  let totalAppliedCount = 0;\n  const results = {\n    jobPreferences: 0,\n    achievements: 0,\n    developmentAreas: 0,\n    overallComments: 0\n  };\n\n  const setText = (element, value) => {\n    if (element && value && value !== '\"\"' && value !== \"Not Specified\") {\n      element.innerText = value;\n\n      const parentEditor = element.closest('.longTextEditor');\n      if (parentEditor) {\n        const ckeIframe = parentEditor.querySelector('.cke_wysiwyg_frame');\n        const textarea = parentEditor.querySelector('textarea');\n\n        if (ckeIframe?.contentDocument?.body) {\n          try {\n            ckeIframe.contentDocument.body.innerHTML = `<p>${value}</p>`;\n          } catch (e) {\n          }\n        }\n\n        if (textarea && window.CKEDITOR && CKEDITOR.instances[textarea.id]) {\n          try {\n            const editorInstance = CKEDITOR.instances[textarea.id];\n            editorInstance.setData(value);\n            editorInstance.updateElement();\n            editorInstance.fire('change');\n          } catch (e) {\n          }\n        }\n      }\n\n      return true;\n    }\n    return false;\n  };\n\n  // ---- JOB PREFERENCES ----\n  if (args.jobPreferencesSection && Array.isArray(args.jobPreferencesSection)) {\n    const jobPreferencesContainer = doc.querySelector('#pnl_IntrerestedIns');\n    if (jobPreferencesContainer) {\n      const interestedInBlocks = jobPreferencesContainer.querySelectorAll('.perf-interested-in');\n      args.jobPreferencesSection.forEach((item, index) => {\n        if (index < interestedInBlocks.length) {\n          const block = interestedInBlocks[index];\n          if (setText(block.querySelector('[data-bind=\"html: Position\"]'), item.position)) { results.jobPreferences++; totalAppliedCount++; }\n          if (setText(block.querySelector('[data-bind=\"html: Location\"]'), item.location)) { results.jobPreferences++; totalAppliedCount++; }\n          if (setText(block.querySelector('[data-bind=\"html: Reason\"]'), item.reason)) { results.jobPreferences++; totalAppliedCount++; }\n          if (setText(block.querySelector('[data-bind=\"html: SupervisorComment\"]'), item.assessorComment)) { results.jobPreferences++; totalAppliedCount++; }\n          if (setText(block.querySelector('[data-bind=\"html: SecondSupervisorComment\"]'), item.reviewerComment)) { results.jobPreferences++; totalAppliedCount++; }\n        }\n      });\n    }\n  }\n\n  // ---- ACHIEVEMENTS ----\n  if (args.achievementBlocks && Array.isArray(args.achievementBlocks)) {\n    const achievementBlocks = doc.querySelectorAll('.perf-achievement');\n    args.achievementBlocks.forEach((item, index) => {\n      if (index < achievementBlocks.length) {\n        const block = achievementBlocks[index];\n        if (setText(block.querySelector('[data-bind=\"html: Achievement\"]'), item.achievement)) { results.achievements++; totalAppliedCount++; }\n        if (setText(block.querySelector('[data-bind=\"html: Learning\"]'), item.learning)) { results.achievements++; totalAppliedCount++; }\n        if (setText(block.querySelector('[data-bind=\"html: Strengths\"]'), item.strengths)) { results.achievements++; totalAppliedCount++; }\n        if (setText(block.querySelector('[data-bind=\"html: SecondSupervisorComment\"]'), item.reviewerComment)) { results.achievements++; totalAppliedCount++; }\n      }\n    });\n  }\n\n  // ---- DEVELOPMENT AREAS ----\n  if (args.developmentArea && Array.isArray(args.developmentArea)) {\n    const missBlocks = doc.querySelectorAll('.perf-miss');\n    args.developmentArea.forEach((item, index) => {\n      if (index < missBlocks.length) {\n        const block = missBlocks[index];\n        if (setText(block.querySelector('[data-bind=\"html: Miss\"]'), item.developmentArea)) { results.developmentAreas++; totalAppliedCount++; }\n        if (setText(block.querySelector('[data-bind=\"html: Learning\"]'), item.learning)) { results.developmentAreas++; totalAppliedCount++; }\n        if (setText(block.querySelector('[data-bind=\"html: DevArea\"]'), item.suggestions)) { results.developmentAreas++; totalAppliedCount++; }\n        if (setText(block.querySelector('[data-bind=\"html: SecondSupervisorComment\"]'), item.reviewerComment)) { results.developmentAreas++; totalAppliedCount++; }\n      }\n    });\n  }\n\n  // ---- OVERALL COMMENTS ----\n  if (args.overallCommentsSection && Array.isArray(args.overallCommentsSection)) {\n    const overallCommentsContainer = doc.querySelector('#perfv8-feedback-partial-overallcomment-6');\n    if (overallCommentsContainer) {\n      const commentBlocks = overallCommentsContainer.querySelectorAll('.perf-interested-in');\n      args.overallCommentsSection.forEach((item, index) => {\n        if (index < commentBlocks.length) {\n          const block = commentBlocks[index];\n          if (setText(block.querySelector('[data-bind=\"html: Comment\"]'), item.comment)) { results.overallComments++; totalAppliedCount++; }\n          if (setText(block.querySelector('[data-bind=\"html: Comment\"]'), item.reviewerComment)) { results.overallComments++; totalAppliedCount++; }\n        }\n      });\n    }\n  }\n\n  // ---- GLOBAL CKEDITOR SYNC ----\n  if (iframe.contentWindow?.CKEDITOR) {\n    try {\n      const iframeCKE = iframe.contentWindow.CKEDITOR.instances;\n      for (const name in iframeCKE) {\n        const instance = iframeCKE[name];\n        instance.updateElement();\n        instance.fire('change');\n      }\n    } catch (e) {\n    }\n  }\n\n  return {\n    success: true,\n    totalAppliedCount,\n    sectionResults: results,\n    message: `Successfully applied ${totalAppliedCount} field updates across all sections.`,\n    details: {\n      jobPreferences: `${results.jobPreferences} fields updated`,\n      achievements: `${results.achievements} fields updated`,\n      developmentAreas: `${results.developmentAreas} fields updated`,\n      overallComments: `${results.overallComments} fields updated`\n    }\n  };\n});\n",
+      "groupName": "",
+      "tags": [
+        "FeedbackAndDevelopmentPlanFilling"
+      ],
+      "taskName": "FeedbackAndDevelopmentPlanFilling",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-02T17:00:46.828Z",
+      "updatedAt": "2026-07-17T12:50:48.740Z",
+      "__v": 2,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1c16",
+          "name": "FeedbackAndDevelopment"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "FeedbackAndDevelopmentPlanFilling",
+      "args": [
+        {
+          "name": "Achievementsgrid",
+          "type": "string",
+          "description": "Achievementsgrid , Achievements as key-value pairs from the Achievements grid, and only include Achievement Learning, Strength, and Reviewer's Comment linked to each achievement.every one separated by semicolon",
+          "required": true,
+          "_id": "683dd8be02212d11937519a0"
+        },
+        {
+          "name": "DevelopmentAreasgrid",
+          "type": "string",
+          "description": "DevelopmentAreasgrid , DevelopmentArea as key-value pairs from the DevelopmentArea grid, and only include DevelopmentArea ,  Learning, Suggestionsforimprovement,and Reviewer'sComment linked to each DevelopmentArea. every separated by semicolon",
+          "required": true,
+          "_id": "68b1aafd61d5da91f382afaf"
+        },
+        {
+          "name": "JobPreferencesGrid",
+          "type": "string",
+          "description": "JobPreferencesGrid , Extract JobPreferencesGrid as key-value pairs; include only Position/Function, Key Skills/Areas, Suggestions for Improvement, Reason, and Assessor's Comment. Separate each entry with semicolons.",
+          "required": true,
+          "_id": "68b1aafd61d5da91f382afb0"
+        },
+        {
+          "name": "OverallCommentGrid",
+          "type": "string",
+          "description": "OverallCommentGrid ,Extract  only Assessors Overall Comment ",
+          "required": true,
+          "_id": "68b1aafd61d5da91f382afb1"
+        }
+      ],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"jobPreferencesSection\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"position\": {\n            \"type\": \"string\"\n          },\n          \"location\": {\n            \"type\": \"string\"\n          },\n          \"reason\": {\n            \"type\": \"string\"\n          },\n          \"assessorComment\": {\n            \"type\": \"string\"\n          },\n          \"reviewerComment\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"achievementBlocks\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"achievement\": {\n            \"type\": \"string\"\n          },\n          \"learning\": {\n            \"type\": \"string\"\n          },\n          \"strengths\": {\n            \"type\": \"string\"\n          },\n          \"reviewerComment\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"overallCommentsSection\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"comment\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"developmentArea\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"developmentArea\": {\n            \"type\": \"string\"\n          },\n          \"learning\": {\n            \"type\": \"string\"\n          },\n          \"suggestions\": {\n            \"type\": \"string\"\n          },\n          \"reviewerComment\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  }\n}",
+      "_id": "6a5a25285aa8b43ec1a7ff72"
+    },
+    "fetcher": "(function(args){\n    return{\n        code:`(function(){\n            return {}\n        })`\n    }\n});\n\n\n",
+    "transformer": "(function (_data, args, reqOptions) {\n  const iframe = document.querySelector(\"#ifrmPage\");\n\n  if (!iframe || !iframe.contentDocument) {\n    return { success: false, message: \"Iframe not found.\" };\n  }\n\n  const doc = iframe.contentDocument;\n  let totalAppliedCount = 0;\n  const results = {\n    jobPreferences: 0,\n    achievements: 0,\n    developmentAreas: 0,\n    overallComments: 0\n  };\n\n  const setText = (element, value) => {\n    if (element && value && value !== '\"\"' && value !== \"Not Specified\") {\n      element.innerText = value;\n\n      const parentEditor = element.closest('.longTextEditor');\n      if (parentEditor) {\n        const ckeIframe = parentEditor.querySelector('.cke_wysiwyg_frame');\n        const textarea = parentEditor.querySelector('textarea');\n\n        if (ckeIframe?.contentDocument?.body) {\n          try {\n            ckeIframe.contentDocument.body.innerHTML = `<p>${value}</p>`;\n          } catch (e) {\n          }\n        }\n\n        if (textarea && window.CKEDITOR && CKEDITOR.instances[textarea.id]) {\n          try {\n            const editorInstance = CKEDITOR.instances[textarea.id];\n            editorInstance.setData(value);\n            editorInstance.updateElement();\n            editorInstance.fire('change');\n          } catch (e) {\n          }\n        }\n      }\n\n      return true;\n    }\n    return false;\n  };\n\n  // ---- JOB PREFERENCES ----\n  if (args.jobPreferencesSection && Array.isArray(args.jobPreferencesSection)) {\n    const jobPreferencesContainer = doc.querySelector('#pnl_IntrerestedIns');\n    if (jobPreferencesContainer) {\n      const interestedInBlocks = jobPreferencesContainer.querySelectorAll('.perf-interested-in');\n      args.jobPreferencesSection.forEach((item, index) => {\n        if (index < interestedInBlocks.length) {\n          const block = interestedInBlocks[index];\n          if (setText(block.querySelector('[data-bind=\"html: Position\"]'), item.position)) { results.jobPreferences++; totalAppliedCount++; }\n          if (setText(block.querySelector('[data-bind=\"html: Location\"]'), item.location)) { results.jobPreferences++; totalAppliedCount++; }\n          if (setText(block.querySelector('[data-bind=\"html: Reason\"]'), item.reason)) { results.jobPreferences++; totalAppliedCount++; }\n          if (setText(block.querySelector('[data-bind=\"html: SupervisorComment\"]'), item.assessorComment)) { results.jobPreferences++; totalAppliedCount++; }\n          if (setText(block.querySelector('[data-bind=\"html: SecondSupervisorComment\"]'), item.reviewerComment)) { results.jobPreferences++; totalAppliedCount++; }\n        }\n      });\n    }\n  }\n\n  // ---- ACHIEVEMENTS ----\n  if (args.achievementBlocks && Array.isArray(args.achievementBlocks)) {\n    const achievementBlocks = doc.querySelectorAll('.perf-achievement');\n    args.achievementBlocks.forEach((item, index) => {\n      if (index < achievementBlocks.length) {\n        const block = achievementBlocks[index];\n        if (setText(block.querySelector('[data-bind=\"html: Achievement\"]'), item.achievement)) { results.achievements++; totalAppliedCount++; }\n        if (setText(block.querySelector('[data-bind=\"html: Learning\"]'), item.learning)) { results.achievements++; totalAppliedCount++; }\n        if (setText(block.querySelector('[data-bind=\"html: Strengths\"]'), item.strengths)) { results.achievements++; totalAppliedCount++; }\n        if (setText(block.querySelector('[data-bind=\"html: SecondSupervisorComment\"]'), item.reviewerComment)) { results.achievements++; totalAppliedCount++; }\n      }\n    });\n  }\n\n  // ---- DEVELOPMENT AREAS ----\n  if (args.developmentArea && Array.isArray(args.developmentArea)) {\n    const missBlocks = doc.querySelectorAll('.perf-miss');\n    args.developmentArea.forEach((item, index) => {\n      if (index < missBlocks.length) {\n        const block = missBlocks[index];\n        if (setText(block.querySelector('[data-bind=\"html: Miss\"]'), item.developmentArea)) { results.developmentAreas++; totalAppliedCount++; }\n        if (setText(block.querySelector('[data-bind=\"html: Learning\"]'), item.learning)) { results.developmentAreas++; totalAppliedCount++; }\n        if (setText(block.querySelector('[data-bind=\"html: DevArea\"]'), item.suggestions)) { results.developmentAreas++; totalAppliedCount++; }\n        if (setText(block.querySelector('[data-bind=\"html: SecondSupervisorComment\"]'), item.reviewerComment)) { results.developmentAreas++; totalAppliedCount++; }\n      }\n    });\n  }\n\n  // ---- OVERALL COMMENTS ----\n  if (args.overallCommentsSection && Array.isArray(args.overallCommentsSection)) {\n    const overallCommentsContainer = doc.querySelector('#perfv8-feedback-partial-overallcomment-6');\n    if (overallCommentsContainer) {\n      const commentBlocks = overallCommentsContainer.querySelectorAll('.perf-interested-in');\n      args.overallCommentsSection.forEach((item, index) => {\n        if (index < commentBlocks.length) {\n          const block = commentBlocks[index];\n          if (setText(block.querySelector('[data-bind=\"html: Comment\"]'), item.comment)) { results.overallComments++; totalAppliedCount++; }\n          if (setText(block.querySelector('[data-bind=\"html: Comment\"]'), item.reviewerComment)) { results.overallComments++; totalAppliedCount++; }\n        }\n      });\n    }\n  }\n\n  // ---- GLOBAL CKEDITOR SYNC ----\n  if (iframe.contentWindow?.CKEDITOR) {\n    try {\n      const iframeCKE = iframe.contentWindow.CKEDITOR.instances;\n      for (const name in iframeCKE) {\n        const instance = iframeCKE[name];\n        instance.updateElement();\n        instance.fire('change');\n      }\n    } catch (e) {\n    }\n  }\n\n  return {\n    success: true,\n    totalAppliedCount,\n    sectionResults: results,\n    message: `Successfully applied ${totalAppliedCount} field updates across all sections.`,\n    details: {\n      jobPreferences: `${results.jobPreferences} fields updated`,\n      achievements: `${results.achievements} fields updated`,\n      developmentAreas: `${results.developmentAreas} fields updated`,\n      overallComments: `${results.overallComments} fields updated`\n    }\n  };\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

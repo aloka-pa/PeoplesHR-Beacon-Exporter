@@ -1,0 +1,24 @@
+{
+  "id": "690dc58b931a2d61ba0b321e",
+  "slug": "shiftutil",
+  "name": "shiftUtil",
+  "status": "live",
+  "createdAt": "2025-06-16T16:29:17.586Z",
+  "updatedAt": "2026-07-17T12:56:02.072Z",
+  "contentHash": "69c3c692c69304b2546a767e9f27250f640c62c81dfd590857d7a0ce33b8b44c",
+  "lastExportedAt": "2026-09-05T19:41:15.127Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58b931a2d61ba0b321e",
+    "name": "shiftUtil",
+    "status": "live",
+    "code": "(function(){\n    const myHeaders = new Headers();\nmyHeaders.append(\"accept\", \"application/json, text/plain, */*\");\nmyHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\nmyHeaders.append(\"content-type\", \"application/json\");\n\nconst raw = JSON.stringify({\n  \"FilterMode\": \"6\",\n  \"PageIndex\": 1,\n  \"PageSize\": 10,\n  \"LoggedEmployeeNumber\": \"c2owOG5QTnVEWXE0eENielp4MGl4cWZuZG1TM3NGVG4zaFZCbUJXVkFmN3RKUDc4Qlh6cHJNTnlrNUg4TmZNV3B6dk5PY2RnV2RBTEhoNnRvWGwzWkJWOUtRcEpodUJjVWRlYVVxdEp6WVBxRC9lVlYxY3RTUWtsbHNWUkxSUE5pajhpc1FNOEZtZGVoNFd2Qm5qRDJ3WWQzUU5Jbjc4a2Nmck1CQzQvNHN4YTdKR2VIdnRUeXptTTVUYjkxdXN5RklhRmk1OWl5am1yYXk5blQwRlRrbEc3ZUZGeHZTZ29EL3NuaytMMEN5UVlHSVJhQUcyTjhNd3JZbUJRdzFhTHp4dmh4Nzhxdmo4bzlPTU1CdmRhcGlQenlybk5kejZ1Yk1lT2VMcXJTTVJlSmJvYmJXRTl1RG9TWC9aNFFBbnFQQVFRNFYzYzhxUnJVU1NKcEZDN3ZHWVhOYWpEdUZpc3FMUHc1b3dMR3pRPQ==\",\n  \"LoggedEmployeeUserId\": \"000005\",\n  \"WfTypeCode\": \"65004\",\n  \"WfMainId\": \"0000000680\",\n  \"FromDate\": \"\",\n  \"ToDate\": \"\",\n  \"EmpNumber\": \"ajZlekNFaFduREVIQ01lbk1TTG1sK1Z6NVhjMDBVODNUSnVNMGhYb2U0cUViLzkvdDRBUWV2M2J6WXZNYzAwL1pPU3lYWmNhejVLUi9LWlpHTUkrdlAxeE9PaGhkRXQ0czdOWDdabmd2RUcxbFYva25LZjZhdzNLcXFvdnZVdUo5KyszQnlkRlVXRzB5Z2tkbXdiTkxXczRLampYN0p5NjZ3L0VwNnVRcktRREllRUs1cWt6NjVwQ0VHSG5UMGlpb1F2cVBEMU90SFpSZkxMOU5tZjl0eFNHS2tWUTJnOFJVRjZUeTFLTEQ1b3JvWWFSNDZXY01kQjVzTzJHSGZXQ2R1bld5Qk95ME90ZWNGU1hVZlIvYmVlTkVJbjVoM2Y4anlKckVndWhVK0F0Mk80OWtvSTJuNXcrTzZUdXkzWDQrWjNHcUtweHpZcUJTcFl4Z3d5ODM1SzF0QXc2cEFzYVo2clNVbjg5QUZWbE9EL283K3NxRlV0eXMxRnVEYkJ4bzFBRDJ2aEJacW9wRHZZZHRzSXVlUT09\"\n});\n\nconst requestOptions = {\n  method: \"POST\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\n\nfetch(\"https://devtest-echoengineers.phrsandbox.dev/hrb5/tnavue/service/api/WorkflowApproval/GetShiftAdjustmentApprovalGridData\", requestOptions)\n  .then((response) => response.text())\n  .then(() => {})\n  .catch(() => {});\n})",
+    "by": "34476",
+    "__v": 1
+  }
+}

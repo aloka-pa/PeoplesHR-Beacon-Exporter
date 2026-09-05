@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "date",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "user to give the data example format \"1/04/2024\" ,\"d/MM/YYYY\"",
+      "advanced": false,
+      "raw": {
+        "name": "date",
+        "type": "string",
+        "description": "user to give the data example format \"1/04/2024\" ,\"d/MM/YYYY\"",
+        "required": true,
+        "_id": "682b3e84b1cab61da612bf61"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "employee specific id",
+      "advanced": false,
+      "raw": {
+        "name": "id",
+        "type": "string",
+        "description": "employee specific id",
+        "required": true,
+        "_id": "683d70bfe6db425dadd1ddda"
+      }
+    },
+    {
+      "name": "editId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get edit id for \"getEmployeePassportAndOtherArticlesDetails\" tool user selected passport and other articles  edit id get.",
+      "advanced": false,
+      "raw": {
+        "name": "editId",
+        "type": "string",
+        "description": "to get edit id for \"getEmployeePassportAndOtherArticlesDetails\" tool user selected passport and other articles  edit id get.",
+        "required": true,
+        "_id": "683d70bfe6db425dadd1dddb"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

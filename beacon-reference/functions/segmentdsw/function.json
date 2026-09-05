@@ -1,0 +1,24 @@
+{
+  "id": "6a1714a4fcc867096936f86b",
+  "slug": "segmentdsw",
+  "name": "segmentDSW",
+  "status": "live",
+  "createdAt": "2026-05-27T15:58:28.878Z",
+  "updatedAt": "2026-05-28T17:37:51.129Z",
+  "contentHash": "42d0708f5e74667f05fb59053305c9905572df3bc75e40a74060eac1c71db48f",
+  "lastExportedAt": "2026-09-05T19:41:25.546Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "6a1714a4fcc867096936f86b",
+    "name": "segmentDSW",
+    "status": "live",
+    "code": "(function () {\n    return localStorage.getItem('isEmployeeSearchEnabled') === 'true';\n})",
+    "by": "7829",
+    "__v": 2
+  }
+}

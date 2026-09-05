@@ -1,0 +1,169 @@
+{
+  "id": "69540adf9f7bf02aaf031895",
+  "slug": "createcurrencytype",
+  "name": "createCurrencyType",
+  "description": "Creates a new currency type in the system with name, symbol, base currency status, and exchange rate.\n\nWhen isBaseCurrency is set to \"true\", the system automatically sets the exchange rate to 1\nChanging the base currency affects all currency calculations system-wide and requires explicit confirmation\nIf not setting as base currency, user can provide an exchangeRate value",
+  "instructions": null,
+  "taskName": "Creating New Currency Type Record",
+  "tags": [
+    "EIMAdmin",
+    "Nexus Information"
+  ],
+  "status": "live",
+  "signature": "createCurrencyType",
+  "createdAt": "2025-12-30T17:24:47.507Z",
+  "updatedAt": "2026-06-15T07:31:54.416Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "46c439c689df3ad5d3f1de8ebeba8516a8984c8a8ee4e30adcf235b9970f4f02",
+  "lastExportedAt": "2026-09-05T19:39:22.388Z",
+  "raw": {
+    "basic": {
+      "_id": "69540adf9f7bf02aaf031895",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createCurrencyType",
+      "description": "Creates a new currency type in the system with name, symbol, base currency status, and exchange rate.\n\nWhen isBaseCurrency is set to \"true\", the system automatically sets the exchange rate to 1\nChanging the base currency affects all currency calculations system-wide and requires explicit confirmation\nIf not setting as base currency, user can provide an exchangeRate value",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createCurrencyType",
+        "args": [
+          {
+            "name": "currencyName",
+            "type": "string",
+            "description": "The name of the new currency (e.g., \"Australian Dollar\")",
+            "required": true,
+            "_id": "69540adf9f7bf02aaf031897"
+          },
+          {
+            "name": "currencySymbol",
+            "type": "string",
+            "description": "The symbol for the new currency (e.g., \"AUD\", \"USD\")\nNOTE: currencySymbol is not currency symbol like \"$\"; it is a combination of letters \"USD.\"",
+            "required": true,
+            "_id": "69540adf9f7bf02aaf031898"
+          },
+          {
+            "name": "isBaseCurrency",
+            "type": "string",
+            "description": "Set as base currency - accepts string \"true\" or \"false\" (default: \"false\")",
+            "required": false,
+            "_id": "69540adf9f7bf02aaf031899"
+          },
+          {
+            "name": "exchangeRate",
+            "type": "string",
+            "description": "The exchange rate value relative to base currency (e.g., \"1.45\"). Not needed if isBaseCurrency is \"true\"",
+            "required": false,
+            "_id": "69540adf9f7bf02aaf03189a"
+          },
+          {
+            "name": "confirmBaseChange",
+            "type": "string",
+            "description": "Required if isBaseCurrency is \"true\"\nMust be set to \"true\" to confirm changing the base currency",
+            "required": false,
+            "_id": "69540adf9f7bf02aaf03189b"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "69540adf9f7bf02aaf031896"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/CurrencyType.aspx\")) {\n    return {\n      status: \"NO_ACCESS\",\n      message: \"You do not have access to Currency Type screen. Please contact HR Admin.\"\n    };\n  }\n\n  // Validate required fields\n  if (!args.currencyName || !args.currencySymbol) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"Both currencyName and currencySymbol are required to create a new currency\"\n    };\n  }\n\n  // Check if user wants to set as base currency\n  const isBase = args.isBaseCurrency === \"true\" || args.isBaseCurrency === true;\n  \n  // If setting as base currency, require confirmation\n  if (isBase && !args.confirmBaseChange) {\n    return {\n      status: \"CONFIRMATION_REQUIRED\",\n      message: \"You are about to change the base currency. This will affect all currency calculations in the system. Please confirm by setting confirmBaseChange to 'true'.\",\n      action: \"Please add confirmBaseChange: 'true' to proceed with base currency change\"\n    };\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"CurrencyType\");\n\n  const headers = new Headers();\n  headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n  headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/CurrencyType.aspx\");\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/CurrencyType.aspx`;\n\n  const parser = new DOMParser();\n\n  // Click New button to open new currency form\n  const newFormData = new FormData();\n  newFormData.append(\"scrollLeft\", \"0\");\n  newFormData.append(\"scrollTop\", \"0\");\n  newFormData.append(\"__EVENTTARGET\", \"\");\n  newFormData.append(\"__EVENTARGUMENT\", \"\");\n  newFormData.append(\"__VIEWSTATE\", details.viewState);\n  newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n  newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"CURRENCY_ID\");\n  newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n  newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  newFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  newFormData.append(\"ctl00$body$butNew\", \"New\");\n\n  const newResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: newFormData\n  });\n\n  const newDoc = parser.parseFromString(await newResponse.text(), \"text/html\");\n\n  const newViewState = newDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const newEventValidation = newDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const newViewStateGen = newDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  \n  // Get the previous base currency name if exists\n  const previousBaseCurrency = newDoc.querySelector(\"#ctl00_body_txtPreCur\")?.value || \"\";\n\n  // Determine exchange rate\n  // If base currency is checked, rate should be 1 (or empty as system handles it)\n  // If not base currency and user provided rate, use it\n  let exchangeRate = \"\";\n  if (isBase) {\n    // When base currency, rate is automatically set to 1 by the system\n    exchangeRate = \"\";\n  } else if (args.exchangeRate !== undefined) {\n    exchangeRate = args.exchangeRate;\n  }\n\n  // Save the new currency\n  const saveFormData = new FormData();\n  saveFormData.append(\"scrollLeft\", \"0\");\n  saveFormData.append(\"scrollTop\", \"0\");\n  saveFormData.append(\"__EVENTTARGET\", \"\");\n  saveFormData.append(\"__EVENTARGUMENT\", \"\");\n  saveFormData.append(\"__VIEWSTATE\", newViewState);\n  saveFormData.append(\"__VIEWSTATEGENERATOR\", newViewStateGen);\n  saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  saveFormData.append(\"__EVENTVALIDATION\", newEventValidation);\n  saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  saveFormData.append(\"ctl00$body$hdnPreCur\", \"\");\n  saveFormData.append(\"ctl00$body$txtName\", args.currencyName);\n  saveFormData.append(\"ctl00$body$txtPreCur\", previousBaseCurrency);\n  saveFormData.append(\"ctl00$body$txtSymbol\", args.currencySymbol);\n  \n  // Add base currency checkbox if true\n  if (isBase) {\n    saveFormData.append(\"ctl00$body$chkBase\", \"on\");\n  }\n  \n  // Add exchange rate if provided and not base currency\n  if (exchangeRate !== \"\") {\n    saveFormData.append(\"ctl00$body$nuRate\", exchangeRate);\n  } else {\n    saveFormData.append(\"ctl00$body$nuRate\", \"\");\n  }\n  \n  saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n  const finalResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: saveFormData\n  });\n\n  const saveHtml = await finalResponse.text();\n\n  if (finalResponse.status === 200) {\n    const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n    const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n    \n    if (errorMsg) {\n      return {\n        status: \"ERROR\",\n        message: `Save failed: ${errorMsg.trim()}`\n      };\n    }\n\n    // Extract the newly created currency code from the response\n    const newCode = saveDoc.querySelector(\"#ctl00_body_txtCode\")?.value || \"\";\n\n    return {\n      status: \"SUCCESS\",\n      message: `Successfully created new Currency Type${newCode ? ` (${newCode})` : \"\"}`,\n      currencyCode: newCode,\n      currencyName: args.currencyName,\n      currencySymbol: args.currencySymbol,\n      isBaseCurrency: isBase,\n      exchangeRate: isBase ? \"1\" : (exchangeRate || \"Not set\"),\n      previousBaseCurrency: isBase && previousBaseCurrency ? previousBaseCurrency : null\n    };\n  }\n\n  return {\n    status: \"ERROR\",\n    message: \"Failed to create Currency Type. Please verify in the UI.\"\n  };\n})",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "Nexus Information"
+      ],
+      "taskName": "Creating New Currency Type Record",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-30T17:24:47.507Z",
+      "updatedAt": "2026-06-15T07:31:54.416Z",
+      "__v": 2,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "createCurrencyType",
+      "args": [
+        {
+          "name": "currencyName",
+          "type": "string",
+          "description": "The name of the new currency (e.g., \"Australian Dollar\")",
+          "required": true,
+          "_id": "69540adf9f7bf02aaf031897"
+        },
+        {
+          "name": "currencySymbol",
+          "type": "string",
+          "description": "The symbol for the new currency (e.g., \"AUD\", \"USD\")\nNOTE: currencySymbol is not currency symbol like \"$\"; it is a combination of letters \"USD.\"",
+          "required": true,
+          "_id": "69540adf9f7bf02aaf031898"
+        },
+        {
+          "name": "isBaseCurrency",
+          "type": "string",
+          "description": "Set as base currency - accepts string \"true\" or \"false\" (default: \"false\")",
+          "required": false,
+          "_id": "69540adf9f7bf02aaf031899"
+        },
+        {
+          "name": "exchangeRate",
+          "type": "string",
+          "description": "The exchange rate value relative to base currency (e.g., \"1.45\"). Not needed if isBaseCurrency is \"true\"",
+          "required": false,
+          "_id": "69540adf9f7bf02aaf03189a"
+        },
+        {
+          "name": "confirmBaseChange",
+          "type": "string",
+          "description": "Required if isBaseCurrency is \"true\"\nMust be set to \"true\" to confirm changing the base currency",
+          "required": false,
+          "_id": "69540adf9f7bf02aaf03189b"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "69540adf9f7bf02aaf031896"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/CurrencyType.aspx\")) {\n    return {\n      status: \"NO_ACCESS\",\n      message: \"You do not have access to Currency Type screen. Please contact HR Admin.\"\n    };\n  }\n\n  // Validate required fields\n  if (!args.currencyName || !args.currencySymbol) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"Both currencyName and currencySymbol are required to create a new currency\"\n    };\n  }\n\n  // Check if user wants to set as base currency\n  const isBase = args.isBaseCurrency === \"true\" || args.isBaseCurrency === true;\n  \n  // If setting as base currency, require confirmation\n  if (isBase && !args.confirmBaseChange) {\n    return {\n      status: \"CONFIRMATION_REQUIRED\",\n      message: \"You are about to change the base currency. This will affect all currency calculations in the system. Please confirm by setting confirmBaseChange to 'true'.\",\n      action: \"Please add confirmBaseChange: 'true' to proceed with base currency change\"\n    };\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"CurrencyType\");\n\n  const headers = new Headers();\n  headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n  headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/CurrencyType.aspx\");\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/CurrencyType.aspx`;\n\n  const parser = new DOMParser();\n\n  // Click New button to open new currency form\n  const newFormData = new FormData();\n  newFormData.append(\"scrollLeft\", \"0\");\n  newFormData.append(\"scrollTop\", \"0\");\n  newFormData.append(\"__EVENTTARGET\", \"\");\n  newFormData.append(\"__EVENTARGUMENT\", \"\");\n  newFormData.append(\"__VIEWSTATE\", details.viewState);\n  newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n  newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"CURRENCY_ID\");\n  newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n  newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  newFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  newFormData.append(\"ctl00$body$butNew\", \"New\");\n\n  const newResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: newFormData\n  });\n\n  const newDoc = parser.parseFromString(await newResponse.text(), \"text/html\");\n\n  const newViewState = newDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const newEventValidation = newDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const newViewStateGen = newDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  \n  // Get the previous base currency name if exists\n  const previousBaseCurrency = newDoc.querySelector(\"#ctl00_body_txtPreCur\")?.value || \"\";\n\n  // Determine exchange rate\n  // If base currency is checked, rate should be 1 (or empty as system handles it)\n  // If not base currency and user provided rate, use it\n  let exchangeRate = \"\";\n  if (isBase) {\n    // When base currency, rate is automatically set to 1 by the system\n    exchangeRate = \"\";\n  } else if (args.exchangeRate !== undefined) {\n    exchangeRate = args.exchangeRate;\n  }\n\n  // Save the new currency\n  const saveFormData = new FormData();\n  saveFormData.append(\"scrollLeft\", \"0\");\n  saveFormData.append(\"scrollTop\", \"0\");\n  saveFormData.append(\"__EVENTTARGET\", \"\");\n  saveFormData.append(\"__EVENTARGUMENT\", \"\");\n  saveFormData.append(\"__VIEWSTATE\", newViewState);\n  saveFormData.append(\"__VIEWSTATEGENERATOR\", newViewStateGen);\n  saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  saveFormData.append(\"__EVENTVALIDATION\", newEventValidation);\n  saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  saveFormData.append(\"ctl00$body$hdnPreCur\", \"\");\n  saveFormData.append(\"ctl00$body$txtName\", args.currencyName);\n  saveFormData.append(\"ctl00$body$txtPreCur\", previousBaseCurrency);\n  saveFormData.append(\"ctl00$body$txtSymbol\", args.currencySymbol);\n  \n  // Add base currency checkbox if true\n  if (isBase) {\n    saveFormData.append(\"ctl00$body$chkBase\", \"on\");\n  }\n  \n  // Add exchange rate if provided and not base currency\n  if (exchangeRate !== \"\") {\n    saveFormData.append(\"ctl00$body$nuRate\", exchangeRate);\n  } else {\n    saveFormData.append(\"ctl00$body$nuRate\", \"\");\n  }\n  \n  saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n  const finalResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: saveFormData\n  });\n\n  const saveHtml = await finalResponse.text();\n\n  if (finalResponse.status === 200) {\n    const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n    const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n    \n    if (errorMsg) {\n      return {\n        status: \"ERROR\",\n        message: `Save failed: ${errorMsg.trim()}`\n      };\n    }\n\n    // Extract the newly created currency code from the response\n    const newCode = saveDoc.querySelector(\"#ctl00_body_txtCode\")?.value || \"\";\n\n    return {\n      status: \"SUCCESS\",\n      message: `Successfully created new Currency Type${newCode ? ` (${newCode})` : \"\"}`,\n      currencyCode: newCode,\n      currencyName: args.currencyName,\n      currencySymbol: args.currencySymbol,\n      isBaseCurrency: isBase,\n      exchangeRate: isBase ? \"1\" : (exchangeRate || \"Not set\"),\n      previousBaseCurrency: isBase && previousBaseCurrency ? previousBaseCurrency : null\n    };\n  }\n\n  return {\n    status: \"ERROR\",\n    message: \"Failed to create Currency Type. Please verify in the UI.\"\n  };\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

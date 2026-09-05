@@ -1,0 +1,24 @@
+{
+  "id": "690dc577931a2d61ba0b1fa7",
+  "slug": "jobdetailonclick",
+  "name": "JobDetailOnclick",
+  "status": "live",
+  "createdAt": "2025-05-28T10:18:08.070Z",
+  "updatedAt": "2026-07-17T12:55:57.160Z",
+  "contentHash": "201a1b9309271b9e65c0a0aa9b883a1c106b07645b185cf4e6b8b140f85f140b",
+  "lastExportedAt": "2026-09-05T19:41:18.397Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc577931a2d61ba0b1fa7",
+    "name": "JobDetailOnclick",
+    "status": "live",
+    "code": "(async function (ad, e) {\n    try {\n        const iframe = document.querySelector('#ifrmPage');\n        if (!iframe || !iframe.contentWindow || !iframe.contentDocument) {\n            throw new Error('Iframe not found or inaccessible.');\n        }\n\n        const iframeDoc = iframe.contentDocument;\n        const iframeWin = iframe.contentWindow;\n\n        const response = await fetch(\n            iframeWin.RctUrl(`Advertisements/ViewAdvertisement?id=${ad.AdvId}`),\n            { method: 'GET' }\n        );\n\n        if (!response.ok) {\n            throw new Error(`Failed to fetch advertisement. Status: ${response.status}`);\n        }\n\n        const data = await response.text();\n\n        const mainId = iframeDoc.querySelector('#recApplyVacancy');\n        let container = mainId.querySelector('#viewAdContainer');\n\n        if (!container) {\n            container = iframeDoc.createElement('div');\n            container.id = 'viewAdContainer';\n            mainId.appendChild(container);\n        }\n\n        container.innerHTML = data;\n\n        const modal = iframeDoc.querySelector('#rctAdView');\n        if (modal && typeof iframeWin.$(modal).modal === 'function') {\n            iframeWin.$(modal).modal('show'); // Bootstrap modal inside iframe\n        }\n\n    } catch (error) {\n        const iframe = document.querySelector('#ifrmPage');\n        if (iframe && iframe.contentWindow) {\n            iframe.contentWindow.RctShowError(null, 'Fetch Failed', error.message);\n        }\n    }\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

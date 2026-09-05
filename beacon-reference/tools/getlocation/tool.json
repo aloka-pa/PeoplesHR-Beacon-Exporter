@@ -1,0 +1,95 @@
+{
+  "id": "690dc560931a2d61ba0b1136",
+  "slug": "getlocation",
+  "name": "getLocation",
+  "description": "in this agent tool provide to get location data to search for location code then related data to get.",
+  "instructions": null,
+  "taskName": "Location Data",
+  "tags": [],
+  "status": "unlive",
+  "signature": "getLocation",
+  "createdAt": "2025-04-25T06:28:08.551Z",
+  "updatedAt": "2026-07-17T12:53:20.668Z",
+  "assignedAgents": [],
+  "contentHash": "dbbf00e0baddd17de59a6c6ff6f31cb3624c0c80de5040068ef30ba063541bb1",
+  "lastExportedAt": "2026-09-05T19:39:22.114Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc560931a2d61ba0b1136",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getLocation",
+      "description": "in this agent tool provide to get location data to search for location code then related data to get.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getLocation",
+        "args": [
+          {
+            "name": "locationCode",
+            "type": "string",
+            "description": "to get the locationCode for user prompt. Ex:-\"000001\"",
+            "required": true,
+            "_id": "680b2d697054b5fe3e78e98b"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a25c0f62ec5c6a120ba2f"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"content-type\", \"application/x-www-form-urlencoded\");\n\n  const details = await BeaconBar.executeFunction(\"getAllApi\")(\"Location\", args.locationCode);\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", details.target);\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded.append(\"ctl00$body$hdnIsHead\", \"\");\n  urlencoded.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n  urlencoded.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$ContentSearch$cboCriteria\", \"LOC_CODE\");\n  urlencoded.append(\"ctl00$body$ContentSearch$txtContent\", args.locationCode);\n  urlencoded.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdSummary_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$hdnDefCountry\", \"-1\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/hr/EIM/Location.aspx`, requestOptions);\n  const html = await response.text();\n  const parser = new DOMParser();\n  const document = parser.parseFromString(html, 'text/html');\n\n  const detail = {\n    viewState: document.querySelector('#__VIEWSTATE')?.value || '',\n    eventValidation: document.querySelector('#__EVENTVALIDATION')?.value || '',\n    viewStateGen: document.querySelector('#__VIEWSTATEGENERATOR')?.value || ''\n  };\n\n  function extractOptions(selectId) {\n    const select = document.getElementById(selectId);\n    if (!select) return [];\n    return Array.from(select.options).map(option => ({\n      value: option.value,\n      label: option.text.trim()\n    }));\n  }\n\n  const dataObj = {\n    Countries: extractOptions(\"ctl00_body_ddlCountry\"),\n    TimeZoneGMT: extractOptions(\"ctl00_body_cboTimeZone\"),\n    Districts: extractOptions(\"ctl00_body_ddlDistrict\")\n  };\n\n  const result = {\n    code: document.querySelector('#ctl00_body_txtCode')?.value || \"\",\n    location: document.querySelector('#ctl00_body_txtName')?.value || \"\",\n    abbreviation: document.querySelector('#ctl00_body_txtAbbreviation')?.value || \"\",\n    telephone: document.querySelector('#ctl00_body_txttp')?.value || \"\",\n    fax: document.querySelector('#ctl00_body_txtFax')?.value || \"\",\n    email: document.querySelector('#ctl00_body_txtemail')?.value || \"\",\n    url: document.querySelector('#ctl00_body_txturl')?.value || \"\",\n    address: document.querySelector('#ctl00_body_txtaddress')?.value.trim() || \"\",\n    country: {\n      text: document.querySelector('#ctl00_body_ddlCountry option:checked')?.textContent.trim() || \"\",\n      value: document.querySelector('#ctl00_body_ddlCountry')?.value || \"\"\n    },\n    province: {\n      text: document.querySelector('#ctl00_body_ddlProvince option:checked')?.textContent.trim() || \"\",\n      value: document.querySelector('#ctl00_body_ddlProvince')?.value || \"\"\n    },\n    district: {\n      text: document.querySelector('#ctl00_body_ddlDistrict option:checked')?.textContent.trim() || \"\",\n      value: document.querySelector('#ctl00_body_ddlDistrict')?.value || \"\"\n    },\n    timezone: document.querySelector('#ctl00_body_cboTimeZone')?.value || \"\",\n    headOfLocation: document.querySelector('#ctl00_body_txtHeadName')?.value || \"\",\n    headTitle: document.querySelector('#ctl00_body_txtHTitle')?.value || \"\",\n    administrator: document.querySelector('#ctl00_body_txtAdminName')?.value || \"\",\n    logo: document.querySelector('#ctl00_body_filMyFile')?.value || \"\",\n    logoPreviewUrl: document.querySelector('#ctl00_body_imgTempEMPImage')?.src || \"\"\n  };\n\n  window.viewData = detail;\n\n  return { result };\n});\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Location Data",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-25T06:28:08.551Z",
+      "updatedAt": "2026-07-17T12:53:20.668Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getLocation",
+      "args": [
+        {
+          "name": "locationCode",
+          "type": "string",
+          "description": "to get the locationCode for user prompt. Ex:-\"000001\"",
+          "required": true,
+          "_id": "680b2d697054b5fe3e78e98b"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a25c0f62ec5c6a120ba2f"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"content-type\", \"application/x-www-form-urlencoded\");\n\n  const details = await BeaconBar.executeFunction(\"getAllApi\")(\"Location\", args.locationCode);\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", details.target);\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded.append(\"ctl00$body$hdnIsHead\", \"\");\n  urlencoded.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n  urlencoded.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$ContentSearch$cboCriteria\", \"LOC_CODE\");\n  urlencoded.append(\"ctl00$body$ContentSearch$txtContent\", args.locationCode);\n  urlencoded.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdSummary_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$hdnDefCountry\", \"-1\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/hr/EIM/Location.aspx`, requestOptions);\n  const html = await response.text();\n  const parser = new DOMParser();\n  const document = parser.parseFromString(html, 'text/html');\n\n  const detail = {\n    viewState: document.querySelector('#__VIEWSTATE')?.value || '',\n    eventValidation: document.querySelector('#__EVENTVALIDATION')?.value || '',\n    viewStateGen: document.querySelector('#__VIEWSTATEGENERATOR')?.value || ''\n  };\n\n  function extractOptions(selectId) {\n    const select = document.getElementById(selectId);\n    if (!select) return [];\n    return Array.from(select.options).map(option => ({\n      value: option.value,\n      label: option.text.trim()\n    }));\n  }\n\n  const dataObj = {\n    Countries: extractOptions(\"ctl00_body_ddlCountry\"),\n    TimeZoneGMT: extractOptions(\"ctl00_body_cboTimeZone\"),\n    Districts: extractOptions(\"ctl00_body_ddlDistrict\")\n  };\n\n  const result = {\n    code: document.querySelector('#ctl00_body_txtCode')?.value || \"\",\n    location: document.querySelector('#ctl00_body_txtName')?.value || \"\",\n    abbreviation: document.querySelector('#ctl00_body_txtAbbreviation')?.value || \"\",\n    telephone: document.querySelector('#ctl00_body_txttp')?.value || \"\",\n    fax: document.querySelector('#ctl00_body_txtFax')?.value || \"\",\n    email: document.querySelector('#ctl00_body_txtemail')?.value || \"\",\n    url: document.querySelector('#ctl00_body_txturl')?.value || \"\",\n    address: document.querySelector('#ctl00_body_txtaddress')?.value.trim() || \"\",\n    country: {\n      text: document.querySelector('#ctl00_body_ddlCountry option:checked')?.textContent.trim() || \"\",\n      value: document.querySelector('#ctl00_body_ddlCountry')?.value || \"\"\n    },\n    province: {\n      text: document.querySelector('#ctl00_body_ddlProvince option:checked')?.textContent.trim() || \"\",\n      value: document.querySelector('#ctl00_body_ddlProvince')?.value || \"\"\n    },\n    district: {\n      text: document.querySelector('#ctl00_body_ddlDistrict option:checked')?.textContent.trim() || \"\",\n      value: document.querySelector('#ctl00_body_ddlDistrict')?.value || \"\"\n    },\n    timezone: document.querySelector('#ctl00_body_cboTimeZone')?.value || \"\",\n    headOfLocation: document.querySelector('#ctl00_body_txtHeadName')?.value || \"\",\n    headTitle: document.querySelector('#ctl00_body_txtHTitle')?.value || \"\",\n    administrator: document.querySelector('#ctl00_body_txtAdminName')?.value || \"\",\n    logo: document.querySelector('#ctl00_body_filMyFile')?.value || \"\",\n    logoPreviewUrl: document.querySelector('#ctl00_body_imgTempEMPImage')?.src || \"\"\n  };\n\n  window.viewData = detail;\n\n  return { result };\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

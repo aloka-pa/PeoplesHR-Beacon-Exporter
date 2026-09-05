@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "descriptionFinaced",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "descriptionFinaced for the financed Responsibility user does not provided , generate 2000 characters",
+      "advanced": false,
+      "raw": {
+        "name": "descriptionFinaced",
+        "type": "string",
+        "description": "descriptionFinaced for the financed Responsibility user does not provided , generate 2000 characters",
+        "required": true,
+        "_id": "683c51c2d9dba9360725596f"
+      }
+    },
+    {
+      "name": "OtherDescription",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "OtherDescription for the Other Related Information user does not provided generate 2000 characters \n",
+      "advanced": false,
+      "raw": {
+        "name": "OtherDescription",
+        "type": "string",
+        "description": "OtherDescription for the Other Related Information user does not provided generate 2000 characters \n",
+        "required": true,
+        "_id": "683c51c2d9dba93607255970"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

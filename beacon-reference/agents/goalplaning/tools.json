@@ -1,0 +1,17 @@
+[
+  {
+    "toolId": "690dc56a931a2d61ba0b1a0e",
+    "toolName": "fillingGoalPanningDescription",
+    "path": "tools/fillinggoalpanningdescription"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a72",
+    "toolName": "fillingGoalPanningDescription",
+    "path": "tools/fillinggoalpanningdescription-2"
+  },
+  {
+    "toolId": "690dc56a931a2d61ba0b1a08",
+    "toolName": "getEvalutions",
+    "path": "tools/getevalutions-2"
+  }
+]

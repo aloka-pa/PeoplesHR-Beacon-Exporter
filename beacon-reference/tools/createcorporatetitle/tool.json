@@ -1,0 +1,72 @@
+{
+  "id": "690dc563931a2d61ba0b13ee",
+  "slug": "createcorporatetitle",
+  "name": "createCorporateTitle",
+  "description": "Before creating a Corporate Title, first fetch and display the Salary Grade and Upgrade Level data. The Salary Grade options must be shown to the user, who will then select a name, and the corresponding value must be captured. If the user marks \"Top in Hierarchy\" as enabled (on), the Next Upgrade Level field should not be displayed. However, if \"Top in Hierarchy\" is disabled (off), the Next Upgrade Level options must be shown, and the user should select the appropriate value from the list.",
+  "instructions": null,
+  "taskName": "Create Corporate Title",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createCorporateTitle",
+  "createdAt": "2025-04-29T09:35:01.862Z",
+  "updatedAt": "2026-05-15T06:52:50.152Z",
+  "assignedAgents": [],
+  "contentHash": "8ebb0fca8c4d84dd3bfd355f1a713607061a2d21953b72bf93d2072d5de57a6a",
+  "lastExportedAt": "2026-09-05T19:39:22.692Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc563931a2d61ba0b13ee",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createCorporateTitle",
+      "description": "Before creating a Corporate Title, first fetch and display the Salary Grade and Upgrade Level data. The Salary Grade options must be shown to the user, who will then select a name, and the corresponding value must be captured. If the user marks \"Top in Hierarchy\" as enabled (on), the Next Upgrade Level field should not be displayed. However, if \"Top in Hierarchy\" is disabled (off), the Next Upgrade Level options must be shown, and the user should select the appropriate value from the list.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createCorporateTitle",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"Corporate Title Name (e.g., 'Middle Management').\"\n    },\n    \"ctl00_body_dpSalary\": {\n      \"type\": \"string\",\n      \"description\": \"Selected Salary Grade code (e.g., '000005'). All Salary Grades data for getUpdateCorporateTitleDetails api will be displayed for the user to select, and the corresponding value must be picked.\"\n    },\n    \"ctl00_body_chkTop\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Top in Hierarchy flag. If provided as 'on', 'Next Upgrade Level' must NOT be passed.\"\n    },\n    \"ctl00_body_dpNextUpgrade\": {\n      \"type\": \"string\",\n      \"description\": \"Next Upgrade Level code (e.g., '000008'). This must be provided if 'Top in Hierarchy' is not 'on'. and user off to display the all next upgrade level detaisl for retrive the data for getUpdateCorporateTitleDetails api\"\n    },\n    \"ctl00_body_nuLevel\": {\n      \"type\": \"integer\",\n      \"description\": \"Level number (e.g., 3).\"\n    },\n    \"ctl00_body_ManagePos\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\", \"off\"],\n      \"description\": \"Indicates whether it is a Managerial Position. on or off\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_dpSalary\",\n    \"ctl00_body_nuLevel\"\n  ],\n  \"dependencies\": {\n    \"ctl00_body_chkTop\": {\n      \"oneOf\": [\n        {\n          \"properties\": {\n            \"ctl00_body_chkTop\": {\n              \"const\": \"on\"\n            }\n          },\n          \"not\": {\n            \"required\": [\"ctl00_body_dpNextUpgrade\"]\n          }\n        },\n        {\n          \"not\": {\n            \"required\": [\"ctl00_body_chkTop\"]\n          },\n          \"required\": [\"ctl00_body_dpNextUpgrade\"]\n        }\n      ]\n    }\n  }\n}",
+        "_id": "68109d451a6d5a4dc75c088a"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", window.cp.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", window.cp.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", window.cp.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n\n  urlencoded.append(\n    \"ctl00$body$txtName\",\n    args[\"ctl00_body_txtName\"]\n  );\n\n  urlencoded.append(\n    \"ctl00$body$dpSalary\",\n    args[\"ctl00_body_dpSalary\"]\n  );\n\n  if (args[\"ctl00_body_chkTop\"] === \"on\") {\n    urlencoded.append(\"ctl00$body$chkTop\", \"on\");\n  } else {\n    urlencoded.append(\n      \"ctl00$body$dpNextUpgrade\",\n      args[\"ctl00_body_dpNextUpgrade\"] || \"-1\"\n    );\n  }\n\n  urlencoded.append(\n    \"ctl00$body$nuLevel\",\n    args[\"ctl00_body_nuLevel\"]?.toString() || \"\"\n  );\n\n  urlencoded.append(\"ctl00$body$butSave\", \"Save\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(\n    `${location.origin}/hr/EIM/CorporeteTitle.aspx`,\n    requestOptions\n  );\n\n  const html = await response.text();\n\n  return \"Created successfully!!\";\n})",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create Corporate Title",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-29T09:35:01.862Z",
+      "updatedAt": "2026-05-15T06:52:50.152Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createCorporateTitle",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"Corporate Title Name (e.g., 'Middle Management').\"\n    },\n    \"ctl00_body_dpSalary\": {\n      \"type\": \"string\",\n      \"description\": \"Selected Salary Grade code (e.g., '000005'). All Salary Grades data for getUpdateCorporateTitleDetails api will be displayed for the user to select, and the corresponding value must be picked.\"\n    },\n    \"ctl00_body_chkTop\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Top in Hierarchy flag. If provided as 'on', 'Next Upgrade Level' must NOT be passed.\"\n    },\n    \"ctl00_body_dpNextUpgrade\": {\n      \"type\": \"string\",\n      \"description\": \"Next Upgrade Level code (e.g., '000008'). This must be provided if 'Top in Hierarchy' is not 'on'. and user off to display the all next upgrade level detaisl for retrive the data for getUpdateCorporateTitleDetails api\"\n    },\n    \"ctl00_body_nuLevel\": {\n      \"type\": \"integer\",\n      \"description\": \"Level number (e.g., 3).\"\n    },\n    \"ctl00_body_ManagePos\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\", \"off\"],\n      \"description\": \"Indicates whether it is a Managerial Position. on or off\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_dpSalary\",\n    \"ctl00_body_nuLevel\"\n  ],\n  \"dependencies\": {\n    \"ctl00_body_chkTop\": {\n      \"oneOf\": [\n        {\n          \"properties\": {\n            \"ctl00_body_chkTop\": {\n              \"const\": \"on\"\n            }\n          },\n          \"not\": {\n            \"required\": [\"ctl00_body_dpNextUpgrade\"]\n          }\n        },\n        {\n          \"not\": {\n            \"required\": [\"ctl00_body_chkTop\"]\n          },\n          \"required\": [\"ctl00_body_dpNextUpgrade\"]\n        }\n      ]\n    }\n  }\n}",
+      "_id": "68109d451a6d5a4dc75c088a"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", window.cp.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", window.cp.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", window.cp.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n\n  urlencoded.append(\n    \"ctl00$body$txtName\",\n    args[\"ctl00_body_txtName\"]\n  );\n\n  urlencoded.append(\n    \"ctl00$body$dpSalary\",\n    args[\"ctl00_body_dpSalary\"]\n  );\n\n  if (args[\"ctl00_body_chkTop\"] === \"on\") {\n    urlencoded.append(\"ctl00$body$chkTop\", \"on\");\n  } else {\n    urlencoded.append(\n      \"ctl00$body$dpNextUpgrade\",\n      args[\"ctl00_body_dpNextUpgrade\"] || \"-1\"\n    );\n  }\n\n  urlencoded.append(\n    \"ctl00$body$nuLevel\",\n    args[\"ctl00_body_nuLevel\"]?.toString() || \"\"\n  );\n\n  urlencoded.append(\"ctl00$body$butSave\", \"Save\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(\n    `${location.origin}/hr/EIM/CorporeteTitle.aspx`,\n    requestOptions\n  );\n\n  const html = await response.text();\n\n  return \"Created successfully!!\";\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "id": "690dc566931a2d61ba0b164e",
+  "slug": "createmaritalstatus",
+  "name": "createMaritalStatus",
+  "description": "in this tool create the Marital Status.",
+  "instructions": null,
+  "taskName": "Create Marital Status",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createMaritalStatus",
+  "createdAt": "2025-05-04T17:17:40.101Z",
+  "updatedAt": "2025-05-04T17:17:40.101Z",
+  "assignedAgents": [],
+  "contentHash": "e59f11000238449296e31e748f923fc4064f70acf6d82f62592ad14b0a73ea0c",
+  "lastExportedAt": "2026-09-05T19:39:24.138Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b164e",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createMaritalStatus",
+      "description": "in this tool create the Marital Status.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createMaritalStatus",
+        "args": [
+          {
+            "name": "ctl00$body$txtName",
+            "type": "string",
+            "description": "to give the create Marital Status name.",
+            "required": true,
+            "_id": "6817a134fc879b0ec383c3df"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6817a134fc879b0ec383c3de"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"MaritalStatus\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"MaritalStatus\");\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: newInt.viewState,\n    __VIEWSTATEGENERATOR: newInt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: newInt.eventValidation,\n    \"ctl00$body$txtName\": args.ctl00$body$txtName,\n    \"ctl00$body$butSave\": \"Save\"\n  }, \"MaritalStatus\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const maritalStatus = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const createdetails = {\n    code,\n    maritalStatus\n  };\n  return createdetails;\n})",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create Marital Status",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-04T17:17:40.101Z",
+      "updatedAt": "2025-05-04T17:17:40.101Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createMaritalStatus",
+      "args": [
+        {
+          "name": "ctl00$body$txtName",
+          "type": "string",
+          "description": "to give the create Marital Status name.",
+          "required": true,
+          "_id": "6817a134fc879b0ec383c3df"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6817a134fc879b0ec383c3de"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"MaritalStatus\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"MaritalStatus\");\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: newInt.viewState,\n    __VIEWSTATEGENERATOR: newInt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: newInt.eventValidation,\n    \"ctl00$body$txtName\": args.ctl00$body$txtName,\n    \"ctl00$body$butSave\": \"Save\"\n  }, \"MaritalStatus\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const maritalStatus = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const createdetails = {\n    code,\n    maritalStatus\n  };\n  return createdetails;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

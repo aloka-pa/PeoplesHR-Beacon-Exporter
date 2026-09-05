@@ -1,0 +1,91 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "reason",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Reason ID selected by the user from the 'getShortLeaveApprovalList' API.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Reason ID selected by the user from the 'getShortLeaveApprovalList' API."
+      }
+    },
+    {
+      "name": "comment",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional comment provided by the user explaining the short leave.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Optional comment provided by the user explaining the short leave."
+      }
+    },
+    {
+      "name": "approverNumber",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Approver's employee ID, selected from the 'getShortLeaveApprovalList' API. ex:- '000001'",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Approver's employee ID, selected from the 'getShortLeaveApprovalList' API. ex:- '000001'"
+      }
+    },
+    {
+      "name": "leaveDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Leave date in the format DD-MM-YYYY",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Leave date in the format DD-MM-YYYY"
+      }
+    },
+    {
+      "name": "startTime",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Start time in 'HH.MM' 24-hour format. Example: '01.00'.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "pattern": "^\\d{2}\\.\\d{2}$",
+        "description": "Start time in 'HH.MM' 24-hour format. Example: '01.00'."
+      }
+    },
+    {
+      "name": "Year",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "takes from the user year like 2025",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "takes from the user year like 2025"
+      }
+    },
+    {
+      "name": "endTime",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "End time in 'HH.MM' 24-hour format. Example: '09.00'.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "pattern": "^\\d{2}\\.\\d{2}$",
+        "description": "End time in 'HH.MM' 24-hour format. Example: '09.00'."
+      }
+    }
+  ]
+}

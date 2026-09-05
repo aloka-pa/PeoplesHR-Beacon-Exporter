@@ -1,0 +1,98 @@
+{
+  "id": "690dc567931a2d61ba0b1779",
+  "slug": "getassignnoncashbenefittoemployeedetails",
+  "name": "getAssignNonCashBenefitToEmployeeDetails",
+  "description": "in this tool generate the Assign Non-Cash Benefit To Employee Details. in tool return the non cash deallocated Benefits and non cash assigned Benefits.",
+  "instructions": null,
+  "taskName": "Fetching Assign Non-Cash Benefit To Employee Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getAssignNonCashBenefitToEmployeeDetails",
+  "createdAt": "2025-05-16T12:51:12.757Z",
+  "updatedAt": "2025-05-16T12:51:12.757Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "e27c21bbfa8fea9afe8d4d52707b53e7a4793d37cffecda81cd64d430f18700d",
+  "lastExportedAt": "2026-09-05T19:39:23.935Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc567931a2d61ba0b1779",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getAssignNonCashBenefitToEmployeeDetails",
+      "description": "in this tool generate the Assign Non-Cash Benefit To Employee Details. in tool return the non cash deallocated Benefits and non cash assigned Benefits.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getAssignNonCashBenefitToEmployeeDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to give the employee id Example:- \"000001\" etc...",
+            "required": true,
+            "_id": "682734c0d7c76e8d8bce3399"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "682734c0d7c76e8d8bce3398"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignNonCashBenifitEmployee.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"IsShowButtons=1\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/AssignNonCashBenifitEmployee.aspx\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n\n  const detailsText = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(detailsText, \"text/html\");\n\n  const empNumber = doc.querySelector('input[id=\"ctl00_body_EmpSearch_txtEmpDisplayNumber\"]')?.value || \"\";\n  window.pqn = empNumber;\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"\");\n  urlencoded.append(\"scrollTop\", \"\");\n  urlencoded.append(\"__EVENTTARGET\", \"GetSearchResult\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewStateGenerator);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", empNumber);\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded.append(\"ctl00_body_grdavailable_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$hdnDateFormate\", \"m/d/yyyy\");\n  urlencoded.append(\"ctl00$body$txtempnumber\", empNumber);\n\n  const responsePost = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  const textPost = await responsePost.text();\n  const docPost = parser.parseFromString(textPost, \"text/html\");\n\n  const viewState2 = docPost.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGen2 = docPost.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation2 = docPost.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const publicKey = docPost.querySelector(\"#ctl00_body_txtPublicKey\")?.value || \"\";\n\n  const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(publicKey, args.id);\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", \"\");\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewState2);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewStateGen2);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", eventValidation2);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded2.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", args.id);\n  urlencoded2.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded2.append(\"ctl00_body_grdavailable_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$butEdit\", \"Edit\");\n  urlencoded2.append(\"ctl00$body$hdnDateFormate\", \"m/d/yyyy\");\n  urlencoded2.append(\"ctl00$body$txtPublicKey\", publicKey);\n  urlencoded2.append(\"ctl00$body$txtempnumber\", empEnc);\n\n  const finalResponse = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  });\n\n  const finalText = await finalResponse.text();\n  const docPost1 = parser.parseFromString(finalText, \"text/html\");\n\n  window.assigned = {\n    viewState3: docPost1.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n    viewStateGen3: docPost1.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n    eventValidation3: docPost1.querySelector(\"#__EVENTVALIDATION\")?.value || \"\",\n    publicKey3: docPost1.querySelector(\"#ctl00_body_txtPublicKey\")?.value || \"\",\n    empEnc: empEnc\n  };\n\n  const nondeallocatedBenefits = [];\n  const groupHeaders = docPost1.querySelectorAll(\".GroupHeader_Default\");\n\n  groupHeaders.forEach(header => {\n    const categoryText = header.querySelector(\"p\")?.textContent.trim().replace(\"Category :\", \"\").trim() || \"\";\n    let nextRow = header.nextElementSibling;\n\n    while (nextRow && (nextRow.classList.contains(\"GridRow_Default\") || nextRow.classList.contains(\"GridAltRow_Default\"))) {\n      const cells = nextRow.querySelectorAll(\"td\");\n      nondeallocatedBenefits.push({\n        category: categoryText,\n        benefitName: cells[1]?.textContent.trim() || \"\",\n        quantity: cells[2]?.textContent.trim() || \"\"\n      });\n      nextRow = nextRow.nextElementSibling;\n      if (nextRow && nextRow.classList.contains(\"GroupHeader_Default\")) break;\n    }\n  });\n\n  const nonassignedBenefits = Array.from(\n    docPost1.querySelectorAll(\"#ctl00_body_grdallocated tr\")\n  )\n    .slice(1) // Skip header row\n    .map((row) => {\n      const cells = row.querySelectorAll(\"td\");\n      const editHref = cells[2]?.querySelector(\"a\")?.getAttribute(\"href\") || \"\";\n      const editIdMatch = editHref.match(/__doPostBack\\('([^']+)'/);\n      return {\n        benefitName: cells[0]?.textContent.trim() || \"\",\n        quantity: cells[1]?.textContent.trim() || \"\",\n        editId: editIdMatch ? editIdMatch[1] : null\n      };\n    });\n\n  const empNum = docPost.querySelector(\"#ctl00_body_EmpSearch_txtEmpDisplayNumber\").value || \"\";\n  if (empNum === args.id) {\n    return {\n      nondeallocatedBenefits,\n      nonassignedBenefits\n    };\n  } else {\n    return \"no employee is exist in this assigned non cash benefit.\"\n  }\n});\n",
+      "sampleRequest": {
+        "id": "000005"
+      },
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Fetching Assign Non-Cash Benefit To Employee Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-16T12:51:12.757Z",
+      "updatedAt": "2025-05-16T12:51:12.757Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getAssignNonCashBenefitToEmployeeDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to give the employee id Example:- \"000001\" etc...",
+          "required": true,
+          "_id": "682734c0d7c76e8d8bce3399"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "682734c0d7c76e8d8bce3398"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignNonCashBenifitEmployee.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"IsShowButtons=1\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/AssignNonCashBenifitEmployee.aspx\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n\n  const detailsText = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(detailsText, \"text/html\");\n\n  const empNumber = doc.querySelector('input[id=\"ctl00_body_EmpSearch_txtEmpDisplayNumber\"]')?.value || \"\";\n  window.pqn = empNumber;\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"\");\n  urlencoded.append(\"scrollTop\", \"\");\n  urlencoded.append(\"__EVENTTARGET\", \"GetSearchResult\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewStateGenerator);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", empNumber);\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded.append(\"ctl00_body_grdavailable_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$hdnDateFormate\", \"m/d/yyyy\");\n  urlencoded.append(\"ctl00$body$txtempnumber\", empNumber);\n\n  const responsePost = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  const textPost = await responsePost.text();\n  const docPost = parser.parseFromString(textPost, \"text/html\");\n\n  const viewState2 = docPost.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGen2 = docPost.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation2 = docPost.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const publicKey = docPost.querySelector(\"#ctl00_body_txtPublicKey\")?.value || \"\";\n\n  const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(publicKey, args.id);\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", \"\");\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewState2);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewStateGen2);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", eventValidation2);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded2.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", args.id);\n  urlencoded2.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded2.append(\"ctl00_body_grdavailable_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$butEdit\", \"Edit\");\n  urlencoded2.append(\"ctl00$body$hdnDateFormate\", \"m/d/yyyy\");\n  urlencoded2.append(\"ctl00$body$txtPublicKey\", publicKey);\n  urlencoded2.append(\"ctl00$body$txtempnumber\", empEnc);\n\n  const finalResponse = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  });\n\n  const finalText = await finalResponse.text();\n  const docPost1 = parser.parseFromString(finalText, \"text/html\");\n\n  window.assigned = {\n    viewState3: docPost1.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n    viewStateGen3: docPost1.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n    eventValidation3: docPost1.querySelector(\"#__EVENTVALIDATION\")?.value || \"\",\n    publicKey3: docPost1.querySelector(\"#ctl00_body_txtPublicKey\")?.value || \"\",\n    empEnc: empEnc\n  };\n\n  const nondeallocatedBenefits = [];\n  const groupHeaders = docPost1.querySelectorAll(\".GroupHeader_Default\");\n\n  groupHeaders.forEach(header => {\n    const categoryText = header.querySelector(\"p\")?.textContent.trim().replace(\"Category :\", \"\").trim() || \"\";\n    let nextRow = header.nextElementSibling;\n\n    while (nextRow && (nextRow.classList.contains(\"GridRow_Default\") || nextRow.classList.contains(\"GridAltRow_Default\"))) {\n      const cells = nextRow.querySelectorAll(\"td\");\n      nondeallocatedBenefits.push({\n        category: categoryText,\n        benefitName: cells[1]?.textContent.trim() || \"\",\n        quantity: cells[2]?.textContent.trim() || \"\"\n      });\n      nextRow = nextRow.nextElementSibling;\n      if (nextRow && nextRow.classList.contains(\"GroupHeader_Default\")) break;\n    }\n  });\n\n  const nonassignedBenefits = Array.from(\n    docPost1.querySelectorAll(\"#ctl00_body_grdallocated tr\")\n  )\n    .slice(1) // Skip header row\n    .map((row) => {\n      const cells = row.querySelectorAll(\"td\");\n      const editHref = cells[2]?.querySelector(\"a\")?.getAttribute(\"href\") || \"\";\n      const editIdMatch = editHref.match(/__doPostBack\\('([^']+)'/);\n      return {\n        benefitName: cells[0]?.textContent.trim() || \"\",\n        quantity: cells[1]?.textContent.trim() || \"\",\n        editId: editIdMatch ? editIdMatch[1] : null\n      };\n    });\n\n  const empNum = docPost.querySelector(\"#ctl00_body_EmpSearch_txtEmpDisplayNumber\").value || \"\";\n  if (empNum === args.id) {\n    return {\n      nondeallocatedBenefits,\n      nonassignedBenefits\n    };\n  } else {\n    return \"no employee is exist in this assigned non cash benefit.\"\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {
+        "id": "000005"
+      }
+    }
+  }
+}

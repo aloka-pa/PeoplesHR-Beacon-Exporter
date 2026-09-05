@@ -1,0 +1,53 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the user for employee id '000001'",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "to give the user for employee id '000001'"
+      }
+    },
+    {
+      "name": "editId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the edit id for 'getAssignCashBenefitToEmployeeDetails' api example id:-'ctl00$body$grdallocated$ctl06$ctl00'",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "to get the edit id for 'getAssignCashBenefitToEmployeeDetails' api example id:-'ctl00$body$grdallocated$ctl06$ctl00'"
+      }
+    },
+    {
+      "name": "updateDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the update date format dd/mm/yyyy. and before take the date, execute the date format api the get the date format.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "to give the update date format dd/mm/yyyy. and before take the date, execute the date format api the get the date format."
+      }
+    },
+    {
+      "name": "updateAmount",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the update ammount Example '1000' etc.. if the user not update ammount to get current assign amount will be take.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "to give the update ammount Example '1000' etc.. if the user not update ammount to get current assign amount will be take."
+      }
+    }
+  ]
+}

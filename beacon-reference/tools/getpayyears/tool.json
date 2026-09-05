@@ -1,0 +1,139 @@
+{
+  "id": "69eeb724d6deb5f99d4daa68",
+  "slug": "getpayyears",
+  "name": "getPayYears",
+  "description": "getPayYears - Requires PayType from previous step. Do not display any hyperlinks in the output",
+  "instructions": null,
+  "taskName": "Fetching Pay Years",
+  "tags": [
+    "PayRoll",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getPayYears",
+  "createdAt": "2026-04-27T01:08:52.716Z",
+  "updatedAt": "2026-07-17T12:53:48.747Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c51",
+      "name": "PayRoll"
+    }
+  ],
+  "contentHash": "3ff7f287fe4db3d027d7b649e6b0e9830d793f5230328cf08c96708b237f5dc6",
+  "lastExportedAt": "2026-09-05T19:39:22.093Z",
+  "raw": {
+    "basic": {
+      "_id": "69eeb724d6deb5f99d4daa68",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getPayYears",
+      "description": "getPayYears - Requires PayType from previous step. Do not display any hyperlinks in the output",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getPayYears",
+        "args": [
+          {
+            "name": "PayType",
+            "type": "string",
+            "description": "Selected Pay Type from previous tool GetPayType",
+            "required": true,
+            "_id": "69eeb724d6deb5f99d4daa6a"
+          },
+          {
+            "name": "EmpNumber",
+            "type": "string",
+            "description": "Employee Number (optional)",
+            "required": false,
+            "_id": "69eeb724d6deb5f99d4daa6b"
+          },
+          {
+            "name": "PaySchId",
+            "type": "string",
+            "description": "Pay Schedule Id (optional)",
+            "required": false,
+            "_id": "69eeb724d6deb5f99d4daa6c"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a25dcf62ec5c6a120c369"
+      },
+      "by": "34476",
+      "fetcher": "(async function (args, reqOptions) {\n  const baseUrl = await BeaconBar.executeFunction(\"reqOptions\")();\n\n  const finalUrl = `${baseUrl}GPAdding/Api/widgets/ExternalSlipApi/GetPayYear`;\n\n\n  return {\n    url: finalUrl,\n    method: \"POST\",\n    headers: {\n      \"x-requested-with\": \"XMLHttpRequest\",\n      \"Content-Type\": \"application/json\"\n    },\n    credentials: \"include\",\n    body: JSON.stringify({\n      EmpNumber: \"\",\n      PayType: args?.PayType || \"\",\n      PaySchId: \"\"\n    })\n  };\n})",
+      "transformer": "(function (data, args, reqOptions) {\n  return data.map(item => ({\n    PayType: item.PayType,\n    PayYear: item.PayYear,\n    PaySchId: item.PaySchId,\n    EmpNumber: item.EmpNumber\n  }));\n})",
+      "groupName": "",
+      "tags": [
+        "PayRoll",
+        "Headers"
+      ],
+      "taskName": "Fetching Pay Years",
+      "etl": false,
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return data.map(item => ({\n    url: \"\",\n    title: `Year: ${item.PayYear}`,\n    subTitle: `Pay Type: ${item.PayType}`,\n    icon: \"\"\n  }));\n})",
+      "toolType": "code",
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "status": "live",
+      "createdAt": "2026-04-27T01:08:52.716Z",
+      "updatedAt": "2026-07-17T12:53:48.747Z",
+      "__v": 3,
+      "outputExample": {},
+      "sampleRequest": {},
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "isFromKG": false,
+      "sanity": {
+        "apiResponse": []
+      },
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c51",
+          "name": "PayRoll"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getPayYears",
+      "args": [
+        {
+          "name": "PayType",
+          "type": "string",
+          "description": "Selected Pay Type from previous tool GetPayType",
+          "required": true,
+          "_id": "69eeb724d6deb5f99d4daa6a"
+        },
+        {
+          "name": "EmpNumber",
+          "type": "string",
+          "description": "Employee Number (optional)",
+          "required": false,
+          "_id": "69eeb724d6deb5f99d4daa6b"
+        },
+        {
+          "name": "PaySchId",
+          "type": "string",
+          "description": "Pay Schedule Id (optional)",
+          "required": false,
+          "_id": "69eeb724d6deb5f99d4daa6c"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a25dcf62ec5c6a120c369"
+    },
+    "fetcher": "(async function (args, reqOptions) {\n  const baseUrl = await BeaconBar.executeFunction(\"reqOptions\")();\n\n  const finalUrl = `${baseUrl}GPAdding/Api/widgets/ExternalSlipApi/GetPayYear`;\n\n\n  return {\n    url: finalUrl,\n    method: \"POST\",\n    headers: {\n      \"x-requested-with\": \"XMLHttpRequest\",\n      \"Content-Type\": \"application/json\"\n    },\n    credentials: \"include\",\n    body: JSON.stringify({\n      EmpNumber: \"\",\n      PayType: args?.PayType || \"\",\n      PaySchId: \"\"\n    })\n  };\n})",
+    "transformer": "(function (data, args, reqOptions) {\n  return data.map(item => ({\n    PayType: item.PayType,\n    PayYear: item.PayYear,\n    PaySchId: item.PaySchId,\n    EmpNumber: item.EmpNumber\n  }));\n})",
+    "source": "(function(data, args, reqOptions) {\n  return data.map(item => ({\n    url: \"\",\n    title: `Year: ${item.PayYear}`,\n    subTitle: `Pay Type: ${item.PayType}`,\n    icon: \"\"\n  }));\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

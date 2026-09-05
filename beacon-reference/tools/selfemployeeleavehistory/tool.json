@@ -1,0 +1,115 @@
+{
+  "id": "690dc56b931a2d61ba0b1a8e",
+  "slug": "selfemployeeleavehistory",
+  "name": "selfEmployeeLeaveHistory",
+  "description": "in the api provide self employee leave history Details. and added Segment in the api, only execute self login employee view history details provide.",
+  "instructions": null,
+  "taskName": "Fetching The Self Employee Leave History",
+  "tags": [
+    "Absent Management",
+    "Headers",
+    "BugFix"
+  ],
+  "status": "live",
+  "signature": "selfEmployeeLeaveHistory",
+  "createdAt": "2025-08-04T12:04:18.887Z",
+  "updatedAt": "2026-07-06T05:04:58.342Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c72",
+      "name": "AbsenceManagementEmployee"
+    }
+  ],
+  "contentHash": "9892523b682391da7e74084aaed34030d7f1fb778cd03f4157a1bac9cf3eb711",
+  "lastExportedAt": "2026-09-05T19:39:22.281Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1a8e",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selfEmployeeLeaveHistory",
+      "description": "in the api provide self employee leave history Details. and added Segment in the api, only execute self login employee view history details provide.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selfEmployeeLeaveHistory",
+        "args": [
+          {
+            "name": "year",
+            "type": "string",
+            "description": "user give which year leave year details get to give the year Example:\"2025\"",
+            "required": true,
+            "_id": "6890a1c2e2a2e5b6af1aa146"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6a4b377aa257f6402f863a66"
+      },
+      "by": "27739",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n   if (\n  !BeaconBar.user.metaData.menus.some(menu =>\n    menu.includes(\"AbsenceV9/LeaveApplication/LeaveApplication?mvc=1&isAllEmployee=1\")\n  ) &&\n  !BeaconBar.user.metaData.menus.some(menu =>\n    menu.includes(\"AbsenceV9/LeaveHistory/LeaveHistory?mvc=1\")\n  )\n) {\n  return \"It seems you don't have access. Please check with the HR Admin\";\n}\n  const empKey = await BeaconBar.executeFunction(\"employeeLeaveApplication\")();\n  window.empnumm = empKey\n  const myHeaders = new Headers();\n  myHeaders.append(\"__cfafvalue\", window.csrf);\n  myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const urlEncodedData = new URLSearchParams();\n  urlEncodedData.append(\"EmpNumber\", empKey);\n  urlEncodedData.append(\"LeaveYear\", args.year);\n  urlEncodedData.append(\"IsReject\", \"0\");\n  urlEncodedData.append(\"_search\", \"false\");\n  urlEncodedData.append(\"nd\", Date.now().toString());\n  urlEncodedData.append(\"rows\", \"10000\");\n  urlEncodedData.append(\"page\", \"1\");\n  urlEncodedData.append(\"sidx\", \"\");\n  urlEncodedData.append(\"sord\", \"asc\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlEncodedData,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveHistory/GetLeaveStatusDetails`, requestOptions);\n\n  const leaveDetails = await response.json();\n\n  // const viewLeaveHistory = leaveDetails.map((item) => ({\n  //   fromDate: item.LDetail?.FromDate,\n  //   toDate: item.LDetail?.ToDate,\n  //   appliedDate: item.LDetail?.EditDate,\n  //   leaveType: item.LeaveTypeName,\n  //   days: item.LDetail?.LeaveAmount,\n  //   leaveHours: `${item.LDetail?.ATBStartTime} - ${item.LDetail?.ATBEndTime}`,\n  //   status: item.Status ? item.Status.replace(/<[^>]*>?/gm, '').trim() : \"N/A\",\n  //   reasonForLeave: item.LDetail?.Comment || \"No Reason Provided\",\n  //   coveringEmployee: item.LDetail?.CoveringEmpNumber || \"No Covering Employee\"\n  // }));\n  const viewLeaveHistory = [];\n\n  const formatDate = (dateStr) => {\n    if (!dateStr) return '';\n    const [year, month, day] = dateStr.split('T')[0].split('-');\n    return `${month}/${day}/${year}`;\n  };\n\n  leaveDetails.forEach(item => {\n    const detail = item.LDetail || {};\n    viewLeaveHistory.push({\n      LeaveAppIDEncrypted: detail.LeaveAppIDEncrypted || '-',\n      FromDate: formatDate(detail.FromDate),\n      ToDate: formatDate(detail.ToDate),\n      LeaveAppliedDate: formatDate(detail.EditDate),\n      LeaveType: item.LeaveTypeName || '-',\n      Days: detail.LeaveAmountText || '-',\n      LeaveHours: item.LeaveMinutes ? (item.LeaveMinutes / 60).toFixed(2) : '-',\n      Status: item.Status?.replace(/<[^>]*>?/gm, '') || '-', // strip HTML\n      ReasonForLeave: detail.Comment || '-',\n      CoveringEmployee: item.LeaveActingEmp || '-',\n      LeaveAppliedId: detail.LeaveAppID || \" \"\n    });\n  });\n\n  if (viewLeaveHistory.length > 5) {\n    BeaconBar.executeFunction(\"downloadcsv\")(viewLeaveHistory);\n  }\n\n  window.leaveHistort12 = viewLeaveHistory\n  return viewLeaveHistory;\n});\n",
+      "groupName": "",
+      "tags": [
+        "Absent Management",
+        "Headers",
+        "BugFix"
+      ],
+      "taskName": "Fetching The Self Employee Leave History",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-04T12:04:18.887Z",
+      "updatedAt": "2026-07-06T05:04:58.342Z",
+      "__v": 5,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "sanity": {
+        "apiResponse": []
+      },
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c72",
+          "name": "AbsenceManagementEmployee"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selfEmployeeLeaveHistory",
+      "args": [
+        {
+          "name": "year",
+          "type": "string",
+          "description": "user give which year leave year details get to give the year Example:\"2025\"",
+          "required": true,
+          "_id": "6890a1c2e2a2e5b6af1aa146"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6a4b377aa257f6402f863a66"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n   if (\n  !BeaconBar.user.metaData.menus.some(menu =>\n    menu.includes(\"AbsenceV9/LeaveApplication/LeaveApplication?mvc=1&isAllEmployee=1\")\n  ) &&\n  !BeaconBar.user.metaData.menus.some(menu =>\n    menu.includes(\"AbsenceV9/LeaveHistory/LeaveHistory?mvc=1\")\n  )\n) {\n  return \"It seems you don't have access. Please check with the HR Admin\";\n}\n  const empKey = await BeaconBar.executeFunction(\"employeeLeaveApplication\")();\n  window.empnumm = empKey\n  const myHeaders = new Headers();\n  myHeaders.append(\"__cfafvalue\", window.csrf);\n  myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const urlEncodedData = new URLSearchParams();\n  urlEncodedData.append(\"EmpNumber\", empKey);\n  urlEncodedData.append(\"LeaveYear\", args.year);\n  urlEncodedData.append(\"IsReject\", \"0\");\n  urlEncodedData.append(\"_search\", \"false\");\n  urlEncodedData.append(\"nd\", Date.now().toString());\n  urlEncodedData.append(\"rows\", \"10000\");\n  urlEncodedData.append(\"page\", \"1\");\n  urlEncodedData.append(\"sidx\", \"\");\n  urlEncodedData.append(\"sord\", \"asc\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlEncodedData,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveHistory/GetLeaveStatusDetails`, requestOptions);\n\n  const leaveDetails = await response.json();\n\n  // const viewLeaveHistory = leaveDetails.map((item) => ({\n  //   fromDate: item.LDetail?.FromDate,\n  //   toDate: item.LDetail?.ToDate,\n  //   appliedDate: item.LDetail?.EditDate,\n  //   leaveType: item.LeaveTypeName,\n  //   days: item.LDetail?.LeaveAmount,\n  //   leaveHours: `${item.LDetail?.ATBStartTime} - ${item.LDetail?.ATBEndTime}`,\n  //   status: item.Status ? item.Status.replace(/<[^>]*>?/gm, '').trim() : \"N/A\",\n  //   reasonForLeave: item.LDetail?.Comment || \"No Reason Provided\",\n  //   coveringEmployee: item.LDetail?.CoveringEmpNumber || \"No Covering Employee\"\n  // }));\n  const viewLeaveHistory = [];\n\n  const formatDate = (dateStr) => {\n    if (!dateStr) return '';\n    const [year, month, day] = dateStr.split('T')[0].split('-');\n    return `${month}/${day}/${year}`;\n  };\n\n  leaveDetails.forEach(item => {\n    const detail = item.LDetail || {};\n    viewLeaveHistory.push({\n      LeaveAppIDEncrypted: detail.LeaveAppIDEncrypted || '-',\n      FromDate: formatDate(detail.FromDate),\n      ToDate: formatDate(detail.ToDate),\n      LeaveAppliedDate: formatDate(detail.EditDate),\n      LeaveType: item.LeaveTypeName || '-',\n      Days: detail.LeaveAmountText || '-',\n      LeaveHours: item.LeaveMinutes ? (item.LeaveMinutes / 60).toFixed(2) : '-',\n      Status: item.Status?.replace(/<[^>]*>?/gm, '') || '-', // strip HTML\n      ReasonForLeave: detail.Comment || '-',\n      CoveringEmployee: item.LeaveActingEmp || '-',\n      LeaveAppliedId: detail.LeaveAppID || \" \"\n    });\n  });\n\n  if (viewLeaveHistory.length > 5) {\n    BeaconBar.executeFunction(\"downloadcsv\")(viewLeaveHistory);\n  }\n\n  window.leaveHistort12 = viewLeaveHistory\n  return viewLeaveHistory;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

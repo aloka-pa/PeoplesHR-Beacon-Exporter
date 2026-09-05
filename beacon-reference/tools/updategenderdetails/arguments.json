@@ -1,0 +1,29 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "ctl00_body_txtGenName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Name of the gender (e.g., Male, Female, Other).",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Name of the gender (e.g., Male, Female, Other)."
+      }
+    },
+    {
+      "name": "ctl00_body_txtdesc",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Description or label for the gender (can be the same as the name or a more detailed label).no ai no need take the description. if the user spacific change the description that only change",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Description or label for the gender (can be the same as the name or a more detailed label).no ai no need take the description. if the user spacific change the description that only change"
+      }
+    }
+  ]
+}

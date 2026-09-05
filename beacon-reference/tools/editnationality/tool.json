@@ -1,0 +1,150 @@
+{
+  "id": "695225703b764e60f75761a4",
+  "slug": "editnationality",
+  "name": "editNationality",
+  "description": "Updates a Nationality master record in EIM/Nationality.aspx.\nSupports editing by:\nnationalityCode (exact match), or\nsearchNationalityName (exact name match)\nIf the user searches by name and multiple records have the same name, the tool will not edit anything.\nInstead, it returns a list of matching records (nationalityCode + nationalityName) and asks the user to choose which record to edit, or whether to edit all (if enabled).\nReturns a success message when the update is saved successfully. Only change the record that the user asked to edit. Do not change any other record.",
+  "instructions": null,
+  "taskName": "Editing Nationality Details",
+  "tags": [
+    "EIMAdmin",
+    "Nationality&ReligionInformation"
+  ],
+  "status": "live",
+  "signature": "editNationality",
+  "createdAt": "2025-12-29T06:53:36.870Z",
+  "updatedAt": "2026-02-09T06:46:34.300Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "b2e4ee09c2a6200e18e7697cdf5f17dea50a9565d09e6a0838deb2cba2b09cb6",
+  "lastExportedAt": "2026-09-05T19:39:22.782Z",
+  "raw": {
+    "basic": {
+      "_id": "695225703b764e60f75761a4",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "editNationality",
+      "description": "Updates a Nationality master record in EIM/Nationality.aspx.\nSupports editing by:\nnationalityCode (exact match), or\nsearchNationalityName (exact name match)\nIf the user searches by name and multiple records have the same name, the tool will not edit anything.\nInstead, it returns a list of matching records (nationalityCode + nationalityName) and asks the user to choose which record to edit, or whether to edit all (if enabled).\nReturns a success message when the update is saved successfully. Only change the record that the user asked to edit. Do not change any other record.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "editNationality",
+        "args": [
+          {
+            "name": "nationalityCode",
+            "type": "string",
+            "description": "Nationality code to identify the exact record to edit (e.g., \"000208\"). If this is provided, the tool edits that record directly and does not ask about duplicates.",
+            "required": false,
+            "_id": "695225703b764e60f75761a6"
+          },
+          {
+            "name": "nationalityName",
+            "type": "string",
+            "description": "New nationality name to be saved.",
+            "required": true,
+            "_id": "695225703b764e60f75761a7"
+          },
+          {
+            "name": "searchNationalityName",
+            "type": "string",
+            "description": "Existing nationality name to identify the record when the code is not provided. If multiple records share the same name, the tool returns all matches and asks the user which code to edit.",
+            "required": false,
+            "_id": "6956a26aad06de92910fa82f"
+          },
+          {
+            "name": "applyTo",
+            "type": "string",
+            "description": "Controls what to do when multiple records match the same searchNationalityName.\nAllowed values:\n\"single\" (default) — return matches and ask the user which nationalityCode to edit\n\"all\" — update all matching records with the new nationalityName",
+            "required": false,
+            "_id": "698982ca2c69c0867ca37267"
+          },
+          {
+            "name": "pageSize",
+            "type": "string",
+            "description": "Page size to use for the results grid (must match UI behavior). Default: \"10\"",
+            "required": false,
+            "_id": "698982ca2c69c0867ca37268"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "695225703b764e60f75761a5"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Nationality.aspx\")) {\n      return { status: \"NO_ACCESS\", message: \"You do not have access to Nationality screen. Please contact HR Admin.\" };\n    }\n\n    /* -------------------------------------------------\n     * 2) Args validation (strings)\n     * ------------------------------------------------- */\n    const nationalityCode = (args?.nationalityCode ?? \"\").toString().trim();\n    const searchNationalityName = (args?.searchNationalityName ?? \"\").toString().trim();\n    const newNationalityName = (args?.nationalityName ?? \"\").toString().trim();\n\n    const applyTo = ((args?.applyTo ?? \"single\").toString().trim().toLowerCase()); // \"single\" | \"all\" (optional)\n    const pageSize = ((args?.pageSize ?? \"10\").toString().trim() || \"10\");\n\n    if (!nationalityCode && !searchNationalityName) {\n      return { status: \"INVALID_ARGS\", message: \"Either nationalityCode or searchNationalityName is required.\" };\n    }\n    if (!newNationalityName) {\n      return { status: \"INVALID_ARGS\", message: \"nationalityName (new name) is required.\" };\n    }\n\n    /* -------------------------------------------------\n     * 3) URL + headers\n     * ------------------------------------------------- */\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Nationality.aspx\");\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Nationality.aspx`;\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const parser = new DOMParser();\n    const getHidden = (doc, sel) => doc.querySelector(sel)?.value || \"\";\n\n    /* -------------------------------------------------\n     * 4) Initial page state\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"Nationality\");\n\n    /* -------------------------------------------------\n     * 5) SEARCH (matches your network payload style)\n     * ------------------------------------------------- */\n    const isSearchByCode = !!nationalityCode;\n    const criteria = isSearchByCode ? \"NAT_CODE\" : \"NAT_NAME\";\n    const txtContent = isSearchByCode ? nationalityCode : searchNationalityName;\n\n    const searchFormData = new FormData();\n    searchFormData.append(\"scrollLeft\", \"0\");\n    searchFormData.append(\"scrollTop\", \"0\");\n    searchFormData.append(\"__EVENTTARGET\", \"\");\n    searchFormData.append(\"__EVENTARGUMENT\", \"\");\n    searchFormData.append(\"__VIEWSTATE\", details.viewState);\n    searchFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    searchFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    searchFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n    searchFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    searchFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    searchFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", criteria);\n    searchFormData.append(\"ctl00$body$ContentSearch$txtContent\", txtContent);\n    searchFormData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n\n    // pager fields (you had these in network)\n    searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", pageSize);\n    searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    searchFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    const searchResp = await fetch(url, { method: \"POST\", headers, body: searchFormData });\n    const searchHtml = await searchResp.text();\n    const searchDoc = parser.parseFromString(searchHtml, \"text/html\");\n\n    const searchViewState = getHidden(searchDoc, \"#__VIEWSTATE\");\n    const searchEventValidation = getHidden(searchDoc, \"#__EVENTVALIDATION\");\n    const searchViewStateGen = getHidden(searchDoc, \"#__VIEWSTATEGENERATOR\");\n\n    /* -------------------------------------------------\n     * 6) Collect ALL matches on the grid page\n     *    (your HTML shows rows like ctl00_body_grdsummary_ctl00__0, __1)\n     * ------------------------------------------------- */\n    const rows = searchDoc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n    const matches = [];\n\n    const needle = (searchNationalityName || \"\").trim().toLowerCase();\n\n    for (const r of rows) {\n      const tds = r.querySelectorAll(\"td\");\n      const code = tds[0]?.textContent?.trim() || \"\";\n      const name = tds[1]?.textContent?.trim() || \"\";\n\n      const isMatch =\n        (isSearchByCode && code === nationalityCode) ||\n        (!isSearchByCode && name.trim().toLowerCase() === needle);\n\n      if (!isMatch) continue;\n\n      // <a href=\"javascript:__doPostBack('ctl00$body$grdsummary$ctl00$ctl04$ctl00','')\">\n      const href = r.querySelector(\"a\")?.getAttribute(\"href\") || \"\";\n      const target = href.match(/__doPostBack\\('([^']+)'/)?.[1] || \"\";\n\n      if (target) {\n        matches.push({ nationalityCode: code, nationalityName: name, eventTarget: target });\n      }\n    }\n\n    if (matches.length === 0) {\n      return { status: \"NOT_FOUND\", message: \"Nationality not found. Please verify the provided code/name.\" };\n    }\n\n    // ✅ KEY REQUIREMENT: if searching by NAME and duplicates exist, STOP and ask user\n    if (!isSearchByCode && matches.length > 1 && applyTo !== \"all\") {\n      return {\n        status: \"MULTIPLE_MATCHES\",\n        message: `There are multiple nationality records with the name \"${searchNationalityName}\". Which record should be edited? (or say \"edit all\")`,\n        matches: matches.map(m => ({ nationalityCode: m.nationalityCode, nationalityName: m.nationalityName })),\n        hint: \"Provide nationalityCode to edit one record. To update all matching records, pass applyTo='all'.\"\n      };\n    }\n\n    // Choose targets to update\n    const targets = (applyTo === \"all\") ? matches : [matches[0]];\n\n    /* -------------------------------------------------\n     * 7) For each target: Row click -> Edit -> Save\n     * ------------------------------------------------- */\n    const updated = [];\n    const failed = [];\n\n    for (const t of targets) {\n      // 7.1 Row click (open detail)\n      const rowClickForm = new FormData();\n      rowClickForm.append(\"scrollLeft\", \"0\");\n      rowClickForm.append(\"scrollTop\", \"0\");\n      rowClickForm.append(\"__EVENTTARGET\", t.eventTarget);\n      rowClickForm.append(\"__EVENTARGUMENT\", \"\");\n      rowClickForm.append(\"__VIEWSTATE\", searchViewState);\n      rowClickForm.append(\"__VIEWSTATEGENERATOR\", searchViewStateGen);\n      rowClickForm.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      rowClickForm.append(\"__EVENTVALIDATION\", searchEventValidation);\n      rowClickForm.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      rowClickForm.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      const detailResp = await fetch(url, { method: \"POST\", headers, body: rowClickForm });\n      const detailHtml = await detailResp.text();\n      const detailDoc = parser.parseFromString(detailHtml, \"text/html\");\n\n      const detailViewState = getHidden(detailDoc, \"#__VIEWSTATE\");\n      const detailEventValidation = getHidden(detailDoc, \"#__EVENTVALIDATION\");\n      const detailViewStateGen = getHidden(detailDoc, \"#__VIEWSTATEGENERATOR\");\n\n      // 7.2 Click Edit\n      const editForm = new FormData();\n      editForm.append(\"scrollLeft\", \"0\");\n      editForm.append(\"scrollTop\", \"0\");\n      editForm.append(\"__EVENTTARGET\", \"\");\n      editForm.append(\"__EVENTARGUMENT\", \"\");\n      editForm.append(\"__VIEWSTATE\", detailViewState);\n      editForm.append(\"__VIEWSTATEGENERATOR\", detailViewStateGen);\n      editForm.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      editForm.append(\"__EVENTVALIDATION\", detailEventValidation);\n      editForm.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      editForm.append(\"ctl00$hdnQuickmenu\", \"1\");\n      editForm.append(\"ctl00$body$butEdit\", \"Edit\");\n\n      const editResp = await fetch(url, { method: \"POST\", headers, body: editForm });\n      const editHtml = await editResp.text();\n      const editDoc = parser.parseFromString(editHtml, \"text/html\");\n\n      const editViewState = getHidden(editDoc, \"#__VIEWSTATE\");\n      const editEventValidation = getHidden(editDoc, \"#__EVENTVALIDATION\");\n      const editViewStateGen = getHidden(editDoc, \"#__VIEWSTATEGENERATOR\");\n\n      // 7.3 Save new name\n      const saveForm = new FormData();\n      saveForm.append(\"scrollLeft\", \"0\");\n      saveForm.append(\"scrollTop\", \"0\");\n      saveForm.append(\"__EVENTTARGET\", \"\");\n      saveForm.append(\"__EVENTARGUMENT\", \"\");\n      saveForm.append(\"__VIEWSTATE\", editViewState);\n      saveForm.append(\"__VIEWSTATEGENERATOR\", editViewStateGen);\n      saveForm.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      saveForm.append(\"__EVENTVALIDATION\", editEventValidation);\n      saveForm.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      saveForm.append(\"ctl00$hdnQuickmenu\", \"1\");\n      saveForm.append(\"ctl00$body$txtName\", newNationalityName);\n      saveForm.append(\"ctl00$body$butSave\", \"Save\");\n\n      const saveResp = await fetch(url, { method: \"POST\", headers, body: saveForm });\n      await saveResp.text();\n\n      if (saveResp.status === 200) {\n        updated.push({ nationalityCode: t.nationalityCode, oldName: t.nationalityName, newName: newNationalityName });\n      } else {\n        failed.push({ nationalityCode: t.nationalityCode, oldName: t.nationalityName, reason: `HTTP ${saveResp.status}` });\n      }\n    }\n\n    if (updated.length > 0 && failed.length === 0) {\n      return {\n        status: \"SUCCESS\",\n        message: (updated.length === 1)\n          ? \"Successfully updated nationality.\"\n          : `Successfully updated ${updated.length} nationalities.`,\n        updated\n      };\n    }\n\n    if (updated.length > 0 && failed.length > 0) {\n      return {\n        status: \"PARTIAL_SUCCESS\",\n        message: `Updated ${updated.length} nationalities, but ${failed.length} failed.`,\n        updated,\n        failed\n      };\n    }\n\n    return { status: \"ERROR\", message: \"Failed to update nationality. Please verify in the UI.\", failed };\n\n  } catch (err) {\n    return { status: \"ERROR\", message: err?.message || \"Unexpected error\", error: err?.toString?.() || String(err) };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "Nationality&ReligionInformation"
+      ],
+      "taskName": "Editing Nationality Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-29T06:53:36.870Z",
+      "updatedAt": "2026-02-09T06:46:34.300Z",
+      "__v": 7,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "editNationality",
+      "args": [
+        {
+          "name": "nationalityCode",
+          "type": "string",
+          "description": "Nationality code to identify the exact record to edit (e.g., \"000208\"). If this is provided, the tool edits that record directly and does not ask about duplicates.",
+          "required": false,
+          "_id": "695225703b764e60f75761a6"
+        },
+        {
+          "name": "nationalityName",
+          "type": "string",
+          "description": "New nationality name to be saved.",
+          "required": true,
+          "_id": "695225703b764e60f75761a7"
+        },
+        {
+          "name": "searchNationalityName",
+          "type": "string",
+          "description": "Existing nationality name to identify the record when the code is not provided. If multiple records share the same name, the tool returns all matches and asks the user which code to edit.",
+          "required": false,
+          "_id": "6956a26aad06de92910fa82f"
+        },
+        {
+          "name": "applyTo",
+          "type": "string",
+          "description": "Controls what to do when multiple records match the same searchNationalityName.\nAllowed values:\n\"single\" (default) — return matches and ask the user which nationalityCode to edit\n\"all\" — update all matching records with the new nationalityName",
+          "required": false,
+          "_id": "698982ca2c69c0867ca37267"
+        },
+        {
+          "name": "pageSize",
+          "type": "string",
+          "description": "Page size to use for the results grid (must match UI behavior). Default: \"10\"",
+          "required": false,
+          "_id": "698982ca2c69c0867ca37268"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "695225703b764e60f75761a5"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Nationality.aspx\")) {\n      return { status: \"NO_ACCESS\", message: \"You do not have access to Nationality screen. Please contact HR Admin.\" };\n    }\n\n    /* -------------------------------------------------\n     * 2) Args validation (strings)\n     * ------------------------------------------------- */\n    const nationalityCode = (args?.nationalityCode ?? \"\").toString().trim();\n    const searchNationalityName = (args?.searchNationalityName ?? \"\").toString().trim();\n    const newNationalityName = (args?.nationalityName ?? \"\").toString().trim();\n\n    const applyTo = ((args?.applyTo ?? \"single\").toString().trim().toLowerCase()); // \"single\" | \"all\" (optional)\n    const pageSize = ((args?.pageSize ?? \"10\").toString().trim() || \"10\");\n\n    if (!nationalityCode && !searchNationalityName) {\n      return { status: \"INVALID_ARGS\", message: \"Either nationalityCode or searchNationalityName is required.\" };\n    }\n    if (!newNationalityName) {\n      return { status: \"INVALID_ARGS\", message: \"nationalityName (new name) is required.\" };\n    }\n\n    /* -------------------------------------------------\n     * 3) URL + headers\n     * ------------------------------------------------- */\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Nationality.aspx\");\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Nationality.aspx`;\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const parser = new DOMParser();\n    const getHidden = (doc, sel) => doc.querySelector(sel)?.value || \"\";\n\n    /* -------------------------------------------------\n     * 4) Initial page state\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"Nationality\");\n\n    /* -------------------------------------------------\n     * 5) SEARCH (matches your network payload style)\n     * ------------------------------------------------- */\n    const isSearchByCode = !!nationalityCode;\n    const criteria = isSearchByCode ? \"NAT_CODE\" : \"NAT_NAME\";\n    const txtContent = isSearchByCode ? nationalityCode : searchNationalityName;\n\n    const searchFormData = new FormData();\n    searchFormData.append(\"scrollLeft\", \"0\");\n    searchFormData.append(\"scrollTop\", \"0\");\n    searchFormData.append(\"__EVENTTARGET\", \"\");\n    searchFormData.append(\"__EVENTARGUMENT\", \"\");\n    searchFormData.append(\"__VIEWSTATE\", details.viewState);\n    searchFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    searchFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    searchFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n    searchFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    searchFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    searchFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", criteria);\n    searchFormData.append(\"ctl00$body$ContentSearch$txtContent\", txtContent);\n    searchFormData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n\n    // pager fields (you had these in network)\n    searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", pageSize);\n    searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    searchFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    const searchResp = await fetch(url, { method: \"POST\", headers, body: searchFormData });\n    const searchHtml = await searchResp.text();\n    const searchDoc = parser.parseFromString(searchHtml, \"text/html\");\n\n    const searchViewState = getHidden(searchDoc, \"#__VIEWSTATE\");\n    const searchEventValidation = getHidden(searchDoc, \"#__EVENTVALIDATION\");\n    const searchViewStateGen = getHidden(searchDoc, \"#__VIEWSTATEGENERATOR\");\n\n    /* -------------------------------------------------\n     * 6) Collect ALL matches on the grid page\n     *    (your HTML shows rows like ctl00_body_grdsummary_ctl00__0, __1)\n     * ------------------------------------------------- */\n    const rows = searchDoc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n    const matches = [];\n\n    const needle = (searchNationalityName || \"\").trim().toLowerCase();\n\n    for (const r of rows) {\n      const tds = r.querySelectorAll(\"td\");\n      const code = tds[0]?.textContent?.trim() || \"\";\n      const name = tds[1]?.textContent?.trim() || \"\";\n\n      const isMatch =\n        (isSearchByCode && code === nationalityCode) ||\n        (!isSearchByCode && name.trim().toLowerCase() === needle);\n\n      if (!isMatch) continue;\n\n      // <a href=\"javascript:__doPostBack('ctl00$body$grdsummary$ctl00$ctl04$ctl00','')\">\n      const href = r.querySelector(\"a\")?.getAttribute(\"href\") || \"\";\n      const target = href.match(/__doPostBack\\('([^']+)'/)?.[1] || \"\";\n\n      if (target) {\n        matches.push({ nationalityCode: code, nationalityName: name, eventTarget: target });\n      }\n    }\n\n    if (matches.length === 0) {\n      return { status: \"NOT_FOUND\", message: \"Nationality not found. Please verify the provided code/name.\" };\n    }\n\n    // ✅ KEY REQUIREMENT: if searching by NAME and duplicates exist, STOP and ask user\n    if (!isSearchByCode && matches.length > 1 && applyTo !== \"all\") {\n      return {\n        status: \"MULTIPLE_MATCHES\",\n        message: `There are multiple nationality records with the name \"${searchNationalityName}\". Which record should be edited? (or say \"edit all\")`,\n        matches: matches.map(m => ({ nationalityCode: m.nationalityCode, nationalityName: m.nationalityName })),\n        hint: \"Provide nationalityCode to edit one record. To update all matching records, pass applyTo='all'.\"\n      };\n    }\n\n    // Choose targets to update\n    const targets = (applyTo === \"all\") ? matches : [matches[0]];\n\n    /* -------------------------------------------------\n     * 7) For each target: Row click -> Edit -> Save\n     * ------------------------------------------------- */\n    const updated = [];\n    const failed = [];\n\n    for (const t of targets) {\n      // 7.1 Row click (open detail)\n      const rowClickForm = new FormData();\n      rowClickForm.append(\"scrollLeft\", \"0\");\n      rowClickForm.append(\"scrollTop\", \"0\");\n      rowClickForm.append(\"__EVENTTARGET\", t.eventTarget);\n      rowClickForm.append(\"__EVENTARGUMENT\", \"\");\n      rowClickForm.append(\"__VIEWSTATE\", searchViewState);\n      rowClickForm.append(\"__VIEWSTATEGENERATOR\", searchViewStateGen);\n      rowClickForm.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      rowClickForm.append(\"__EVENTVALIDATION\", searchEventValidation);\n      rowClickForm.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      rowClickForm.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      const detailResp = await fetch(url, { method: \"POST\", headers, body: rowClickForm });\n      const detailHtml = await detailResp.text();\n      const detailDoc = parser.parseFromString(detailHtml, \"text/html\");\n\n      const detailViewState = getHidden(detailDoc, \"#__VIEWSTATE\");\n      const detailEventValidation = getHidden(detailDoc, \"#__EVENTVALIDATION\");\n      const detailViewStateGen = getHidden(detailDoc, \"#__VIEWSTATEGENERATOR\");\n\n      // 7.2 Click Edit\n      const editForm = new FormData();\n      editForm.append(\"scrollLeft\", \"0\");\n      editForm.append(\"scrollTop\", \"0\");\n      editForm.append(\"__EVENTTARGET\", \"\");\n      editForm.append(\"__EVENTARGUMENT\", \"\");\n      editForm.append(\"__VIEWSTATE\", detailViewState);\n      editForm.append(\"__VIEWSTATEGENERATOR\", detailViewStateGen);\n      editForm.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      editForm.append(\"__EVENTVALIDATION\", detailEventValidation);\n      editForm.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      editForm.append(\"ctl00$hdnQuickmenu\", \"1\");\n      editForm.append(\"ctl00$body$butEdit\", \"Edit\");\n\n      const editResp = await fetch(url, { method: \"POST\", headers, body: editForm });\n      const editHtml = await editResp.text();\n      const editDoc = parser.parseFromString(editHtml, \"text/html\");\n\n      const editViewState = getHidden(editDoc, \"#__VIEWSTATE\");\n      const editEventValidation = getHidden(editDoc, \"#__EVENTVALIDATION\");\n      const editViewStateGen = getHidden(editDoc, \"#__VIEWSTATEGENERATOR\");\n\n      // 7.3 Save new name\n      const saveForm = new FormData();\n      saveForm.append(\"scrollLeft\", \"0\");\n      saveForm.append(\"scrollTop\", \"0\");\n      saveForm.append(\"__EVENTTARGET\", \"\");\n      saveForm.append(\"__EVENTARGUMENT\", \"\");\n      saveForm.append(\"__VIEWSTATE\", editViewState);\n      saveForm.append(\"__VIEWSTATEGENERATOR\", editViewStateGen);\n      saveForm.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      saveForm.append(\"__EVENTVALIDATION\", editEventValidation);\n      saveForm.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      saveForm.append(\"ctl00$hdnQuickmenu\", \"1\");\n      saveForm.append(\"ctl00$body$txtName\", newNationalityName);\n      saveForm.append(\"ctl00$body$butSave\", \"Save\");\n\n      const saveResp = await fetch(url, { method: \"POST\", headers, body: saveForm });\n      await saveResp.text();\n\n      if (saveResp.status === 200) {\n        updated.push({ nationalityCode: t.nationalityCode, oldName: t.nationalityName, newName: newNationalityName });\n      } else {\n        failed.push({ nationalityCode: t.nationalityCode, oldName: t.nationalityName, reason: `HTTP ${saveResp.status}` });\n      }\n    }\n\n    if (updated.length > 0 && failed.length === 0) {\n      return {\n        status: \"SUCCESS\",\n        message: (updated.length === 1)\n          ? \"Successfully updated nationality.\"\n          : `Successfully updated ${updated.length} nationalities.`,\n        updated\n      };\n    }\n\n    if (updated.length > 0 && failed.length > 0) {\n      return {\n        status: \"PARTIAL_SUCCESS\",\n        message: `Updated ${updated.length} nationalities, but ${failed.length} failed.`,\n        updated,\n        failed\n      };\n    }\n\n    return { status: \"ERROR\", message: \"Failed to update nationality. Please verify in the UI.\", failed };\n\n  } catch (err) {\n    return { status: \"ERROR\", message: err?.message || \"Unexpected error\", error: err?.toString?.() || String(err) };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

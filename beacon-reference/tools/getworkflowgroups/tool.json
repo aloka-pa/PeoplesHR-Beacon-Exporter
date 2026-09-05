@@ -1,0 +1,95 @@
+{
+  "id": "690dc568931a2d61ba0b18e5",
+  "slug": "getworkflowgroups",
+  "name": "getWorkFlowGroups",
+  "description": "getWorkFlowGroups",
+  "instructions": null,
+  "taskName": "fetchingWorkFlowGroups",
+  "tags": [
+    "workFlow",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getWorkFlowGroups",
+  "createdAt": "2025-06-02T07:50:51.509Z",
+  "updatedAt": "2026-07-17T12:54:33.924Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c34",
+      "name": "WorkfLows"
+    }
+  ],
+  "contentHash": "40942aa88bc1181f64c92183d28f7e95ce3ad9dcaf16dad34469a61800ac387a",
+  "lastExportedAt": "2026-09-05T19:39:22.066Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b18e5",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getWorkFlowGroups",
+      "description": "getWorkFlowGroups",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getWorkFlowGroups",
+        "args": [],
+        "isAdvanced": false,
+        "_id": "6a5a2609f86fba5501bffb9e"
+      },
+      "by": "34476",
+      "fetcher": "(function(){    \n     return {\n    code: `(function(){\n      return [];\n    })`\n  }\n});\n",
+      "transformer": "(async function (data, args) {\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  if (!BeaconBar.user.metaData.menus.includes(\"WorkFlow_v6/DefineWorkflowGroup.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('WorkFlow_v6/DefineWorkflowGroup.aspx');\n  const baseUrl = `${reqOptions}${updateurl.updateUrl}`;\n  \n  const headers = new Headers({\n    \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\",\n    \"accept-language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n    \"content-type\": \"application/x-www-form-urlencoded\",\n    \"x-requested-with\" : \"XMLHttpRequest\"\n  });\n\n  const buildPostBody = (pageNumber, viewStateInfo) => {\n    const body = new URLSearchParams();\n    body.append(\"ctl00_body_RadScriptManager1_HiddenField\", \"\");\n    body.append(\"__EVENTTARGET\", \"ctl00$body$grdWFGroups\");\n    body.append(\"__EVENTARGUMENT\", `Page$${pageNumber}`);\n    body.append(\"__VIEWSTATE\", viewStateInfo.viewState);\n    body.append(\"__VIEWSTATEGENERATOR\", viewStateInfo.viewStateGenerator);\n    body.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    body.append(\"__EVENTVALIDATION\", viewStateInfo.eventValidation);\n    body.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n    body.append(\"ctl00$body$hdnFlModID\", \"\");\n    body.append(\"ctl00$body$hdnFldTypeCodeStatus\", \"\");\n    body.append(\"ctl00$body$hdnFldTypeCode\", \"\");\n    return body;\n  };\n\n  const extractHiddenFields = (htmlString) => {\n    const doc = new DOMParser().parseFromString(htmlString, \"text/html\");\n    return {\n      viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n      viewStateGenerator: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n      eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\",\n    };\n  };\n\n  const extractTableData = (htmlString) => {\n    const doc = new DOMParser().parseFromString(htmlString, \"text/html\");\n    const table = doc.getElementById(\"ctl00_body_grdWFGroups\");\n    if (!table) return [];\n\n    const rows = table.querySelectorAll(\"tr\");\n    const results = [];\n\n    for (let i = 1; i < rows.length; i++) {\n      const cols = rows[i].querySelectorAll(\"td\");\n      if (cols.length > 0) {\n        const description = cols[0]?.textContent.trim();\n        const editButton = cols[1]?.querySelector('input[title=\"Edit\"]');\n        const eventKey = editButton?.getAttribute(\"name\") || \"\";\n\n        if (description) {\n          results.push({ Description: description, EventKey: eventKey });\n        }\n      }\n    }\n\n    return results;\n  };\n\n  let allResults = [];\n  const initialResponse = await fetch(baseUrl, { method: \"GET\", headers });\n  const initialHtml = await initialResponse.text();\n\n  let page = 1;\n  let hasMorePages = true;\n  let currentHtml = initialHtml;\n  let lastSuccessfulViewState = null;\n\n  const maxPagesEstimate = 50;\n  let pagesFetched = 0;\n\n  while (hasMorePages && pagesFetched < maxPagesEstimate) {\n    const viewStateInfo = extractHiddenFields(currentHtml);\n    // Check if ViewState fields are empty (indicates end of pagination or error)\n    if (!viewStateInfo.viewState || !viewStateInfo.eventValidation) {\n      \n      // Use the last successful ViewState if available\n      if (lastSuccessfulViewState) {\n        BeaconBar.setSharedData(\"failedViewState\", {\n          viewState: lastSuccessfulViewState,\n          page: page,\n          reason: \"ViewState fields empty - likely end of pagination\",\n          emptyViewState: viewStateInfo,\n          timestamp: new Date().toISOString()\n        });\n      }\n      \n      hasMorePages = false;\n      break;\n    }\n    \n    const pageData = extractTableData(currentHtml);\n    // Check if data extraction was successful\n    if (!pageData || pageData.length === 0) {\n      \n      // Store failed ViewState when no data is extracted\n      BeaconBar.setSharedData(\"failedViewState\", {\n        viewState: viewStateInfo,\n        page: page,\n        reason: \"No data extracted from page\",\n        timestamp: new Date().toISOString()\n      });\n      \n      hasMorePages = false;\n      break;\n    }\n\n    // Data extraction was successful\n    allResults = allResults.concat(pageData);\n    lastSuccessfulViewState = viewStateInfo; // Store last successful ViewState\n    pagesFetched += 1;\n\n    // Store working ViewState near the end\n    if (pagesFetched === maxPagesEstimate - 3) {\n      BeaconBar.setSharedData(\"workFlowGroups\", viewStateInfo);\n    }\n\n    // Try to fetch next page\n    const payloadBody = buildPostBody(page + 1, viewStateInfo);\n\n    try {\n      const response = await fetch(baseUrl, {\n        method: \"POST\",\n        headers,\n        body: payloadBody,\n        redirect: \"follow\"\n      });\n\n      if (!response.ok) {\n        const errorText = await response.text();\n        \n        // Store failed ViewState on HTTP error\n        BeaconBar.setSharedData(\"failedViewState\", {\n          viewState: viewStateInfo,\n          page: page + 1,\n          status: response.status,\n          statusText: response.statusText,\n          reason: \"HTTP request failed\",\n          timestamp: new Date().toISOString()\n        });\n        \n        hasMorePages = false;\n        break;\n      }\n\n      currentHtml = await response.text();\n      page += 1;\n      \n    } catch (err) {\n      // Store failed ViewState on network/fetch error\n      BeaconBar.setSharedData(\"failedViewState\", {\n        viewState: viewStateInfo,\n        page: page + 1,\n        error: err.message || String(err),\n        reason: \"Network or fetch error\",\n        timestamp: new Date().toISOString()\n      });\n      \n      hasMorePages = false;\n      break;\n    }\n  }\n\n  // Store all results and last successful ViewState\n  BeaconBar.setSharedData(\"allResultsgroups\", allResults);\n  if (lastSuccessfulViewState) {\n    BeaconBar.setSharedData(\"lastSuccessfulViewState\", lastSuccessfulViewState);\n  }\n  return allResults.map(({ Description }) => ({ Description }));\n});",
+      "groupName": "",
+      "tags": [
+        "workFlow",
+        "Headers"
+      ],
+      "taskName": "fetchingWorkFlowGroups",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-02T07:50:51.509Z",
+      "updatedAt": "2026-07-17T12:54:33.924Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c34",
+          "name": "WorkfLows"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getWorkFlowGroups",
+      "args": [],
+      "isAdvanced": false,
+      "_id": "6a5a2609f86fba5501bffb9e"
+    },
+    "fetcher": "(function(){    \n     return {\n    code: `(function(){\n      return [];\n    })`\n  }\n});\n",
+    "transformer": "(async function (data, args) {\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  if (!BeaconBar.user.metaData.menus.includes(\"WorkFlow_v6/DefineWorkflowGroup.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('WorkFlow_v6/DefineWorkflowGroup.aspx');\n  const baseUrl = `${reqOptions}${updateurl.updateUrl}`;\n  \n  const headers = new Headers({\n    \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\",\n    \"accept-language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n    \"content-type\": \"application/x-www-form-urlencoded\",\n    \"x-requested-with\" : \"XMLHttpRequest\"\n  });\n\n  const buildPostBody = (pageNumber, viewStateInfo) => {\n    const body = new URLSearchParams();\n    body.append(\"ctl00_body_RadScriptManager1_HiddenField\", \"\");\n    body.append(\"__EVENTTARGET\", \"ctl00$body$grdWFGroups\");\n    body.append(\"__EVENTARGUMENT\", `Page$${pageNumber}`);\n    body.append(\"__VIEWSTATE\", viewStateInfo.viewState);\n    body.append(\"__VIEWSTATEGENERATOR\", viewStateInfo.viewStateGenerator);\n    body.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    body.append(\"__EVENTVALIDATION\", viewStateInfo.eventValidation);\n    body.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n    body.append(\"ctl00$body$hdnFlModID\", \"\");\n    body.append(\"ctl00$body$hdnFldTypeCodeStatus\", \"\");\n    body.append(\"ctl00$body$hdnFldTypeCode\", \"\");\n    return body;\n  };\n\n  const extractHiddenFields = (htmlString) => {\n    const doc = new DOMParser().parseFromString(htmlString, \"text/html\");\n    return {\n      viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n      viewStateGenerator: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n      eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\",\n    };\n  };\n\n  const extractTableData = (htmlString) => {\n    const doc = new DOMParser().parseFromString(htmlString, \"text/html\");\n    const table = doc.getElementById(\"ctl00_body_grdWFGroups\");\n    if (!table) return [];\n\n    const rows = table.querySelectorAll(\"tr\");\n    const results = [];\n\n    for (let i = 1; i < rows.length; i++) {\n      const cols = rows[i].querySelectorAll(\"td\");\n      if (cols.length > 0) {\n        const description = cols[0]?.textContent.trim();\n        const editButton = cols[1]?.querySelector('input[title=\"Edit\"]');\n        const eventKey = editButton?.getAttribute(\"name\") || \"\";\n\n        if (description) {\n          results.push({ Description: description, EventKey: eventKey });\n        }\n      }\n    }\n\n    return results;\n  };\n\n  let allResults = [];\n  const initialResponse = await fetch(baseUrl, { method: \"GET\", headers });\n  const initialHtml = await initialResponse.text();\n\n  let page = 1;\n  let hasMorePages = true;\n  let currentHtml = initialHtml;\n  let lastSuccessfulViewState = null;\n\n  const maxPagesEstimate = 50;\n  let pagesFetched = 0;\n\n  while (hasMorePages && pagesFetched < maxPagesEstimate) {\n    const viewStateInfo = extractHiddenFields(currentHtml);\n    // Check if ViewState fields are empty (indicates end of pagination or error)\n    if (!viewStateInfo.viewState || !viewStateInfo.eventValidation) {\n      \n      // Use the last successful ViewState if available\n      if (lastSuccessfulViewState) {\n        BeaconBar.setSharedData(\"failedViewState\", {\n          viewState: lastSuccessfulViewState,\n          page: page,\n          reason: \"ViewState fields empty - likely end of pagination\",\n          emptyViewState: viewStateInfo,\n          timestamp: new Date().toISOString()\n        });\n      }\n      \n      hasMorePages = false;\n      break;\n    }\n    \n    const pageData = extractTableData(currentHtml);\n    // Check if data extraction was successful\n    if (!pageData || pageData.length === 0) {\n      \n      // Store failed ViewState when no data is extracted\n      BeaconBar.setSharedData(\"failedViewState\", {\n        viewState: viewStateInfo,\n        page: page,\n        reason: \"No data extracted from page\",\n        timestamp: new Date().toISOString()\n      });\n      \n      hasMorePages = false;\n      break;\n    }\n\n    // Data extraction was successful\n    allResults = allResults.concat(pageData);\n    lastSuccessfulViewState = viewStateInfo; // Store last successful ViewState\n    pagesFetched += 1;\n\n    // Store working ViewState near the end\n    if (pagesFetched === maxPagesEstimate - 3) {\n      BeaconBar.setSharedData(\"workFlowGroups\", viewStateInfo);\n    }\n\n    // Try to fetch next page\n    const payloadBody = buildPostBody(page + 1, viewStateInfo);\n\n    try {\n      const response = await fetch(baseUrl, {\n        method: \"POST\",\n        headers,\n        body: payloadBody,\n        redirect: \"follow\"\n      });\n\n      if (!response.ok) {\n        const errorText = await response.text();\n        \n        // Store failed ViewState on HTTP error\n        BeaconBar.setSharedData(\"failedViewState\", {\n          viewState: viewStateInfo,\n          page: page + 1,\n          status: response.status,\n          statusText: response.statusText,\n          reason: \"HTTP request failed\",\n          timestamp: new Date().toISOString()\n        });\n        \n        hasMorePages = false;\n        break;\n      }\n\n      currentHtml = await response.text();\n      page += 1;\n      \n    } catch (err) {\n      // Store failed ViewState on network/fetch error\n      BeaconBar.setSharedData(\"failedViewState\", {\n        viewState: viewStateInfo,\n        page: page + 1,\n        error: err.message || String(err),\n        reason: \"Network or fetch error\",\n        timestamp: new Date().toISOString()\n      });\n      \n      hasMorePages = false;\n      break;\n    }\n  }\n\n  // Store all results and last successful ViewState\n  BeaconBar.setSharedData(\"allResultsgroups\", allResults);\n  if (lastSuccessfulViewState) {\n    BeaconBar.setSharedData(\"lastSuccessfulViewState\", lastSuccessfulViewState);\n  }\n  return allResults.map(({ Description }) => ({ Description }));\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

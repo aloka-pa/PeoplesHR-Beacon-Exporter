@@ -1,0 +1,92 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "entity",
+      "type": null,
+      "required": true,
+      "defaultValue": null,
+      "description": "Specifies the entity based on the query.",
+      "advanced": true,
+      "raw": {
+        "enum": [
+          "overtimeInformation",
+          "gracePeriodInformation"
+        ],
+        "description": "Specifies the entity based on the query."
+      }
+    },
+    {
+      "name": "overtimeInformation",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "to create overtime Information.fisrt execute the 'defaultRoundingPatternAndBaseTypeDetails' api. to get corresponding schema data fields then creating overtimeInformation",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "to create overtime Information.fisrt execute the 'defaultRoundingPatternAndBaseTypeDetails' api. to get corresponding schema data fields then creating overtimeInformation",
+        "properties": {
+          "otTypeName": {
+            "type": "string",
+            "description": "The name of the overtime type, such as 'PRE EXOT', 'Post One Hour', etc."
+          },
+          "defaultRoundingPattern": {
+            "type": "string",
+            "description": "The value of the Default Rounding Pattern. If a user provides a pattern name, the corresponding value is fetched using the defaultRoundingPatternAndBaseTypeDetails tool. Examples: '000002', '000001'."
+          },
+          "baseType": {
+            "type": "string",
+            "description": "The value of the Base Type. If a user provides a base type name, the corresponding value is fetched using the defaultRoundingPatternAndBaseTypeDetails tool. Examples: '1', '2'."
+          },
+          "customMultiplier": {
+            "type": "string",
+            "description": "The value of the custom multiplier specified by the user. Examples: '1', '2'."
+          }
+        },
+        "required": [
+          "otTypeName",
+          "defaultRoundingPattern",
+          "baseType",
+          "customMultiplier"
+        ]
+      }
+    },
+    {
+      "name": "gracePeriodInformation",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "This object defines the structure for creating a Grace Period Information entry. First, fetch the 'gracePeriodandRoundingPatternDetails' API to retrieve the available schema fields for the grace period configuration. to display the all rounding patterns and previous grace perriod details dispaly then user to select.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "This object defines the structure for creating a Grace Period Information entry. First, fetch the 'gracePeriodandRoundingPatternDetails' API to retrieve the available schema fields for the grace period configuration. to display the all rounding patterns and previous grace perriod details dispaly then user to select.",
+        "properties": {
+          "gracePeriodName": {
+            "type": "string",
+            "description": "The name of the grace period, such as 'text', 'text2', etc."
+          },
+          "roundingPattern": {
+            "type": "string",
+            "description": "The value of the selected rounding pattern. If a user provides a pattern name, the corresponding value is fetched using the 'defaultRoundingPatternAndBaseTypeDetails' tool. Examples: '000002', '000001'."
+          },
+          "previousGracePeriod": {
+            "type": "string",
+            "description": "The value of the selected previous grace period. If a user provides a period name, the corresponding value is fetched using the 'defaultRoundingPatternAndBaseTypeDetails' tool. Examples: '1', '2'."
+          },
+          "duration": {
+            "type": "string",
+            "description": "The duration of the grace period specified by the user. Examples: '1', '2'."
+          }
+        },
+        "required": [
+          "gracePeriodName",
+          "roundingPattern",
+          "previousGracePeriod",
+          "duration"
+        ]
+      }
+    }
+  ]
+}

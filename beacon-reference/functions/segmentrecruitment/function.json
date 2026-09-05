@@ -1,0 +1,24 @@
+{
+  "id": "6a1721e8ec57563bbd3756b6",
+  "slug": "segmentrecruitment",
+  "name": "segmentRecruitment",
+  "status": "live",
+  "createdAt": "2026-05-27T16:55:04.971Z",
+  "updatedAt": "2026-05-28T07:41:34.592Z",
+  "contentHash": "c600d949fec90b800c33e6a43f861ecf326ea32769c888fac71ec3e438b50054",
+  "lastExportedAt": "2026-09-05T19:41:25.681Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "6a1721e8ec57563bbd3756b6",
+    "name": "segmentRecruitment",
+    "status": "live",
+    "code": "(function () {\n    const enabledAgents = JSON.parse(\n        localStorage.getItem('enabledAgents') || '[]'\n    );\n        return enabledAgents\n        .map(agent => String(agent).toLowerCase())\n        .includes('recruitment'.toLowerCase());\n})",
+    "by": "7829",
+    "__v": 1
+  }
+}

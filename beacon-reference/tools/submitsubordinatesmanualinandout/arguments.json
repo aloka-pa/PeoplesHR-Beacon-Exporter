@@ -1,0 +1,113 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "employeeNumber",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The subordinate's employee number, e.g. 000013. Either employeeNumber or employeeName must be provided.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The subordinate's employee number, e.g. 000013. Either employeeNumber or employeeName must be provided."
+      }
+    },
+    {
+      "name": "employeeName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The subordinate's name (full or partial). Either employeeNumber or employeeName must be provided.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The subordinate's name (full or partial). Either employeeNumber or employeeName must be provided."
+      }
+    },
+    {
+      "name": "date",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Date to add/check manual in and out for, in the format returned by the dateFormat tool (DD/MM/YYYY, or MM/DD/YYYY for en-US). Ask the user for this if not provided.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Date to add/check manual in and out for, in the format returned by the dateFormat tool (DD/MM/YYYY, or MM/DD/YYYY for en-US). Ask the user for this if not provided."
+      }
+    },
+    {
+      "name": "inTime",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "In time in HH:mm 24-hour format. Only required if not already present on the record for that date.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "In time in HH:mm 24-hour format. Only required if not already present on the record for that date."
+      }
+    },
+    {
+      "name": "outTime",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Out time in HH:mm 24-hour format. Only required if not already present on the record for that date.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Out time in HH:mm 24-hour format. Only required if not already present on the record for that date."
+      }
+    },
+    {
+      "name": "breakInTime",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional break in time in HH:mm 24-hour format.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Optional break in time in HH:mm 24-hour format."
+      }
+    },
+    {
+      "name": "breakOutTime",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional break out time in HH:mm 24-hour format.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Optional break out time in HH:mm 24-hour format."
+      }
+    },
+    {
+      "name": "reason",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Reason/comment explaining why the manual in and out is being added. Always required before submission. No need reason for breakInTime and breakOutTime.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Reason/comment explaining why the manual in and out is being added. Always required before submission. No need reason for breakInTime and breakOutTime."
+      }
+    },
+    {
+      "name": "confirmed",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set to true only after the user has reviewed the preview and explicitly confirmed the data is correct. Set to false (or omit) to just preview/validate without submitting.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Set to true only after the user has reviewed the preview and explicitly confirmed the data is correct. Set to false (or omit) to just preview/validate without submitting."
+      }
+    }
+  ]
+}

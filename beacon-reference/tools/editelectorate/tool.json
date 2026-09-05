@@ -1,0 +1,150 @@
+{
+  "id": "695360444bee6b3103ce7500",
+  "slug": "editelectorate",
+  "name": "editElectorate",
+  "description": "Edit an existing electorate record. Only change the record that the user asked to edit. Do not change any other record.\nIf both districtCode and districtName are provided, districtCode takes priority",
+  "instructions": null,
+  "taskName": "Editing Electorate Details",
+  "tags": [
+    "EIMAdmin",
+    "GeographicalLocations"
+  ],
+  "status": "live",
+  "signature": "editElectorate",
+  "createdAt": "2025-12-30T05:16:52.647Z",
+  "updatedAt": "2026-02-02T14:55:44.472Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "327f9b7ab9c6e8e7fd9deaec46fef9937d27f113d2272c320134d40cb74d8d5f",
+  "lastExportedAt": "2026-09-05T19:39:22.987Z",
+  "raw": {
+    "basic": {
+      "_id": "695360444bee6b3103ce7500",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "editElectorate",
+      "description": "Edit an existing electorate record. Only change the record that the user asked to edit. Do not change any other record.\nIf both districtCode and districtName are provided, districtCode takes priority",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "editElectorate",
+        "args": [
+          {
+            "name": "electorateCode",
+            "type": "string",
+            "description": "Electorate code to search for\nExample: \"000002\"",
+            "required": false,
+            "_id": "695360444bee6b3103ce7502"
+          },
+          {
+            "name": "electorateName",
+            "type": "string",
+            "description": "Electorate name to search for\nExample: \"Mahara\"",
+            "required": false,
+            "_id": "695360444bee6b3103ce7503"
+          },
+          {
+            "name": "newElectorateName",
+            "type": "string",
+            "description": "New electorate name\n\nExample: \"Updated Electorate Name\"",
+            "required": false,
+            "_id": "695360444bee6b3103ce7504"
+          },
+          {
+            "name": "districtCode",
+            "type": "string",
+            "description": "District code directly\n\nExample: \"000122\"",
+            "required": false,
+            "_id": "695360444bee6b3103ce7505"
+          },
+          {
+            "name": "districtName",
+            "type": "string",
+            "description": " District name\nExample: \"Colombo\"",
+            "required": false,
+            "_id": "695360444bee6b3103ce7506"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "695360444bee6b3103ce7501"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Electorate.aspx\")) {\n    return \"You do not have access to Electorate screen. Please contact HR Admin.\";\n  }\n\n  // Validate input - user must provide either electorateCode OR electorateName to identify the electorate\n  if (!args.electorateCode && !args.electorateName) {\n    return \"Error: Either electorateCode or electorateName is required to identify the electorate\";\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Electorate\");\n\n  const headers = new Headers();\n  headers.append(\n    \"Accept\",\n    \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\"\n  );\n  headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Electorate.aspx\");\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/Electorate.aspx`;\n\n  const parser = new DOMParser();\n\n  // Determine search criteria based on what user provided\n  let searchCriteria, searchValue;\n  if (args.electorateCode) {\n    searchCriteria = \"ELECTORATE_CODE\";\n    searchValue = args.electorateCode;\n  } else {\n    searchCriteria = \"ELECTORATE_NAME\";\n    searchValue = args.electorateName;\n  }\n\n  // Search for the electorate\n  const searchFormData = new FormData();\n  searchFormData.append(\"scrollLeft\", \"0\");\n  searchFormData.append(\"scrollTop\", \"0\");\n  searchFormData.append(\"__EVENTTARGET\", \"\");\n  searchFormData.append(\"__EVENTARGUMENT\", \"\");\n  searchFormData.append(\"__VIEWSTATE\", details.viewState);\n  searchFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  searchFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  searchFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n  searchFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  searchFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  searchFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n  searchFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n  searchFormData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  searchFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const searchResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: searchFormData\n  });\n\n  const searchDoc = parser.parseFromString(await searchResponse.text(), \"text/html\");\n\n  const searchViewState = searchDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const searchEventValidation = searchDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const searchViewStateGen = searchDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // Find the matching row\n  let row = null;\n  const rows = searchDoc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n  for (const r of rows) {\n    const cells = r.querySelectorAll(\"td\");\n    const rowCode = cells[0]?.textContent.trim();\n    const rowName = cells[1]?.textContent.trim();\n    \n    if (args.electorateCode && rowCode === args.electorateCode) {\n      row = r;\n      break;\n    } else if (args.electorateName && rowName === args.electorateName) {\n      row = r;\n      break;\n    }\n  }\n\n  if (!row) {\n    return \"Electorate not found. Please verify the electorate code or name.\";\n  }\n\n  // Get the edit link\n  const editKey = row\n    .querySelector(\"a\")\n    ?.getAttribute(\"href\")\n    ?.match(/__doPostBack\\('([^']+)'/)?.[1];\n\n  if (!editKey) {\n    return \"Unable to open electorate record.\";\n  }\n\n  // Click on the row to open detail view\n  const rowClickFormData = new FormData();\n  rowClickFormData.append(\"scrollLeft\", \"0\");\n  rowClickFormData.append(\"scrollTop\", \"0\");\n  rowClickFormData.append(\"__EVENTTARGET\", editKey);\n  rowClickFormData.append(\"__EVENTARGUMENT\", \"\");\n  rowClickFormData.append(\"__VIEWSTATE\", searchViewState);\n  rowClickFormData.append(\"__VIEWSTATEGENERATOR\", searchViewStateGen);\n  rowClickFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  rowClickFormData.append(\"__EVENTVALIDATION\", searchEventValidation);\n  rowClickFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  rowClickFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  rowClickFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n  rowClickFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n  rowClickFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  rowClickFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  rowClickFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  rowClickFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  rowClickFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const detailResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: rowClickFormData\n  });\n\n  const detailDoc = parser.parseFromString(await detailResponse.text(), \"text/html\");\n\n  // Extract current values from detail view\n  const currentCode = detailDoc.querySelector(\"#ctl00_body_txtCode\")?.value || \"\";\n  const currentName = detailDoc.querySelector(\"#ctl00_body_txtName\")?.value || \"\";\n  const currentDistrictCode = detailDoc.querySelector(\"#ctl00_body_drpDistrict\")?.value || \"\";\n\n  // Determine district code to use\n  let updatedDistrictCode = currentDistrictCode;\n  \n  // If districtCode is provided, use it directly\n  if (args.districtCode !== undefined) {\n    updatedDistrictCode = args.districtCode;\n  }\n  // If districtName is provided, look it up in the dropdown\n  else if (args.districtName !== undefined) {\n    const districtDropdown = detailDoc.querySelector(\"#ctl00_body_drpDistrict\");\n    const options = districtDropdown?.querySelectorAll(\"option\") || [];\n    \n    let foundDistrictCode = null;\n    for (const option of options) {\n      const optionText = option.textContent.trim();\n      const optionValue = option.value;\n      \n      if (optionText.toLowerCase() === args.districtName.toLowerCase() && optionValue !== \"\") {\n        foundDistrictCode = optionValue;\n        break;\n      }\n    }\n    \n    if (foundDistrictCode) {\n      updatedDistrictCode = foundDistrictCode;\n    } else if (args.districtName !== \"\") {\n      return `District \"${args.districtName}\" not found in the dropdown. Please verify the district name.`;\n    }\n  }\n\n  // Merge with updates (only update fields that are provided)\n  const updatedName = args.newElectorateName !== undefined ? args.newElectorateName : currentName;\n\n  const detailViewState = detailDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const detailEventValidation = detailDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const detailViewStateGen = detailDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // Click Edit button to enter edit mode\n  const editFormData = new FormData();\n  editFormData.append(\"scrollLeft\", \"0\");\n  editFormData.append(\"scrollTop\", \"0\");\n  editFormData.append(\"__EVENTTARGET\", \"\");\n  editFormData.append(\"__EVENTARGUMENT\", \"\");\n  editFormData.append(\"__VIEWSTATE\", detailViewState);\n  editFormData.append(\"__VIEWSTATEGENERATOR\", detailViewStateGen);\n  editFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  editFormData.append(\"__EVENTVALIDATION\", detailEventValidation);\n  editFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  editFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  editFormData.append(\"ctl00$body$butEdit\", \"Edit\");\n\n  const editModeResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: editFormData\n  });\n\n  const editModeDoc = parser.parseFromString(await editModeResponse.text(), \"text/html\");\n\n  const saveViewState = editModeDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const saveEventValidation = editModeDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const saveViewStateGen = editModeDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // Save the changes\n  const saveFormData = new FormData();\n  saveFormData.append(\"scrollLeft\", \"0\");\n  saveFormData.append(\"scrollTop\", \"0\");\n  saveFormData.append(\"__EVENTTARGET\", \"\");\n  saveFormData.append(\"__EVENTARGUMENT\", \"\");\n  saveFormData.append(\"__VIEWSTATE\", saveViewState);\n  saveFormData.append(\"__VIEWSTATEGENERATOR\", saveViewStateGen);\n  saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  saveFormData.append(\"__EVENTVALIDATION\", saveEventValidation);\n  saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  saveFormData.append(\"ctl00$body$txtName\", updatedName);\n  saveFormData.append(\"ctl00$body$drpDistrict\", updatedDistrictCode);\n  saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n  const finalResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: saveFormData\n  });\n\n  await finalResponse.text();\n\n  if (finalResponse.status === 200) {\n    return `Successfully updated electorate (${currentCode}).`;\n  }\n\n  return \"Failed to update electorate. Please verify in the UI.\";\n});",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "GeographicalLocations"
+      ],
+      "taskName": "Editing Electorate Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-30T05:16:52.647Z",
+      "updatedAt": "2026-02-02T14:55:44.472Z",
+      "__v": 2,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "editElectorate",
+      "args": [
+        {
+          "name": "electorateCode",
+          "type": "string",
+          "description": "Electorate code to search for\nExample: \"000002\"",
+          "required": false,
+          "_id": "695360444bee6b3103ce7502"
+        },
+        {
+          "name": "electorateName",
+          "type": "string",
+          "description": "Electorate name to search for\nExample: \"Mahara\"",
+          "required": false,
+          "_id": "695360444bee6b3103ce7503"
+        },
+        {
+          "name": "newElectorateName",
+          "type": "string",
+          "description": "New electorate name\n\nExample: \"Updated Electorate Name\"",
+          "required": false,
+          "_id": "695360444bee6b3103ce7504"
+        },
+        {
+          "name": "districtCode",
+          "type": "string",
+          "description": "District code directly\n\nExample: \"000122\"",
+          "required": false,
+          "_id": "695360444bee6b3103ce7505"
+        },
+        {
+          "name": "districtName",
+          "type": "string",
+          "description": " District name\nExample: \"Colombo\"",
+          "required": false,
+          "_id": "695360444bee6b3103ce7506"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "695360444bee6b3103ce7501"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Electorate.aspx\")) {\n    return \"You do not have access to Electorate screen. Please contact HR Admin.\";\n  }\n\n  // Validate input - user must provide either electorateCode OR electorateName to identify the electorate\n  if (!args.electorateCode && !args.electorateName) {\n    return \"Error: Either electorateCode or electorateName is required to identify the electorate\";\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Electorate\");\n\n  const headers = new Headers();\n  headers.append(\n    \"Accept\",\n    \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\"\n  );\n  headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Electorate.aspx\");\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/Electorate.aspx`;\n\n  const parser = new DOMParser();\n\n  // Determine search criteria based on what user provided\n  let searchCriteria, searchValue;\n  if (args.electorateCode) {\n    searchCriteria = \"ELECTORATE_CODE\";\n    searchValue = args.electorateCode;\n  } else {\n    searchCriteria = \"ELECTORATE_NAME\";\n    searchValue = args.electorateName;\n  }\n\n  // Search for the electorate\n  const searchFormData = new FormData();\n  searchFormData.append(\"scrollLeft\", \"0\");\n  searchFormData.append(\"scrollTop\", \"0\");\n  searchFormData.append(\"__EVENTTARGET\", \"\");\n  searchFormData.append(\"__EVENTARGUMENT\", \"\");\n  searchFormData.append(\"__VIEWSTATE\", details.viewState);\n  searchFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  searchFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  searchFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n  searchFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  searchFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  searchFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n  searchFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n  searchFormData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  searchFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const searchResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: searchFormData\n  });\n\n  const searchDoc = parser.parseFromString(await searchResponse.text(), \"text/html\");\n\n  const searchViewState = searchDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const searchEventValidation = searchDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const searchViewStateGen = searchDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // Find the matching row\n  let row = null;\n  const rows = searchDoc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n  for (const r of rows) {\n    const cells = r.querySelectorAll(\"td\");\n    const rowCode = cells[0]?.textContent.trim();\n    const rowName = cells[1]?.textContent.trim();\n    \n    if (args.electorateCode && rowCode === args.electorateCode) {\n      row = r;\n      break;\n    } else if (args.electorateName && rowName === args.electorateName) {\n      row = r;\n      break;\n    }\n  }\n\n  if (!row) {\n    return \"Electorate not found. Please verify the electorate code or name.\";\n  }\n\n  // Get the edit link\n  const editKey = row\n    .querySelector(\"a\")\n    ?.getAttribute(\"href\")\n    ?.match(/__doPostBack\\('([^']+)'/)?.[1];\n\n  if (!editKey) {\n    return \"Unable to open electorate record.\";\n  }\n\n  // Click on the row to open detail view\n  const rowClickFormData = new FormData();\n  rowClickFormData.append(\"scrollLeft\", \"0\");\n  rowClickFormData.append(\"scrollTop\", \"0\");\n  rowClickFormData.append(\"__EVENTTARGET\", editKey);\n  rowClickFormData.append(\"__EVENTARGUMENT\", \"\");\n  rowClickFormData.append(\"__VIEWSTATE\", searchViewState);\n  rowClickFormData.append(\"__VIEWSTATEGENERATOR\", searchViewStateGen);\n  rowClickFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  rowClickFormData.append(\"__EVENTVALIDATION\", searchEventValidation);\n  rowClickFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  rowClickFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  rowClickFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n  rowClickFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n  rowClickFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  rowClickFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  rowClickFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  rowClickFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  rowClickFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const detailResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: rowClickFormData\n  });\n\n  const detailDoc = parser.parseFromString(await detailResponse.text(), \"text/html\");\n\n  // Extract current values from detail view\n  const currentCode = detailDoc.querySelector(\"#ctl00_body_txtCode\")?.value || \"\";\n  const currentName = detailDoc.querySelector(\"#ctl00_body_txtName\")?.value || \"\";\n  const currentDistrictCode = detailDoc.querySelector(\"#ctl00_body_drpDistrict\")?.value || \"\";\n\n  // Determine district code to use\n  let updatedDistrictCode = currentDistrictCode;\n  \n  // If districtCode is provided, use it directly\n  if (args.districtCode !== undefined) {\n    updatedDistrictCode = args.districtCode;\n  }\n  // If districtName is provided, look it up in the dropdown\n  else if (args.districtName !== undefined) {\n    const districtDropdown = detailDoc.querySelector(\"#ctl00_body_drpDistrict\");\n    const options = districtDropdown?.querySelectorAll(\"option\") || [];\n    \n    let foundDistrictCode = null;\n    for (const option of options) {\n      const optionText = option.textContent.trim();\n      const optionValue = option.value;\n      \n      if (optionText.toLowerCase() === args.districtName.toLowerCase() && optionValue !== \"\") {\n        foundDistrictCode = optionValue;\n        break;\n      }\n    }\n    \n    if (foundDistrictCode) {\n      updatedDistrictCode = foundDistrictCode;\n    } else if (args.districtName !== \"\") {\n      return `District \"${args.districtName}\" not found in the dropdown. Please verify the district name.`;\n    }\n  }\n\n  // Merge with updates (only update fields that are provided)\n  const updatedName = args.newElectorateName !== undefined ? args.newElectorateName : currentName;\n\n  const detailViewState = detailDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const detailEventValidation = detailDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const detailViewStateGen = detailDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // Click Edit button to enter edit mode\n  const editFormData = new FormData();\n  editFormData.append(\"scrollLeft\", \"0\");\n  editFormData.append(\"scrollTop\", \"0\");\n  editFormData.append(\"__EVENTTARGET\", \"\");\n  editFormData.append(\"__EVENTARGUMENT\", \"\");\n  editFormData.append(\"__VIEWSTATE\", detailViewState);\n  editFormData.append(\"__VIEWSTATEGENERATOR\", detailViewStateGen);\n  editFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  editFormData.append(\"__EVENTVALIDATION\", detailEventValidation);\n  editFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  editFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  editFormData.append(\"ctl00$body$butEdit\", \"Edit\");\n\n  const editModeResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: editFormData\n  });\n\n  const editModeDoc = parser.parseFromString(await editModeResponse.text(), \"text/html\");\n\n  const saveViewState = editModeDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const saveEventValidation = editModeDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const saveViewStateGen = editModeDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // Save the changes\n  const saveFormData = new FormData();\n  saveFormData.append(\"scrollLeft\", \"0\");\n  saveFormData.append(\"scrollTop\", \"0\");\n  saveFormData.append(\"__EVENTTARGET\", \"\");\n  saveFormData.append(\"__EVENTARGUMENT\", \"\");\n  saveFormData.append(\"__VIEWSTATE\", saveViewState);\n  saveFormData.append(\"__VIEWSTATEGENERATOR\", saveViewStateGen);\n  saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  saveFormData.append(\"__EVENTVALIDATION\", saveEventValidation);\n  saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  saveFormData.append(\"ctl00$body$txtName\", updatedName);\n  saveFormData.append(\"ctl00$body$drpDistrict\", updatedDistrictCode);\n  saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n  const finalResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: saveFormData\n  });\n\n  await finalResponse.text();\n\n  if (finalResponse.status === 200) {\n    return `Successfully updated electorate (${currentCode}).`;\n  }\n\n  return \"Failed to update electorate. Please verify in the UI.\";\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

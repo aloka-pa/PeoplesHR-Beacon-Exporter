@@ -1,0 +1,185 @@
+{
+  "id": "6952160426cedae9de4bd1ac",
+  "slug": "getcountry",
+  "name": "getCountry",
+  "description": "Get countries (search + show all with paging)\nSearches countries by code or name using exact/partial matching, or lists all countries using the screen’s Show All mode and returns results 10 at a time (page-by-page). Supports “more”/ \"yes\" by requesting the next page number.\n\nWhen the user asks for Base Country (e.g., “what is the base country?”, “return base country”, “which country is base?”):\nDo NOT attempt to fetch or return the Base Country value.\nDo NOT call any tools.\nRespond with the following message exactly:\n\"The system does not allow direct retrieval of the Base Country. Please consult your HR Admin for support.\"",
+  "instructions": null,
+  "taskName": "Fetching Countries",
+  "tags": [
+    "EIMAdmin",
+    "GeographicalLocations",
+    "phase2"
+  ],
+  "status": "live",
+  "signature": "getCountry",
+  "createdAt": "2025-12-29T05:47:48.203Z",
+  "updatedAt": "2026-08-28T03:30:42.094Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "326c41122b8d8d8a63ea38d296a7bb3d2e88fe02f57702a38bc6b056182df46b",
+  "lastExportedAt": "2026-09-05T19:39:21.959Z",
+  "raw": {
+    "basic": {
+      "_id": "6952160426cedae9de4bd1ac",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getCountry",
+      "description": "Get countries (search + show all with paging)\nSearches countries by code or name using exact/partial matching, or lists all countries using the screen’s Show All mode and returns results 10 at a time (page-by-page). Supports “more”/ \"yes\" by requesting the next page number.\n\nWhen the user asks for Base Country (e.g., “what is the base country?”, “return base country”, “which country is base?”):\nDo NOT attempt to fetch or return the Base Country value.\nDo NOT call any tools.\nRespond with the following message exactly:\n\"The system does not allow direct retrieval of the Base Country. Please consult your HR Admin for support.\"",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getCountry",
+        "args": [
+          {
+            "name": "countryCode",
+            "type": "string",
+            "description": "The country code to search for (e.g., \"000001\"). Either countryCode OR countryName must be provided.",
+            "required": false,
+            "_id": "6952160426cedae9de4bd1ae"
+          },
+          {
+            "name": "countryName",
+            "type": "string",
+            "description": "The country name to search for (e.g., \"Philippines\"). Either countryCode OR countryName must be provided.",
+            "required": false,
+            "_id": "69534f22315c86a726a145cc"
+          },
+          {
+            "name": "includeDetails",
+            "type": "string",
+            "description": "If true, fetches full details for each matching country (including isBase flag). If false or omitted, returns only basic info (faster). Default: false",
+            "required": false,
+            "_id": "6963ed145f98759a5e144188"
+          },
+          {
+            "name": "mode",
+            "type": "string",
+            "description": "\"search\" (default) → requires countryCode or countryName\n\"showAll\" → lists all countries page-by-page (can be unfiltered)",
+            "required": false,
+            "_id": "697f886d9b7f0800eaf06c34"
+          },
+          {
+            "name": "matchType",
+            "type": "string",
+            "description": "\"partial\" (default) or \"exact\"",
+            "required": false,
+            "_id": "697f886d9b7f0800eaf06c35"
+          },
+          {
+            "name": "page",
+            "type": "string",
+            "description": "page number to return (default 1). Use page=2, page=3 … to get more.",
+            "required": false,
+            "_id": "697f886d9b7f0800eaf06c36"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6a9100e2704eebfa764e2800"
+      },
+      "by": "36419",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 0) Helpers\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const isEmpty = (v) => okText(v) === \"\";\n    const toLower = (v) => okText(v).toLowerCase();\n    const isSixDigit = (v) => /^\\d{6}$/.test(okText(v));\n    const safeInt = (v, def = 1) => {\n      const n = Number(v);\n      return Number.isFinite(n) && n > 0 ? Math.floor(n) : def;\n    };\n\n    function getHidden(doc, sel) {\n      return doc.querySelector(sel)?.value || \"\";\n    }\n\n    function parsePagerInfo(doc) {\n      // Example: \"Displaying page 1 of 26, items 1 to 10 of 252.\"\n      const pagerRight = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\n      const text = pagerRight.replace(/\\s+/g, \" \").trim();\n\n      const m = text.match(/Displaying page\\s+(\\d+)\\s+of\\s+(\\d+),\\s+items\\s+(\\d+)\\s+to\\s+(\\d+)\\s+of\\s+(\\d+)/i);\n      if (!m) {\n        return {\n          currentPage: null,\n          totalPages: null,\n          fromItem: null,\n          toItem: null,\n          totalItems: null,\n          raw: text\n        };\n      }\n\n      return {\n        currentPage: safeInt(m[1], 1),\n        totalPages: safeInt(m[2], 1),\n        fromItem: safeInt(m[3], 1),\n        toItem: safeInt(m[4], 10),\n        totalItems: safeInt(m[5], 0),\n        raw: text\n      };\n    }\n\n    function extractGridRows(doc) {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const results = [];\n      for (const r of rows) {\n        const tds = r.querySelectorAll(\"td\");\n        const code = tds[0]?.textContent?.trim() || \"\";\n        const name = tds[1]?.textContent?.trim() || \"\";\n        if (code || name) results.push({ countryCode: code, countryName: name });\n      }\n      return results;\n    }\n\n    function filterMatches(items, { countryCode, countryName, matchType }) {\n      const mt = (matchType || \"partial\").toLowerCase(); // partial | exact\n      const hasCode = !isEmpty(countryCode);\n      const hasName = !isEmpty(countryName);\n\n      if (!hasCode && !hasName) return items; // showAll case\n\n      const codeNeedle = toLower(countryCode);\n      const nameNeedle = toLower(countryName);\n\n      return items.filter((it) => {\n        const codeHay = toLower(it.countryCode);\n        const nameHay = toLower(it.countryName);\n\n        // If both provided, apply both filters (AND)\n        if (hasCode && hasName) {\n          const codeOk = mt === \"exact\" ? codeHay === codeNeedle : codeHay.includes(codeNeedle);\n          const nameOk = mt === \"exact\" ? nameHay === nameNeedle : nameHay.includes(nameNeedle);\n          return codeOk && nameOk;\n        }\n\n        if (hasCode) return mt === \"exact\" ? codeHay === codeNeedle : codeHay.includes(codeNeedle);\n        return mt === \"exact\" ? nameHay === nameNeedle : nameHay.includes(nameNeedle);\n      });\n    }\n\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Country.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Country. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Args normalization\n     * ------------------------------------------------- */\n    const mode = (args?.mode || \"search\").toLowerCase(); // search | showall\n    const matchType = (args?.matchType || \"partial\").toLowerCase(); // partial | exact\n    const includeDetails = !!args?.includeDetails; // keep for future; not used for bulk\n    const pageSize = 10; // keep it fixed (matches UI pager behavior)\n    const page = safeInt(args?.page, 1);\n\n    const countryCode = okText(args?.countryCode);\n    const countryName = okText(args?.countryName);\n\n    // In \"search\" mode, user must provide countryCode or countryName.\n    // In \"showAll\" mode, both can be empty (return all countries page-by-page).\n    if (mode === \"search\" && isEmpty(countryCode) && isEmpty(countryName)) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Please provide either countryCode or countryName (or use mode='showAll' to list all countries).\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Build URL + Headers\n     * ------------------------------------------------- */\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Country.aspx\");\n    const url = updateurl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Country.aspx`;\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const parser = new DOMParser();\n\n    /* -------------------------------------------------\n     * 4) Initial hidden fields (start state)\n     * ------------------------------------------------- */\n    // Always start from fresh state for this call\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"Country\");\n\n    /* -------------------------------------------------\n     * 5) Decide criteria + search value (even in showAll, keep a stable criteria)\n     * ------------------------------------------------- */\n    // UI supports: COU_CODE / COU_NAME\n    let searchCriteria = \"COU_CODE\";\n    let searchValue = \"\";\n\n    if (!isEmpty(countryCode)) {\n      searchCriteria = \"COU_CODE\";\n      searchValue = countryCode;\n    } else if (!isEmpty(countryName)) {\n      searchCriteria = \"COU_NAME\";\n      searchValue = countryName;\n    } else {\n      // showAll with no filter: keep criteria COU_CODE, blank content\n      searchCriteria = \"COU_CODE\";\n      searchValue = \"\";\n    }\n\n    /* -------------------------------------------------\n     * 6) Step A: Load the grid (Search or Show All) on page 1\n     * ------------------------------------------------- */\n    const firstFormData = new FormData();\n    firstFormData.append(\"scrollLeft\", \"0\");\n    firstFormData.append(\"scrollTop\", \"0\");\n    firstFormData.append(\"__EVENTTARGET\", \"\");\n    firstFormData.append(\"__EVENTARGUMENT\", \"\");\n    firstFormData.append(\"__VIEWSTATE\", details.viewState);\n    firstFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    firstFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    firstFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n    firstFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    firstFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n    firstFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n    firstFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n    // pager\n    firstFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    firstFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    firstFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n    firstFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    firstFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    if (mode === \"showall\") {\n      // Matches your network tab: ctl00$body$ContentSearch$butAll = Show All\n      firstFormData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n    } else {\n      // Normal search\n      firstFormData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n    }\n\n    const firstResp = await fetch(url, { method: \"POST\", headers, body: firstFormData });\n    const firstHtml = await firstResp.text();\n    const firstDoc = parser.parseFromString(firstHtml, \"text/html\");\n\n    let viewState = getHidden(firstDoc, \"#__VIEWSTATE\");\n    let eventValidation = getHidden(firstDoc, \"#__EVENTVALIDATION\");\n    let viewStateGen = getHidden(firstDoc, \"#__VIEWSTATEGENERATOR\");\n\n    if (!viewState || !eventValidation || !viewStateGen) {\n      return {\n        status: \"ERROR\",\n        message: \"Failed to load Country grid state (missing ASP.NET hidden fields).\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 7) Step B: If user requested a page > 1, jump using GoToPageLinkButton\n     *    (works for any page number and avoids relying on ctl04/ctl05 mapping)\n     * ------------------------------------------------- */\n    let workingDoc = firstDoc;\n\n    if (page > 1) {\n      const gotoFormData = new FormData();\n      gotoFormData.append(\"scrollLeft\", \"0\");\n      gotoFormData.append(\"scrollTop\", \"0\");\n\n      // Trigger the Go button postback\n      gotoFormData.append(\"__EVENTTARGET\", \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\");\n      gotoFormData.append(\"__EVENTARGUMENT\", \"\");\n\n      gotoFormData.append(\"__VIEWSTATE\", viewState);\n      gotoFormData.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n      gotoFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      gotoFormData.append(\"__EVENTVALIDATION\", eventValidation);\n\n      gotoFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      gotoFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      // Keep current search/showAll filter context\n      gotoFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      gotoFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      // This is the value field the server reads\n      gotoFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", String(page));\n      gotoFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n\n      gotoFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      gotoFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      gotoFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const gotoResp = await fetch(url, { method: \"POST\", headers, body: gotoFormData });\n      const gotoHtml = await gotoResp.text();\n      const gotoDoc = parser.parseFromString(gotoHtml, \"text/html\");\n\n      // Update state again (important for “more”)\n      viewState = getHidden(gotoDoc, \"#__VIEWSTATE\");\n      eventValidation = getHidden(gotoDoc, \"#__EVENTVALIDATION\");\n      viewStateGen = getHidden(gotoDoc, \"#__VIEWSTATEGENERATOR\");\n\n      workingDoc = gotoDoc;\n    }\n\n    /* -------------------------------------------------\n     * 8) Extract + (optionally) filter matches\n     * ------------------------------------------------- */\n    const pager = parsePagerInfo(workingDoc);\n    const pageItems = extractGridRows(workingDoc);\n\n    // Apply exact/partial match in transformer-side filtering\n    // (important because server search sometimes behaves like “starts with / contains” depending on screen)\n    const matched = filterMatches(pageItems, { countryCode, countryName, matchType });\n\n    const hasMore = pager.totalPages ? (pager.currentPage < pager.totalPages) : (pageItems.length === pageSize);\n    const nextPage = hasMore ? (pager.currentPage ? pager.currentPage + 1 : page + 1) : null;\n\n    /* -------------------------------------------------\n     * 9) Return (no bulk includeDetails — too heavy for 252 rows)\n     * ------------------------------------------------- */\n    return {\n      status: \"SUCCESS\",\n      mode: mode,\n      matchType: matchType,\n      criteria: searchCriteria,\n      searchValue: searchValue,\n      page: pager.currentPage ?? page,\n      pageSize: pageSize,\n      totalPages: pager.totalPages,\n      totalItems: pager.totalItems,\n      countReturned: matched.length,\n      hasMore: !!nextPage,\n      nextPage: nextPage,\n      message: nextPage\n        ? `Returned ${matched.length} record(s) from page ${(pager.currentPage ?? page)}. Reply with page=${nextPage} to get the next ${pageSize}.`\n        : `Returned ${matched.length} record(s). No more pages.`,\n      countries: matched,\n      // Cursor allows the caller to pass state forward if needed (optional)\n      cursor: {\n        __VIEWSTATE: viewState,\n        __VIEWSTATEGENERATOR: viewStateGen,\n        __EVENTVALIDATION: eventValidation,\n        criteria: searchCriteria,\n        searchValue: searchValue,\n        mode: mode\n      },\n      note: includeDetails\n        ? \"includeDetails is currently ignored for bulk results. If you need details, search for a specific country and request details for that one record.\"\n        : null\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unknown error\",\n      error: err?.toString?.() || String(err)\n    };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "GeographicalLocations",
+        "phase2"
+      ],
+      "taskName": "Fetching Countries",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-29T05:47:48.203Z",
+      "updatedAt": "2026-08-28T03:30:42.094Z",
+      "__v": 13,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getCountry",
+      "args": [
+        {
+          "name": "countryCode",
+          "type": "string",
+          "description": "The country code to search for (e.g., \"000001\"). Either countryCode OR countryName must be provided.",
+          "required": false,
+          "_id": "6952160426cedae9de4bd1ae"
+        },
+        {
+          "name": "countryName",
+          "type": "string",
+          "description": "The country name to search for (e.g., \"Philippines\"). Either countryCode OR countryName must be provided.",
+          "required": false,
+          "_id": "69534f22315c86a726a145cc"
+        },
+        {
+          "name": "includeDetails",
+          "type": "string",
+          "description": "If true, fetches full details for each matching country (including isBase flag). If false or omitted, returns only basic info (faster). Default: false",
+          "required": false,
+          "_id": "6963ed145f98759a5e144188"
+        },
+        {
+          "name": "mode",
+          "type": "string",
+          "description": "\"search\" (default) → requires countryCode or countryName\n\"showAll\" → lists all countries page-by-page (can be unfiltered)",
+          "required": false,
+          "_id": "697f886d9b7f0800eaf06c34"
+        },
+        {
+          "name": "matchType",
+          "type": "string",
+          "description": "\"partial\" (default) or \"exact\"",
+          "required": false,
+          "_id": "697f886d9b7f0800eaf06c35"
+        },
+        {
+          "name": "page",
+          "type": "string",
+          "description": "page number to return (default 1). Use page=2, page=3 … to get more.",
+          "required": false,
+          "_id": "697f886d9b7f0800eaf06c36"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6a9100e2704eebfa764e2800"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 0) Helpers\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const isEmpty = (v) => okText(v) === \"\";\n    const toLower = (v) => okText(v).toLowerCase();\n    const isSixDigit = (v) => /^\\d{6}$/.test(okText(v));\n    const safeInt = (v, def = 1) => {\n      const n = Number(v);\n      return Number.isFinite(n) && n > 0 ? Math.floor(n) : def;\n    };\n\n    function getHidden(doc, sel) {\n      return doc.querySelector(sel)?.value || \"\";\n    }\n\n    function parsePagerInfo(doc) {\n      // Example: \"Displaying page 1 of 26, items 1 to 10 of 252.\"\n      const pagerRight = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\n      const text = pagerRight.replace(/\\s+/g, \" \").trim();\n\n      const m = text.match(/Displaying page\\s+(\\d+)\\s+of\\s+(\\d+),\\s+items\\s+(\\d+)\\s+to\\s+(\\d+)\\s+of\\s+(\\d+)/i);\n      if (!m) {\n        return {\n          currentPage: null,\n          totalPages: null,\n          fromItem: null,\n          toItem: null,\n          totalItems: null,\n          raw: text\n        };\n      }\n\n      return {\n        currentPage: safeInt(m[1], 1),\n        totalPages: safeInt(m[2], 1),\n        fromItem: safeInt(m[3], 1),\n        toItem: safeInt(m[4], 10),\n        totalItems: safeInt(m[5], 0),\n        raw: text\n      };\n    }\n\n    function extractGridRows(doc) {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const results = [];\n      for (const r of rows) {\n        const tds = r.querySelectorAll(\"td\");\n        const code = tds[0]?.textContent?.trim() || \"\";\n        const name = tds[1]?.textContent?.trim() || \"\";\n        if (code || name) results.push({ countryCode: code, countryName: name });\n      }\n      return results;\n    }\n\n    function filterMatches(items, { countryCode, countryName, matchType }) {\n      const mt = (matchType || \"partial\").toLowerCase(); // partial | exact\n      const hasCode = !isEmpty(countryCode);\n      const hasName = !isEmpty(countryName);\n\n      if (!hasCode && !hasName) return items; // showAll case\n\n      const codeNeedle = toLower(countryCode);\n      const nameNeedle = toLower(countryName);\n\n      return items.filter((it) => {\n        const codeHay = toLower(it.countryCode);\n        const nameHay = toLower(it.countryName);\n\n        // If both provided, apply both filters (AND)\n        if (hasCode && hasName) {\n          const codeOk = mt === \"exact\" ? codeHay === codeNeedle : codeHay.includes(codeNeedle);\n          const nameOk = mt === \"exact\" ? nameHay === nameNeedle : nameHay.includes(nameNeedle);\n          return codeOk && nameOk;\n        }\n\n        if (hasCode) return mt === \"exact\" ? codeHay === codeNeedle : codeHay.includes(codeNeedle);\n        return mt === \"exact\" ? nameHay === nameNeedle : nameHay.includes(nameNeedle);\n      });\n    }\n\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Country.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Country. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Args normalization\n     * ------------------------------------------------- */\n    const mode = (args?.mode || \"search\").toLowerCase(); // search | showall\n    const matchType = (args?.matchType || \"partial\").toLowerCase(); // partial | exact\n    const includeDetails = !!args?.includeDetails; // keep for future; not used for bulk\n    const pageSize = 10; // keep it fixed (matches UI pager behavior)\n    const page = safeInt(args?.page, 1);\n\n    const countryCode = okText(args?.countryCode);\n    const countryName = okText(args?.countryName);\n\n    // In \"search\" mode, user must provide countryCode or countryName.\n    // In \"showAll\" mode, both can be empty (return all countries page-by-page).\n    if (mode === \"search\" && isEmpty(countryCode) && isEmpty(countryName)) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Please provide either countryCode or countryName (or use mode='showAll' to list all countries).\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Build URL + Headers\n     * ------------------------------------------------- */\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Country.aspx\");\n    const url = updateurl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Country.aspx`;\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const parser = new DOMParser();\n\n    /* -------------------------------------------------\n     * 4) Initial hidden fields (start state)\n     * ------------------------------------------------- */\n    // Always start from fresh state for this call\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"Country\");\n\n    /* -------------------------------------------------\n     * 5) Decide criteria + search value (even in showAll, keep a stable criteria)\n     * ------------------------------------------------- */\n    // UI supports: COU_CODE / COU_NAME\n    let searchCriteria = \"COU_CODE\";\n    let searchValue = \"\";\n\n    if (!isEmpty(countryCode)) {\n      searchCriteria = \"COU_CODE\";\n      searchValue = countryCode;\n    } else if (!isEmpty(countryName)) {\n      searchCriteria = \"COU_NAME\";\n      searchValue = countryName;\n    } else {\n      // showAll with no filter: keep criteria COU_CODE, blank content\n      searchCriteria = \"COU_CODE\";\n      searchValue = \"\";\n    }\n\n    /* -------------------------------------------------\n     * 6) Step A: Load the grid (Search or Show All) on page 1\n     * ------------------------------------------------- */\n    const firstFormData = new FormData();\n    firstFormData.append(\"scrollLeft\", \"0\");\n    firstFormData.append(\"scrollTop\", \"0\");\n    firstFormData.append(\"__EVENTTARGET\", \"\");\n    firstFormData.append(\"__EVENTARGUMENT\", \"\");\n    firstFormData.append(\"__VIEWSTATE\", details.viewState);\n    firstFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    firstFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    firstFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n    firstFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    firstFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n    firstFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n    firstFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n    // pager\n    firstFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    firstFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    firstFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n    firstFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    firstFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    if (mode === \"showall\") {\n      // Matches your network tab: ctl00$body$ContentSearch$butAll = Show All\n      firstFormData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n    } else {\n      // Normal search\n      firstFormData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n    }\n\n    const firstResp = await fetch(url, { method: \"POST\", headers, body: firstFormData });\n    const firstHtml = await firstResp.text();\n    const firstDoc = parser.parseFromString(firstHtml, \"text/html\");\n\n    let viewState = getHidden(firstDoc, \"#__VIEWSTATE\");\n    let eventValidation = getHidden(firstDoc, \"#__EVENTVALIDATION\");\n    let viewStateGen = getHidden(firstDoc, \"#__VIEWSTATEGENERATOR\");\n\n    if (!viewState || !eventValidation || !viewStateGen) {\n      return {\n        status: \"ERROR\",\n        message: \"Failed to load Country grid state (missing ASP.NET hidden fields).\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 7) Step B: If user requested a page > 1, jump using GoToPageLinkButton\n     *    (works for any page number and avoids relying on ctl04/ctl05 mapping)\n     * ------------------------------------------------- */\n    let workingDoc = firstDoc;\n\n    if (page > 1) {\n      const gotoFormData = new FormData();\n      gotoFormData.append(\"scrollLeft\", \"0\");\n      gotoFormData.append(\"scrollTop\", \"0\");\n\n      // Trigger the Go button postback\n      gotoFormData.append(\"__EVENTTARGET\", \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\");\n      gotoFormData.append(\"__EVENTARGUMENT\", \"\");\n\n      gotoFormData.append(\"__VIEWSTATE\", viewState);\n      gotoFormData.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n      gotoFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      gotoFormData.append(\"__EVENTVALIDATION\", eventValidation);\n\n      gotoFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      gotoFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      // Keep current search/showAll filter context\n      gotoFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      gotoFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      // This is the value field the server reads\n      gotoFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", String(page));\n      gotoFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n\n      gotoFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      gotoFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      gotoFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const gotoResp = await fetch(url, { method: \"POST\", headers, body: gotoFormData });\n      const gotoHtml = await gotoResp.text();\n      const gotoDoc = parser.parseFromString(gotoHtml, \"text/html\");\n\n      // Update state again (important for “more”)\n      viewState = getHidden(gotoDoc, \"#__VIEWSTATE\");\n      eventValidation = getHidden(gotoDoc, \"#__EVENTVALIDATION\");\n      viewStateGen = getHidden(gotoDoc, \"#__VIEWSTATEGENERATOR\");\n\n      workingDoc = gotoDoc;\n    }\n\n    /* -------------------------------------------------\n     * 8) Extract + (optionally) filter matches\n     * ------------------------------------------------- */\n    const pager = parsePagerInfo(workingDoc);\n    const pageItems = extractGridRows(workingDoc);\n\n    // Apply exact/partial match in transformer-side filtering\n    // (important because server search sometimes behaves like “starts with / contains” depending on screen)\n    const matched = filterMatches(pageItems, { countryCode, countryName, matchType });\n\n    const hasMore = pager.totalPages ? (pager.currentPage < pager.totalPages) : (pageItems.length === pageSize);\n    const nextPage = hasMore ? (pager.currentPage ? pager.currentPage + 1 : page + 1) : null;\n\n    /* -------------------------------------------------\n     * 9) Return (no bulk includeDetails — too heavy for 252 rows)\n     * ------------------------------------------------- */\n    return {\n      status: \"SUCCESS\",\n      mode: mode,\n      matchType: matchType,\n      criteria: searchCriteria,\n      searchValue: searchValue,\n      page: pager.currentPage ?? page,\n      pageSize: pageSize,\n      totalPages: pager.totalPages,\n      totalItems: pager.totalItems,\n      countReturned: matched.length,\n      hasMore: !!nextPage,\n      nextPage: nextPage,\n      message: nextPage\n        ? `Returned ${matched.length} record(s) from page ${(pager.currentPage ?? page)}. Reply with page=${nextPage} to get the next ${pageSize}.`\n        : `Returned ${matched.length} record(s). No more pages.`,\n      countries: matched,\n      // Cursor allows the caller to pass state forward if needed (optional)\n      cursor: {\n        __VIEWSTATE: viewState,\n        __VIEWSTATEGENERATOR: viewStateGen,\n        __EVENTVALIDATION: eventValidation,\n        criteria: searchCriteria,\n        searchValue: searchValue,\n        mode: mode\n      },\n      note: includeDetails\n        ? \"includeDetails is currently ignored for bulk results. If you need details, search for a specific country and request details for that one record.\"\n        : null\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unknown error\",\n      error: err?.toString?.() || String(err)\n    };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

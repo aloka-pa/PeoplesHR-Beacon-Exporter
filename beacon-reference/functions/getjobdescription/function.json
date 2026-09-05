@@ -1,0 +1,24 @@
+{
+  "id": "690dc581931a2d61ba0b2944",
+  "slug": "getjobdescription",
+  "name": "getJobDescription",
+  "status": "live",
+  "createdAt": "2025-06-09T10:10:52.798Z",
+  "updatedAt": "2025-06-09T10:10:52.798Z",
+  "contentHash": "89db34c7638e27fa720c5f7e7cf8870013a2e2994b9ed3ed0a45af1bcfd09222",
+  "lastExportedAt": "2026-09-05T19:41:37.269Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc581931a2d61ba0b2944",
+    "name": "getJobDescription",
+    "status": "live",
+    "code": "(async function (args) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"content-type\", \"application/json; charset=utf-8\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n\n  const url = new URL(`${reqOptions}recruitmentv9/Requisitions/CheckJobDescription`);\n  url.searchParams.set(\"hieCode\", args.hieCode);\n  url.searchParams.set(\"salGrdCode\", args.salGrdCode);\n  url.searchParams.set(\"ctCode\", args.ctCode);\n  url.searchParams.set(\"dsgCode\", args.DsgCode);\n  url.searchParams.set(\"_\", Date.now());\n\n  const response = await fetch(url.toString(), {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\",\n  });\n\n  if (!response.ok) {\n    throw new Error(`HTTP error! status: ${response.status}`);\n  }\n\n  const data = await response.text();\n  return data;\n})\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

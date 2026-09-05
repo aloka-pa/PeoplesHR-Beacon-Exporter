@@ -1,0 +1,88 @@
+{
+  "id": "690dc565931a2d61ba0b15ba",
+  "slug": "updatefunctionalroledetails",
+  "name": "updateFunctionalRoleDetails",
+  "description": "In this tool, must and should first execute for the \"getEIMAttributeList\" API then after execute for \"update functional role details\" api. to fetch the existing data. If any field is missing, retrieve the corresponding data. If the user updates the ctl00$body$dpcountry field, first display all available functional role options and use the value of the selected option for the update. ",
+  "instructions": null,
+  "taskName": "Update Functional Role Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateFunctionalRoleDetails",
+  "createdAt": "2025-05-02T13:46:59.756Z",
+  "updatedAt": "2026-05-15T07:10:17.162Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "ba9a11faa052ca4037868b61ea1bed63da5cf59db3bddf2ba4fb41160c6c2ccc",
+  "lastExportedAt": "2026-09-05T19:39:22.515Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc565931a2d61ba0b15ba",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateFunctionalRoleDetails",
+      "description": "In this tool, must and should first execute for the \"getEIMAttributeList\" API then after execute for \"update functional role details\" api. to fetch the existing data. If any field is missing, retrieve the corresponding data. If the user updates the ctl00$body$dpcountry field, first display all available functional role options and use the value of the selected option for the update. ",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateFunctionalRoleDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_dpcountry\": {\n      \"type\": \"string\",\n      \"description\": \"Selected functional role ID or country code. If the user updates this field, first display all available functional role options and use the corresponding value from the selection.\"\n    },\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"The name or label for the functional role.\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_dpcountry\",\n    \"ctl00_body_txtName\"\n  ]\n}",
+        "_id": "6814ccd38f0c9af526c8a3aa"
+      },
+      "by": "7829",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/FunctionalRole.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/FunctionalRole.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"FunctionalRole\";\n  }\n\n  const editInit =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.fr.viewState,\n      __VIEWSTATEGENERATOR: window.fr.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.fr.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$butEdit\": \"Edit\"\n\n    }, url);\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: editInit.viewState,\n      __VIEWSTATEGENERATOR: editInit.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: editInit.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$dpcountry\":\n        args[\"ctl00_body_dpcountry\"],\n\n      \"ctl00$body$txtName\":\n        args[\"ctl00_body_txtName\"],\n\n      \"ctl00$body$butSave\": \"Save\"\n\n    }, url);\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const code =\n    doc.querySelector(\"#ctl00_body_txtCode\")\n      ?.value?.trim() || \"\";\n\n  const functionRole =\n    doc.querySelector(\"#ctl00_body_txtName\")\n      ?.value?.trim() || \"\";\n\n  const selectElement =\n    doc.querySelector(\"#ctl00_body_dpcountry\");\n\n  let functionSelect = null;\n\n  if (selectElement) {\n\n    const selected =\n      selectElement.selectedOptions[0];\n\n    functionSelect = {\n      value:\n        selected?.value || \"\",\n\n      text:\n        selected?.textContent.trim() || \"\"\n    };\n\n  }\n\n  const result = {\n    code,\n    functionSelect,\n    functionRole\n  };\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\";\n  } else {\n    return result;\n  }\n\n});",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update Functional Role Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-02T13:46:59.756Z",
+      "updatedAt": "2026-05-15T07:10:17.162Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateFunctionalRoleDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_dpcountry\": {\n      \"type\": \"string\",\n      \"description\": \"Selected functional role ID or country code. If the user updates this field, first display all available functional role options and use the corresponding value from the selection.\"\n    },\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"The name or label for the functional role.\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_dpcountry\",\n    \"ctl00_body_txtName\"\n  ]\n}",
+      "_id": "6814ccd38f0c9af526c8a3aa"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/FunctionalRole.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/FunctionalRole.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"FunctionalRole\";\n  }\n\n  const editInit =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.fr.viewState,\n      __VIEWSTATEGENERATOR: window.fr.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.fr.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$butEdit\": \"Edit\"\n\n    }, url);\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: editInit.viewState,\n      __VIEWSTATEGENERATOR: editInit.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: editInit.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$dpcountry\":\n        args[\"ctl00_body_dpcountry\"],\n\n      \"ctl00$body$txtName\":\n        args[\"ctl00_body_txtName\"],\n\n      \"ctl00$body$butSave\": \"Save\"\n\n    }, url);\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const code =\n    doc.querySelector(\"#ctl00_body_txtCode\")\n      ?.value?.trim() || \"\";\n\n  const functionRole =\n    doc.querySelector(\"#ctl00_body_txtName\")\n      ?.value?.trim() || \"\";\n\n  const selectElement =\n    doc.querySelector(\"#ctl00_body_dpcountry\");\n\n  let functionSelect = null;\n\n  if (selectElement) {\n\n    const selected =\n      selectElement.selectedOptions[0];\n\n    functionSelect = {\n      value:\n        selected?.value || \"\",\n\n      text:\n        selected?.textContent.trim() || \"\"\n    };\n\n  }\n\n  const result = {\n    code,\n    functionSelect,\n    functionRole\n  };\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\";\n  } else {\n    return result;\n  }\n\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

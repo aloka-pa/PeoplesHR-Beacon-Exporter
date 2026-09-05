@@ -1,0 +1,82 @@
+[
+  {
+    "toolId": "690dc568931a2d61ba0b1871",
+    "toolName": "getCompanyLeaveDetails",
+    "path": "tools/getcompanyleavedetails"
+  },
+  {
+    "toolId": "6a1fc5b7d30ad4ca3f174ed5",
+    "toolName": "getEmpDetails",
+    "path": "tools/getempdetails"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b16ed",
+    "toolName": "employeeLeaveApplication",
+    "path": "tools/employeeleaveapplication"
+  },
+  {
+    "toolId": "690dc56a931a2d61ba0b1a41",
+    "toolName": "leaveCancelation",
+    "path": "tools/leavecancelation"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b16c7",
+    "toolName": "employeeDetails",
+    "path": "tools/employeedetails"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b1869",
+    "toolName": "getAdminInformationDetails",
+    "path": "tools/getadmininformationdetails"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a67",
+    "toolName": "getGlobalEmployeeSearch",
+    "path": "tools/getglobalemployeesearch"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b1866",
+    "toolName": "applyShortLeave",
+    "path": "tools/applyshortleave"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b1816",
+    "toolName": "getLeaveSummaryDetails",
+    "path": "tools/getleavesummarydetails"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b16e9",
+    "toolName": "getViewLeaveHistoryDetails",
+    "path": "tools/getviewleavehistorydetails"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b16be",
+    "toolName": "getEmployeeLeaveBalance",
+    "path": "tools/getemployeeleavebalance"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a5f",
+    "toolName": "dateFormat",
+    "path": "tools/dateformat"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b1893",
+    "toolName": "selectEmployee",
+    "path": "tools/selectemployee"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b1878",
+    "toolName": "getShortLeaveApprovalList",
+    "path": "tools/getshortleaveapprovallist"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b181e",
+    "toolName": "getLeaveStatisticsDetails",
+    "path": "tools/getleavestatisticsdetails"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b16cb",
+    "toolName": "employeeLogKey",
+    "path": "tools/employeelogkey"
+  }
+]

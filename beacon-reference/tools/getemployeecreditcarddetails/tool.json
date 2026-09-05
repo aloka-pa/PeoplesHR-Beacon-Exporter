@@ -1,0 +1,91 @@
+{
+  "id": "690dc567931a2d61ba0b176d",
+  "slug": "getemployeecreditcarddetails",
+  "name": "getEmployeeCreditCardDetails",
+  "description": "In this tool, the Employee Credit Card Details are generated. If the user asks to retrieve credit card information—such as credit card type, bank name, etc.—the system should fetch and return only the data relevant to the user’s query. If the query matches a specific detail, return only that information without including any additional or unrelated data.",
+  "instructions": null,
+  "taskName": "Fetching Employee Credit Card Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getEmployeeCreditCardDetails",
+  "createdAt": "2025-05-16T11:01:52.016Z",
+  "updatedAt": "2025-05-16T11:01:52.016Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "f3ca9a4b59069fb570900e934c583b42e77d64cea210290ac77426ecd5f328eb",
+  "lastExportedAt": "2026-09-05T19:39:23.978Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc567931a2d61ba0b176d",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getEmployeeCreditCardDetails",
+      "description": "In this tool, the Employee Credit Card Details are generated. If the user asks to retrieve credit card information—such as credit card type, bank name, etc.—the system should fetch and return only the data relevant to the user’s query. If the query matches a specific detail, return only that information without including any additional or unrelated data.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getEmployeeCreditCardDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to give the employee id Example:- \"000001\" etc...",
+            "required": true,
+            "_id": "68271b203787efeff9aae9f5"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68271b203787efeff9aae9f4"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignCreditCard.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/AssignCreditCard.aspx\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n\n  const detailsText = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(detailsText, \"text/html\");\n\n  const empNumber = doc.querySelector('input[id=\"ctl00_body_EmpSearch_txtEmpDisplayNumber\"]')?.value || \"\";\n  window.pqn = empNumber;\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"\");\n  urlencoded.append(\"scrollTop\", \"\");\n  urlencoded.append(\"__EVENTTARGET\", \"GetSearchResult\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewStateGenerator);\n  urlencoded.append(\"__SCROLLPOSITIONX\", \"0\");\n  urlencoded.append(\"__SCROLLPOSITIONY\", \"0\");\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", empNumber);\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded.append(\"ctl00$body$grdCC$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdCC_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdCC$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdCC_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdCC_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$txtCCard\", \"\");\n  urlencoded.append(\"ctl00$body$txtempnumber\", empNumber);\n\n  const responsePost = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  const textPost = await responsePost.text();\n  const docPost = parser.parseFromString(textPost, \"text/html\");\n\n  const viewState1 = docPost.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator1 = docPost.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation1 = docPost.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const publicKey = docPost.querySelector(\"#ctl00_body_txtPublicKey\")?.value || \"\";\n\n  const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(publicKey, args.id);\n\n  const edit = await BeaconBar.executeFunction(\"module\")(\n    {\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __VIEWSTATE: viewState1,\n      __VIEWSTATEGENERATOR: viewStateGenerator1,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: eventValidation1,\n      \"ctl00$hdnDateFormat\": \"m/d/yy\",\n      \"ctl00$hdnQuickmenu\": \"\",\n      \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n      \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n      \"ctl00$body$grdCC$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdCC_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdCC$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"2\",\n      \"ctl00_body_grdCC_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdCC_ClientState\": \"\",\n      \"ctl00$body$cmdEdit\": \"Edit\",\n      \"ctl00$body$txtPublicKey\": publicKey,\n      \"ctl00$body$txtCCard\": \"\",\n      \"ctl00$body$txtempnumber\": empEnc\n    },\n    `${reqOptions.sl}/${updateUrlData.pageUrl}`\n  );\n  window.ccd = edit\n  const docPost1 = parser.parseFromString(edit.rawData, \"text/html\");\n\n  const creditCardDetails = Array.from(\n    docPost1.querySelectorAll(\".GridRow_Default, .GridAltRow_Default\")\n  ).map(row => {\n    const cells = row.querySelectorAll(\"td\");\n    const rawHref = cells[3]?.querySelector(\"a\")?.getAttribute(\"href\") || \"\";\n    const textarea = document.createElement(\"textarea\");\n    textarea.innerHTML = rawHref;\n    const decodedHref = textarea.value;\n    const match = decodedHref.match(/__doPostBack\\('([^']+)'/);\n    const editId = match ? match[1] : \"\";\n\n    return {\n      bankName: cells[0]?.textContent.trim() || \"\",\n      cardNumber: cells[1]?.textContent.trim() || \"\",\n      cardType: cells[2]?.textContent.trim() || \"\",\n      editId: editId\n    };\n  });\n  return creditCardDetails;\n});\n",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Fetching Employee Credit Card Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-16T11:01:52.016Z",
+      "updatedAt": "2025-05-16T11:01:52.016Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getEmployeeCreditCardDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to give the employee id Example:- \"000001\" etc...",
+          "required": true,
+          "_id": "68271b203787efeff9aae9f5"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68271b203787efeff9aae9f4"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignCreditCard.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/AssignCreditCard.aspx\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n\n  const detailsText = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(detailsText, \"text/html\");\n\n  const empNumber = doc.querySelector('input[id=\"ctl00_body_EmpSearch_txtEmpDisplayNumber\"]')?.value || \"\";\n  window.pqn = empNumber;\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"\");\n  urlencoded.append(\"scrollTop\", \"\");\n  urlencoded.append(\"__EVENTTARGET\", \"GetSearchResult\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewStateGenerator);\n  urlencoded.append(\"__SCROLLPOSITIONX\", \"0\");\n  urlencoded.append(\"__SCROLLPOSITIONY\", \"0\");\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", empNumber);\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded.append(\"ctl00$body$grdCC$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdCC_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdCC$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdCC_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdCC_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$txtCCard\", \"\");\n  urlencoded.append(\"ctl00$body$txtempnumber\", empNumber);\n\n  const responsePost = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  const textPost = await responsePost.text();\n  const docPost = parser.parseFromString(textPost, \"text/html\");\n\n  const viewState1 = docPost.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator1 = docPost.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation1 = docPost.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const publicKey = docPost.querySelector(\"#ctl00_body_txtPublicKey\")?.value || \"\";\n\n  const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(publicKey, args.id);\n\n  const edit = await BeaconBar.executeFunction(\"module\")(\n    {\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __VIEWSTATE: viewState1,\n      __VIEWSTATEGENERATOR: viewStateGenerator1,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: eventValidation1,\n      \"ctl00$hdnDateFormat\": \"m/d/yy\",\n      \"ctl00$hdnQuickmenu\": \"\",\n      \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n      \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n      \"ctl00$body$grdCC$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdCC_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdCC$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"2\",\n      \"ctl00_body_grdCC_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdCC_ClientState\": \"\",\n      \"ctl00$body$cmdEdit\": \"Edit\",\n      \"ctl00$body$txtPublicKey\": publicKey,\n      \"ctl00$body$txtCCard\": \"\",\n      \"ctl00$body$txtempnumber\": empEnc\n    },\n    `${reqOptions.sl}/${updateUrlData.pageUrl}`\n  );\n  window.ccd = edit\n  const docPost1 = parser.parseFromString(edit.rawData, \"text/html\");\n\n  const creditCardDetails = Array.from(\n    docPost1.querySelectorAll(\".GridRow_Default, .GridAltRow_Default\")\n  ).map(row => {\n    const cells = row.querySelectorAll(\"td\");\n    const rawHref = cells[3]?.querySelector(\"a\")?.getAttribute(\"href\") || \"\";\n    const textarea = document.createElement(\"textarea\");\n    textarea.innerHTML = rawHref;\n    const decodedHref = textarea.value;\n    const match = decodedHref.match(/__doPostBack\\('([^']+)'/);\n    const editId = match ? match[1] : \"\";\n\n    return {\n      bankName: cells[0]?.textContent.trim() || \"\",\n      cardNumber: cells[1]?.textContent.trim() || \"\",\n      cardType: cells[2]?.textContent.trim() || \"\",\n      editId: editId\n    };\n  });\n  return creditCardDetails;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "id": "690dc562931a2d61ba0b1324",
+  "slug": "editorupdateratingmethods",
+  "name": "editOrUpdateRatingMethods",
+  "description": "editOrUpdateRatingMethods , before calling this api. must be first execute for \"getEIMAttributeList\" api. to get the corresponding values in the api. if the user update values give then take for update value. if the user not update to get previous data. marks values format using example format example \"10.00\" , 15.00\"",
+  "instructions": null,
+  "taskName": "Updating Rating Methods",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "editOrUpdateRatingMethods",
+  "createdAt": "2025-04-28T12:24:21.800Z",
+  "updatedAt": "2025-04-28T12:24:21.800Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "efcd0728bb9e546e6a6df2f236ca3b128f56e116fdf96403f3190dc8fe82f692",
+  "lastExportedAt": "2026-09-05T19:39:24.482Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc562931a2d61ba0b1324",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "editOrUpdateRatingMethods",
+      "description": "editOrUpdateRatingMethods , before calling this api. must be first execute for \"getEIMAttributeList\" api. to get the corresponding values in the api. if the user update values give then take for update value. if the user not update to get previous data. marks values format using example format example \"10.00\" , 15.00\"",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "editOrUpdateRatingMethods",
+        "args": [
+          {
+            "name": "ratingMethod",
+            "type": "string",
+            "description": "ratingMethod , SkillRating",
+            "required": true,
+            "_id": "680f73757714a9ba3d3dbacb"
+          },
+          {
+            "name": "Grade",
+            "type": "string",
+            "description": "grade , Ex:- \"1\" or \"A\"",
+            "required": true,
+            "_id": "680f73757714a9ba3d3dbacc"
+          },
+          {
+            "name": "minimumMarks",
+            "type": "string",
+            "description": "minimumMarks , Ex:- \"10.00\" , 15.00\". user give any format marks to take example format. must return example format values",
+            "required": true,
+            "_id": "680f73757714a9ba3d3dbacd"
+          },
+          {
+            "name": "maximumMarks",
+            "type": "string",
+            "description": "maximumMarks , \"100.00\" , \"200.00\". user give any format marks to take example format.must return example format values",
+            "required": true,
+            "_id": "680f73757714a9ba3d3dbace"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "680f73757714a9ba3d3dbaca"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/RatingMethods.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const myHeaders = new Headers();\n  myHeaders.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/RatingMethods.aspx');\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`\n  } else {\n    url = `${window.origin}/${reqOptions.sl}/EIM/RatingMethods.aspx`\n  }\n\n  const initialFormData = new FormData();\n  initialFormData.append(\"scrollLeft\", \"0\");\n  initialFormData.append(\"scrollTop\", \"0\");\n  initialFormData.append(\"__EVENTTARGET\", \"\");\n  initialFormData.append(\"__EVENTARGUMENT\", \"\");\n  initialFormData.append(\"__VIEWSTATE\", window.rm.viewState);\n  initialFormData.append(\"__VIEWSTATEGENERATOR\", window.rm.viewStateGen);\n  initialFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  initialFormData.append(\"__EVENTVALIDATION\", window.rm.eventValidation);\n  initialFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  initialFormData.append(\"ctl00$body$butEdit\", \"Edit\");\n\n  const fetchEditResponse = await fetch(url, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: initialFormData,\n    redirect: \"follow\"\n  });\n\n  const html = await fetchEditResponse.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html, 'text/html'); // Use 'doc' instead of 'document'\n\n  const viewState = doc.querySelector('#__VIEWSTATE')?.value || '';\n  const eventValidation = doc.querySelector('#__EVENTVALIDATION')?.value || '';\n  const viewStateGen = doc.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n  const min = parseFloat(args.minimumMarks);\n  const max = parseFloat(args.maximumMarks);\n  const average = ((min + max) / 2).toFixed(2);\n\n  const edit = new FormData();\n  edit.append(\"scrollLeft\", \"0\");\n  edit.append(\"scrollTop\", \"0\");\n  edit.append(\"__EVENTTARGET\", \"ctl00$body$btnsavesub\");\n  edit.append(\"__EVENTARGUMENT\", \"\");\n  edit.append(\"__LASTFOCUS\", \"\");\n  edit.append(\"__VIEWSTATE\", viewState);\n  edit.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n  edit.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  edit.append(\"__EVENTVALIDATION\", eventValidation);\n  edit.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  edit.append(\"ctl00$hdnQuickmenu\", 1);\n  edit.append(\"ctl00$body$txtName\", args.ratingMethod || \"\");\n  edit.append(\"ctl00$body$txtgrade\", args.Grade || \"\");\n  edit.append(\"ctl00$body$nuninimun\", args.minimumMarks || \"\");\n  edit.append(\"ctl00$body$numax\", args.maximumMarks || \"\");\n  edit.append(\"ctl00$body$nuAvg\", average || \"\");\n  edit.append(\"ctl00$body$grdgrade$ctl00$ctl03$ctl01$GoToPageTextBox\", 1);\n  edit.append(\"ctl00_body_grdgrade_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  edit.append(\"ctl00$body$grdgrade$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", 4);\n  edit.append(\"ctl00_body_grdgrade_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  edit.append(\"ctl00_body_grdgrade_ClientState\", \"\");\n\n\n  const editResponse = await fetch(url, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: edit,\n    redirect: \"follow\"\n  });\n\n  const editDate = await editResponse.text();\n\n  const doc1 = parser.parseFromString(editDate, 'text/html'); // Use 'doc' instead of 'document'\n\n  const saveviewState = doc1.querySelector('#__VIEWSTATE')?.value || '';\n  const saveeventValidation = doc1.querySelector('#__EVENTVALIDATION')?.value || '';\n  const saveviewStateGen = doc1.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n\n  const finalResponse = new FormData();\n  finalResponse.append(\"scrollLeft\", \"0\");\n  finalResponse.append(\"scrollTop\", \"0\");\n  finalResponse.append(\"__EVENTTARGET\", \"\");\n  finalResponse.append(\"__EVENTARGUMENT\", \"\");\n  finalResponse.append(\"__LASTFOCUS\", \"\");\n  finalResponse.append(\"__VIEWSTATE\", saveviewState);\n  finalResponse.append(\"__VIEWSTATEGENERATOR\", saveviewStateGen);\n  finalResponse.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  finalResponse.append(\"__EVENTVALIDATION\", saveeventValidation);\n  finalResponse.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  finalResponse.append(\"ctl00$hdnQuickmenu\", 1);\n  finalResponse.append(\"ctl00$body$txtName\", args.ratingMethod || \"\");\n  finalResponse.append(\"ctl00$body$txtgrade\", \"\");\n  finalResponse.append(\"ctl00$body$nuninimun\", \"\");\n  finalResponse.append(\"ctl00$body$numax\", \"\");\n  finalResponse.append(\"ctl00$body$nuAvg\", \"\");\n  finalResponse.append(\"ctl00$body$grdgrade$ctl00$ctl03$ctl01$GoToPageTextBox\", 1);\n  finalResponse.append(\"ctl00_body_grdgrade_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  finalResponse.append(\"ctl00$body$grdgrade$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", 4);\n  finalResponse.append(\"ctl00_body_grdgrade_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  finalResponse.append(\"ctl00_body_grdgrade_ClientState\", \"\");\n  finalResponse.append(\"ctl00$body$butSave\", \"Save\");\n\n  const final = await fetch(url, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: finalResponse,\n    redirect: \"follow\"\n  });\n\n  await final.text();\n\n  if (final.status === 200) {\n    return \"Successfully updated!\";\n  } else {\n    return \"try again api is fail.\"\n  }\n\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Updating Rating Methods",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-28T12:24:21.800Z",
+      "updatedAt": "2025-04-28T12:24:21.800Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "editOrUpdateRatingMethods",
+      "args": [
+        {
+          "name": "ratingMethod",
+          "type": "string",
+          "description": "ratingMethod , SkillRating",
+          "required": true,
+          "_id": "680f73757714a9ba3d3dbacb"
+        },
+        {
+          "name": "Grade",
+          "type": "string",
+          "description": "grade , Ex:- \"1\" or \"A\"",
+          "required": true,
+          "_id": "680f73757714a9ba3d3dbacc"
+        },
+        {
+          "name": "minimumMarks",
+          "type": "string",
+          "description": "minimumMarks , Ex:- \"10.00\" , 15.00\". user give any format marks to take example format. must return example format values",
+          "required": true,
+          "_id": "680f73757714a9ba3d3dbacd"
+        },
+        {
+          "name": "maximumMarks",
+          "type": "string",
+          "description": "maximumMarks , \"100.00\" , \"200.00\". user give any format marks to take example format.must return example format values",
+          "required": true,
+          "_id": "680f73757714a9ba3d3dbace"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "680f73757714a9ba3d3dbaca"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/RatingMethods.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const myHeaders = new Headers();\n  myHeaders.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/RatingMethods.aspx');\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`\n  } else {\n    url = `${window.origin}/${reqOptions.sl}/EIM/RatingMethods.aspx`\n  }\n\n  const initialFormData = new FormData();\n  initialFormData.append(\"scrollLeft\", \"0\");\n  initialFormData.append(\"scrollTop\", \"0\");\n  initialFormData.append(\"__EVENTTARGET\", \"\");\n  initialFormData.append(\"__EVENTARGUMENT\", \"\");\n  initialFormData.append(\"__VIEWSTATE\", window.rm.viewState);\n  initialFormData.append(\"__VIEWSTATEGENERATOR\", window.rm.viewStateGen);\n  initialFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  initialFormData.append(\"__EVENTVALIDATION\", window.rm.eventValidation);\n  initialFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  initialFormData.append(\"ctl00$body$butEdit\", \"Edit\");\n\n  const fetchEditResponse = await fetch(url, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: initialFormData,\n    redirect: \"follow\"\n  });\n\n  const html = await fetchEditResponse.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html, 'text/html'); // Use 'doc' instead of 'document'\n\n  const viewState = doc.querySelector('#__VIEWSTATE')?.value || '';\n  const eventValidation = doc.querySelector('#__EVENTVALIDATION')?.value || '';\n  const viewStateGen = doc.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n  const min = parseFloat(args.minimumMarks);\n  const max = parseFloat(args.maximumMarks);\n  const average = ((min + max) / 2).toFixed(2);\n\n  const edit = new FormData();\n  edit.append(\"scrollLeft\", \"0\");\n  edit.append(\"scrollTop\", \"0\");\n  edit.append(\"__EVENTTARGET\", \"ctl00$body$btnsavesub\");\n  edit.append(\"__EVENTARGUMENT\", \"\");\n  edit.append(\"__LASTFOCUS\", \"\");\n  edit.append(\"__VIEWSTATE\", viewState);\n  edit.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n  edit.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  edit.append(\"__EVENTVALIDATION\", eventValidation);\n  edit.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  edit.append(\"ctl00$hdnQuickmenu\", 1);\n  edit.append(\"ctl00$body$txtName\", args.ratingMethod || \"\");\n  edit.append(\"ctl00$body$txtgrade\", args.Grade || \"\");\n  edit.append(\"ctl00$body$nuninimun\", args.minimumMarks || \"\");\n  edit.append(\"ctl00$body$numax\", args.maximumMarks || \"\");\n  edit.append(\"ctl00$body$nuAvg\", average || \"\");\n  edit.append(\"ctl00$body$grdgrade$ctl00$ctl03$ctl01$GoToPageTextBox\", 1);\n  edit.append(\"ctl00_body_grdgrade_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  edit.append(\"ctl00$body$grdgrade$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", 4);\n  edit.append(\"ctl00_body_grdgrade_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  edit.append(\"ctl00_body_grdgrade_ClientState\", \"\");\n\n\n  const editResponse = await fetch(url, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: edit,\n    redirect: \"follow\"\n  });\n\n  const editDate = await editResponse.text();\n\n  const doc1 = parser.parseFromString(editDate, 'text/html'); // Use 'doc' instead of 'document'\n\n  const saveviewState = doc1.querySelector('#__VIEWSTATE')?.value || '';\n  const saveeventValidation = doc1.querySelector('#__EVENTVALIDATION')?.value || '';\n  const saveviewStateGen = doc1.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n\n  const finalResponse = new FormData();\n  finalResponse.append(\"scrollLeft\", \"0\");\n  finalResponse.append(\"scrollTop\", \"0\");\n  finalResponse.append(\"__EVENTTARGET\", \"\");\n  finalResponse.append(\"__EVENTARGUMENT\", \"\");\n  finalResponse.append(\"__LASTFOCUS\", \"\");\n  finalResponse.append(\"__VIEWSTATE\", saveviewState);\n  finalResponse.append(\"__VIEWSTATEGENERATOR\", saveviewStateGen);\n  finalResponse.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  finalResponse.append(\"__EVENTVALIDATION\", saveeventValidation);\n  finalResponse.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  finalResponse.append(\"ctl00$hdnQuickmenu\", 1);\n  finalResponse.append(\"ctl00$body$txtName\", args.ratingMethod || \"\");\n  finalResponse.append(\"ctl00$body$txtgrade\", \"\");\n  finalResponse.append(\"ctl00$body$nuninimun\", \"\");\n  finalResponse.append(\"ctl00$body$numax\", \"\");\n  finalResponse.append(\"ctl00$body$nuAvg\", \"\");\n  finalResponse.append(\"ctl00$body$grdgrade$ctl00$ctl03$ctl01$GoToPageTextBox\", 1);\n  finalResponse.append(\"ctl00_body_grdgrade_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  finalResponse.append(\"ctl00$body$grdgrade$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", 4);\n  finalResponse.append(\"ctl00_body_grdgrade_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  finalResponse.append(\"ctl00_body_grdgrade_ClientState\", \"\");\n  finalResponse.append(\"ctl00$body$butSave\", \"Save\");\n\n  const final = await fetch(url, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: finalResponse,\n    redirect: \"follow\"\n  });\n\n  await final.text();\n\n  if (final.status === 200) {\n    return \"Successfully updated!\";\n  } else {\n    return \"try again api is fail.\"\n  }\n\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

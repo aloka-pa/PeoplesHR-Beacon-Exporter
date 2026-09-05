@@ -1,0 +1,24 @@
+{
+  "id": "695f42e2e4390e562982e1a1",
+  "slug": "teamattendanceapproval",
+  "name": "TeamAttendanceApproval",
+  "status": "live",
+  "createdAt": "2026-01-08T05:38:42.761Z",
+  "updatedAt": "2026-01-08T09:04:28.244Z",
+  "contentHash": "5f6a587b0f80dea2ccedb355b5d64abd54ae4fe2e640c4779d9cbd2a33eb2167",
+  "lastExportedAt": "2026-09-05T19:41:27.217Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "695f42e2e4390e562982e1a1",
+    "name": "TeamAttendanceApproval",
+    "status": "live",
+    "code": "(async function () {\r\n    // Setup\r\n    const digestkey1 = await BeaconBar.executeFunction('getDigest')(\"mvc=1&bs=4\");\r\n    const sl = await BeaconBar.getSharedData(\"sl\");\r\n    \r\n    const myHeaders = new Headers();\r\n    myHeaders.append(\"accept\", \"*/*\");\r\n    myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\r\n    myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\r\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\r\n\r\n    const requestOptions = {\r\n        method: \"GET\",\r\n        headers: myHeaders,\r\n        redirect: \"follow\"\r\n    };\r\n\r\n    const baseUrl = `${location.origin}/${sl}`;\r\n\r\n    // Step 1: Get the Attendance Application page\r\n    const response1 = await fetch(\r\n        `${baseUrl}/TNAVUE/app/AttendanceApproval/AttendanceApplication/1?mvc=1&bs=4&digest=${digestkey1.digest}`,\r\n        requestOptions\r\n    );\r\n    const data1 = await response1.text();\r\n\r\n    // Extract patterns from the page\r\n    const empNumberMatch = data1.match(/empNumber=([^\"&]+)/);\r\n    const callBackMatch = data1.match(/(?:callBack=|SearchCallBack\":\")(.*?)(?:&|\")/);\r\n    const searchTokenMatch = data1.match(/searchToken=([^\"&']+)/);\r\n\r\n    const empNumber = empNumberMatch ? empNumberMatch[1] : \"\";\r\n    const callBack = callBackMatch ? decodeURIComponent(callBackMatch[1]) : \"\";\r\n    const searchToken = searchTokenMatch ? searchTokenMatch[1] : \"\";\r\n\r\n    // Step 2: Search for employee\r\n    const searchUrl = `${baseUrl}/CommonComponents/Search/Search?empNumber=${empNumber}&callBack=${callBack}&searchMode=2&searchQueryMode=All&searchQueryState=ActiveOnly&isMultiple=1&breadCrumbEnable=0&isDivLoading=0&displayName=&searchToken=${searchToken}`;\r\n    \r\n    const response2 = await fetch(searchUrl, requestOptions);\r\n    const data2 = await response2.text();\r\n\r\n    const empNumberMatch2 = data2.match(/\"EmpNumber\":\"([^\"]+)\"/);\r\n    const keyValueMatch = data2.match(/\"KeyValue\":\"([^\"]+)\"/);\r\n\r\n    const empNumber2 = empNumberMatch2 ? empNumberMatch2[1] : \"\";\r\n    const keyValue = keyValueMatch ? keyValueMatch[1] : \"\";\r\n\r\n    // Step 3: Get attendance summary data\r\n    const summaryBody = new URLSearchParams();\r\n    summaryBody.append(\"empNumber\", empNumber2);\r\n    summaryBody.append(\"keyValue\", keyValue);\r\n\r\n    const response3 = await fetch(`${baseUrl}/AttendanceApproval/GetEmployeeSummary`, {\r\n        method: \"POST\",\r\n        headers: myHeaders,\r\n        body: summaryBody,\r\n        redirect: \"follow\"\r\n    });\r\n    \r\n    const summaryData = await response3.json();\r\n\r\n    // Helper function\r\n    const getFieldValue = (array, uniqueId) => \r\n        array?.find(x => x.UniqueId === uniqueId)?.FieldValue || \"0\";\r\n\r\n    // Structure and store result\r\n    const result = {\r\n        employee: {\r\n            number: summaryData.EmployeeData.EmpDisplayNumber,\r\n            name: summaryData.EmployeeData.EmpDisplayName,\r\n            designation: summaryData.EmployeeData.Designation,\r\n            completeName: summaryData.EmployeeData.EmpCompleteName\r\n        },\r\n        period: summaryData.SummaryPeriod,\r\n        summary: {\r\n            preOT: getFieldValue(summaryData.SummaryData_01, \"DAT_SOT\"),\r\n            postOT: getFieldValue(summaryData.SummaryData_01, \"DAT_EOT\"),\r\n            absentDays: getFieldValue(summaryData.SummaryData_01, \"DAT_ABSENT_DAY\"),\r\n            lateHours: getFieldValue(summaryData.SummaryData_02, \"DAT_SLATE\"),\r\n            earlyHours: getFieldValue(summaryData.SummaryData_02, \"DAT_ELATE\"),\r\n            nopayDays: getFieldValue(summaryData.SummaryData_03, \"DAT_NPY_DAYS\"),\r\n            workHours: getFieldValue(summaryData.SummaryData_03, \"DAT_WORKHRS\")\r\n        },\r\n        rawData: summaryData\r\n    };\r\n\r\n    window.attendanceSummary = result;\r\n    return result;\r\n})();",
+    "by": "10308",
+    "__v": 1
+  }
+}

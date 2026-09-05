@@ -1,0 +1,91 @@
+{
+  "id": "690dc564931a2d61ba0b14d0",
+  "slug": "updatemembershiptitle",
+  "name": "updateMembershipTitle",
+  "description": "in this tool update membership title.must should first execute for \"getEIMAttributeList\" api. then after execute for \"updateMembershipTitle\" api.",
+  "instructions": null,
+  "taskName": "Update Membership Title",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateMembershipTitle",
+  "createdAt": "2025-04-30T13:05:00.145Z",
+  "updatedAt": "2025-04-30T13:05:00.145Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "4a6faa6dff791779264c35a32b64beed66cc8c30d4c08dffb798f8b9747858cd",
+  "lastExportedAt": "2026-09-05T19:39:24.355Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b14d0",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateMembershipTitle",
+      "description": "in this tool update membership title.must should first execute for \"getEIMAttributeList\" api. then after execute for \"updateMembershipTitle\" api.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateMembershipTitle",
+        "args": [
+          {
+            "name": "membershipTitleName",
+            "type": "string",
+            "description": "user prompt update membership title name.",
+            "required": true,
+            "_id": "68121ffc5b9fb869c57b09df"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68121ffc5b9fb869c57b09de"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/MemberShipTitles.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/MemberShipTitles.aspx');\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n  } else {\n    url = \"MemberShipTitles\"\n  }\n\n  const editInit = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.mt.viewState,\n    __VIEWSTATEGENERATOR: window.mt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.mt.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butEdit\": \"Edit\"\n  }, url);\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtName\": args.membershipTitleName,\n    \"ctl00$body$butSave\": \"Save\"\n  }, url);\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, 'text/html');\n\n  const getValue = (id) => {\n    const el = doc.getElementById(id);\n    return el ? el.value.trim() : \"\";\n  };\n\n  const createMembershipTitleDetails = {\n    code: getValue(\"ctl00_body_txtCode\"),\n    membershipTitle: getValue(\"ctl00_body_txtName\")\n  };\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\"\n  } else {\n    return createMembershipTitleDetails;\n  }\n})\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update Membership Title",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-30T13:05:00.145Z",
+      "updatedAt": "2025-04-30T13:05:00.145Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateMembershipTitle",
+      "args": [
+        {
+          "name": "membershipTitleName",
+          "type": "string",
+          "description": "user prompt update membership title name.",
+          "required": true,
+          "_id": "68121ffc5b9fb869c57b09df"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68121ffc5b9fb869c57b09de"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/MemberShipTitles.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/MemberShipTitles.aspx');\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n  } else {\n    url = \"MemberShipTitles\"\n  }\n\n  const editInit = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.mt.viewState,\n    __VIEWSTATEGENERATOR: window.mt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.mt.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butEdit\": \"Edit\"\n  }, url);\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtName\": args.membershipTitleName,\n    \"ctl00$body$butSave\": \"Save\"\n  }, url);\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, 'text/html');\n\n  const getValue = (id) => {\n    const el = doc.getElementById(id);\n    return el ? el.value.trim() : \"\";\n  };\n\n  const createMembershipTitleDetails = {\n    code: getValue(\"ctl00_body_txtCode\"),\n    membershipTitle: getValue(\"ctl00_body_txtName\")\n  };\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\"\n  } else {\n    return createMembershipTitleDetails;\n  }\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "id": "690dc564931a2d61ba0b14db",
+  "slug": "getmembershiptitledetails",
+  "name": "getMembershipTitleDetails",
+  "description": "in this tool generate the Membership Title Details.",
+  "instructions": null,
+  "taskName": "Membership Title Details",
+  "tags": [],
+  "status": "unlive",
+  "signature": "getMembershipTitleDetails",
+  "createdAt": "2025-04-30T12:25:20.448Z",
+  "updatedAt": "2025-04-30T12:25:20.448Z",
+  "assignedAgents": [],
+  "contentHash": "1915dc029ca20ee71d02426de9c6827678b6695a3891fa34b9b7e58aaab8f5ee",
+  "lastExportedAt": "2026-09-05T19:39:24.362Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b14db",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getMembershipTitleDetails",
+      "description": "in this tool generate the Membership Title Details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getMembershipTitleDetails",
+        "args": [
+          {
+            "name": "membershipTitleCode",
+            "type": "string",
+            "description": "to get the membership Title details with give membershipTitleCode",
+            "required": true,
+            "_id": "681216b0bf13cf04f231e740"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "681216b0bf13cf04f231e73f"
+      },
+      "by": "1927",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"MemberShipTitles\");\n\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"MEMBTITLE_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": args.membershipTitleCode,\n    \"ctl00$body$ContentSearch$butSearch\": \"Search\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"3\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"MemberShipTitles\");\n\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: searchResponse.postBackCode,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: searchResponse.viewState,\n    __VIEWSTATEGENERATOR: searchResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: searchResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"MEMBTITLE_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": args.membershipTitleCode,\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"MemberShipTitles\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(postBackResponse.rawData, \"text/html\");\n\n  const getValue = (id) => {\n    const el = doc.getElementById(id);\n    return el ? el.value.trim() : \"\";\n  };\n\n  const membershipTitleDetails = {\n    code: getValue(\"ctl00_body_txtCode\"),\n    membershipTitle: getValue(\"ctl00_body_txtName\")\n  };\n\n  window.mt = postBackResponse;\n\n  return membershipTitleDetails;\n})\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Membership Title Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-30T12:25:20.448Z",
+      "updatedAt": "2025-04-30T12:25:20.448Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getMembershipTitleDetails",
+      "args": [
+        {
+          "name": "membershipTitleCode",
+          "type": "string",
+          "description": "to get the membership Title details with give membershipTitleCode",
+          "required": true,
+          "_id": "681216b0bf13cf04f231e740"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "681216b0bf13cf04f231e73f"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"MemberShipTitles\");\n\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"MEMBTITLE_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": args.membershipTitleCode,\n    \"ctl00$body$ContentSearch$butSearch\": \"Search\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"3\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"MemberShipTitles\");\n\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: searchResponse.postBackCode,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: searchResponse.viewState,\n    __VIEWSTATEGENERATOR: searchResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: searchResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"MEMBTITLE_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": args.membershipTitleCode,\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"MemberShipTitles\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(postBackResponse.rawData, \"text/html\");\n\n  const getValue = (id) => {\n    const el = doc.getElementById(id);\n    return el ? el.value.trim() : \"\";\n  };\n\n  const membershipTitleDetails = {\n    code: getValue(\"ctl00_body_txtCode\"),\n    membershipTitle: getValue(\"ctl00_body_txtName\")\n  };\n\n  window.mt = postBackResponse;\n\n  return membershipTitleDetails;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

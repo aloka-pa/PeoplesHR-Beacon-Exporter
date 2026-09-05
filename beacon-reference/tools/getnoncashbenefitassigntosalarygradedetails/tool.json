@@ -1,0 +1,91 @@
+{
+  "id": "690dc564931a2d61ba0b154f",
+  "slug": "getnoncashbenefitassigntosalarygradedetails",
+  "name": "getNonCashBenefitAssignToSalaryGradeDetails",
+  "description": "To generate the non Cash Benefit Assignment for Salary Grade details, first fetch the salary grades using the gradeDetails API. Display all available salary grades, and upon selecting one, use its corresponding value as the argument for salaryGradeCode. dont display the edit Id and identifier only using that edit id user update refer to use.",
+  "instructions": null,
+  "taskName": "Non CashBenefitAssign To SalaryGradeDetails",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getNonCashBenefitAssignToSalaryGradeDetails",
+  "createdAt": "2025-05-02T08:21:09.217Z",
+  "updatedAt": "2025-05-02T08:21:09.217Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "22528202c577c44b79a0644edfb2d8212ad9fcb74d04e877da5a31825b249c30",
+  "lastExportedAt": "2026-09-05T19:39:24.288Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b154f",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getNonCashBenefitAssignToSalaryGradeDetails",
+      "description": "To generate the non Cash Benefit Assignment for Salary Grade details, first fetch the salary grades using the gradeDetails API. Display all available salary grades, and upon selecting one, use its corresponding value as the argument for salaryGradeCode. dont display the edit Id and identifier only using that edit id user update refer to use.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getNonCashBenefitAssignToSalaryGradeDetails",
+        "args": [
+          {
+            "name": "salaryGradeCode",
+            "type": "string",
+            "description": "to get the salaryGradeCode for gradeDetails api corresponding value will be take.",
+            "required": true,
+            "_id": "68148075eb28e5d6f39f5a41"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68148075eb28e5d6f39f5a40"
+      },
+      "by": "1927",
+      "fetcher": "(async function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return [];\n    })`\n  }\n});\n",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"AssignNonCashBenifit\");\n\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"ctl00$body$dpsalGrsade\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$dpsalGrsade\": args.salaryGradeCode\n  }, \"AssignNonCashBenifit\");\n\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: searchResponse.viewState,\n    __VIEWSTATEGENERATOR: searchResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: searchResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$dpsalGrsade\": args.salaryGradeCode,\n    \"ctl00_body_grdavailable_ClientState\": \"\",\n    \"ctl00$body$butEdit\": \"Edit\"\n  }, \"AssignNonCashBenifit\");\n\n  window.noncashBenefit = postBackResponse\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(postBackResponse.rawData, \"text/html\");\n\n  const availableTable = doc.querySelector(\"#ctl00_body_grdavailable_ctl00\");\n  const availableBenefits = [];\n\n  let currentCategory = \"\";\n\n  if (availableTable) {\n    const rows = availableTable.querySelectorAll(\"tbody tr\");\n\n    for (const row of rows) {\n      if (row.classList.contains(\"GroupHeader_Default\")) {\n        const categoryText = row.querySelector(\"td[colspan] p\")?.textContent || \"\";\n        const match = categoryText.match(/Category\\s*:\\s*(.*)/i);\n        currentCategory = match ? match[1].trim() : \"\";\n      } else if (\n        row.classList.contains(\"GridRow_Default\") ||\n        row.classList.contains(\"GridAltRow_Default\")\n      ) {\n        const benefitCell = row.querySelectorAll(\"td\")[1];\n        const name = row.querySelectorAll(\"td\")[2];\n        if (benefitCell) {\n          const input = name.querySelector('input');\n          const identifier = input ? input.name : null;\n          availableBenefits.push({\n            category: currentCategory,\n            benefit: benefitCell.textContent.trim(),\n            identifier: identifier\n          });\n        }\n      }\n    }\n  }\n\n  const allocatedTable = doc.querySelector(\"#ctl00_body_grdallocated\");\n  const allocatedBenefits = [];\n\n  if (allocatedTable) {\n    const rows = allocatedTable.querySelectorAll(\"tr\");\n\n    for (let i = 1; i < rows.length; i++) {\n      const cells = rows[i].querySelectorAll(\"td\");\n      if (cells.length >= 2) {\n        const benefit = cells[0].textContent.trim();\n        const quantity = cells[1].textContent.trim();\n        const editAnchor = cells[2].querySelector('a');\n        let editId = null;\n        if (editAnchor) {\n          const match = editAnchor.getAttribute('href').match(/__doPostBack\\('([^']+)'/);\n          if (match) {\n            editId = match[1];\n          }\n        }\n        allocatedBenefits.push({ benefit, quantity, editId });\n      }\n    }\n  }\n\n  const noncashbenefitassign = {\n    availableBenefits,\n    allocatedBenefits\n  };\n  return noncashbenefitassign;\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Non CashBenefitAssign To SalaryGradeDetails",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-02T08:21:09.217Z",
+      "updatedAt": "2025-05-02T08:21:09.217Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getNonCashBenefitAssignToSalaryGradeDetails",
+      "args": [
+        {
+          "name": "salaryGradeCode",
+          "type": "string",
+          "description": "to get the salaryGradeCode for gradeDetails api corresponding value will be take.",
+          "required": true,
+          "_id": "68148075eb28e5d6f39f5a41"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68148075eb28e5d6f39f5a40"
+    },
+    "fetcher": "(async function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return [];\n    })`\n  }\n});\n",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"AssignNonCashBenifit\");\n\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"ctl00$body$dpsalGrsade\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$dpsalGrsade\": args.salaryGradeCode\n  }, \"AssignNonCashBenifit\");\n\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: searchResponse.viewState,\n    __VIEWSTATEGENERATOR: searchResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: searchResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$dpsalGrsade\": args.salaryGradeCode,\n    \"ctl00_body_grdavailable_ClientState\": \"\",\n    \"ctl00$body$butEdit\": \"Edit\"\n  }, \"AssignNonCashBenifit\");\n\n  window.noncashBenefit = postBackResponse\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(postBackResponse.rawData, \"text/html\");\n\n  const availableTable = doc.querySelector(\"#ctl00_body_grdavailable_ctl00\");\n  const availableBenefits = [];\n\n  let currentCategory = \"\";\n\n  if (availableTable) {\n    const rows = availableTable.querySelectorAll(\"tbody tr\");\n\n    for (const row of rows) {\n      if (row.classList.contains(\"GroupHeader_Default\")) {\n        const categoryText = row.querySelector(\"td[colspan] p\")?.textContent || \"\";\n        const match = categoryText.match(/Category\\s*:\\s*(.*)/i);\n        currentCategory = match ? match[1].trim() : \"\";\n      } else if (\n        row.classList.contains(\"GridRow_Default\") ||\n        row.classList.contains(\"GridAltRow_Default\")\n      ) {\n        const benefitCell = row.querySelectorAll(\"td\")[1];\n        const name = row.querySelectorAll(\"td\")[2];\n        if (benefitCell) {\n          const input = name.querySelector('input');\n          const identifier = input ? input.name : null;\n          availableBenefits.push({\n            category: currentCategory,\n            benefit: benefitCell.textContent.trim(),\n            identifier: identifier\n          });\n        }\n      }\n    }\n  }\n\n  const allocatedTable = doc.querySelector(\"#ctl00_body_grdallocated\");\n  const allocatedBenefits = [];\n\n  if (allocatedTable) {\n    const rows = allocatedTable.querySelectorAll(\"tr\");\n\n    for (let i = 1; i < rows.length; i++) {\n      const cells = rows[i].querySelectorAll(\"td\");\n      if (cells.length >= 2) {\n        const benefit = cells[0].textContent.trim();\n        const quantity = cells[1].textContent.trim();\n        const editAnchor = cells[2].querySelector('a');\n        let editId = null;\n        if (editAnchor) {\n          const match = editAnchor.getAttribute('href').match(/__doPostBack\\('([^']+)'/);\n          if (match) {\n            editId = match[1];\n          }\n        }\n        allocatedBenefits.push({ benefit, quantity, editId });\n      }\n    }\n  }\n\n  const noncashbenefitassign = {\n    availableBenefits,\n    allocatedBenefits\n  };\n  return noncashbenefitassign;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

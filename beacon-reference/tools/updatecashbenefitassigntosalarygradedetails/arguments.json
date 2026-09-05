@@ -1,0 +1,29 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "editId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Before get edit Id first execute 'getCashBenefitAssignToSalaryGradeDetails' api, user update record corresponding edit id will be take.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Before get edit Id first execute 'getCashBenefitAssignToSalaryGradeDetails' api, user update record corresponding edit id will be take."
+      }
+    },
+    {
+      "name": "updateAmount",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "user update amount will be take.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "user update amount will be take."
+      }
+    }
+  ]
+}

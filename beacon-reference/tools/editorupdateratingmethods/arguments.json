@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    {
+      "name": "ratingMethod",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "ratingMethod , SkillRating",
+      "advanced": false,
+      "raw": {
+        "name": "ratingMethod",
+        "type": "string",
+        "description": "ratingMethod , SkillRating",
+        "required": true,
+        "_id": "680f73757714a9ba3d3dbacb"
+      }
+    },
+    {
+      "name": "Grade",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "grade , Ex:- \"1\" or \"A\"",
+      "advanced": false,
+      "raw": {
+        "name": "Grade",
+        "type": "string",
+        "description": "grade , Ex:- \"1\" or \"A\"",
+        "required": true,
+        "_id": "680f73757714a9ba3d3dbacc"
+      }
+    },
+    {
+      "name": "minimumMarks",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "minimumMarks , Ex:- \"10.00\" , 15.00\". user give any format marks to take example format. must return example format values",
+      "advanced": false,
+      "raw": {
+        "name": "minimumMarks",
+        "type": "string",
+        "description": "minimumMarks , Ex:- \"10.00\" , 15.00\". user give any format marks to take example format. must return example format values",
+        "required": true,
+        "_id": "680f73757714a9ba3d3dbacd"
+      }
+    },
+    {
+      "name": "maximumMarks",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "maximumMarks , \"100.00\" , \"200.00\". user give any format marks to take example format.must return example format values",
+      "advanced": false,
+      "raw": {
+        "name": "maximumMarks",
+        "type": "string",
+        "description": "maximumMarks , \"100.00\" , \"200.00\". user give any format marks to take example format.must return example format values",
+        "required": true,
+        "_id": "680f73757714a9ba3d3dbace"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

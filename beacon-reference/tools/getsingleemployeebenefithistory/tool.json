@@ -1,0 +1,141 @@
+{
+  "id": "690dc566931a2d61ba0b16f7",
+  "slug": "getsingleemployeebenefithistory",
+  "name": "getSingleEmployeeBenefitHistory",
+  "description": "Before calling in this api \"getSingleEmployeeBenefitHistory\" api, first calling in this api call \"getBenefitEmployeeInformation\" api. do not ask for employee id my and self employee related query to execute for \"getAdminInformationDetails\" api to get the employee id. do not ask for employee id.\n\nIf user asks employee benefit history for single employee call getEmployeeBenefitHistory  api.\nDo not call this api if you user do not provide fromDate and toDate.\n\nALWAYS TAKE ONLY THE EMPLOYEE ID.",
+  "instructions": null,
+  "taskName": "Fetching Employee Benefit History",
+  "tags": [
+    "BenefitManagement",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getSingleEmployeeBenefitHistory",
+  "createdAt": "2025-05-13T12:14:48.913Z",
+  "updatedAt": "2026-07-24T06:57:16.153Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be9",
+      "name": "BenefitManagement"
+    }
+  ],
+  "contentHash": "1425636aa1ccba118dea122d14674f250c637d252af23a03e786e75bcf3271eb",
+  "lastExportedAt": "2026-09-05T19:39:22.003Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b16f7",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getSingleEmployeeBenefitHistory",
+      "description": "Before calling in this api \"getSingleEmployeeBenefitHistory\" api, first calling in this api call \"getBenefitEmployeeInformation\" api. do not ask for employee id my and self employee related query to execute for \"getAdminInformationDetails\" api to get the employee id. do not ask for employee id.\n\nIf user asks employee benefit history for single employee call getEmployeeBenefitHistory  api.\nDo not call this api if you user do not provide fromDate and toDate.\n\nALWAYS TAKE ONLY THE EMPLOYEE ID.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getSingleEmployeeBenefitHistory",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to get the employee id for getBenefitEmployeeInformation api. Example:-\"000006\"",
+            "required": true,
+            "_id": "682337b842e72e1f30f6b0cf"
+          },
+          {
+            "name": "fromDate",
+            "type": "string",
+            "description": "Ask user to provide the fromDate D/M/YYYY. If user not provided ask user to provide.",
+            "required": true,
+            "_id": "68235a6ef8ee07a423d3dbdb"
+          },
+          {
+            "name": "toDate",
+            "type": "string",
+            "description": "ask user to provide toDate D/M/YYYY. If user not provided ask user to provide.",
+            "required": true,
+            "_id": "68235a6ef8ee07a423d3dbdc"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6a630ccc347f1334c9e249e6"
+      },
+      "by": "27739",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`, requestOptions);\n  const details = await response1.json();\n\n  const digestkey = await BeaconBar.executeFunction('getDigest')(`key=${details.Message}&mode=0`);\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  let response2, details1\n  try {\n    response2 = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/AdminHistoryApi/GetSearchEmployee/?key=${details.Message}&mode=0&digest=${digestkey.digest}`, requestOptions1);\n    details1 = await response2.json();\n    \n  } catch {\n    return \"Access denied, you do not have access to view this information\"\n  }\n\n\n  window.empNumber12 = details1.EmpNumber;\n\n  const params = JSON.stringify({ \"EmpNumber\": details1.EmpNumber, \"FromDate\": args.fromDate, \"ToDate\": args.toDate })\n\n  const myHeaders1 = new Headers();\n  myHeaders1.append(\"accept\", \"*/*\");\n  myHeaders1.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8,te;q=0.7\");\n  myHeaders1.append(\"content-type\", \"application/json; charset=UTF-8\");\n  myHeaders1.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders1,\n    body: params,\n    redirect: \"follow\"\n  };\n\n  const response3 = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/AdminHistoryApi/GetHistoryByEmployee`, requestOptions2);\n  const details2 = await response3.json();\n\n  return details2.HistoryDataTableVm.DataTableRowVms;\n})",
+      "groupName": "",
+      "tags": [
+        "BenefitManagement",
+        "Headers"
+      ],
+      "taskName": "Fetching Employee Benefit History",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-13T12:14:48.913Z",
+      "updatedAt": "2026-07-24T06:57:16.153Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be9",
+          "name": "BenefitManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getSingleEmployeeBenefitHistory",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to get the employee id for getBenefitEmployeeInformation api. Example:-\"000006\"",
+          "required": true,
+          "_id": "682337b842e72e1f30f6b0cf"
+        },
+        {
+          "name": "fromDate",
+          "type": "string",
+          "description": "Ask user to provide the fromDate D/M/YYYY. If user not provided ask user to provide.",
+          "required": true,
+          "_id": "68235a6ef8ee07a423d3dbdb"
+        },
+        {
+          "name": "toDate",
+          "type": "string",
+          "description": "ask user to provide toDate D/M/YYYY. If user not provided ask user to provide.",
+          "required": true,
+          "_id": "68235a6ef8ee07a423d3dbdc"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6a630ccc347f1334c9e249e6"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`, requestOptions);\n  const details = await response1.json();\n\n  const digestkey = await BeaconBar.executeFunction('getDigest')(`key=${details.Message}&mode=0`);\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  let response2, details1\n  try {\n    response2 = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/AdminHistoryApi/GetSearchEmployee/?key=${details.Message}&mode=0&digest=${digestkey.digest}`, requestOptions1);\n    details1 = await response2.json();\n    \n  } catch {\n    return \"Access denied, you do not have access to view this information\"\n  }\n\n\n  window.empNumber12 = details1.EmpNumber;\n\n  const params = JSON.stringify({ \"EmpNumber\": details1.EmpNumber, \"FromDate\": args.fromDate, \"ToDate\": args.toDate })\n\n  const myHeaders1 = new Headers();\n  myHeaders1.append(\"accept\", \"*/*\");\n  myHeaders1.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8,te;q=0.7\");\n  myHeaders1.append(\"content-type\", \"application/json; charset=UTF-8\");\n  myHeaders1.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders1,\n    body: params,\n    redirect: \"follow\"\n  };\n\n  const response3 = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/AdminHistoryApi/GetHistoryByEmployee`, requestOptions2);\n  const details2 = await response3.json();\n\n  return details2.HistoryDataTableVm.DataTableRowVms;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

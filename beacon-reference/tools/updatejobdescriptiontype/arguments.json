@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "jobDescriptionTypeName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to updated the Job Description Type Name",
+      "advanced": false,
+      "raw": {
+        "name": "jobDescriptionTypeName",
+        "type": "string",
+        "description": "to updated the Job Description Type Name",
+        "required": true,
+        "_id": "6811afd55b9fb869c5798b33"
+      }
+    },
+    {
+      "name": "jobDescriptionCategory",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to updated job Description Category display the all job Description Category then select one corresponding value will be take. data available for getJobDescriptionTypeDetails Api . Example:-\"000001\"",
+      "advanced": false,
+      "raw": {
+        "name": "jobDescriptionCategory",
+        "type": "string",
+        "description": "to updated job Description Category display the all job Description Category then select one corresponding value will be take. data available for getJobDescriptionTypeDetails Api . Example:-\"000001\"",
+        "required": true,
+        "_id": "6811afd55b9fb869c5798b34"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

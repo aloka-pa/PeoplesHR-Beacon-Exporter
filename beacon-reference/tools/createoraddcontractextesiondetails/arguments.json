@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "StartDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "StartDate , Ex:- \"14/10/2027\" , format must be in the DD/MM/YYYY\".",
+      "advanced": false,
+      "raw": {
+        "name": "StartDate",
+        "type": "string",
+        "description": "StartDate , Ex:- \"14/10/2027\" , format must be in the DD/MM/YYYY\".",
+        "required": true,
+        "_id": "6847156fe7d5d1d93e928e19"
+      }
+    },
+    {
+      "name": "EndDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "EndDate ,   Ex:- \"13/12/2027\" ,  format must be in the DD/MM/YYYY\".",
+      "advanced": false,
+      "raw": {
+        "name": "EndDate",
+        "type": "string",
+        "description": "EndDate ,   Ex:- \"13/12/2027\" ,  format must be in the DD/MM/YYYY\".",
+        "required": true,
+        "_id": "6847156fe7d5d1d93e928e1a"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

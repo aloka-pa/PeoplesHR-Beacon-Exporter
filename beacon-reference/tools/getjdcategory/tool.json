@@ -1,0 +1,75 @@
+{
+  "id": "690dc564931a2d61ba0b1481",
+  "slug": "getjdcategory",
+  "name": "getJdCategory",
+  "description": "in this tool generate category details. if the user create or added new records for job description type must and should be first execute for \"getJdCategory\" tool. and display the all job description category user selected one corresponding value will be take, then after execute for \"createEIMModuleList\" tool. ",
+  "instructions": null,
+  "taskName": "Category Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getJdCategory",
+  "createdAt": "2025-04-30T05:59:03.769Z",
+  "updatedAt": "2025-04-30T05:59:03.769Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "04fb06cd0a4584f95e235f9092df7438560fb2fa1d1e338474507a7f4134e92a",
+  "lastExportedAt": "2026-09-05T19:39:24.408Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b1481",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getJdCategory",
+      "description": "in this tool generate category details. if the user create or added new records for job description type must and should be first execute for \"getJdCategory\" tool. and display the all job description category user selected one corresponding value will be take, then after execute for \"createEIMModuleList\" tool. ",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getJdCategory",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6811bc2779ebe9607c136c18"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/JdType.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"JdType\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded.append(\"ctl00$body$ContentSearch$cboCriteria\", \"JDTYPE_CODE\");\n  urlencoded.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  urlencoded.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  urlencoded.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$butNew\", \"New\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/EIM/JdType.aspx`, requestOptions);\n  const html = await response.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html, \"text/html\");\n\n  const finalDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html);\n  window.ca = finalDetails;\n\n  const extractOptions = (id) => {\n    const select = doc.getElementById(id);\n    if (!select) return [];\n    return Array.from(select.options)\n      .filter(opt => opt.value !== \"-1\" && opt.value.trim() && opt.text.trim())\n      .map(opt => ({ value: opt.value, text: opt.text.trim() }));\n  };\n\n  const allJobDescriptionCategories = extractOptions(\"ctl00_body_dpSalary\");\n\n  return allJobDescriptionCategories;\n})\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Category Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-30T05:59:03.769Z",
+      "updatedAt": "2025-04-30T05:59:03.769Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getJdCategory",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6811bc2779ebe9607c136c18"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/JdType.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"JdType\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded.append(\"ctl00$body$ContentSearch$cboCriteria\", \"JDTYPE_CODE\");\n  urlencoded.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  urlencoded.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  urlencoded.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$butNew\", \"New\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/EIM/JdType.aspx`, requestOptions);\n  const html = await response.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html, \"text/html\");\n\n  const finalDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html);\n  window.ca = finalDetails;\n\n  const extractOptions = (id) => {\n    const select = doc.getElementById(id);\n    if (!select) return [];\n    return Array.from(select.options)\n      .filter(opt => opt.value !== \"-1\" && opt.value.trim() && opt.text.trim())\n      .map(opt => ({ value: opt.value, text: opt.text.trim() }));\n  };\n\n  const allJobDescriptionCategories = extractOptions(\"ctl00_body_dpSalary\");\n\n  return allJobDescriptionCategories;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

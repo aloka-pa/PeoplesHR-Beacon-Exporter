@@ -1,0 +1,127 @@
+{
+  "id": "690dc56b931a2d61ba0b1af5",
+  "slug": "selfemployeemanualinandoutdetails",
+  "name": "selfEmployeeManualInAndOutDetails",
+  "description": "before execute the selfEmployeeManualInAndOutDetails api:\n1. first execute for date format api, using date format.",
+  "instructions": null,
+  "taskName": "Fetching The Self Employee Manual In And Out Details",
+  "tags": [
+    "Attendance",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "selfEmployeeManualInAndOutDetails",
+  "createdAt": "2025-08-20T12:45:33.988Z",
+  "updatedAt": "2026-08-13T06:08:05.188Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "492dd4074a89b8ddbd4b4a77e9b327f88cbbfa2b66b38374ed8b9aed456949f9",
+  "lastExportedAt": "2026-09-05T19:39:21.987Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1af5",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selfEmployeeManualInAndOutDetails",
+      "description": "before execute the selfEmployeeManualInAndOutDetails api:\n1. first execute for date format api, using date format.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selfEmployeeManualInAndOutDetails",
+        "args": [
+          {
+            "name": "fromDate",
+            "type": "string",
+            "description": "to give the fromDate Example:-\"12/1/2023\"",
+            "required": true,
+            "_id": "68a5c36d724e84ba6c1b6f7b"
+          },
+          {
+            "name": "toDate",
+            "type": "string",
+            "description": "to give the toDate Example:-\"12/1/2024\"",
+            "required": true,
+            "_id": "68a5c36d724e84ba6c1b6f7c"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6a7d5f45290d135331ec7d58"
+      },
+      "by": "7854",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"TNAV9/ManualInOut/ManualInOut/2?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const empNumber = await BeaconBar.executeFunction(\"selfEmployeeManualInAndOutDetails\")();\n\n  BeaconBar.setSharedData(\"empNumber\", empNumber);\n\n  const rawPayload = {\n    FromDateText: args.fromDate,\n    ToDateText: args.toDate,\n    IsGroupByEmployee: false,\n    FilterMode: \"1\",\n    EmpNumber: empNumber,\n    RosterCode: \"\",\n    callBackId: 1,\n    isShowShiftHoursInShiftAdjEnabled: false,\n    IsClientUoc: false,\n    PageMode: 0\n  };\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/${reqOptions.sl}/tnav9/api/ManualInOut/GetGridDataByCriteria/`,\n    requestOptions1\n  );\n\n  const details1 = await response2.json();\n  return details1.ManualInOutDetailList.map(item => ({\n    Date: item.DatInDate,\n    Shift: item.ShiftAbbreviation,\n    \"In Date\": item.InDateText,\n    \"In Time\": item.InTimeText || \"\",\n    \"Out Date\": item.OutDateText,\n    \"Out Time\": item.OutTimeText || \"\",\n    Breaks: item.BreakCount,\n    Comment: item.Comment || \"\",\n    Status: item.RecordStatusText,\n    Leave: item.LeaveType || \"\"\n  }));\n});\n",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "Headers"
+      ],
+      "taskName": "Fetching The Self Employee Manual In And Out Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-20T12:45:33.988Z",
+      "updatedAt": "2026-08-13T06:08:05.188Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selfEmployeeManualInAndOutDetails",
+      "args": [
+        {
+          "name": "fromDate",
+          "type": "string",
+          "description": "to give the fromDate Example:-\"12/1/2023\"",
+          "required": true,
+          "_id": "68a5c36d724e84ba6c1b6f7b"
+        },
+        {
+          "name": "toDate",
+          "type": "string",
+          "description": "to give the toDate Example:-\"12/1/2024\"",
+          "required": true,
+          "_id": "68a5c36d724e84ba6c1b6f7c"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6a7d5f45290d135331ec7d58"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"TNAV9/ManualInOut/ManualInOut/2?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const empNumber = await BeaconBar.executeFunction(\"selfEmployeeManualInAndOutDetails\")();\n\n  BeaconBar.setSharedData(\"empNumber\", empNumber);\n\n  const rawPayload = {\n    FromDateText: args.fromDate,\n    ToDateText: args.toDate,\n    IsGroupByEmployee: false,\n    FilterMode: \"1\",\n    EmpNumber: empNumber,\n    RosterCode: \"\",\n    callBackId: 1,\n    isShowShiftHoursInShiftAdjEnabled: false,\n    IsClientUoc: false,\n    PageMode: 0\n  };\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/${reqOptions.sl}/tnav9/api/ManualInOut/GetGridDataByCriteria/`,\n    requestOptions1\n  );\n\n  const details1 = await response2.json();\n  return details1.ManualInOutDetailList.map(item => ({\n    Date: item.DatInDate,\n    Shift: item.ShiftAbbreviation,\n    \"In Date\": item.InDateText,\n    \"In Time\": item.InTimeText || \"\",\n    \"Out Date\": item.OutDateText,\n    \"Out Time\": item.OutTimeText || \"\",\n    Breaks: item.BreakCount,\n    Comment: item.Comment || \"\",\n    Status: item.RecordStatusText,\n    Leave: item.LeaveType || \"\"\n  }));\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

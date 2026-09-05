@@ -1,0 +1,140 @@
+{
+  "arguments": [
+    {
+      "name": "propertyCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The unique qualification property code to search for (e.g., \"000003\")",
+      "advanced": false,
+      "raw": {
+        "name": "propertyCode",
+        "type": "string",
+        "description": "The unique qualification property code to search for (e.g., \"000003\")",
+        "required": false,
+        "_id": "6954babd58fa694a25a732ab"
+      }
+    },
+    {
+      "name": "propertyName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The qualification property name or partial name to search for (e.g., \"Grade\", \"Level A\")",
+      "advanced": false,
+      "raw": {
+        "name": "propertyName",
+        "type": "string",
+        "description": "The qualification property name or partial name to search for (e.g., \"Grade\", \"Level A\")",
+        "required": false,
+        "_id": "6954babd58fa694a25a732ac"
+      }
+    },
+    {
+      "name": "qualificationName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The qualification name or partial name to search for (e.g., \"Bachelor\", \"Master Degree\")",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationName",
+        "type": "string",
+        "description": "The qualification name or partial name to search for (e.g., \"Bachelor\", \"Master Degree\")",
+        "required": false,
+        "_id": "6954babd58fa694a25a732ad"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "If user wants all records, pass a truthy string like:\n\"true\" / \"all\" / \"show all\" / \"list\" / \"available\" / \"existing\"",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "If user wants all records, pass a truthy string like:\n\"true\" / \"all\" / \"show all\" / \"list\" / \"available\" / \"existing\"",
+        "required": false,
+        "_id": "697e308b32be68838ce332b3"
+      }
+    },
+    {
+      "name": "qualificationCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "partial match (optional; only if criteria exists in dropdown)",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationCode",
+        "type": "string",
+        "description": "partial match (optional; only if criteria exists in dropdown)",
+        "required": false,
+        "_id": "6980879032be68838ce7e73b"
+      }
+    },
+    {
+      "name": "pageNumber",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "which page to return (default \"1\")",
+      "advanced": false,
+      "raw": {
+        "name": "pageNumber",
+        "type": "string",
+        "description": "which page to return (default \"1\")",
+        "required": false,
+        "_id": "6980879032be68838ce7e73c"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "requested page size (default \"100\"",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "requested page size (default \"100\"",
+        "required": false,
+        "_id": "6980879032be68838ce7e73d"
+      }
+    },
+    {
+      "name": "autoFetchAllPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "if truthy, fetch all pages (default \"false\")",
+      "advanced": false,
+      "raw": {
+        "name": "autoFetchAllPages",
+        "type": "string",
+        "description": "if truthy, fetch all pages (default \"false\")",
+        "required": false,
+        "_id": "6980879032be68838ce7e73e"
+      }
+    },
+    {
+      "name": "maxPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "safety limit (default \"70\")",
+      "advanced": false,
+      "raw": {
+        "name": "maxPages",
+        "type": "string",
+        "description": "safety limit (default \"70\")",
+        "required": false,
+        "_id": "6980879032be68838ce7e73f"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

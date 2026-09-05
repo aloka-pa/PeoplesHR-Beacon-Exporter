@@ -1,0 +1,75 @@
+{
+  "id": "690dc565931a2d61ba0b15b7",
+  "slug": "functiontypes",
+  "name": "functionTypes",
+  "description": "in this tool generate the functionTypes",
+  "instructions": null,
+  "taskName": "Function Types",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "functionTypes",
+  "createdAt": "2025-05-02T14:04:59.982Z",
+  "updatedAt": "2025-05-02T14:04:59.982Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "b85fe93754e562c315b4968562305015c63ed147669941073fe712d560285bf9",
+  "lastExportedAt": "2026-09-05T19:39:24.216Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc565931a2d61ba0b15b7",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "functionTypes",
+      "description": "in this tool generate the functionTypes",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "functionTypes",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6814d10bfc879b0ec38292af"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/FunctionalRole.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"FunctionalRole\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"F.FUNCTION_ROLE_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"5\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"FunctionalRole\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(newInt.rawData, \"text/html\");\n\n  window.ft = newInt;\n\n  const selectElement = doc.querySelector(\"#ctl00_body_dpcountry\");\n  const functionList = [];\n\n  if (selectElement) {\n    for (const option of selectElement.options) {\n      functionList.push({\n        value: option.value,\n        text: option.textContent.trim()\n      });\n    }\n  }\n\n  return functionList;\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Function Types",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-02T14:04:59.982Z",
+      "updatedAt": "2025-05-02T14:04:59.982Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "functionTypes",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6814d10bfc879b0ec38292af"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/FunctionalRole.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"FunctionalRole\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"F.FUNCTION_ROLE_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"5\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"FunctionalRole\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(newInt.rawData, \"text/html\");\n\n  window.ft = newInt;\n\n  const selectElement = doc.querySelector(\"#ctl00_body_dpcountry\");\n  const functionList = [];\n\n  if (selectElement) {\n    for (const option of selectElement.options) {\n      functionList.push({\n        value: option.value,\n        text: option.textContent.trim()\n      });\n    }\n  }\n\n  return functionList;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "functionCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the function Code.",
+      "advanced": false,
+      "raw": {
+        "name": "functionCode",
+        "type": "string",
+        "description": "to give the function Code.",
+        "required": true,
+        "_id": "6814b82b8f0c9af526c86899"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

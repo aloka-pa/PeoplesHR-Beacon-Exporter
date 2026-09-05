@@ -1,0 +1,24 @@
+{
+  "id": "690dc589931a2d61ba0b30bd",
+  "slug": "selectleadershipaftersubmit",
+  "name": "selectLeaderShipaftersubmit",
+  "status": "live",
+  "createdAt": "2025-09-03T06:32:50.772Z",
+  "updatedAt": "2025-09-03T06:32:50.772Z",
+  "contentHash": "0e2fedaf783cc5ae6f8d7de7a98f5ba652231f4227ab860651148f6ae5a0455e",
+  "lastExportedAt": "2026-09-05T19:41:27.649Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc589931a2d61ba0b30bd",
+    "name": "selectLeaderShipaftersubmit",
+    "status": "live",
+    "code": "(async function () {\n  \n  const utils = await BeaconBar.getSharedData(\"utils\");\n  const argscycle = await BeaconBar.getSharedData(\"argscycle\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"cache-control\", \"max-age=0\");\n  myHeaders.append(\"content-type\", \"application/x-www-form-urlencoded\");\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"__EVENTTARGET\", \"GetSearchResult\"); \n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__LASTFOCUS\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", utils.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", utils.viewStateGenerator);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", utils.eventValidation);\n\n  \n  urlencoded.append(\"ctl00$body$ucCycleHeader$ddlReviewCycle\", argscycle.reviewCycle);\n  urlencoded.append(\"ctl00$body$hdnTalentCycleID\", \"0\");\n  urlencoded.append(\"ctl00$body$hdnIspms1\", \"\");\n\n  \n  // urlencoded.append(\"ctl00$action$btnCandidatePool\", \"Candidate Pool\");\n\n  \n  const now = new Date();\n  const formattedDate = [\n    String(now.getDate()).padStart(2, \"0\"),\n    String(now.getMonth() + 1).padStart(2, \"0\"),\n    now.getFullYear()\n  ].join(\"/\");\n  urlencoded.append(\"ctl00$txtCultureDate\",  \"dd/mm/yy\"); // instead of\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  \n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n\n  const response = await fetch(\n    `${reqOptions}Talent/SelectLeadershipCandiddates.aspx`,\n    requestOptions\n  );\n\n  const data = await response.text();\n  return data;\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

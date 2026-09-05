@@ -1,0 +1,42 @@
+{
+  "id": "690dc571931a2d61ba0b1c12",
+  "slug": "genarateadvertisement",
+  "name": "GenarateAdvertisement",
+  "description": "GenarateAdvertisement",
+  "exportedAt": "2026-09-05T19:41:12.268Z",
+  "raw": {
+    "_id": "690dc571931a2d61ba0b1c12",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "GenarateAdvertisement",
+    "description": "GenarateAdvertisement",
+    "by": "1927",
+    "prompt": "Get the data and wait. When the user says “Shall I fill this description?”, call the tool \"fillAdvertisementDescription\" with the previously captured description.  first show what you filled then user confirms then fill. \n\nimp :- dont ask anything to the user just ask consent shall fill this \n\nimp :- only takes 200 characters description",
+    "notes": [],
+    "llmConfig": [],
+    "status": "live",
+    "toolIds": [
+      "690dc568931a2d61ba0b18c6"
+    ],
+    "scenarioIds": [],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      }
+    },
+    "vis": false,
+    "createdAt": "2025-05-30T05:41:54.035Z",
+    "updatedAt": "2025-05-30T05:41:54.035Z",
+    "__v": 0
+  }
+}

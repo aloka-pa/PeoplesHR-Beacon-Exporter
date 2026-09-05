@@ -1,0 +1,127 @@
+{
+  "id": "6952a5d6fbe9c497d06bff58",
+  "slug": "createqualificationclassification",
+  "name": "createQualificationClassification",
+  "description": "create a new qualification classification record",
+  "instructions": null,
+  "taskName": "Creating New Qualification Classification Record",
+  "tags": [
+    "EIMAdmin",
+    "QualificationInformation"
+  ],
+  "status": "live",
+  "signature": "createQualificationClassification",
+  "createdAt": "2025-12-29T16:01:26.967Z",
+  "updatedAt": "2026-06-15T07:29:55.124Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "cf4800adc889357a37f33a0acaa43a667ea6662c87cc88dd8dabf8e61b93bf89",
+  "lastExportedAt": "2026-09-05T19:39:22.416Z",
+  "raw": {
+    "basic": {
+      "_id": "6952a5d6fbe9c497d06bff58",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createQualificationClassification",
+      "description": "create a new qualification classification record",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createQualificationClassification",
+        "args": [
+          {
+            "name": "classificationName",
+            "type": "string",
+            "description": "new qualification classification's name",
+            "required": true,
+            "_id": "6952a5d6fbe9c497d06bff5a"
+          },
+          {
+            "name": "rank",
+            "type": "string",
+            "description": "A numeric value that defines the ordering or priority of the qualification classification. Each classification must have a unique rank. \nIf the user-provided rank already exists, the user must be prompted to enter a different numeric rank.",
+            "required": true,
+            "_id": "6952a5d6fbe9c497d06bff5b"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6952a5d6fbe9c497d06bff59"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/QualificationClassific.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Qualification Classification screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Input validation\n     * ------------------------------------------------- */\n    const classificationName = args?.classificationName?.toString()?.trim();\n    const rankStr = args?.rank?.toString()?.trim();\n\n    if (!classificationName) {\n      return { status: \"INVALID_ARGS\", message: \"Error: classificationName is required\" };\n    }\n\n    if (!rankStr) {\n      return { status: \"INVALID_ARGS\", message: \"Error: rank is required\" };\n    }\n\n    if (!/^\\d+$/.test(rankStr)) {\n      return { status: \"INVALID_ARGS\", message: \"Error: rank must be a numeric value\" };\n    }\n\n    if (rankStr.length > 3) {\n      return { status: \"INVALID_ARGS\", message: \"Error: rank must be 3 digits or less\" };\n    }\n\n    /* -------------------------------------------------\n     * 3) Helpers\n     * ------------------------------------------------- */\n    const parser = new DOMParser();\n\n    const extractHidden = (doc, id) => doc.querySelector(`#${id}`)?.value || \"\";\n\n    const extractUiMessage = (doc, rawHtml) => {\n      // 1) PeoplesHR middleware popup\n      const msg1 = doc.querySelector(\"#idHBSAlertMiddleware-message\")?.textContent?.trim();\n      if (msg1) return msg1;\n\n      // 2) Same message but only class exists\n      const msg2 = doc.querySelector(\".clsHBSAlertMiddleware-message\")?.textContent?.trim();\n      if (msg2) return msg2;\n\n      // 3) Legacy/common error blocks\n      const msg3 = doc.querySelector(\".alert-danger, .error\")?.textContent?.trim();\n      if (msg3) return msg3;\n\n      // 4) Last-resort string search (in case DOM structure changes)\n      if (rawHtml && /cannot duplicate/i.test(rawHtml)) {\n        // return a clean standardized message if needed\n        // but prefer to return the actual DOM message when available\n        return \"Qualification classification rank cannot duplicate, please assign a different rank\";\n      }\n\n      return null;\n    };\n\n    /* -------------------------------------------------\n     * 4) Initial page state\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"QualificationClassific\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n    headers.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n\n    const url = `${window.origin}/${reqOptions.sl}/EIM/QualificationClassific.aspx`;\n\n    /* -------------------------------------------------\n     * 5) Click \"New\"\n     * ------------------------------------------------- */\n    const newFormData = new URLSearchParams();\n    newFormData.append(\"scrollLeft\", \"0\");\n    newFormData.append(\"scrollTop\", \"0\");\n    newFormData.append(\"__EVENTTARGET\", \"\");\n    newFormData.append(\"__EVENTARGUMENT\", \"\");\n    newFormData.append(\"__VIEWSTATE\", details.viewState);\n    newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n    newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n    // Keep common page state fields\n    newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"QUALCLASSIFIC_CODE\");\n    newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n    newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"8\");\n    newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    newFormData.append(\"ctl00$body$butNew\", \"New\");\n\n    const newResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: newFormData.toString()\n    });\n\n    const newHtml = await newResponse.text();\n    const newDoc = parser.parseFromString(newHtml, \"text/html\");\n\n    const newViewState = extractHidden(newDoc, \"__VIEWSTATE\");\n    const newEventValidation = extractHidden(newDoc, \"__EVENTVALIDATION\");\n    const newViewStateGen = extractHidden(newDoc, \"__VIEWSTATEGENERATOR\");\n\n    if (!newViewState || !newEventValidation || !newViewStateGen) {\n      return {\n        status: \"ERROR\",\n        message: \"Failed to load New form state (missing ViewState/EventValidation).\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 6) Save\n     * ------------------------------------------------- */\n    const saveFormData = new URLSearchParams();\n    saveFormData.append(\"scrollLeft\", \"0\");\n    saveFormData.append(\"scrollTop\", \"0\");\n    saveFormData.append(\"__EVENTTARGET\", \"\");\n    saveFormData.append(\"__EVENTARGUMENT\", \"\");\n    saveFormData.append(\"__VIEWSTATE\", newViewState);\n    saveFormData.append(\"__VIEWSTATEGENERATOR\", newViewStateGen);\n    saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    saveFormData.append(\"__EVENTVALIDATION\", newEventValidation);\n    saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n    saveFormData.append(\"ctl00$body$txtName\", classificationName);\n    saveFormData.append(\"ctl00$body$txtRate\", rankStr);\n    saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n    const saveResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: saveFormData.toString()\n    });\n\n    const saveHtml = await saveResponse.text();\n\n    // Baseline: HTTP 200 -> proceed to parse page outcome\n    if (saveResponse.status === 200) {\n      const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n\n      // Detect popup/validation message FIRST\n      const uiMsg = extractUiMessage(saveDoc, saveHtml);\n      if (uiMsg) {\n        if (/rank cannot duplicate/i.test(uiMsg) || /cannot duplicate/i.test(uiMsg) || /duplicate/i.test(uiMsg)) {\n          return {\n            status: \"DUPLICATE_RANK\",\n            message: uiMsg,\n            classificationName,\n            rank: rankStr\n          };\n        }\n\n        return {\n          status: \"ERROR\",\n          message: `Save failed: ${uiMsg}`,\n          classificationName,\n          rank: rankStr\n        };\n      }\n\n      // If no UI error message, then extract code\n      const generatedCode = saveDoc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || null;\n\n      // Extra safety: if code is missing, do NOT claim success\n      if (!generatedCode) {\n        return {\n          status: \"ERROR\",\n          message: \"Save returned HTTP 200 but no classification code was generated. Please verify in UI.\",\n          classificationName,\n          rank: rankStr\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: \"Successfully created qualification classification record!\",\n        classificationName,\n        rank: rankStr,\n        classificationCode: generatedCode\n      };\n    }\n\n    return {\n      status: \"ERROR\",\n      message: \"Save request failed. Please verify in UI.\",\n      classificationName,\n      rank: rankStr\n    };\n\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unexpected error\",\n      error: err?.toString?.() || String(err)\n    };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "QualificationInformation"
+      ],
+      "taskName": "Creating New Qualification Classification Record",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-29T16:01:26.967Z",
+      "updatedAt": "2026-06-15T07:29:55.124Z",
+      "__v": 7,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "createQualificationClassification",
+      "args": [
+        {
+          "name": "classificationName",
+          "type": "string",
+          "description": "new qualification classification's name",
+          "required": true,
+          "_id": "6952a5d6fbe9c497d06bff5a"
+        },
+        {
+          "name": "rank",
+          "type": "string",
+          "description": "A numeric value that defines the ordering or priority of the qualification classification. Each classification must have a unique rank. \nIf the user-provided rank already exists, the user must be prompted to enter a different numeric rank.",
+          "required": true,
+          "_id": "6952a5d6fbe9c497d06bff5b"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6952a5d6fbe9c497d06bff59"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/QualificationClassific.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Qualification Classification screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Input validation\n     * ------------------------------------------------- */\n    const classificationName = args?.classificationName?.toString()?.trim();\n    const rankStr = args?.rank?.toString()?.trim();\n\n    if (!classificationName) {\n      return { status: \"INVALID_ARGS\", message: \"Error: classificationName is required\" };\n    }\n\n    if (!rankStr) {\n      return { status: \"INVALID_ARGS\", message: \"Error: rank is required\" };\n    }\n\n    if (!/^\\d+$/.test(rankStr)) {\n      return { status: \"INVALID_ARGS\", message: \"Error: rank must be a numeric value\" };\n    }\n\n    if (rankStr.length > 3) {\n      return { status: \"INVALID_ARGS\", message: \"Error: rank must be 3 digits or less\" };\n    }\n\n    /* -------------------------------------------------\n     * 3) Helpers\n     * ------------------------------------------------- */\n    const parser = new DOMParser();\n\n    const extractHidden = (doc, id) => doc.querySelector(`#${id}`)?.value || \"\";\n\n    const extractUiMessage = (doc, rawHtml) => {\n      // 1) PeoplesHR middleware popup\n      const msg1 = doc.querySelector(\"#idHBSAlertMiddleware-message\")?.textContent?.trim();\n      if (msg1) return msg1;\n\n      // 2) Same message but only class exists\n      const msg2 = doc.querySelector(\".clsHBSAlertMiddleware-message\")?.textContent?.trim();\n      if (msg2) return msg2;\n\n      // 3) Legacy/common error blocks\n      const msg3 = doc.querySelector(\".alert-danger, .error\")?.textContent?.trim();\n      if (msg3) return msg3;\n\n      // 4) Last-resort string search (in case DOM structure changes)\n      if (rawHtml && /cannot duplicate/i.test(rawHtml)) {\n        // return a clean standardized message if needed\n        // but prefer to return the actual DOM message when available\n        return \"Qualification classification rank cannot duplicate, please assign a different rank\";\n      }\n\n      return null;\n    };\n\n    /* -------------------------------------------------\n     * 4) Initial page state\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"QualificationClassific\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n    headers.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n\n    const url = `${window.origin}/${reqOptions.sl}/EIM/QualificationClassific.aspx`;\n\n    /* -------------------------------------------------\n     * 5) Click \"New\"\n     * ------------------------------------------------- */\n    const newFormData = new URLSearchParams();\n    newFormData.append(\"scrollLeft\", \"0\");\n    newFormData.append(\"scrollTop\", \"0\");\n    newFormData.append(\"__EVENTTARGET\", \"\");\n    newFormData.append(\"__EVENTARGUMENT\", \"\");\n    newFormData.append(\"__VIEWSTATE\", details.viewState);\n    newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n    newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n    // Keep common page state fields\n    newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"QUALCLASSIFIC_CODE\");\n    newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n    newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"8\");\n    newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    newFormData.append(\"ctl00$body$butNew\", \"New\");\n\n    const newResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: newFormData.toString()\n    });\n\n    const newHtml = await newResponse.text();\n    const newDoc = parser.parseFromString(newHtml, \"text/html\");\n\n    const newViewState = extractHidden(newDoc, \"__VIEWSTATE\");\n    const newEventValidation = extractHidden(newDoc, \"__EVENTVALIDATION\");\n    const newViewStateGen = extractHidden(newDoc, \"__VIEWSTATEGENERATOR\");\n\n    if (!newViewState || !newEventValidation || !newViewStateGen) {\n      return {\n        status: \"ERROR\",\n        message: \"Failed to load New form state (missing ViewState/EventValidation).\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 6) Save\n     * ------------------------------------------------- */\n    const saveFormData = new URLSearchParams();\n    saveFormData.append(\"scrollLeft\", \"0\");\n    saveFormData.append(\"scrollTop\", \"0\");\n    saveFormData.append(\"__EVENTTARGET\", \"\");\n    saveFormData.append(\"__EVENTARGUMENT\", \"\");\n    saveFormData.append(\"__VIEWSTATE\", newViewState);\n    saveFormData.append(\"__VIEWSTATEGENERATOR\", newViewStateGen);\n    saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    saveFormData.append(\"__EVENTVALIDATION\", newEventValidation);\n    saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n    saveFormData.append(\"ctl00$body$txtName\", classificationName);\n    saveFormData.append(\"ctl00$body$txtRate\", rankStr);\n    saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n    const saveResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: saveFormData.toString()\n    });\n\n    const saveHtml = await saveResponse.text();\n\n    // Baseline: HTTP 200 -> proceed to parse page outcome\n    if (saveResponse.status === 200) {\n      const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n\n      // Detect popup/validation message FIRST\n      const uiMsg = extractUiMessage(saveDoc, saveHtml);\n      if (uiMsg) {\n        if (/rank cannot duplicate/i.test(uiMsg) || /cannot duplicate/i.test(uiMsg) || /duplicate/i.test(uiMsg)) {\n          return {\n            status: \"DUPLICATE_RANK\",\n            message: uiMsg,\n            classificationName,\n            rank: rankStr\n          };\n        }\n\n        return {\n          status: \"ERROR\",\n          message: `Save failed: ${uiMsg}`,\n          classificationName,\n          rank: rankStr\n        };\n      }\n\n      // If no UI error message, then extract code\n      const generatedCode = saveDoc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || null;\n\n      // Extra safety: if code is missing, do NOT claim success\n      if (!generatedCode) {\n        return {\n          status: \"ERROR\",\n          message: \"Save returned HTTP 200 but no classification code was generated. Please verify in UI.\",\n          classificationName,\n          rank: rankStr\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: \"Successfully created qualification classification record!\",\n        classificationName,\n        rank: rankStr,\n        classificationCode: generatedCode\n      };\n    }\n\n    return {\n      status: \"ERROR\",\n      message: \"Save request failed. Please verify in UI.\",\n      classificationName,\n      rank: rankStr\n    };\n\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unexpected error\",\n      error: err?.toString?.() || String(err)\n    };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

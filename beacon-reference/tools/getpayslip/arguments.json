@@ -1,0 +1,80 @@
+{
+  "arguments": [
+    {
+      "name": "employeeid",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "employeeid , (optional) dont ask user for employee id,Ex:- employeeid  is like \"000003\"",
+      "advanced": false,
+      "raw": {
+        "name": "employeeid",
+        "type": "string",
+        "description": "employeeid , (optional) dont ask user for employee id,Ex:- employeeid  is like \"000003\"",
+        "required": false,
+        "_id": "684c1c8393aa0a6500d7363d"
+      }
+    },
+    {
+      "name": "year",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "year , Ex:- \"2025\", takes user consent for this ",
+      "advanced": false,
+      "raw": {
+        "name": "year",
+        "type": "string",
+        "description": "year , Ex:- \"2025\", takes user consent for this ",
+        "required": true,
+        "_id": "684c1c8393aa0a6500d7363e"
+      }
+    },
+    {
+      "name": "schedule",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "month , Ex:- \"12\", takes user consent for this ",
+      "advanced": false,
+      "raw": {
+        "name": "schedule",
+        "type": "string",
+        "description": "month , Ex:- \"12\", takes user consent for this ",
+        "required": true,
+        "_id": "684c1c8393aa0a6500d7363f"
+      }
+    },
+    {
+      "name": "type",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "if the user ask download payslip to return key is \"Download\" other wise do not mention download return null and dont ask type for user",
+      "advanced": false,
+      "raw": {
+        "name": "type",
+        "type": "string",
+        "description": "if the user ask download payslip to return key is \"Download\" other wise do not mention download return null and dont ask type for user",
+        "required": false,
+        "_id": "6887bb084ca762f9c23d4263"
+      }
+    },
+    {
+      "name": "pfCode",
+      "type": "integer",
+      "required": true,
+      "defaultValue": null,
+      "description": "PFCode , Ex:- 1 ",
+      "advanced": false,
+      "raw": {
+        "name": "pfCode",
+        "type": "integer",
+        "description": "PFCode , Ex:- 1 ",
+        "required": true,
+        "_id": "690317ef96175ced819891a1"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

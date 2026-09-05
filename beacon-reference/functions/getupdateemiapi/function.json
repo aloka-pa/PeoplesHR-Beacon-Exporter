@@ -1,0 +1,24 @@
+{
+  "id": "690dc583931a2d61ba0b2a7c",
+  "slug": "getupdateemiapi",
+  "name": "getUpdateEmiApi",
+  "status": "live",
+  "createdAt": "2025-07-28T13:12:41.220Z",
+  "updatedAt": "2026-07-17T12:55:56.591Z",
+  "contentHash": "be309ea691490ea75bb1138aa53946bd2da1a5083515f373077d16a01eaf1df1",
+  "lastExportedAt": "2026-09-05T19:41:18.844Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc583931a2d61ba0b2a7c",
+    "name": "getUpdateEmiApi",
+    "status": "live",
+    "code": "(async function (params, url) {\n  const sl = await BeaconBar.getSharedData(\"sl\");\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const body = new URLSearchParams({ ...params });\n\n  const response = await fetch(`${location.origin}/${sl}/${url}`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: body,\n    redirect: \"follow\"\n  });\n\n  const html = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html, 'text/html');\n\n  const anchor = doc.querySelector('tr[id^=\"ctl00_body_grdsummary_ctl00__\"] a[href^=\"javascript:__doPostBack\"]');\n  const href = anchor?.getAttribute('href') || \"\";\n  const match = href.match(/__doPostBack\\('([^']+)'/);\n  const postBackCode = match ? match[1] : \"\";\n\n  const viewState = doc.querySelector('#__VIEWSTATE')?.value || '';\n  const eventValidation = doc.querySelector('#__EVENTVALIDATION')?.value || '';\n  const viewStateGen = doc.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n\n  const finalData = {\n    rawData: html,\n    postBackCode,\n    viewState,\n    eventValidation,\n    viewStateGen\n  }\n  return finalData;\n})\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

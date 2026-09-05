@@ -1,0 +1,72 @@
+{
+  "id": "690dc562931a2d61ba0b1292",
+  "slug": "createsublocation",
+  "name": "createSubLocation",
+  "description": "To create a new sub-location, first fetch all available locations using the \"getSelectLocations\" API and display the location names for the user to select. Once a location is selected, automatically retrieve the corresponding location ID. The \"Head of Sub Location\" field is optional; however, if the user provides an employee ID, the corresponding employee name should be automatically fetched and populated. The \"Head of Sub Location\" name remains optional during the creation process.",
+  "instructions": null,
+  "taskName": "Create Sub Location",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createSubLocation",
+  "createdAt": "2025-04-28T06:39:28.172Z",
+  "updatedAt": "2026-05-15T07:00:28.180Z",
+  "assignedAgents": [],
+  "contentHash": "c15e69e80a76cfcc18d8e680dd3836090fe388282bf5846efa342d60a21961b6",
+  "lastExportedAt": "2026-09-05T19:39:22.640Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc562931a2d61ba0b1292",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createSubLocation",
+      "description": "To create a new sub-location, first fetch all available locations using the \"getSelectLocations\" API and display the location names for the user to select. Once a location is selected, automatically retrieve the corresponding location ID. The \"Head of Sub Location\" field is optional; however, if the user provides an employee ID, the corresponding employee name should be automatically fetched and populated. The \"Head of Sub Location\" name remains optional during the creation process.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createSubLocation",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"Name or description of the sub-location, e.g., 'Colomboo'.\"\n    },\n    \"ctl00_body_ddlLocation\": {\n      \"type\": \"string\",\n      \"description\": \"Selected location ID from the dropdown, e.g., '000002'. This value should be retrieved from the available locations using the getSubLocationDetails API. The user must select the corresponding value or id.\"\n    },\n    \"ctl00_body_txtHeadName\": {\n      \"type\": \"string\",\n      \"description\": \"Head of Sub Location name, e.g., 'Peter Pascal'. This is an optional field. If provided, the corresponding employee ID should be fetched using the getEmployeeDetails API.\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_ddlLocation\"\n  ]\n}",
+        "_id": "680f22a0d582f08908ffedea"
+      },
+      "by": "7829",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  const myHeaders = new Headers();\n\n  myHeaders.append(\n    \"accept\",\n    \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\"\n  );\n\n  myHeaders.append(\n    \"accept-language\",\n    \"en-US,en;q=0.9\"\n  );\n\n  const urlencoded2 = new URLSearchParams();\n\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", \"\");\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n\n  urlencoded2.append(\n    \"__VIEWSTATE\",\n    window.sls.viewState\n  );\n\n  urlencoded2.append(\n    \"__VIEWSTATEGENERATOR\",\n    window.sls.viewStateGen\n  );\n\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n\n  urlencoded2.append(\n    \"__EVENTVALIDATION\",\n    window.sls.eventValidation\n  );\n\n  urlencoded2.append(\n    \"ctl00$hdnDateFormat\",\n    \"dd/mm/yy\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$hdnIsHead\",\n    \"\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$hdnEditItemIndex\",\n    \"\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$txtName\",\n    args[\"ctl00_body_txtName\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$ddlLocation\",\n    args[\"ctl00_body_ddlLocation\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$txtHeadName\",\n    args[\"ctl00_body_txtHeadName\"] || \"\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$CmdSave\",\n    \"Save\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$hdnDefCountry\",\n    \"\"\n  );\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/hr/eim/SubLocation.aspx`,\n    requestOptions2\n  );\n\n  const result = await response2.text();\n\n  return \"Successfully created!\";\n\n})",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create Sub Location",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-28T06:39:28.172Z",
+      "updatedAt": "2026-05-15T07:00:28.180Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createSubLocation",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"Name or description of the sub-location, e.g., 'Colomboo'.\"\n    },\n    \"ctl00_body_ddlLocation\": {\n      \"type\": \"string\",\n      \"description\": \"Selected location ID from the dropdown, e.g., '000002'. This value should be retrieved from the available locations using the getSubLocationDetails API. The user must select the corresponding value or id.\"\n    },\n    \"ctl00_body_txtHeadName\": {\n      \"type\": \"string\",\n      \"description\": \"Head of Sub Location name, e.g., 'Peter Pascal'. This is an optional field. If provided, the corresponding employee ID should be fetched using the getEmployeeDetails API.\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_ddlLocation\"\n  ]\n}",
+      "_id": "680f22a0d582f08908ffedea"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  const myHeaders = new Headers();\n\n  myHeaders.append(\n    \"accept\",\n    \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\"\n  );\n\n  myHeaders.append(\n    \"accept-language\",\n    \"en-US,en;q=0.9\"\n  );\n\n  const urlencoded2 = new URLSearchParams();\n\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", \"\");\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n\n  urlencoded2.append(\n    \"__VIEWSTATE\",\n    window.sls.viewState\n  );\n\n  urlencoded2.append(\n    \"__VIEWSTATEGENERATOR\",\n    window.sls.viewStateGen\n  );\n\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n\n  urlencoded2.append(\n    \"__EVENTVALIDATION\",\n    window.sls.eventValidation\n  );\n\n  urlencoded2.append(\n    \"ctl00$hdnDateFormat\",\n    \"dd/mm/yy\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$hdnIsHead\",\n    \"\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$hdnEditItemIndex\",\n    \"\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$txtName\",\n    args[\"ctl00_body_txtName\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$ddlLocation\",\n    args[\"ctl00_body_ddlLocation\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$txtHeadName\",\n    args[\"ctl00_body_txtHeadName\"] || \"\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$CmdSave\",\n    \"Save\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$hdnDefCountry\",\n    \"\"\n  );\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/hr/eim/SubLocation.aspx`,\n    requestOptions2\n  );\n\n  const result = await response2.text();\n\n  return \"Successfully created!\";\n\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

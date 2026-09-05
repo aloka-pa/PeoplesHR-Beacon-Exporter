@@ -1,0 +1,42 @@
+{
+  "id": "690dc571931a2d61ba0b1c14",
+  "slug": "formatyearendassesmentdesc",
+  "name": "formatYearEndAssesmentDesc",
+  "description": "formatYearEndAssesmentDesc",
+  "exportedAt": "2026-09-05T19:41:12.265Z",
+  "raw": {
+    "_id": "690dc571931a2d61ba0b1c14",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "formatYearEndAssesmentDesc",
+    "description": "formatYearEndAssesmentDesc",
+    "by": "1927",
+    "prompt": "\nGet the data and wait. show the description before filled . When the user says “Shall I fill this description?”, call the tool \"yearEndAssessmentDescriptionFormatting\" with the previously captured description.  first show what you filled then user confirms then fill. \n\nimp :- dont ask anything to the user just ask consent shall fill this \n\nimportant :- take one comment more than  300 characters\n\n\nvery imp :- \"These comments have been applied to the description, updating 6 span elements and 6 CKEditor instances \" no need this text updaing better description generate\n \n",
+    "notes": [],
+    "llmConfig": [],
+    "status": "live",
+    "toolIds": [
+      "690dc568931a2d61ba0b18bd"
+    ],
+    "scenarioIds": [],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      }
+    },
+    "vis": false,
+    "createdAt": "2025-05-30T08:51:39.923Z",
+    "updatedAt": "2025-05-30T08:51:39.923Z",
+    "__v": 0
+  }
+}

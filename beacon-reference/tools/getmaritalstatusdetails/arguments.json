@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "maritalStatusCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the maritalStatusCode.",
+      "advanced": false,
+      "raw": {
+        "name": "maritalStatusCode",
+        "type": "string",
+        "description": "to give the maritalStatusCode.",
+        "required": true,
+        "_id": "68179d5c5b9fb869c57f4c34"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,95 @@
+{
+  "id": "690dc565931a2d61ba0b15a0",
+  "slug": "getfunctionroledetails",
+  "name": "getFunctionRoleDetails",
+  "description": "in this tool generate the Function Role Details.",
+  "instructions": null,
+  "taskName": "Function Role Details",
+  "tags": [],
+  "status": "unlive",
+  "signature": "getFunctionRoleDetails",
+  "createdAt": "2025-05-02T13:23:23.179Z",
+  "updatedAt": "2026-07-17T12:53:06.574Z",
+  "assignedAgents": [],
+  "contentHash": "266d73e9fec4281498a1d44c128d8634c619d1a5cd2191a70e7589b26b26ccf8",
+  "lastExportedAt": "2026-09-05T19:39:22.126Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc565931a2d61ba0b15a0",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getFunctionRoleDetails",
+      "description": "in this tool generate the Function Role Details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getFunctionRoleDetails",
+        "args": [
+          {
+            "name": "functionRoleCode",
+            "type": "string",
+            "description": "to give the functionRoleCode.",
+            "required": true,
+            "_id": "6814c74bbf13cf04f2350447"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a25b2f62ec5c6a120b479"
+      },
+      "by": "34476",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"FunctionalRole\");\n\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"F.FUNCTION_ROLE_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": args.functionRoleCode,\n    \"ctl00$body$ContentSearch$butSearch\": \"Search\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"4\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"FunctionalRole\");\n\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: searchResponse.postBackCode,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: searchResponse.viewState,\n    __VIEWSTATEGENERATOR: searchResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: searchResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"F.FUNCTION_ROLE_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": args.functionCode,\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"FunctionalRole\");\n\n  window.fr = postBackResponse;\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(postBackResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const functionRole = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const selectElement = doc.querySelector(\"#ctl00_body_dpcountry\");\n  let functionSelect = null;\n  const options = [];\n\n  if (selectElement) {\n    const selected = selectElement.selectedOptions[0];\n    functionSelect = {\n      value: selected?.value || \"\",\n      text: selected?.textContent.trim() || \"\"\n    };\n\n    for (const option of selectElement.options) {\n      options.push({\n        value: option.value,\n        text: option.text.trim()\n      });\n    }\n  }\n\n  const result = {\n    code,\n    functionSelect,\n    functionRole,\n    options\n  };\n\n  return result;\n});\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Function Role Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-02T13:23:23.179Z",
+      "updatedAt": "2026-07-17T12:53:06.574Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getFunctionRoleDetails",
+      "args": [
+        {
+          "name": "functionRoleCode",
+          "type": "string",
+          "description": "to give the functionRoleCode.",
+          "required": true,
+          "_id": "6814c74bbf13cf04f2350447"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a25b2f62ec5c6a120b479"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"FunctionalRole\");\n\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"F.FUNCTION_ROLE_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": args.functionRoleCode,\n    \"ctl00$body$ContentSearch$butSearch\": \"Search\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"4\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"FunctionalRole\");\n\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: searchResponse.postBackCode,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: searchResponse.viewState,\n    __VIEWSTATEGENERATOR: searchResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: searchResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"F.FUNCTION_ROLE_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": args.functionCode,\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"FunctionalRole\");\n\n  window.fr = postBackResponse;\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(postBackResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const functionRole = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const selectElement = doc.querySelector(\"#ctl00_body_dpcountry\");\n  let functionSelect = null;\n  const options = [];\n\n  if (selectElement) {\n    const selected = selectElement.selectedOptions[0];\n    functionSelect = {\n      value: selected?.value || \"\",\n      text: selected?.textContent.trim() || \"\"\n    };\n\n    for (const option of selectElement.options) {\n      options.push({\n        value: option.value,\n        text: option.text.trim()\n      });\n    }\n  }\n\n  const result = {\n    code,\n    functionSelect,\n    functionRole,\n    options\n  };\n\n  return result;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

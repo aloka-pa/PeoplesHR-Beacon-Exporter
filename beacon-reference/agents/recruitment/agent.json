@@ -1,0 +1,74 @@
+{
+  "id": "690dc571931a2d61ba0b1bef",
+  "slug": "recruitment",
+  "name": "Recruitment",
+  "description": "Recruitment",
+  "exportedAt": "2026-09-05T19:41:12.235Z",
+  "raw": {
+    "_id": "690dc571931a2d61ba0b1bef",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "Recruitment",
+    "description": "Recruitment",
+    "by": "7337",
+    "prompt": "Scenarios:-\n\"You are an AI assistant helping users to resolve their queries using tools provided.\"\n\nRule:-  Only respond to requests that involve fetching or displaying admin or shortlisting details using the getAdminInformationDetails and getShortListingDetails APIs. Politely reject all other queries as out of scope for this HR platform module.\n\n\nIf the user asks a question related to the given tool, return only the relevant data. Do not display any unrelated information. For user-specific queries, respond directly with the answer; avoid including irrelevant content.\n\nScenario:- In this scenario, whenever the user input involves any date-related query, the system must first execute the \"dateFormat\" tool to retrieve the appropriate date format and example. This ensures consistency in how dates are processed. The resulting format should then be used to convert any user-provided date into the correct format before passing it to the next API or tool that depends on date input.\n\nYou are an AI assistant helping users resolve their queries using the available tools.\n\nAlways answer queries strictly with data from the relevant tool; do not include unrelated information.\n\nFor user-specific queries, respond directly with the result—keep answers concise and relevant.\n\nIf the query involves any date-related input, first execute the dateFormat tool to retrieve the correct date format and example. Use that format to normalize the user’s date before passing it to any other API or tool that requires date input.",
+    "notes": [
+      {
+        "prompt": "690dc55d931a2d61ba0b0f6d",
+        "rules": {
+          "ids": [],
+          "condition": "and"
+        },
+        "_id": "6911e161d994e1474d74dc4d"
+      }
+    ],
+    "llmConfig": [],
+    "status": "live",
+    "toolIds": [
+      "690dc567931a2d61ba0b1712",
+      "690dc568931a2d61ba0b1869",
+      "690dc56b931a2d61ba0b1a5f"
+    ],
+    "scenarioIds": [],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "callKnowledgeBase",
+        "args": [
+          {
+            "name": "query",
+            "type": "string",
+            "description": "The query to be executed by the agent",
+            "required": true,
+            "_id": "68c92b76acdfc60cd77212e6"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n       \"type\":  \"object\",\n       \"properties\": {},\n       \"required\": []\n       }",
+        "_id": "6911e161d994e1474d74dc4e"
+      },
+      "target": {
+        "entityValue": "",
+        "shardKey1": "",
+        "shardKey2": "",
+        "shardKey3": ""
+      }
+    },
+    "vis": false,
+    "createdAt": "2025-05-14T05:52:02.611Z",
+    "updatedAt": "2025-11-10T12:58:09.933Z",
+    "__v": 1
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "690dc583931a2d61ba0b2abe",
+  "slug": "getemployeeutils",
+  "name": "getemployeeUtils",
+  "status": "live",
+  "createdAt": "2025-05-28T12:31:51.553Z",
+  "updatedAt": "2026-07-17T12:55:54.574Z",
+  "contentHash": "dafad4ae94507c10009af075ef4dfa860f2150e07509d32c66da8f883184bb61",
+  "lastExportedAt": "2026-09-05T19:41:20.371Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc583931a2d61ba0b2abe",
+    "name": "getemployeeUtils",
+    "status": "live",
+    "code": "(async function () {\n  //done\n  try {\n    const headers = new Headers({\n      \"accept\": \"text/html, */*; q=0.01\",\n      \"accept-language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n      \"priority\": \"u=1, i\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    });\n\n    const empInfo = await BeaconBar.executeFunction(\"callbackemp\")();\n    const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n\n    const url = `${reqOptions}CommonComponents/Search/Search?` +\n      new URLSearchParams({\n        empNumber: empInfo.empNumber,\n        callBack: empInfo.callBack,\n        searchMode: \"2\",\n        searchQueryMode: \"all\",\n        searchQueryState: \"activeonly\",\n        isMultiple: \"1\",\n        breadCrumbEnable: \"0\",\n        isDivLoading: \"1\"\n      }).toString();\n\n    const response = await fetch(url, {\n      method: \"GET\",\n      headers,\n      redirect: \"follow\"\n    });\n\n    const htmlText = await response.text();\n\n            const match = htmlText.match(/window\\.advancedModelObj\\s*=\\s*(['\"])(.*?)\\1;/s);\n\n            const datass = JSON.parse(match[2])\n    return {EmpNumber : datass.EmpNumber , KeyValue: datass.KeyValue };\n\n\n  } catch (error) {\n    return null;\n  }\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

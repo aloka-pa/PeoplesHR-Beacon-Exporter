@@ -1,0 +1,119 @@
+{
+  "id": "690dc567931a2d61ba0b17c0",
+  "slug": "updatejobspecificationdetails",
+  "name": "updateJobSpecificationDetails",
+  "description": "in this tool update the job specification Details. first execute the getJobSpecificationDetails api then retrive the corresponding edit key and then ",
+  "instructions": null,
+  "taskName": "Update Job Specification Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateJobSpecificationDetails",
+  "createdAt": "2025-05-17T08:49:05.742Z",
+  "updatedAt": "2025-05-17T08:49:05.742Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "94dd5eb1582de37180593b2f0660354d0db4535de77ffe4a118a2f77bd9873a6",
+  "lastExportedAt": "2026-09-05T19:39:23.900Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc567931a2d61ba0b17c0",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateJobSpecificationDetails",
+      "description": "in this tool update the job specification Details. first execute the getJobSpecificationDetails api then retrive the corresponding edit key and then ",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateJobSpecificationDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to give the employee id Example:- \"000001\" etc...",
+            "required": true,
+            "_id": "68284d819a20c440e02a6e43"
+          },
+          {
+            "name": "updateComment",
+            "type": "string",
+            "description": "to give the update comment Example.\"text\"",
+            "required": true,
+            "_id": "682869b651d6fa1109d3f298"
+          },
+          {
+            "name": "editId",
+            "type": "string",
+            "description": "to get the editId for getJobSpecificationDetails api. Example:-\"ctl00_body_grdEmpJobData_ctl00_ctl04_EditButton\"",
+            "required": true,
+            "_id": "682869b651d6fa1109d3f299"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68284d819a20c440e02a6e42"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignJobProfile.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/AssignJobProfile.aspx\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"content-type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const updateKey = args.editId.replace(\"EditButton\", \"UpdateButton\");\n  const key = args.editId.replace(\"EditButton\", \"txtEmpText\");\n\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", args.editId);\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", window.jbs.viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", window.jbs.viewStateGenerator);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", window.jbs.eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded2.append(\"ctl00$hdnQuickmenu\", \"\");\n  urlencoded2.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", args.id);\n  urlencoded2.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded2.append(\"ctl00$body$grdEmpJobData$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdEmpJobData_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$grdEmpJobData$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"9\");\n  urlencoded2.append(\"ctl00_body_grdEmpJobData_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00_body_grdEmpJobData_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$hdnJobCode\", window.jbs.jobcode3);\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, requestOptions2);\n  const text2 = await response2.text();\n  const parser = new DOMParser();\n  const doc2 = parser.parseFromString(text2, \"text/html\");\n\n  const viewState1 = doc2.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator1 = doc2.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation1 = doc2.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  const jobCode = doc2.querySelector(\"#ctl00_body_hdnJobCode\")?.value || \"\";\n\n  const urlencoded3 = new URLSearchParams();\n  urlencoded3.append(\"scrollLeft\", \"0\");\n  urlencoded3.append(\"scrollTop\", \"0\");\n  urlencoded3.append(\"__EVENTTARGET\", updateKey);\n  urlencoded3.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded3.append(\"__VIEWSTATE\", viewState1);\n  urlencoded3.append(\"__VIEWSTATEGENERATOR\", viewStateGenerator1);\n  urlencoded3.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded3.append(\"__EVENTVALIDATION\", eventValidation1);\n  urlencoded3.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded3.append(\"ctl00$hdnQuickmenu\", \"\");\n  urlencoded3.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded3.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", args.id);\n  urlencoded3.append(\"ctl00$body$grdEmpJobData$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded3.append(\"ctl00_body_grdEmpJobData_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded3.append(\"ctl00$body$grdEmpJobData$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"9\");\n  urlencoded3.append(\"ctl00_body_grdEmpJobData_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded3.append(key, args.updateComment);\n  urlencoded3.append(\"ctl00_body_grdEmpJobData_ClientState\", \"\");\n  urlencoded3.append(\"ctl00$body$hdnJobCode\", jobCode);\n\n  const requestOptions3 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded3,\n    redirect: \"follow\"\n  };\n\n  const response3 = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, requestOptions3);\n  const text3 = await response3.text();\n  const doc3 = parser.parseFromString(text3, \"text/html\");\n\n  const rows = doc3.querySelectorAll(\"#ctl00_body_grdEmpJobData_ctl00 tbody tr\");\n  const updateDetails = Array.from(rows).map(row => {\n    const name = row.querySelector(\"td:nth-child(1)\")?.textContent.trim() || \"\";\n    const comment = row.querySelector(\"span[id^='ctl00_body_grdEmpJobData_']\")?.textContent.trim() || \"\";\n\n    return { name, comment };\n  });\n\n  return updateDetails;\n});\n",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Update Job Specification Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-17T08:49:05.742Z",
+      "updatedAt": "2025-05-17T08:49:05.742Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateJobSpecificationDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to give the employee id Example:- \"000001\" etc...",
+          "required": true,
+          "_id": "68284d819a20c440e02a6e43"
+        },
+        {
+          "name": "updateComment",
+          "type": "string",
+          "description": "to give the update comment Example.\"text\"",
+          "required": true,
+          "_id": "682869b651d6fa1109d3f298"
+        },
+        {
+          "name": "editId",
+          "type": "string",
+          "description": "to get the editId for getJobSpecificationDetails api. Example:-\"ctl00_body_grdEmpJobData_ctl00_ctl04_EditButton\"",
+          "required": true,
+          "_id": "682869b651d6fa1109d3f299"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68284d819a20c440e02a6e42"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignJobProfile.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/AssignJobProfile.aspx\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"content-type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const updateKey = args.editId.replace(\"EditButton\", \"UpdateButton\");\n  const key = args.editId.replace(\"EditButton\", \"txtEmpText\");\n\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", args.editId);\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", window.jbs.viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", window.jbs.viewStateGenerator);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", window.jbs.eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded2.append(\"ctl00$hdnQuickmenu\", \"\");\n  urlencoded2.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", args.id);\n  urlencoded2.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded2.append(\"ctl00$body$grdEmpJobData$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdEmpJobData_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$grdEmpJobData$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"9\");\n  urlencoded2.append(\"ctl00_body_grdEmpJobData_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00_body_grdEmpJobData_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$hdnJobCode\", window.jbs.jobcode3);\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, requestOptions2);\n  const text2 = await response2.text();\n  const parser = new DOMParser();\n  const doc2 = parser.parseFromString(text2, \"text/html\");\n\n  const viewState1 = doc2.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator1 = doc2.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation1 = doc2.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  const jobCode = doc2.querySelector(\"#ctl00_body_hdnJobCode\")?.value || \"\";\n\n  const urlencoded3 = new URLSearchParams();\n  urlencoded3.append(\"scrollLeft\", \"0\");\n  urlencoded3.append(\"scrollTop\", \"0\");\n  urlencoded3.append(\"__EVENTTARGET\", updateKey);\n  urlencoded3.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded3.append(\"__VIEWSTATE\", viewState1);\n  urlencoded3.append(\"__VIEWSTATEGENERATOR\", viewStateGenerator1);\n  urlencoded3.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded3.append(\"__EVENTVALIDATION\", eventValidation1);\n  urlencoded3.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded3.append(\"ctl00$hdnQuickmenu\", \"\");\n  urlencoded3.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded3.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", args.id);\n  urlencoded3.append(\"ctl00$body$grdEmpJobData$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded3.append(\"ctl00_body_grdEmpJobData_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded3.append(\"ctl00$body$grdEmpJobData$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"9\");\n  urlencoded3.append(\"ctl00_body_grdEmpJobData_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded3.append(key, args.updateComment);\n  urlencoded3.append(\"ctl00_body_grdEmpJobData_ClientState\", \"\");\n  urlencoded3.append(\"ctl00$body$hdnJobCode\", jobCode);\n\n  const requestOptions3 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded3,\n    redirect: \"follow\"\n  };\n\n  const response3 = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, requestOptions3);\n  const text3 = await response3.text();\n  const doc3 = parser.parseFromString(text3, \"text/html\");\n\n  const rows = doc3.querySelectorAll(\"#ctl00_body_grdEmpJobData_ctl00 tbody tr\");\n  const updateDetails = Array.from(rows).map(row => {\n    const name = row.querySelector(\"td:nth-child(1)\")?.textContent.trim() || \"\";\n    const comment = row.querySelector(\"span[id^='ctl00_body_grdEmpJobData_']\")?.textContent.trim() || \"\";\n\n    return { name, comment };\n  });\n\n  return updateDetails;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

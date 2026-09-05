@@ -1,0 +1,24 @@
+{
+  "id": "690dc583931a2d61ba0b2aba",
+  "slug": "getworkflowtypesdetails",
+  "name": "getWorkFlowTypesDetails",
+  "status": "live",
+  "createdAt": "2025-06-02T07:02:37.407Z",
+  "updatedAt": "2025-06-02T07:02:37.407Z",
+  "contentHash": "1f2eb749c6f90d445da484f613ce4b4531d974fe4ce2f36e6d9042b481dbea71",
+  "lastExportedAt": "2026-09-05T19:41:38.823Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc583931a2d61ba0b2aba",
+    "name": "getWorkFlowTypesDetails",
+    "status": "live",
+    "code": "(function(args){\n const myHeaders = new Headers();\nmyHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\nmyHeaders.append(\"content-type\", \"application/x-www-form-urlencoded\");\n\nconst urlencoded = new URLSearchParams();\nurlencoded.append(\"ctl00_body_RadScriptManager1_HiddenField\", \"\");\nurlencoded.append(\"__EVENTTARGET\", \"\");\nurlencoded.append(\"__EVENTARGUMENT\", \"\");\nurlencoded.append(\"__VIEWSTATE\", args.viewState);\nurlencoded.append(\"__VIEWSTATEGENERATOR\", args.generator);\nurlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\nurlencoded.append(\"__EVENTVALIDATION\", args.validation);\nurlencoded.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\nurlencoded.append(\"ctl00$body$grdWFTypes$ctl02$imgbtnEdit.x\", \"5\");\nurlencoded.append(\"ctl00$body$grdWFTypes$ctl02$imgbtnEdit.y\", \"12\");\nurlencoded.append(\"ctl00$body$hdnFlModID\", \"\");\nurlencoded.append(\"ctl00$body$hdnFldTypeCodeStatus\", \"\");\nurlencoded.append(\"ctl00$body$hdnFldTypeCode\", \"\");\n\nconst requestOptions = {\n  method: \"POST\",\n  headers: myHeaders,\n  body: urlencoded,\n  redirect: \"follow\"\n};\nconst reqOptions = BeaconBar.executeFunction(\"reqOptions\")();\nconst response = await fetch(`${reqOptions}WorkFlow_v6/DefineWorkflowType.aspx`, requestOptions)\n const data  = await  response.text();\nreturn data ;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

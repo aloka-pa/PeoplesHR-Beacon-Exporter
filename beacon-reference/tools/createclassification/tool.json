@@ -1,0 +1,75 @@
+{
+  "id": "690dc565931a2d61ba0b15dc",
+  "slug": "createclassification",
+  "name": "createClassification",
+  "description": "in this tool create the classification.",
+  "instructions": null,
+  "taskName": "Create Classification",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createClassification",
+  "createdAt": "2025-05-03T10:40:22.129Z",
+  "updatedAt": "2025-05-03T10:40:22.129Z",
+  "assignedAgents": [],
+  "contentHash": "fccec57eaa1dc6dbaa8f7c25cf755601621e9f9d3fe2707b221a3b0a30ef3e16",
+  "lastExportedAt": "2026-09-05T19:39:24.194Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc565931a2d61ba0b15dc",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createClassification",
+      "description": "in this tool create the classification.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createClassification",
+        "args": [
+          {
+            "name": "classificationName",
+            "type": "string",
+            "description": "to give the classification Name or description.",
+            "required": true,
+            "_id": "6815f2967b792c31fa8ee667"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6815f2967b792c31fa8ee666"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Classification\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"Classification\");\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: newInt.viewState,\n    __VIEWSTATEGENERATOR: newInt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: newInt.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtName\": args.classificationName || \"\",\n    \"ctl00$body$butSave\": \"Save\"\n  }, \"Classification\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const classification = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const result = {\n    code,\n    classification\n  };\n  return result;\n})\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create Classification",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-03T10:40:22.129Z",
+      "updatedAt": "2025-05-03T10:40:22.129Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createClassification",
+      "args": [
+        {
+          "name": "classificationName",
+          "type": "string",
+          "description": "to give the classification Name or description.",
+          "required": true,
+          "_id": "6815f2967b792c31fa8ee667"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6815f2967b792c31fa8ee666"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Classification\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"Classification\");\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: newInt.viewState,\n    __VIEWSTATEGENERATOR: newInt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: newInt.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtName\": args.classificationName || \"\",\n    \"ctl00$body$butSave\": \"Save\"\n  }, \"Classification\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const classification = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const result = {\n    code,\n    classification\n  };\n  return result;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

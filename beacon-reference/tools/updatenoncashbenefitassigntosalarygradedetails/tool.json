@@ -1,0 +1,75 @@
+{
+  "id": "690dc56c931a2d61ba0b1b78",
+  "slug": "updatenoncashbenefitassigntosalarygradedetails",
+  "name": "updateNonCashBenefitAssignToSalaryGradeDetails",
+  "description": "Before execute in the \"updateNonCashBenefitAssignToSalaryGradeDetails\" api.\n- first execute the \"getNonCashBenefitAssignToSalaryGradeDetails\" api, to get the user update record corresponding edit id will be take. ",
+  "instructions": null,
+  "taskName": "Update Non Cash Benefit Assign To Salary Grade Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateNonCashBenefitAssignToSalaryGradeDetails",
+  "createdAt": "2025-09-22T07:04:02.374Z",
+  "updatedAt": "2025-09-22T07:04:02.374Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "18612de6ed4a76bbd4f4bf2c7c1301afa94600ba59159755660ab9ca3b7355be",
+  "lastExportedAt": "2026-09-05T19:39:23.415Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56c931a2d61ba0b1b78",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateNonCashBenefitAssignToSalaryGradeDetails",
+      "description": "Before execute in the \"updateNonCashBenefitAssignToSalaryGradeDetails\" api.\n- first execute the \"getNonCashBenefitAssignToSalaryGradeDetails\" api, to get the user update record corresponding edit id will be take. ",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateNonCashBenefitAssignToSalaryGradeDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {\n    \"editId\" : {\n      \"type\": \"string\",\n      \"description\" : \"Before get edit Id first execute 'getNonCashBenefitAssignToSalaryGradeDetails' api, user update record corresponding edit id will be take.\"\n    },\n    \"Quantity\" : {\n      \"type\": \"string\",\n      \"description\" : \"user update Quantity value will be take.\"\n    }\n  },\n  \"required\": [\"editId\",\"Quantity\"]\n}",
+        "_id": "68d0f4e2e2cc6820fc521992"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignNonCashBenifit.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const modified = args.editId.replace(/\\$[^$]*$/, '$');\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.editId,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.noncashBenefit.viewState,\n    __VIEWSTATEGENERATOR: window.noncashBenefit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.noncashBenefit.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$hdnQuickmenu\": \"1\",\n    \"ctl00_body_grdavailable_ClientState\" : \"\"\n  }, \"AssignNonCashBenifit\");\n\n  const postBackResponse1 = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.editId,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: postBackResponse.viewState,\n    __VIEWSTATEGENERATOR: postBackResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: postBackResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$hdnQuickmenu\": \"1\",\n    [`${modified}nuamount`]: args.Quantity\n  }, \"AssignNonCashBenifit\");\n\n  const postBackResponse2 = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: postBackResponse1.viewState,\n    __VIEWSTATEGENERATOR: postBackResponse1.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: postBackResponse1.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$hdnQuickmenu\": \"1\",\n    \"ctl00_body_grdavailable_ClientState\" : \"\",\n    \"ctl00$body$butSave\": \"Save\"\n  }, \"AssignNonCashBenifit\");\n\n  return \"update sucessfully\";\n})",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update Non Cash Benefit Assign To Salary Grade Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-09-22T07:04:02.374Z",
+      "updatedAt": "2025-09-22T07:04:02.374Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateNonCashBenefitAssignToSalaryGradeDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {\n    \"editId\" : {\n      \"type\": \"string\",\n      \"description\" : \"Before get edit Id first execute 'getNonCashBenefitAssignToSalaryGradeDetails' api, user update record corresponding edit id will be take.\"\n    },\n    \"Quantity\" : {\n      \"type\": \"string\",\n      \"description\" : \"user update Quantity value will be take.\"\n    }\n  },\n  \"required\": [\"editId\",\"Quantity\"]\n}",
+      "_id": "68d0f4e2e2cc6820fc521992"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignNonCashBenifit.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const modified = args.editId.replace(/\\$[^$]*$/, '$');\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.editId,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.noncashBenefit.viewState,\n    __VIEWSTATEGENERATOR: window.noncashBenefit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.noncashBenefit.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$hdnQuickmenu\": \"1\",\n    \"ctl00_body_grdavailable_ClientState\" : \"\"\n  }, \"AssignNonCashBenifit\");\n\n  const postBackResponse1 = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.editId,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: postBackResponse.viewState,\n    __VIEWSTATEGENERATOR: postBackResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: postBackResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$hdnQuickmenu\": \"1\",\n    [`${modified}nuamount`]: args.Quantity\n  }, \"AssignNonCashBenifit\");\n\n  const postBackResponse2 = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: postBackResponse1.viewState,\n    __VIEWSTATEGENERATOR: postBackResponse1.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: postBackResponse1.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$hdnQuickmenu\": \"1\",\n    \"ctl00_body_grdavailable_ClientState\" : \"\",\n    \"ctl00$body$butSave\": \"Save\"\n  }, \"AssignNonCashBenifit\");\n\n  return \"update sucessfully\";\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

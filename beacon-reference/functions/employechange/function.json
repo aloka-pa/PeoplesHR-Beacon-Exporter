@@ -1,0 +1,24 @@
+{
+  "id": "690dc57c931a2d61ba0b24be",
+  "slug": "employechange",
+  "name": "employeChange",
+  "status": "live",
+  "createdAt": "2025-05-22T07:48:09.714Z",
+  "updatedAt": "2026-07-17T12:55:49.616Z",
+  "contentHash": "6ffe3f88683c28f34c1c0729a23cddef3aa405374bd44a2d429ddf937e9501f6",
+  "lastExportedAt": "2026-09-05T19:41:22.896Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57c931a2d61ba0b24be",
+    "name": "employeChange",
+    "status": "live",
+    "code": "(async function(args) {\n        const reqOptions = await BeaconBar.executeFunction('reqOptions')();\n\n    const  baseUrl= `${reqOptions}CommonComponents/Search/GetEmpNumber/`\n  const url = new URL(baseUrl);\n\n  url.searchParams.set(\"loggedEmpNumber\", args.loggedEmpNumber);\n  url.searchParams.set(\"empNumber\", args.empNumber);\n  url.searchParams.set(\"empDisplayName\", args.empDisplayName);\n  url.searchParams.set(\"empDateJoined\", args.empDateJoined);\n  url.searchParams.set(\"key\", args.key);\n  url.searchParams.set(\"_\", Date.now());\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  try {\n    const response = await fetch(url, requestOptions);\n    if (!response.ok) throw new Error(`HTTP error ${response.status}`);\n    const text = await response.text();\n    return text;\n  } catch (err) {\n    throw err;\n  }\n})\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

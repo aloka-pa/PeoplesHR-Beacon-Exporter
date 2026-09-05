@@ -1,0 +1,24 @@
+{
+  "id": "690dc58c931a2d61ba0b3388",
+  "slug": "supnumber",
+  "name": "supNumber",
+  "status": "live",
+  "createdAt": "2025-05-15T09:58:29.854Z",
+  "updatedAt": "2026-07-17T12:56:04.205Z",
+  "contentHash": "436f60d17e1a7d8c95a4d4a749dc373db82706f7ce510457bc79f590adf2f027",
+  "lastExportedAt": "2026-09-05T19:41:13.916Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58c931a2d61ba0b3388",
+    "name": "supNumber",
+    "status": "live",
+    "code": "(async function () {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const reqOptions = BeaconBar.executeFunction(\"reqOptions\")();\n\n  try {\n    const response = await fetch(`${reqOptions}PerfV8/FinalAssessment/FinalAssessmentSelect`, requestOptions);\n    const result = await response.text(); \n    function extractEmployeeNumber(htmlString) {\n    const parser = new DOMParser();\n\n    const doc = parser.parseFromString(htmlString, 'text/html');\n\n    const employeeInput = doc.querySelector('#EmployeeNumber');\n\n    return employeeInput ? employeeInput.value : null;\n}\n  const dataa = extractEmployeeNumber(result)\n    return dataa;\n  } catch (error) {\n  }\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

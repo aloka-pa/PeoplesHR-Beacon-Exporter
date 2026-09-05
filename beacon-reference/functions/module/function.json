@@ -1,0 +1,24 @@
+{
+  "id": "690dc585931a2d61ba0b2d35",
+  "slug": "module",
+  "name": "module",
+  "status": "live",
+  "createdAt": "2025-05-05T09:57:33.128Z",
+  "updatedAt": "2025-05-05T09:57:33.128Z",
+  "contentHash": "248521a11eb90e20babc19b04a96a65a2b01b9a816972e2838d5b6d8ea25c6d1",
+  "lastExportedAt": "2026-09-05T19:41:43.617Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc585931a2d61ba0b2d35",
+    "name": "module",
+    "status": "live",
+    "code": "(async function (params, url) {\n  //done\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const body = new URLSearchParams({ ...params });\n\n  // Split URL into path and query\n  const [rawPath, rawQuery] = url.split(\"?\");\n  const cleanPath = rawPath.replace(/\\.aspx$/, \"\");  // Remove .aspx if included\n  const fullUrl = `${location.origin}/${cleanPath}.aspx${rawQuery ? `?${rawQuery}` : \"\"}`;\n\n  const response = await fetch(fullUrl, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: body,\n    redirect: \"follow\"\n  });\n\n  const html = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html, 'text/html');\n\n  const anchor = doc.querySelector('tr[id^=\"ctl00_body_grdsummary_ctl00__\"] a[href^=\"javascript:__doPostBack\"]');\n  const href = anchor?.getAttribute('href') || \"\";\n  const match = href.match(/__doPostBack\\('([^']+)'/);\n  const postBackCode = match ? match[1] : \"\";\n\n  const viewState = doc.querySelector('#__VIEWSTATE')?.value || '';\n  const eventValidation = doc.querySelector('#__EVENTVALIDATION')?.value || '';\n  const viewStateGen = doc.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n  const publicKey = doc.querySelector(\"#ctl00_body_txtPublicKey\")?.value || \"\";\n\n  const finalData = {\n    rawData: html,\n    postBackCode,\n    viewState,\n    eventValidation,\n    viewStateGen,\n    publicKey\n  };\n  return finalData;\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

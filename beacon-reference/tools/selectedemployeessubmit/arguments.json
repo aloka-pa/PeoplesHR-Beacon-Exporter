@@ -1,0 +1,17 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "selectedIndexes",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "From the given rows, return only the selectedIndexes as numbers. Indexing starts at 0. The output must be a single string of indexes separated by commas (e.g., 0,1,2,3).",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "From the given rows, return only the selectedIndexes as numbers. Indexing starts at 0. The output must be a single string of indexes separated by commas (e.g., 0,1,2,3)."
+      }
+    }
+  ]
+}

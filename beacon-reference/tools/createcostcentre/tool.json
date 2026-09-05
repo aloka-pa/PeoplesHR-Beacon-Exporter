@@ -1,0 +1,59 @@
+{
+  "id": "690dc561931a2d61ba0b1229",
+  "slug": "createcostcentre",
+  "name": "createCostCentre",
+  "description": "in this used for Create a Cost Centre.",
+  "instructions": null,
+  "taskName": "Create Cost Centre",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createCostCentre",
+  "createdAt": "2025-04-27T08:17:16.871Z",
+  "updatedAt": "2025-04-27T08:17:16.871Z",
+  "assignedAgents": [],
+  "contentHash": "bdf35d5b1a6e037edad5d3ea7435f39910ff66f53618e78a36d8eeb2923d516a",
+  "lastExportedAt": "2026-09-05T19:39:24.509Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc561931a2d61ba0b1229",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createCostCentre",
+      "description": "in this used for Create a Cost Centre.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createCostCentre",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"costCentreName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the cost centre if the user missing the field to ask user prompt to fill the cost centre name then i will create the cost center.\"\n    },\n    \"description\": {\n      \"type\": \"string\",\n      \"description\": \"Short description of the cost centre.\"\n    }\n  },\n  \"required\": [\n    \"costCentreName\"\n  ]\n}",
+        "_id": "680de80c514e6c7f9319e7ef"
+      },
+      "by": "1927",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Coscentre\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"CENTRE_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$butNew\", \"New\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const fetchEditResponse = await fetch(`${location.origin}/hr/EIM/Coscentre.aspx`, requestOptions1);\n  const html = await fetchEditResponse.text();\n  const parser = new DOMParser();\n  const documentEdit = parser.parseFromString(html, 'text/html');\n\n  const viewState = documentEdit.querySelector('#__VIEWSTATE')?.value || '';\n  const eventValidation = documentEdit.querySelector('#__EVENTVALIDATION')?.value || '';\n  const viewStateGen = documentEdit.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", \"\");\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00$body$txtName\", args.costCentreName);\n  urlencoded2.append(\"ctl00$body$txtbriefDesc\", args.description);\n  urlencoded2.append(\"ctl00$body$butSave\", \"Save\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const saveResponse = await fetch(`${location.origin}/hr/EIM/Coscentre.aspx`, requestOptions2);\n  await saveResponse.text();\n  return \"Create Successfully!\";\n})\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create Cost Centre",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-27T08:17:16.871Z",
+      "updatedAt": "2025-04-27T08:17:16.871Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createCostCentre",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"costCentreName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the cost centre if the user missing the field to ask user prompt to fill the cost centre name then i will create the cost center.\"\n    },\n    \"description\": {\n      \"type\": \"string\",\n      \"description\": \"Short description of the cost centre.\"\n    }\n  },\n  \"required\": [\n    \"costCentreName\"\n  ]\n}",
+      "_id": "680de80c514e6c7f9319e7ef"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Coscentre\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"CENTRE_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$butNew\", \"New\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const fetchEditResponse = await fetch(`${location.origin}/hr/EIM/Coscentre.aspx`, requestOptions1);\n  const html = await fetchEditResponse.text();\n  const parser = new DOMParser();\n  const documentEdit = parser.parseFromString(html, 'text/html');\n\n  const viewState = documentEdit.querySelector('#__VIEWSTATE')?.value || '';\n  const eventValidation = documentEdit.querySelector('#__EVENTVALIDATION')?.value || '';\n  const viewStateGen = documentEdit.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", \"\");\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00$body$txtName\", args.costCentreName);\n  urlencoded2.append(\"ctl00$body$txtbriefDesc\", args.description);\n  urlencoded2.append(\"ctl00$body$butSave\", \"Save\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const saveResponse = await fetch(`${location.origin}/hr/EIM/Coscentre.aspx`, requestOptions2);\n  await saveResponse.text();\n  return \"Create Successfully!\";\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

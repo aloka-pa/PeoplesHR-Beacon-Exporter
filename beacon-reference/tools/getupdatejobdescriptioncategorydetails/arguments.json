@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "jobDescriptionCategoryName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to update name job Description Category Name.",
+      "advanced": false,
+      "raw": {
+        "name": "jobDescriptionCategoryName",
+        "type": "string",
+        "description": "to update name job Description Category Name.",
+        "required": true,
+        "_id": "6810ea5e001dad7b67f5605d"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

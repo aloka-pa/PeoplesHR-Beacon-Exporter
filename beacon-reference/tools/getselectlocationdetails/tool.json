@@ -1,0 +1,118 @@
+{
+  "id": "690dc560931a2d61ba0b112d",
+  "slug": "getselectlocationdetails",
+  "name": "getSelectLocationDetails",
+  "description": "in this tool generate the country details.",
+  "instructions": null,
+  "taskName": "Select Location Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getSelectLocationDetails",
+  "createdAt": "2025-04-25T11:45:25.319Z",
+  "updatedAt": "2026-05-15T07:13:42.749Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "16a7efcba8675deb74986d61001a1a628d81cb9a5010f7b312b1eea241aa625d",
+  "lastExportedAt": "2026-09-05T19:39:22.488Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc560931a2d61ba0b112d",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getSelectLocationDetails",
+      "description": "in this tool generate the country details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getSelectLocationDetails",
+        "args": [
+          {
+            "name": "countryName",
+            "type": "string",
+            "description": "to get country name for user prompt.",
+            "required": true,
+            "_id": "680b8de1851c8da9149a32c4"
+          },
+          {
+            "name": "provinceValue",
+            "type": "string",
+            "description": "to get provinceValue for list province names to select one province name to corresponding value you take.",
+            "required": true,
+            "_id": "680b994b95acec8cf7225478"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"title\": \"LocationFormData\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"Location name. If the user provides a value, use that. Otherwise, fetch from the getLocation tool and populate this field.\"\n    },\n    \"ctl00_body_txtAbbreviation\": {\n      \"type\": \"string\",\n      \"description\": \"Location abbreviation. Use user input if available, otherwise retrieve from the getLocation tool.\"\n    },\n    \"ctl00_body_txttp\": {\n      \"type\": \"string\",\n      \"description\": \"Telephone number. Use user-provided input or fetch it from the getLocation tool if not provided.\"\n    },\n    \"ctl00_body_txtFax\": {\n      \"type\": \"string\",\n      \"description\": \"Fax number. Use the user-entered value or retrieve it from the getLocation tool if not provided.\"\n    },\n    \"ctl00_body_txtemail\": {\n      \"type\": \"string\",\n      \"format\": \"email\",\n      \"description\": \"Email address. Use user input or fetch from the getLocation tool if left blank.\"\n    },\n    \"ctl00_body_txturl\": {\n      \"type\": \"string\",\n      \"format\": \"uri\",\n      \"description\": \"Website URL. Populate with user input or use data from the getLocation tool if empty.\"\n    },\n    \"ctl00_body_txtaddress\": {\n      \"type\": \"string\",\n      \"description\": \"Address. Use the provided value or retrieve from the getLocation tool if not entered.\"\n    },\n    \"ctl00_body_ddlCountry\": {\n      \"type\": \"string\",\n      \"description\": \"Country. If not specified by the user, get the value from the getLocation tool.\"\n    },\n    \"ctl00_body_ddlProvince\": {\n      \"type\": \"string\",\n      \"description\": \"Province or state. Use user-provided input or default to the value from the getLocation tool.\"\n    },\n    \"ctl00_body_ddlDistrict\": {\n      \"type\": \"string\",\n      \"description\": \"District. Use input from the user or fallback to data from the getLocation tool.\"\n    },\n    \"ctl00_body_cboTimeZone\": {\n      \"type\": \"string\",\n      \"description\": \"Time zone. Use the user-entered value or populate from the getLocation tool if blank.\"\n    },\n    \"ctl00_body_txtHeadName\": {\n      \"type\": \"string\",\n      \"description\": \"Head of location name. Use user-provided value or fetch from the getLocation tool.\"\n    },\n    \"ctl00_body_txtHTitle\": {\n      \"type\": \"string\",\n      \"description\": \"Head's title or designation. If not provided by the user, get it from the getLocation tool.\"\n    },\n    \"ctl00_body_txtAdminName\": {\n      \"type\": \"string\",\n      \"description\": \"Administrator name. Use input from the user or fetch from the getLocation tool.\"\n    },\n    \"ctl00_body_filMyFile\": {\n      \"type\": \"string\",\n      \"contentEncoding\": \"base64\",\n      \"title\": \"Logo File (Binary Base64)\",\n      \"description\": \"Base64-encoded logo file to be uploaded. Optional input.\"\n    },\n    \"ctl00_body_butSave\": {\n      \"type\": \"string\",\n      \"enum\": [\"Save\"],\n      \"description\": \"Trigger to save the form. Should always be set to 'Save'.\"\n    },\n    \"ctl00_body_hdnDefCountry\": {\n      \"type\": \"string\",\n      \"description\": \"Default country code or name. If not provided, populate from the getLocation tool.\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_ddlCountry\",\n    \"ctl00_body_ddlProvince\",\n    \"ctl00_body_ddlDistrict\"\n  ]\n}",
+        "_id": "680b75d52e0d16f352060a68"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Location.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const details = await BeaconBar.executeFunction('getApiList')(\"Location\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const initialFormData = new FormData();\n  initialFormData.append(\"scrollLeft\", \"0\");\n  initialFormData.append(\"scrollTop\", \"0\");\n  initialFormData.append(\"__EVENTTARGET\", \"\");\n  initialFormData.append(\"__EVENTARGUMENT\", \"\");\n  initialFormData.append(\"__VIEWSTATE\", details.viewState);\n  initialFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  initialFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  initialFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n  initialFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  initialFormData.append(\"ctl00$body$hdnIsHead\", \"\");\n  initialFormData.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n  initialFormData.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  initialFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"LOC_CODE\");\n  initialFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  initialFormData.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  initialFormData.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  initialFormData.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  initialFormData.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  initialFormData.append(\"ctl00_body_grdSummary_ClientState\", \"\");\n  initialFormData.append(\"ctl00$body$butNew\", \"New\");\n  initialFormData.append(\"ctl00$body$hdnDefCountry\", \"-1\");\n\n  const fetchEditResponse = await fetch(`${location.origin}/${reqOptions.sl}/EIM/Location.aspx`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: initialFormData,\n    redirect: \"follow\"\n  });\n\n  const html = await fetchEditResponse.text();\n  const countryDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html);\n  window.viewState = countryDetails;\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(html, 'text/html');\n\n  function extractOptions(selectId) {\n    const select = document.getElementById(selectId);\n    if (!select) return [];\n    return Array.from(select.options).map(option => ({\n      value: option.value,\n      label: option.text.trim()\n    }));\n  }\n\n  const countries = extractOptions(\"ctl00_body_ddlCountry\");\n\n  // const FuseJS = await BeaconBar.executeFunction(\"getTool\")(\"fuse\");\n  // const countryFuse = new FuseJS(countries, {\n  //   keys: ['label'],\n  //   threshold: 0.1\n  // });\n  // const countryCode = countryFuse.search(args.countryName).map(({ item }) => item).slice(0, 5);\n\n\n  // const provinceCode = await BeaconBar.executeFunction(\"getProvinceCode\")(countryCode[0].value);\n\n  // const provinceFuse = new FuseJS(provinceCode, {\n  //   keys: ['label'],\n  //   threshold: 0.1\n  // });\n  // const provinceCode = provinceFuse.search(args.provinceName).map(({ item }) => item).slice(0, 5);\n\n  // const districtCode = await BeaconBar.executeFunction(\"getDistrictCode\")(countryCode[0].value, args.provinceValue);\n\n  // return {\n  //   countryCode,\n  //   provinceCode,\n  //   districtCode\n  // };\n  return countries;\n})\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Select Location Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-25T11:45:25.319Z",
+      "updatedAt": "2026-05-15T07:13:42.749Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getSelectLocationDetails",
+      "args": [
+        {
+          "name": "countryName",
+          "type": "string",
+          "description": "to get country name for user prompt.",
+          "required": true,
+          "_id": "680b8de1851c8da9149a32c4"
+        },
+        {
+          "name": "provinceValue",
+          "type": "string",
+          "description": "to get provinceValue for list province names to select one province name to corresponding value you take.",
+          "required": true,
+          "_id": "680b994b95acec8cf7225478"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"title\": \"LocationFormData\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"Location name. If the user provides a value, use that. Otherwise, fetch from the getLocation tool and populate this field.\"\n    },\n    \"ctl00_body_txtAbbreviation\": {\n      \"type\": \"string\",\n      \"description\": \"Location abbreviation. Use user input if available, otherwise retrieve from the getLocation tool.\"\n    },\n    \"ctl00_body_txttp\": {\n      \"type\": \"string\",\n      \"description\": \"Telephone number. Use user-provided input or fetch it from the getLocation tool if not provided.\"\n    },\n    \"ctl00_body_txtFax\": {\n      \"type\": \"string\",\n      \"description\": \"Fax number. Use the user-entered value or retrieve it from the getLocation tool if not provided.\"\n    },\n    \"ctl00_body_txtemail\": {\n      \"type\": \"string\",\n      \"format\": \"email\",\n      \"description\": \"Email address. Use user input or fetch from the getLocation tool if left blank.\"\n    },\n    \"ctl00_body_txturl\": {\n      \"type\": \"string\",\n      \"format\": \"uri\",\n      \"description\": \"Website URL. Populate with user input or use data from the getLocation tool if empty.\"\n    },\n    \"ctl00_body_txtaddress\": {\n      \"type\": \"string\",\n      \"description\": \"Address. Use the provided value or retrieve from the getLocation tool if not entered.\"\n    },\n    \"ctl00_body_ddlCountry\": {\n      \"type\": \"string\",\n      \"description\": \"Country. If not specified by the user, get the value from the getLocation tool.\"\n    },\n    \"ctl00_body_ddlProvince\": {\n      \"type\": \"string\",\n      \"description\": \"Province or state. Use user-provided input or default to the value from the getLocation tool.\"\n    },\n    \"ctl00_body_ddlDistrict\": {\n      \"type\": \"string\",\n      \"description\": \"District. Use input from the user or fallback to data from the getLocation tool.\"\n    },\n    \"ctl00_body_cboTimeZone\": {\n      \"type\": \"string\",\n      \"description\": \"Time zone. Use the user-entered value or populate from the getLocation tool if blank.\"\n    },\n    \"ctl00_body_txtHeadName\": {\n      \"type\": \"string\",\n      \"description\": \"Head of location name. Use user-provided value or fetch from the getLocation tool.\"\n    },\n    \"ctl00_body_txtHTitle\": {\n      \"type\": \"string\",\n      \"description\": \"Head's title or designation. If not provided by the user, get it from the getLocation tool.\"\n    },\n    \"ctl00_body_txtAdminName\": {\n      \"type\": \"string\",\n      \"description\": \"Administrator name. Use input from the user or fetch from the getLocation tool.\"\n    },\n    \"ctl00_body_filMyFile\": {\n      \"type\": \"string\",\n      \"contentEncoding\": \"base64\",\n      \"title\": \"Logo File (Binary Base64)\",\n      \"description\": \"Base64-encoded logo file to be uploaded. Optional input.\"\n    },\n    \"ctl00_body_butSave\": {\n      \"type\": \"string\",\n      \"enum\": [\"Save\"],\n      \"description\": \"Trigger to save the form. Should always be set to 'Save'.\"\n    },\n    \"ctl00_body_hdnDefCountry\": {\n      \"type\": \"string\",\n      \"description\": \"Default country code or name. If not provided, populate from the getLocation tool.\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_ddlCountry\",\n    \"ctl00_body_ddlProvince\",\n    \"ctl00_body_ddlDistrict\"\n  ]\n}",
+      "_id": "680b75d52e0d16f352060a68"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Location.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const details = await BeaconBar.executeFunction('getApiList')(\"Location\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const initialFormData = new FormData();\n  initialFormData.append(\"scrollLeft\", \"0\");\n  initialFormData.append(\"scrollTop\", \"0\");\n  initialFormData.append(\"__EVENTTARGET\", \"\");\n  initialFormData.append(\"__EVENTARGUMENT\", \"\");\n  initialFormData.append(\"__VIEWSTATE\", details.viewState);\n  initialFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  initialFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  initialFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n  initialFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  initialFormData.append(\"ctl00$body$hdnIsHead\", \"\");\n  initialFormData.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n  initialFormData.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  initialFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"LOC_CODE\");\n  initialFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  initialFormData.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  initialFormData.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  initialFormData.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  initialFormData.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  initialFormData.append(\"ctl00_body_grdSummary_ClientState\", \"\");\n  initialFormData.append(\"ctl00$body$butNew\", \"New\");\n  initialFormData.append(\"ctl00$body$hdnDefCountry\", \"-1\");\n\n  const fetchEditResponse = await fetch(`${location.origin}/${reqOptions.sl}/EIM/Location.aspx`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: initialFormData,\n    redirect: \"follow\"\n  });\n\n  const html = await fetchEditResponse.text();\n  const countryDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html);\n  window.viewState = countryDetails;\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(html, 'text/html');\n\n  function extractOptions(selectId) {\n    const select = document.getElementById(selectId);\n    if (!select) return [];\n    return Array.from(select.options).map(option => ({\n      value: option.value,\n      label: option.text.trim()\n    }));\n  }\n\n  const countries = extractOptions(\"ctl00_body_ddlCountry\");\n\n  // const FuseJS = await BeaconBar.executeFunction(\"getTool\")(\"fuse\");\n  // const countryFuse = new FuseJS(countries, {\n  //   keys: ['label'],\n  //   threshold: 0.1\n  // });\n  // const countryCode = countryFuse.search(args.countryName).map(({ item }) => item).slice(0, 5);\n\n\n  // const provinceCode = await BeaconBar.executeFunction(\"getProvinceCode\")(countryCode[0].value);\n\n  // const provinceFuse = new FuseJS(provinceCode, {\n  //   keys: ['label'],\n  //   threshold: 0.1\n  // });\n  // const provinceCode = provinceFuse.search(args.provinceName).map(({ item }) => item).slice(0, 5);\n\n  // const districtCode = await BeaconBar.executeFunction(\"getDistrictCode\")(countryCode[0].value, args.provinceValue);\n\n  // return {\n  //   countryCode,\n  //   provinceCode,\n  //   districtCode\n  // };\n  return countries;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

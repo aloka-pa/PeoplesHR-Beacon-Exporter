@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "countryCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "the country code to search for",
+      "advanced": false,
+      "raw": {
+        "name": "countryCode",
+        "type": "string",
+        "description": "the country code to search for",
+        "required": false,
+        "_id": "69521688c933be4dd2b33c48"
+      }
+    },
+    {
+      "name": "countryName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "updated country name",
+      "advanced": false,
+      "raw": {
+        "name": "countryName",
+        "type": "string",
+        "description": "updated country name",
+        "required": false,
+        "_id": "69521688c933be4dd2b33c49"
+      }
+    },
+    {
+      "name": "isBase",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Updated base country flag (\"true\"/\"false\" or \"yes\"/\"no\")",
+      "advanced": false,
+      "raw": {
+        "name": "isBase",
+        "type": "string",
+        "description": "Updated base country flag (\"true\"/\"false\" or \"yes\"/\"no\")",
+        "required": false,
+        "_id": "69521688c933be4dd2b33c4a"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

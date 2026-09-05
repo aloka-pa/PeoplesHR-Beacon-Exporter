@@ -1,0 +1,75 @@
+{
+  "id": "690dc566931a2d61ba0b16c4",
+  "slug": "graceperiodandroundingpatterndetails",
+  "name": "gracePeriodandRoundingPatternDetails",
+  "description": "This tool is used to generate Grace Period and Rounding Pattern details. in this tool return rounding patterns and previous grace period.",
+  "instructions": null,
+  "taskName": "Grace Period and Rounding PatternDetails",
+  "tags": [
+    "Attendance",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "gracePeriodandRoundingPatternDetails",
+  "createdAt": "2025-05-08T13:36:25.574Z",
+  "updatedAt": "2025-05-08T13:36:25.574Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "579b8c8ed2adcfafb4ec681134216e35db936beaadfdfe529faab20e5b0c850b",
+  "lastExportedAt": "2026-09-05T19:39:24.068Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b16c4",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "gracePeriodandRoundingPatternDetails",
+      "description": "This tool is used to generate Grace Period and Rounding Pattern details. in this tool return rounding patterns and previous grace period.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "gracePeriodandRoundingPatternDetails",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "681cb3598f757518367404aa"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"TNA/GracePeriodInformation.aspx\")) {\n      return \"It seems you don't have access. Please check with the HR Admin\";\n    }\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('TNA/GracePeriodInformation.aspx');\n\n  let details;\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n    details = await BeaconBar.executeFunction('getmodule')(url);\n  } else {\n    url = \"TNA/GracePeriodInformation\"\n    details = await BeaconBar.executeFunction('getmodule')(`${reqOptions.sl}/TNA/GracePeriodInformation`);\n  }\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(details.rawData, 'text/html');\n\n  const maxval = doc.querySelector(\"#ctl00_action_maxLateVal\").value || \"240.00\"\n  window.maxval = maxval;\n  const response = await BeaconBar.executeFunction('module')({\n    \"ctl00$main$RadScriptManager\": \"ctl00$action$UpdatePanel2|ctl00$action$ButtonPanel$butNew$imgbtnSave\",\n    \"ctl00_main_RadScriptManager_HiddenField\": \"\",\n    \"__EVENTTARGET\": \"\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": details.viewState,\n    \"__VIEWSTATEGENERATOR\": details.viewStateGen,\n    \"__SCROLLPOSITIONX\": \"0\",\n    \"__SCROLLPOSITIONY\": \"0\",\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": details.eventValidation,\n    \"ctl00$body$GraceGrid$ctl00$ctl02$ctl02$FilterTextBox_Code_Col\": \"\",\n    \"ctl00$body$GraceGrid$ctl00$ctl02$ctl02$FilterTextBox_Name_Col\": \"\",\n    \"ctl00$body$GraceGrid$ctl00$ctl02$ctl02$FilterTextBox_Rounding_Col\": \"\",\n    \"ctl00$body$GraceGrid$ctl00$ctl02$ctl02$FilterTextBox_Durataion_Col\": \"\",\n    \"ctl00$body$GraceGrid$ctl00$ctl02$ctl02$FilterTextBox_Pre_Grace_Col\": \"\",\n    \"ctl00$body$GraceGrid$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_GraceGrid_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$GraceGrid$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"3\",\n    \"ctl00_body_GraceGrid_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00$body$GraceGrid$ctl00$ctl04$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$GraceGrid$ctl00$ctl04$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$GraceGrid$ctl00$ctl06$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$GraceGrid$ctl00$ctl06$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$GraceGrid$ctl00$ctl08$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$GraceGrid$ctl00$ctl08$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00_body_grdsummary_rfltMenu_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\",\n    \"ctl00$body$tpTest2$txtTime\": \"\",\n    \"ctl00$action$ButtonPanel$butNew$isControlEnabled\": \"True\",\n    \"ctl00$action$maxLateVal\": maxval,\n    \"ctl00$hdnCulturDateFormat\": \"M/d/yyyy\",\n    \"__ASYNCPOST\": \"true\",\n    \"ctl00$action$ButtonPanel$butNew$imgbtnSave\": \"New\"\n  }, `${reqOptions.sl}/${url}`);\n\n  const viewStateRegex = /\\|hiddenField\\|__VIEWSTATE\\|([^|]*)/;\n  const viewStateGeneratorRegex = /\\|hiddenField\\|__VIEWSTATEGENERATOR\\|([^|]*)/;\n  const eventValidationRegex = /\\|hiddenField\\|__EVENTVALIDATION\\|([^|]*)/;\n\n  const viewStateMatch = response.rawData.match(viewStateRegex);\n  const viewStateGeneratorMatch = response.rawData.match(viewStateGeneratorRegex);\n  const eventValidationMatch = response.rawData.match(eventValidationRegex);\n\n  const viewdetails = {\n    viewState: viewStateMatch ? viewStateMatch[1] : null,\n    viewStateGen: viewStateGeneratorMatch ? viewStateGeneratorMatch[1] : null,\n    eventValidation: eventValidationMatch ? eventValidationMatch[1] : null\n  };\n\n  window.gp = viewdetails;\n\n  const document = parser.parseFromString(response.rawData, 'text/html');\n\n  const roundingPatternOptions = Array.from(document.querySelectorAll(\"#ctl00_body_cmdRoundings option\")).map(option => ({\n    value: option.value.trim(),\n    text: option.textContent.trim()\n  }));\n\n  const previousGracePeriodOptions = Array.from(document.querySelectorAll(\"#ctl00_body_cmbPreviousGrace option\")).map(option => ({\n    value: option.value.trim(),\n    text: option.textContent.trim()\n  }));\n\n  return {\n    RoundingPatternOptions: roundingPatternOptions,\n    PreviousGracePeriodOptions: previousGracePeriodOptions\n  };\n});\n",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "Headers"
+      ],
+      "taskName": "Grace Period and Rounding PatternDetails",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-08T13:36:25.574Z",
+      "updatedAt": "2025-05-08T13:36:25.574Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "gracePeriodandRoundingPatternDetails",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "681cb3598f757518367404aa"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"TNA/GracePeriodInformation.aspx\")) {\n      return \"It seems you don't have access. Please check with the HR Admin\";\n    }\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('TNA/GracePeriodInformation.aspx');\n\n  let details;\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n    details = await BeaconBar.executeFunction('getmodule')(url);\n  } else {\n    url = \"TNA/GracePeriodInformation\"\n    details = await BeaconBar.executeFunction('getmodule')(`${reqOptions.sl}/TNA/GracePeriodInformation`);\n  }\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(details.rawData, 'text/html');\n\n  const maxval = doc.querySelector(\"#ctl00_action_maxLateVal\").value || \"240.00\"\n  window.maxval = maxval;\n  const response = await BeaconBar.executeFunction('module')({\n    \"ctl00$main$RadScriptManager\": \"ctl00$action$UpdatePanel2|ctl00$action$ButtonPanel$butNew$imgbtnSave\",\n    \"ctl00_main_RadScriptManager_HiddenField\": \"\",\n    \"__EVENTTARGET\": \"\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": details.viewState,\n    \"__VIEWSTATEGENERATOR\": details.viewStateGen,\n    \"__SCROLLPOSITIONX\": \"0\",\n    \"__SCROLLPOSITIONY\": \"0\",\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": details.eventValidation,\n    \"ctl00$body$GraceGrid$ctl00$ctl02$ctl02$FilterTextBox_Code_Col\": \"\",\n    \"ctl00$body$GraceGrid$ctl00$ctl02$ctl02$FilterTextBox_Name_Col\": \"\",\n    \"ctl00$body$GraceGrid$ctl00$ctl02$ctl02$FilterTextBox_Rounding_Col\": \"\",\n    \"ctl00$body$GraceGrid$ctl00$ctl02$ctl02$FilterTextBox_Durataion_Col\": \"\",\n    \"ctl00$body$GraceGrid$ctl00$ctl02$ctl02$FilterTextBox_Pre_Grace_Col\": \"\",\n    \"ctl00$body$GraceGrid$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_GraceGrid_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$GraceGrid$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"3\",\n    \"ctl00_body_GraceGrid_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00$body$GraceGrid$ctl00$ctl04$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$GraceGrid$ctl00$ctl04$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$GraceGrid$ctl00$ctl06$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$GraceGrid$ctl00$ctl06$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$GraceGrid$ctl00$ctl08$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$GraceGrid$ctl00$ctl08$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00_body_grdsummary_rfltMenu_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\",\n    \"ctl00$body$tpTest2$txtTime\": \"\",\n    \"ctl00$action$ButtonPanel$butNew$isControlEnabled\": \"True\",\n    \"ctl00$action$maxLateVal\": maxval,\n    \"ctl00$hdnCulturDateFormat\": \"M/d/yyyy\",\n    \"__ASYNCPOST\": \"true\",\n    \"ctl00$action$ButtonPanel$butNew$imgbtnSave\": \"New\"\n  }, `${reqOptions.sl}/${url}`);\n\n  const viewStateRegex = /\\|hiddenField\\|__VIEWSTATE\\|([^|]*)/;\n  const viewStateGeneratorRegex = /\\|hiddenField\\|__VIEWSTATEGENERATOR\\|([^|]*)/;\n  const eventValidationRegex = /\\|hiddenField\\|__EVENTVALIDATION\\|([^|]*)/;\n\n  const viewStateMatch = response.rawData.match(viewStateRegex);\n  const viewStateGeneratorMatch = response.rawData.match(viewStateGeneratorRegex);\n  const eventValidationMatch = response.rawData.match(eventValidationRegex);\n\n  const viewdetails = {\n    viewState: viewStateMatch ? viewStateMatch[1] : null,\n    viewStateGen: viewStateGeneratorMatch ? viewStateGeneratorMatch[1] : null,\n    eventValidation: eventValidationMatch ? eventValidationMatch[1] : null\n  };\n\n  window.gp = viewdetails;\n\n  const document = parser.parseFromString(response.rawData, 'text/html');\n\n  const roundingPatternOptions = Array.from(document.querySelectorAll(\"#ctl00_body_cmdRoundings option\")).map(option => ({\n    value: option.value.trim(),\n    text: option.textContent.trim()\n  }));\n\n  const previousGracePeriodOptions = Array.from(document.querySelectorAll(\"#ctl00_body_cmbPreviousGrace option\")).map(option => ({\n    value: option.value.trim(),\n    text: option.textContent.trim()\n  }));\n\n  return {\n    RoundingPatternOptions: roundingPatternOptions,\n    PreviousGracePeriodOptions: previousGracePeriodOptions\n  };\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

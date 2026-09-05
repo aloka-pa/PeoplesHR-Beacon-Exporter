@@ -1,0 +1,103 @@
+{
+  "id": "6a4f562183026e3d233dd849",
+  "slug": "errorhandlingtool",
+  "name": "errorHandlingTool",
+  "description": "This tool is used when the user's query does not match any of the existing sub-agents. In such cases, this tool must be called, and its response should be returned directly to the end user — with no further follow-up questions asked. This tool is directly mapped to the MAO agent.",
+  "instructions": null,
+  "taskName": "errorHandlingTool",
+  "tags": [
+    "errorHandlingTool"
+  ],
+  "status": "live",
+  "signature": "errorHandlingTool",
+  "createdAt": "2026-07-09T08:04:49.649Z",
+  "updatedAt": "2026-07-09T08:04:49.649Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    },
+    {
+      "id": "6a4f55bb83026e3d233dceb1",
+      "name": "errorHandlingAgent"
+    }
+  ],
+  "contentHash": "3613c995091d963f5d3cdc0f6c300a2d1cf01ea35f52c74990c0fbec440a2352",
+  "lastExportedAt": "2026-09-05T19:39:22.256Z",
+  "raw": {
+    "basic": {
+      "_id": "6a4f562183026e3d233dd849",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "errorHandlingTool",
+      "description": "This tool is used when the user's query does not match any of the existing sub-agents. In such cases, this tool must be called, and its response should be returned directly to the end user — with no further follow-up questions asked. This tool is directly mapped to the MAO agent.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "errorHandlingTool",
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6a4f562183026e3d233dd84a",
+        "args": []
+      },
+      "by": "7854",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return []\n      })`\n  };\n})",
+      "transformer": "(function(data, args, reqOptions) {\n  return \"Analyze the user's query. If it does not match any existing sub-agent, return the message 'Out Of Scope' and do not ask the end user any further follow-up questions.\";\n})",
+      "groupName": "",
+      "tags": [
+        "errorHandlingTool"
+      ],
+      "taskName": "errorHandlingTool",
+      "etl": false,
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "toolType": "code",
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "status": "live",
+      "isFromKG": false,
+      "branch": {
+        "id": null,
+        "sourceId": null,
+        "sourceVersion": null,
+        "discardedByConflictResolution": false
+      },
+      "sanity": {
+        "apiResponse": []
+      },
+      "createdAt": "2026-07-09T08:04:49.649Z",
+      "updatedAt": "2026-07-09T08:04:49.649Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        },
+        {
+          "_id": "6a4f55bb83026e3d233dceb1",
+          "name": "errorHandlingAgent"
+        }
+      ],
+      "agentCount": 2
+    },
+    "arguments": {
+      "name": "errorHandlingTool",
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6a4f562183026e3d233dd84a",
+      "args": []
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return []\n      })`\n  };\n})",
+    "transformer": "(function(data, args, reqOptions) {\n  return \"Analyze the user's query. If it does not match any existing sub-agent, return the message 'Out Of Scope' and do not ask the end user any further follow-up questions.\";\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

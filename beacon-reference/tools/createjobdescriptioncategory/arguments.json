@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "jobDescriptionCategoryName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to create a job Description Category first give the Description Category Name then will be create.",
+      "advanced": false,
+      "raw": {
+        "name": "jobDescriptionCategoryName",
+        "type": "string",
+        "description": "to create a job Description Category first give the Description Category Name then will be create.",
+        "required": true,
+        "_id": "6811a6ac8f0c9af526c40729"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,140 @@
+{
+  "arguments": [
+    {
+      "name": "nameGivenToTheBank",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "If the user updates the nameGivenToTheBank field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.",
+      "advanced": false,
+      "raw": {
+        "name": "nameGivenToTheBank",
+        "type": "string",
+        "description": "If the user updates the nameGivenToTheBank field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.",
+        "required": true,
+        "_id": "68b031276539bc13a5f1d232"
+      }
+    },
+    {
+      "name": "currenCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "If the user updates the currency name corresponding code will be take field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. Ex:-\"000082\"",
+      "advanced": false,
+      "raw": {
+        "name": "currenCode",
+        "type": "string",
+        "description": "If the user updates the currency name corresponding code will be take field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. Ex:-\"000082\"",
+        "required": true,
+        "_id": "68b031276539bc13a5f1d233"
+      }
+    },
+    {
+      "name": "accountTypeName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "If the user updates the account TypeName field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.",
+      "advanced": false,
+      "raw": {
+        "name": "accountTypeName",
+        "type": "string",
+        "description": "If the user updates the account TypeName field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.",
+        "required": true,
+        "_id": "68b031276539bc13a5f1d234"
+      }
+    },
+    {
+      "name": "accountTypeCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "If the user updates the account type name corresponding code will be take field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. Ex:-\"0\"",
+      "advanced": false,
+      "raw": {
+        "name": "accountTypeCode",
+        "type": "string",
+        "description": "If the user updates the account type name corresponding code will be take field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. Ex:-\"0\"",
+        "required": true,
+        "_id": "68b031276539bc13a5f1d235"
+      }
+    },
+    {
+      "name": "comments",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "If the user updates the comments or remarks field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. in the field is optional.",
+      "advanced": false,
+      "raw": {
+        "name": "comments",
+        "type": "string",
+        "description": "If the user updates the comments or remarks field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. in the field is optional.",
+        "required": true,
+        "_id": "68b031276539bc13a5f1d236"
+      }
+    },
+    {
+      "name": "amountOrPercentage",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "If the user updates the Amount Or Percentage field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. if the user change amount to percentage below 100 amount provide.",
+      "advanced": false,
+      "raw": {
+        "name": "amountOrPercentage",
+        "type": "string",
+        "description": "If the user updates the Amount Or Percentage field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. if the user change amount to percentage below 100 amount provide.",
+        "required": true,
+        "_id": "68b031276539bc13a5f1d237"
+      }
+    },
+    {
+      "name": "order",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "before api response check if the same order dont accept, user consent order number will be change.",
+      "advanced": false,
+      "raw": {
+        "name": "order",
+        "type": "string",
+        "description": "before api response check if the same order dont accept, user consent order number will be change.",
+        "required": true,
+        "_id": "68b031276539bc13a5f1d238"
+      }
+    },
+    {
+      "name": "startDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "If the user updates the startDate field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.before update the date first execute date format api, use response date format.",
+      "advanced": false,
+      "raw": {
+        "name": "startDate",
+        "type": "string",
+        "description": "If the user updates the startDate field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.before update the date first execute date format api, use response date format.",
+        "required": true,
+        "_id": "68b031276539bc13a5f1d239"
+      }
+    },
+    {
+      "name": "endDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "If the user updates the endDate field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.before update the date first execute date format api, use response date format.",
+      "advanced": false,
+      "raw": {
+        "name": "endDate",
+        "type": "string",
+        "description": "If the user updates the endDate field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.before update the date first execute date format api, use response date format.",
+        "required": true,
+        "_id": "68b031276539bc13a5f1d23a"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

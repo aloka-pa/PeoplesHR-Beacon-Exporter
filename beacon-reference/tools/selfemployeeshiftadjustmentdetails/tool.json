@@ -1,0 +1,110 @@
+{
+  "id": "690dc56b931a2d61ba0b1aea",
+  "slug": "selfemployeeshiftadjustmentdetails",
+  "name": "selfEmployeeShiftAdjustmentDetails",
+  "description": "Before execute the Shift Adjustment In and Out Details\n - do not execute datFormat api, data format using example format \"2025-05-30\" format date \"YYYY-MM-DD\".  self employee shift adjustment my, my self etc.\n",
+  "instructions": null,
+  "taskName": "Fetching The Self Employee Shift Adjustment Details",
+  "tags": [
+    "Attendance",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "selfEmployeeShiftAdjustmentDetails",
+  "createdAt": "2025-08-20T10:42:55.207Z",
+  "updatedAt": "2025-11-10T12:12:05.424Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "fd0c11cb8c2404f0eb3e83eacfa49641da85aea222ce9fdd091575bcb469b014",
+  "lastExportedAt": "2026-09-05T19:39:23.364Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1aea",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selfEmployeeShiftAdjustmentDetails",
+      "description": "Before execute the Shift Adjustment In and Out Details\n - do not execute datFormat api, data format using example format \"2025-05-30\" format date \"YYYY-MM-DD\".  self employee shift adjustment my, my self etc.\n",
+      "rules": {
+        "ids": [
+          "690dc4b5931a2d61ba0a8085"
+        ],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selfEmployeeShiftAdjustmentDetails",
+        "args": [
+          {
+            "name": "fromDate",
+            "type": "string",
+            "description": "to give the fromDate Example:-\"2025-05-30\" format date \"YYYY-MM-DD\" in the date format must be use.",
+            "required": true,
+            "_id": "68a5a6afaf0a573cb299b80e"
+          },
+          {
+            "name": "toDate",
+            "type": "string",
+            "description": "to give the toDate Example:-\"2025-05-30\" format date \"YYYY-MM-DD\" in the date format must be use.",
+            "required": true,
+            "_id": "68a5a6afaf0a573cb299b80f"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68a5a6afaf0a573cb299b80d"
+      },
+      "by": "7337",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"TNAVUE/app/ShiftAdjustment/?mvc=1&self=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const empNumber = await BeaconBar.executeFunction(\"selfEmployeeShiftAdjustmentDetails\")();\n\n  const rawPayload = {\n    FromDate: args.fromDate,\n    ToDate: args.toDate,\n    IsGroupByEmployee: false,\n    FilterMode: \"1\",\n    EmpNumber: empNumber,\n    RosterCode: \"\",\n    EmpNumberList: \"\",\n    // IsClientUoc: false,\n    SearchKey: \"\",\n    PageSize: 10,\n    PageIndex: 1\n  };\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      \"accept\": \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/${reqOptions.sl}/tnavue/service/api/ShiftData/GetShiftAdjustmentGridData`,\n    requestOptions1\n  );\n\n  const details1 = await response2.json();\n  const rgpId = details1.EmpShiftDetailList?.[0]?.RGPId || \"\";\n\n  const rawPayload1 = {\n    RgpId: rgpId,\n    PageIndex: 1,\n    PageSize: 10,\n    SearchString: \"\"\n  };\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: {\n      \"accept\": \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify(rawPayload1),\n    redirect: \"follow\"\n  };\n\n  const response3 = await fetch(\n    `${location.origin}/${reqOptions.sl}/tnavue/service/api/ShiftData/GetShiftDataByRosterGroup`,\n    requestOptions2\n  );\n\n  const data1 = await response3.json();\n\n  const schedulingModes = Array.isArray(data1)\n    ? data1.map((shift) => {\n      const duration = (shift.OutTime >= shift.InTime)\n        ? shift.OutTime - shift.InTime\n        : (24 - shift.InTime) + shift.OutTime;\n\n      return {\n        ShiftCode: shift.ShiftCode,\n        ShiftName: shift.ShiftName,\n        ShiftType: shift.IsFlexyShift ? \"Flexible\" : \"Fixed\",\n        InTime: shift.InTime,\n        OutTime: shift.OutTime,\n        DurationHours: duration\n      };\n    })\n    : [];\n\n  return {\n    gridDataColumns: details1.GridDateColumnList,\n    schedulingModes\n  };\n});\n",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "Headers"
+      ],
+      "taskName": "Fetching The Self Employee Shift Adjustment Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-20T10:42:55.207Z",
+      "updatedAt": "2025-11-10T12:12:05.424Z",
+      "__v": 2,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selfEmployeeShiftAdjustmentDetails",
+      "args": [
+        {
+          "name": "fromDate",
+          "type": "string",
+          "description": "to give the fromDate Example:-\"2025-05-30\" format date \"YYYY-MM-DD\" in the date format must be use.",
+          "required": true,
+          "_id": "68a5a6afaf0a573cb299b80e"
+        },
+        {
+          "name": "toDate",
+          "type": "string",
+          "description": "to give the toDate Example:-\"2025-05-30\" format date \"YYYY-MM-DD\" in the date format must be use.",
+          "required": true,
+          "_id": "68a5a6afaf0a573cb299b80f"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68a5a6afaf0a573cb299b80d"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"TNAVUE/app/ShiftAdjustment/?mvc=1&self=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const empNumber = await BeaconBar.executeFunction(\"selfEmployeeShiftAdjustmentDetails\")();\n\n  const rawPayload = {\n    FromDate: args.fromDate,\n    ToDate: args.toDate,\n    IsGroupByEmployee: false,\n    FilterMode: \"1\",\n    EmpNumber: empNumber,\n    RosterCode: \"\",\n    EmpNumberList: \"\",\n    // IsClientUoc: false,\n    SearchKey: \"\",\n    PageSize: 10,\n    PageIndex: 1\n  };\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      \"accept\": \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/${reqOptions.sl}/tnavue/service/api/ShiftData/GetShiftAdjustmentGridData`,\n    requestOptions1\n  );\n\n  const details1 = await response2.json();\n  const rgpId = details1.EmpShiftDetailList?.[0]?.RGPId || \"\";\n\n  const rawPayload1 = {\n    RgpId: rgpId,\n    PageIndex: 1,\n    PageSize: 10,\n    SearchString: \"\"\n  };\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: {\n      \"accept\": \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify(rawPayload1),\n    redirect: \"follow\"\n  };\n\n  const response3 = await fetch(\n    `${location.origin}/${reqOptions.sl}/tnavue/service/api/ShiftData/GetShiftDataByRosterGroup`,\n    requestOptions2\n  );\n\n  const data1 = await response3.json();\n\n  const schedulingModes = Array.isArray(data1)\n    ? data1.map((shift) => {\n      const duration = (shift.OutTime >= shift.InTime)\n        ? shift.OutTime - shift.InTime\n        : (24 - shift.InTime) + shift.OutTime;\n\n      return {\n        ShiftCode: shift.ShiftCode,\n        ShiftName: shift.ShiftName,\n        ShiftType: shift.IsFlexyShift ? \"Flexible\" : \"Fixed\",\n        InTime: shift.InTime,\n        OutTime: shift.OutTime,\n        DurationHours: duration\n      };\n    })\n    : [];\n\n  return {\n    gridDataColumns: details1.GridDateColumnList,\n    schedulingModes\n  };\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

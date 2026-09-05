@@ -1,0 +1,80 @@
+{
+  "id": "690dc56b931a2d61ba0b1b1b",
+  "slug": "selfemployeeeducationalandqualificationdetails",
+  "name": "selfEmployeeEducationalAndQualificationDetails",
+  "description": "to generate the self employee educational and qualification details",
+  "instructions": null,
+  "taskName": "Fetching The Self Employee Educational And Qualification Details",
+  "tags": [
+    "Employee Information",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "selfEmployeeEducationalAndQualificationDetails",
+  "createdAt": "2025-08-26T10:37:13.958Z",
+  "updatedAt": "2025-11-10T12:12:32.998Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "184dba330e9fe6860794016501db37415e01fb50501935785563c10c762c9f30",
+  "lastExportedAt": "2026-09-05T19:39:23.357Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1b1b",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selfEmployeeEducationalAndQualificationDetails",
+      "description": "to generate the self employee educational and qualification details",
+      "rules": {
+        "ids": [
+          "690dc4b5931a2d61ba0a8085"
+        ],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selfEmployeeEducationalAndQualificationDetails",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68ad8e5978760c7f6c221586"
+      },
+      "by": "7337",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return []\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const url = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIMV9/Qualification/Qualification?mvc=1&subordinate=0\")\n  const digest = await BeaconBar.executeFunction('getDigest')(url.updateParams);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${url.updateUrl}&digest=${digest.digest}&_=${Date.now()}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n  const details = await response.text();\n  const match = details.match(/var\\s+modelQualification\\s*=\\s*(\\{[\\s\\S]*?\\});/);\n  const educate = JSON.parse(match[1]);\n  window.educate = educate;\n  const originalData = educate.EmpQualObjList.map(item => ({\n\n    EmpNumber: item.EmpNumber,\n\n    // Flatten Qualification\n    QuliObj: {\n      QualificationCode: item.QuliObj?.QualificationCode ?? \"\",\n      QualificationName: item.QuliObj?.QualificationName ?? \"\"\n    },\n\n    // Flatten Type\n    TypeObj: {\n      QualTypeCode: item.TypeObj?.QualTypeCode ?? \"\",\n      QualTypeName: item.TypeObj?.QualTypeName ?? \"\"\n    },\n\n    // Flatten MBBS\n    MBBSObj: {\n      MBBSCode: item.MBBSObj?.MBBSCode ?? \"\",\n      MBBSName: item.MBBSObj?.MBBSName ?? \"\"\n    },\n\n    // Flatten Status\n    StatusObj: {\n      QualStatusCode: item.StatusObj?.QualStatusDescription ?? \"\",\n      QualStatusDescription: item.StatusObj?.QualStatusDescription ?? \"\"\n    },\n\n    // Carry over directly if present\n    Institute: item.Institute ?? \"\",\n    QualYear: item.QualYear ?? \"\",\n    Comment: item.Comment ?? \"\",\n    Distinction: item.Distinction ?? \"\",\n    MedleReword: item.MedleReword ?? \"\",\n    Sequence: item.Sequence ?? 0,\n    AdmissionDate: item.AdmissionDate ?? \"\",\n    EffectiveDate: item.EffectiveDate ?? \"\",\n    ActionType: item.ActionType ?? 0,\n    CourseMethod: item.CourseMethod ?? 0,\n    CourseType: item.CourseType ?? 0,\n    EmpSubjectList: item.EmpSubjectList ?? []\n  }));\n  window.payData = originalData;\n  return {\n    existingQualificationDetails: educate.EmpQualObjList,\n    statusDetails: educate.StatusObjList\n  }\n})",
+      "groupName": "",
+      "tags": [
+        "Employee Information",
+        "Headers"
+      ],
+      "taskName": "Fetching The Self Employee Educational And Qualification Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-26T10:37:13.958Z",
+      "updatedAt": "2025-11-10T12:12:32.998Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selfEmployeeEducationalAndQualificationDetails",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68ad8e5978760c7f6c221586"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return []\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const url = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIMV9/Qualification/Qualification?mvc=1&subordinate=0\")\n  const digest = await BeaconBar.executeFunction('getDigest')(url.updateParams);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${url.updateUrl}&digest=${digest.digest}&_=${Date.now()}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n  const details = await response.text();\n  const match = details.match(/var\\s+modelQualification\\s*=\\s*(\\{[\\s\\S]*?\\});/);\n  const educate = JSON.parse(match[1]);\n  window.educate = educate;\n  const originalData = educate.EmpQualObjList.map(item => ({\n\n    EmpNumber: item.EmpNumber,\n\n    // Flatten Qualification\n    QuliObj: {\n      QualificationCode: item.QuliObj?.QualificationCode ?? \"\",\n      QualificationName: item.QuliObj?.QualificationName ?? \"\"\n    },\n\n    // Flatten Type\n    TypeObj: {\n      QualTypeCode: item.TypeObj?.QualTypeCode ?? \"\",\n      QualTypeName: item.TypeObj?.QualTypeName ?? \"\"\n    },\n\n    // Flatten MBBS\n    MBBSObj: {\n      MBBSCode: item.MBBSObj?.MBBSCode ?? \"\",\n      MBBSName: item.MBBSObj?.MBBSName ?? \"\"\n    },\n\n    // Flatten Status\n    StatusObj: {\n      QualStatusCode: item.StatusObj?.QualStatusDescription ?? \"\",\n      QualStatusDescription: item.StatusObj?.QualStatusDescription ?? \"\"\n    },\n\n    // Carry over directly if present\n    Institute: item.Institute ?? \"\",\n    QualYear: item.QualYear ?? \"\",\n    Comment: item.Comment ?? \"\",\n    Distinction: item.Distinction ?? \"\",\n    MedleReword: item.MedleReword ?? \"\",\n    Sequence: item.Sequence ?? 0,\n    AdmissionDate: item.AdmissionDate ?? \"\",\n    EffectiveDate: item.EffectiveDate ?? \"\",\n    ActionType: item.ActionType ?? 0,\n    CourseMethod: item.CourseMethod ?? 0,\n    CourseType: item.CourseType ?? 0,\n    EmpSubjectList: item.EmpSubjectList ?? []\n  }));\n  window.payData = originalData;\n  return {\n    existingQualificationDetails: educate.EmpQualObjList,\n    statusDetails: educate.StatusObjList\n  }\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

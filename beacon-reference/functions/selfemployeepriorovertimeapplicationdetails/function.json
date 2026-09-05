@@ -1,0 +1,24 @@
+{
+  "id": "690dc58a931a2d61ba0b3137",
+  "slug": "selfemployeepriorovertimeapplicationdetails",
+  "name": "selfEmployeePriorOvertimeApplicationDetails",
+  "status": "live",
+  "createdAt": "2025-08-20T06:26:34.998Z",
+  "updatedAt": "2025-08-20T06:26:34.998Z",
+  "contentHash": "ae421cd26cb4dd7cebf171b8a0596c08dab9e3f9b03bb898044bdcb680d0f8a9",
+  "lastExportedAt": "2026-09-05T19:41:29.858Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58a931a2d61ba0b3137",
+    "name": "selfEmployeePriorOvertimeApplicationDetails",
+    "status": "live",
+    "code": "(async function () {\n    //done\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('TNAV9/PriorOT/PriorOT/2?mvc=1');\n    let url;\n\n    if (updateurl.updateUrl) {\n        url = updateurl.updateUrl\n    } else {\n        url = \"TNAV9/PriorOT/PriorOT/2?mvc=1\"\n    }\n\n    const digestkey1 = await BeaconBar.executeFunction('getDigest')(updateurl.updateParams);\n    const sl = await BeaconBar.getSharedData(\"sl\");\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"*/*\");\n    myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n    myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n\n    const response1 = await fetch(`${location.origin}/${sl}/${url}&digest=${digestkey1.digest}`, requestOptions);\n    const data1 = await response1.text();\n\n    const empNumberPattern = /\"LoginEmpNumber\":\"([^\"]+)\"/;\n    const empNumberMatch = data1.match(empNumberPattern);\n    const empNumber = empNumberMatch ? empNumberMatch[1] : null;\n\n    return empNumber\n});",
+    "by": "1927",
+    "__v": 0
+  }
+}

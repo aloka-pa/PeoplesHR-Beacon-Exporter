@@ -1,0 +1,24 @@
+{
+  "id": "690dc57d931a2d61ba0b269f",
+  "slug": "generalpatternroundinfor",
+  "name": "generalpatternroundInfor",
+  "status": "live",
+  "createdAt": "2025-06-06T08:58:10.776Z",
+  "updatedAt": "2026-07-17T12:55:50.534Z",
+  "contentHash": "3ab5795b9fd7a335e0e793b214740cbd968bba85fcfa494e1e90b059d3dfd004",
+  "lastExportedAt": "2026-09-05T19:41:22.056Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57d931a2d61ba0b269f",
+    "name": "generalpatternroundInfor",
+    "status": "live",
+    "code": "(async function(state , args ){\n  const reqOptions = await BeaconBar.executeFunction('reqOptions')()\n  const url = `${reqOptions}TNA/RoundingInformation.aspx`;\n\n  const headers = new Headers({\n    \"accept\": \"*/*\",\n    \"accept-language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n    \"cache-control\": \"no-cache\",\n    \"content-type\": \"application/x-www-form-urlencoded; charset=UTF-8\"\n  });\n\n  const body = new URLSearchParams({\n    \"ctl00$main$RadScriptManager\": \"ctl00$body$upPnlDetailView|ctl00$body$rbtnGeneral\",\n    \"ctl00_main_RadScriptManager_HiddenField\": \"\",\n    \"ctl00$body$txtRoundingPatternName\": args.roundingPatternName,\n    \"ctl00$body$Rounding_pattern\": \"rbtnGeneral\",\n    \"ctl00$body$txtNumFrom$txtTime\": \"\",\n    \"ctl00$body$txtNumTo$txtTime\": \"\",\n    \"ctl00$body$txtNumValue$txtTime\": \"\",\n    \"ctl00$body$grdRange$ctl00$ctl04$butEditGrid$isControlEnabled\": \"\",\n    \"ctl00$body$grdRange$ctl00$ctl04$butDeleteGrid$isControlEnabled\": \"\",\n    \"ctl00_body_grdRange_ClientState\": \"\",\n    \"ctl00$body$tpTest$txtTime\": \"\",\n    \"ctl00$action$ButtonPanel$butDelete$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butReset$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSave$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSummary$isControlEnabled\": \"True\",\n    \"ctl00$hdnCulturDateFormat\": \"M/d/yyyy\",\n    \"__EVENTTARGET\": \"ctl00$body$rbtnGeneral\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": state.viewState, \n    \"__VIEWSTATEGENERATOR\": state.viewStateGenerator,\n    \"__SCROLLPOSITIONX\": \"0\",\n    \"__SCROLLPOSITIONY\": \"0\",\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": state.eventValidation, \n    \"__ASYNCPOST\": \"true\"\n  });\n\n  try {\n    const response = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body,\n      redirect: \"follow\"\n    });\n    const result = await response.text();\n        function extractViewState(htmlText) {\n  const data = {};\n\n  const regexMap = {\n    viewState: /__VIEWSTATE\\|([^|]+)/,\n    viewStateGenerator: /__VIEWSTATEGENERATOR\\|([^|]+)/,\n    eventValidation: /__EVENTVALIDATION\\|([^|]+)/,\n    eventTarget: /postBackControlIDs\\|\\|([^|,\\n]+)/\n  };\n\n  for (const [key, regex] of Object.entries(regexMap)) {\n    const match = htmlText.match(regex);\n    if (match) {\n      data[key] = decodeURIComponent(match[1]);\n    } else {\n    }\n  }\n\n  return data;\n}\nconst res = extractViewState(result);\n    return res;\n\n  } catch (error) {\n    return null;\n  }\n})",
+    "by": "34476",
+    "__v": 1
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "690dc58c931a2d61ba0b3409",
+  "slug": "updateurlparams",
+  "name": "updateUrlParams",
+  "status": "live",
+  "createdAt": "2025-06-12T07:48:02.236Z",
+  "updatedAt": "2025-06-12T07:48:02.236Z",
+  "contentHash": "5a6da4f6e816fc93ffa39ecd18ff3c583b01f52d236e36cdd830c3afc2475fe9",
+  "lastExportedAt": "2026-09-05T19:41:35.944Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58c931a2d61ba0b3409",
+    "name": "updateUrlParams",
+    "status": "live",
+    "code": "(async function (targetUrl) {\n    //done\n    const menus = BeaconBar?.user?.metaData?.menus || [];\n\n    const result = menus.find(url => url.includes(targetUrl));\n    const updateParams = result?.split('?')[1] || null;\n\n    return {\n        updateUrl: result,\n        updateParams: updateParams\n    }\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

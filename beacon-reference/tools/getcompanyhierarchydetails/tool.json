@@ -1,0 +1,95 @@
+{
+  "id": "690dc561931a2d61ba0b11c7",
+  "slug": "getcompanyhierarchydetails",
+  "name": "getCompanyHierarchyDetails",
+  "description": "in this tool get the Company Hierarchy Details.",
+  "instructions": null,
+  "taskName": "Company Hierarchy Details",
+  "tags": [],
+  "status": "unlive",
+  "signature": "getCompanyHierarchyDetails",
+  "createdAt": "2025-04-26T17:44:03.983Z",
+  "updatedAt": "2026-07-17T12:52:24.345Z",
+  "assignedAgents": [],
+  "contentHash": "df928da645e0baf1f11b8e287732163b5b552105cd59d119578586ea59481573",
+  "lastExportedAt": "2026-09-05T19:39:22.154Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc561931a2d61ba0b11c7",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getCompanyHierarchyDetails",
+      "description": "in this tool get the Company Hierarchy Details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getCompanyHierarchyDetails",
+        "args": [
+          {
+            "name": "hierarchyCode",
+            "type": "string",
+            "description": "to get hierarchy details for user prompt for hierarchy Code.",
+            "required": true,
+            "_id": "680d1b6384c6425fd5ba761f"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a25885aa8b43ec1a82616"
+      },
+      "by": "34476",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"CompanyHierarchy\");\n  window.ch = details;\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", window.ch.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", window.ch.viewStateGen);\n  urlencoded1.append(\"__SCROLLPOSITIONX\", \"0\");\n  urlencoded1.append(\"__SCROLLPOSITIONY\", \"0\");\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", window.ch.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$ContentSearchCompanyHie$cboCriteria\", \"T.HIE_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearchCompanyHie$ddlHie\", \"-1\");\n  urlencoded1.append(\"ctl00$body$ContentSearchCompanyHie$txtContent\", args.hierarchyCode);\n  urlencoded1.append(\"ctl00$body$ContentSearchCompanyHie$butSearch\", \"Search\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"26\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$hdnOrgchartURL\", \"../OrgChartV9/companychart.aspx?popup=1&digest=WGreiH2lCZhF2jzcVDYkmg\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/hr/EIM/CompanyHierarchy.aspx`, requestOptions1);\n  const html1 = await response1.text();\n  const viewDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html1);\n  const parser = new DOMParser();\n  const document = parser.parseFromString(html1, 'text/html');\n  const anchor = document.querySelector('tr[id^=\"ctl00_body_grdsummary_ctl00__\"] a[href^=\"javascript:__doPostBack\"]');\n  const postBackId = anchor?.getAttribute('href')?.match(/__doPostBack\\('([^']+)'/)?.[1] || null;\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", postBackId);\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewDetails.viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewDetails.viewStateGen);\n  urlencoded2.append(\"__SCROLLPOSITIONX\", \"0\");\n  urlencoded2.append(\"__SCROLLPOSITIONY\", \"0\");\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", viewDetails.eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$ContentSearchCompanyHie$cboCriteria\", \"T.HIE_CODE\");\n  urlencoded2.append(\"ctl00$body$ContentSearchCompanyHie$ddlHie\", \"-1\");\n  urlencoded2.append(\"ctl00$body$ContentSearchCompanyHie$txtContent\", args.hierarchyCode);\n  urlencoded2.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$hdnOrgchartURL\", \"../OrgChartV9/companychart.aspx?popup=1&digest=WGreiH2lCZhF2jzcVDYkmg\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(`${location.origin}/hr/EIM/CompanyHierarchy.aspx`, requestOptions2);\n  const html2 = await response2.text();\n  const doc2 = parser.parseFromString(html2, 'text/html');\n\n  const getValue = (selector) => doc2.querySelector(selector)?.value?.trim() || \"\";\n  const getText = (selector) => doc2.querySelector(selector)?.innerText?.trim() || \"\";\n  const getSelectText = (selector) => {\n    const el = doc2.querySelector(selector);\n    return el ? el.options[el.selectedIndex]?.text.trim() || \"\" : \"\";\n  };\n  const getImgSrc = (selector) => doc2.querySelector(selector)?.getAttribute(\"src\") || \"\";\n\n  const checkbox = document.querySelector('#ctl00_body_chkHieCodeActive');\n  const isActive = checkbox?.checked ? true : false;\n\n  const hierarchyData = {\n    code: getValue(\"#ctl00_body_txtCode\"),\n    hierarchyLevel: getSelectText(\"#ctl00_body_CboHierarchyLevel\"),\n    hierarchyName: getValue(\"#ctl00_body_txtDes\"),\n    abbreviation: getValue(\"#ctl00_body_txtAbbreviation\"),\n    telephone: getValue(\"#ctl00_body_txttp\"),\n    fax: getValue(\"#ctl00_body_txtFax\"),\n    email: getValue(\"#ctl00_body_txtemail\"),\n    url: getValue(\"#ctl00_body_txturl\"),\n    address: getValue(\"#ctl00_body_txtaddress\"),\n    headName: getValue(\"#ctl00_body_txtHeadName\"),\n    titleOfHead: getValue(\"#ctl00_body_txtHTitle\"),\n    administrator: getValue(\"#ctl00_body_txtAdminName\"),\n    country: getSelectText(\"#ctl00_body_ddlCountry\"),\n    location: getSelectText(\"#ctl00_body_dplocation\"),\n    logoUrl: getImgSrc(\"#ctl00_body_imgTempEMPImage\"),\n    headerImageUrl: getImgSrc(\"#ctl00_body_imgTempEMPImageHeader\"),\n    footerImageUrl: getImgSrc(\"#ctl00_body_imgTempEMPImageFooter\"),\n    isActive:isActive,\n    additionalRoles: Array.from(doc2.querySelectorAll(\"#ctl00_body_grdHead input\")).map(input => ({\n      role: input.closest('tr')?.children[0]?.innerText.trim() || \"\",\n      employeeName: input.value.trim()\n    })),\n    classifications: Array.from(doc2.querySelectorAll(\"#ctl00_body_drpClassification option\"))\n      .filter(option => option.selected)\n      .map(option => option.text.trim())\n  };\n\n\n  return hierarchyData;\n})\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Company Hierarchy Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-26T17:44:03.983Z",
+      "updatedAt": "2026-07-17T12:52:24.345Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getCompanyHierarchyDetails",
+      "args": [
+        {
+          "name": "hierarchyCode",
+          "type": "string",
+          "description": "to get hierarchy details for user prompt for hierarchy Code.",
+          "required": true,
+          "_id": "680d1b6384c6425fd5ba761f"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a25885aa8b43ec1a82616"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"CompanyHierarchy\");\n  window.ch = details;\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", window.ch.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", window.ch.viewStateGen);\n  urlencoded1.append(\"__SCROLLPOSITIONX\", \"0\");\n  urlencoded1.append(\"__SCROLLPOSITIONY\", \"0\");\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", window.ch.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$ContentSearchCompanyHie$cboCriteria\", \"T.HIE_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearchCompanyHie$ddlHie\", \"-1\");\n  urlencoded1.append(\"ctl00$body$ContentSearchCompanyHie$txtContent\", args.hierarchyCode);\n  urlencoded1.append(\"ctl00$body$ContentSearchCompanyHie$butSearch\", \"Search\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"26\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$hdnOrgchartURL\", \"../OrgChartV9/companychart.aspx?popup=1&digest=WGreiH2lCZhF2jzcVDYkmg\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/hr/EIM/CompanyHierarchy.aspx`, requestOptions1);\n  const html1 = await response1.text();\n  const viewDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html1);\n  const parser = new DOMParser();\n  const document = parser.parseFromString(html1, 'text/html');\n  const anchor = document.querySelector('tr[id^=\"ctl00_body_grdsummary_ctl00__\"] a[href^=\"javascript:__doPostBack\"]');\n  const postBackId = anchor?.getAttribute('href')?.match(/__doPostBack\\('([^']+)'/)?.[1] || null;\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", postBackId);\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewDetails.viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewDetails.viewStateGen);\n  urlencoded2.append(\"__SCROLLPOSITIONX\", \"0\");\n  urlencoded2.append(\"__SCROLLPOSITIONY\", \"0\");\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", viewDetails.eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$ContentSearchCompanyHie$cboCriteria\", \"T.HIE_CODE\");\n  urlencoded2.append(\"ctl00$body$ContentSearchCompanyHie$ddlHie\", \"-1\");\n  urlencoded2.append(\"ctl00$body$ContentSearchCompanyHie$txtContent\", args.hierarchyCode);\n  urlencoded2.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$hdnOrgchartURL\", \"../OrgChartV9/companychart.aspx?popup=1&digest=WGreiH2lCZhF2jzcVDYkmg\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(`${location.origin}/hr/EIM/CompanyHierarchy.aspx`, requestOptions2);\n  const html2 = await response2.text();\n  const doc2 = parser.parseFromString(html2, 'text/html');\n\n  const getValue = (selector) => doc2.querySelector(selector)?.value?.trim() || \"\";\n  const getText = (selector) => doc2.querySelector(selector)?.innerText?.trim() || \"\";\n  const getSelectText = (selector) => {\n    const el = doc2.querySelector(selector);\n    return el ? el.options[el.selectedIndex]?.text.trim() || \"\" : \"\";\n  };\n  const getImgSrc = (selector) => doc2.querySelector(selector)?.getAttribute(\"src\") || \"\";\n\n  const checkbox = document.querySelector('#ctl00_body_chkHieCodeActive');\n  const isActive = checkbox?.checked ? true : false;\n\n  const hierarchyData = {\n    code: getValue(\"#ctl00_body_txtCode\"),\n    hierarchyLevel: getSelectText(\"#ctl00_body_CboHierarchyLevel\"),\n    hierarchyName: getValue(\"#ctl00_body_txtDes\"),\n    abbreviation: getValue(\"#ctl00_body_txtAbbreviation\"),\n    telephone: getValue(\"#ctl00_body_txttp\"),\n    fax: getValue(\"#ctl00_body_txtFax\"),\n    email: getValue(\"#ctl00_body_txtemail\"),\n    url: getValue(\"#ctl00_body_txturl\"),\n    address: getValue(\"#ctl00_body_txtaddress\"),\n    headName: getValue(\"#ctl00_body_txtHeadName\"),\n    titleOfHead: getValue(\"#ctl00_body_txtHTitle\"),\n    administrator: getValue(\"#ctl00_body_txtAdminName\"),\n    country: getSelectText(\"#ctl00_body_ddlCountry\"),\n    location: getSelectText(\"#ctl00_body_dplocation\"),\n    logoUrl: getImgSrc(\"#ctl00_body_imgTempEMPImage\"),\n    headerImageUrl: getImgSrc(\"#ctl00_body_imgTempEMPImageHeader\"),\n    footerImageUrl: getImgSrc(\"#ctl00_body_imgTempEMPImageFooter\"),\n    isActive:isActive,\n    additionalRoles: Array.from(doc2.querySelectorAll(\"#ctl00_body_grdHead input\")).map(input => ({\n      role: input.closest('tr')?.children[0]?.innerText.trim() || \"\",\n      employeeName: input.value.trim()\n    })),\n    classifications: Array.from(doc2.querySelectorAll(\"#ctl00_body_drpClassification option\"))\n      .filter(option => option.selected)\n      .map(option => option.text.trim())\n  };\n\n\n  return hierarchyData;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

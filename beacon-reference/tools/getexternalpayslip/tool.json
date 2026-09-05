@@ -1,0 +1,145 @@
+{
+  "id": "69ead41bc3d239ade6352c8c",
+  "slug": "getexternalpayslip",
+  "name": "GetExternalPaySlip",
+  "description": "GetExternalPaySlip - Requires PayGrpCode, PayStartDate, PayEndDate and PayGrpNum from previous step. Do not display any hyperlinks in the output",
+  "instructions": null,
+  "taskName": "Generating External Pay Slip Details",
+  "tags": [
+    "Payoll",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "GetExternalPaySlip",
+  "createdAt": "2026-04-24T02:23:23.703Z",
+  "updatedAt": "2026-04-27T06:00:13.917Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c51",
+      "name": "PayRoll"
+    }
+  ],
+  "contentHash": "385eaa9c78076834f9281525ee308264a1cf507f373ee060ac69bae3d5d0e4d2",
+  "lastExportedAt": "2026-09-05T19:39:22.724Z",
+  "raw": {
+    "basic": {
+      "_id": "69ead41bc3d239ade6352c8c",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "GetExternalPaySlip",
+      "description": "GetExternalPaySlip - Requires PayGrpCode, PayStartDate, PayEndDate and PayGrpNum from previous step. Do not display any hyperlinks in the output",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "GetExternalPaySlip",
+        "args": [
+          {
+            "name": "PayGrpCode",
+            "type": "number",
+            "description": "Pay Group Code",
+            "required": true,
+            "_id": "69eebcd5743bb0b544db69c7"
+          },
+          {
+            "name": "PayStartDate",
+            "type": "string",
+            "description": "Pay Start Date",
+            "required": true,
+            "_id": "69eebcd5743bb0b544db69c8"
+          },
+          {
+            "name": "PayEndDate",
+            "type": "string",
+            "description": "Pay End Date",
+            "required": true,
+            "_id": "69eebcd5743bb0b544db69c9"
+          },
+          {
+            "name": "PayGrpNum",
+            "type": "string",
+            "description": "Pay Group Number (PayType)",
+            "required": true,
+            "_id": "69eebcd5743bb0b544db69ca"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "69ead41bc3d239ade6352c8d"
+      },
+      "by": "10308",
+      "fetcher": "(async function (args, reqOptions) {\n  const baseUrl = await BeaconBar.executeFunction(\"reqOptions\")();\n\n  if (!args?.PayGrpCode || !args?.PayStartDate || !args?.PayEndDate || !args?.PayGrpNum) {\n    throw new Error(\"Missing required payslip parameters\");\n  }\n\n  return {\n    url: `${baseUrl}GPAdding/Api/widgets/ExternalSlipApi/ViewPaySlip`,\n    method: \"POST\",\n    headers: {\n      \"x-requested-with\": \"XMLHttpRequest\",\n      \"Content-Type\": \"application/json\"\n    },\n    credentials: \"include\",\n    body: JSON.stringify({\n      PayGrpCode: args.PayGrpCode,\n      PayStartDate: args.PayStartDate,\n      PayEndDate: args.PayEndDate,\n      PayGrpNum: args.PayGrpNum\n    })\n  };\n})",
+      "transformer": "(function (data) {\n  return data.map(item => ({\n    Item: item.Item,\n    Amount: item.TrnAmount\n  }));\n})",
+      "groupName": "",
+      "tags": [
+        "Payoll",
+        "Headers"
+      ],
+      "taskName": "Generating External Pay Slip Details",
+      "sourceConstructor": "(function(data) {\n  return data.map(item => ({\n    url: \"\",\n    title: item.Item,\n    subTitle: `Amount: ${item.Amount.toFixed(2)}`,\n    icon: \"\"\n  }));\n})",
+      "toolType": "code",
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "status": "live",
+      "createdAt": "2026-04-24T02:23:23.703Z",
+      "updatedAt": "2026-04-27T06:00:13.917Z",
+      "__v": 8,
+      "sampleRequest": {},
+      "etl": false,
+      "outputExample": {},
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c51",
+          "name": "PayRoll"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "GetExternalPaySlip",
+      "args": [
+        {
+          "name": "PayGrpCode",
+          "type": "number",
+          "description": "Pay Group Code",
+          "required": true,
+          "_id": "69eebcd5743bb0b544db69c7"
+        },
+        {
+          "name": "PayStartDate",
+          "type": "string",
+          "description": "Pay Start Date",
+          "required": true,
+          "_id": "69eebcd5743bb0b544db69c8"
+        },
+        {
+          "name": "PayEndDate",
+          "type": "string",
+          "description": "Pay End Date",
+          "required": true,
+          "_id": "69eebcd5743bb0b544db69c9"
+        },
+        {
+          "name": "PayGrpNum",
+          "type": "string",
+          "description": "Pay Group Number (PayType)",
+          "required": true,
+          "_id": "69eebcd5743bb0b544db69ca"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "69ead41bc3d239ade6352c8d"
+    },
+    "fetcher": "(async function (args, reqOptions) {\n  const baseUrl = await BeaconBar.executeFunction(\"reqOptions\")();\n\n  if (!args?.PayGrpCode || !args?.PayStartDate || !args?.PayEndDate || !args?.PayGrpNum) {\n    throw new Error(\"Missing required payslip parameters\");\n  }\n\n  return {\n    url: `${baseUrl}GPAdding/Api/widgets/ExternalSlipApi/ViewPaySlip`,\n    method: \"POST\",\n    headers: {\n      \"x-requested-with\": \"XMLHttpRequest\",\n      \"Content-Type\": \"application/json\"\n    },\n    credentials: \"include\",\n    body: JSON.stringify({\n      PayGrpCode: args.PayGrpCode,\n      PayStartDate: args.PayStartDate,\n      PayEndDate: args.PayEndDate,\n      PayGrpNum: args.PayGrpNum\n    })\n  };\n})",
+    "transformer": "(function (data) {\n  return data.map(item => ({\n    Item: item.Item,\n    Amount: item.TrnAmount\n  }));\n})",
+    "source": "(function(data) {\n  return data.map(item => ({\n    url: \"\",\n    title: item.Item,\n    subTitle: `Amount: ${item.Amount.toFixed(2)}`,\n    icon: \"\"\n  }));\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

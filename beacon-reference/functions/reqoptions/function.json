@@ -1,0 +1,24 @@
+{
+  "id": "690dc587931a2d61ba0b2f4a",
+  "slug": "reqoptions",
+  "name": "reqOptions",
+  "status": "live",
+  "createdAt": "2025-05-09T07:51:52.318Z",
+  "updatedAt": "2025-05-09T07:51:52.318Z",
+  "contentHash": "11c7b1b7f9b6731dae70b07cb72d716c677ba4af6e02b71ff8248cd67b83a1e2",
+  "lastExportedAt": "2026-09-05T19:41:43.292Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc587931a2d61ba0b2f4a",
+    "name": "reqOptions",
+    "status": "live",
+    "code": "(function(){\n  //done\n const loc = window.location.href\n  const final = loc.split(\"home\")[0]\n  return final;\n\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

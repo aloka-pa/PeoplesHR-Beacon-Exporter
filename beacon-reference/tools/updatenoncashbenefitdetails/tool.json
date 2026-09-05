@@ -1,0 +1,88 @@
+{
+  "id": "690dc564931a2d61ba0b151b",
+  "slug": "updatenoncashbenefitdetails",
+  "name": "updateNonCashBenefitDetails",
+  "description": "In this tool, must and should be first execute for \"getEIMAttributeList\" API. then after execute in this tool.If the user updates the category details, use the corresponding category value when calling the getEIMAttributeList API.",
+  "instructions": null,
+  "taskName": "Update NonCash BenefitDetails",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateNonCashBenefitDetails",
+  "createdAt": "2025-05-02T06:18:53.348Z",
+  "updatedAt": "2026-05-15T07:12:47.601Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "b7279d7015c54c8d282a8ff67d3721e42dac743bbd143a32b494106cab13f2e9",
+  "lastExportedAt": "2026-09-05T19:39:22.495Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b151b",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateNonCashBenefitDetails",
+      "description": "In this tool, must and should be first execute for \"getEIMAttributeList\" API. then after execute in this tool.If the user updates the category details, use the corresponding category value when calling the getEIMAttributeList API.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateNonCashBenefitDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"Description or name of the non-cash benefit item.\"\n    },\n    \"ctl00_body_dpCategory\": {\n      \"type\": \"string\",\n      \"description\": \"Selected category code for the non-cash benefit item.If the user updates the category details, use the corresponding category value when calling the getNonCashBenefitDetails API\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_dpCategory\"\n  ]\n}",
+        "_id": "681463cd23977c0e7a371586"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/NonCashBenifit.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/NonCashBenifit.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"NonCashBenifit\";\n  }\n\n  const editInit =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.cda.viewState,\n      __VIEWSTATEGENERATOR: window.cda.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.cda.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$butEdit\": \"Edit\"\n\n    }, url);\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: editInit.viewState,\n      __VIEWSTATEGENERATOR: editInit.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: editInit.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$txtName\":\n        args[\"ctl00_body_txtName\"] || \"\",\n\n      \"ctl00$body$dpCategory\":\n        args[\"ctl00_body_dpCategory\"] || \"\",\n\n      \"ctl00$body$butSave\": \"Save\"\n\n    }, url);\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const code =\n    doc.getElementById(\"ctl00_body_txtCode\")\n      ?.value?.trim() || \"\";\n\n  const description =\n    doc.getElementById(\"ctl00_body_txtName\")\n      ?.value?.trim() || \"\";\n\n  const updatedetails = {\n    code,\n    description\n  };\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\";\n  } else {\n    return updatedetails;\n  }\n\n});",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update NonCash BenefitDetails",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-02T06:18:53.348Z",
+      "updatedAt": "2026-05-15T07:12:47.601Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateNonCashBenefitDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"Description or name of the non-cash benefit item.\"\n    },\n    \"ctl00_body_dpCategory\": {\n      \"type\": \"string\",\n      \"description\": \"Selected category code for the non-cash benefit item.If the user updates the category details, use the corresponding category value when calling the getNonCashBenefitDetails API\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_dpCategory\"\n  ]\n}",
+      "_id": "681463cd23977c0e7a371586"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/NonCashBenifit.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/NonCashBenifit.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"NonCashBenifit\";\n  }\n\n  const editInit =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.cda.viewState,\n      __VIEWSTATEGENERATOR: window.cda.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.cda.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$butEdit\": \"Edit\"\n\n    }, url);\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: editInit.viewState,\n      __VIEWSTATEGENERATOR: editInit.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: editInit.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$txtName\":\n        args[\"ctl00_body_txtName\"] || \"\",\n\n      \"ctl00$body$dpCategory\":\n        args[\"ctl00_body_dpCategory\"] || \"\",\n\n      \"ctl00$body$butSave\": \"Save\"\n\n    }, url);\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const code =\n    doc.getElementById(\"ctl00_body_txtCode\")\n      ?.value?.trim() || \"\";\n\n  const description =\n    doc.getElementById(\"ctl00_body_txtName\")\n      ?.value?.trim() || \"\";\n\n  const updatedetails = {\n    code,\n    description\n  };\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\";\n  } else {\n    return updatedetails;\n  }\n\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

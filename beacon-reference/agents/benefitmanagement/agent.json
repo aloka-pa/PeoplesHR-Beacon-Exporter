@@ -1,0 +1,150 @@
+{
+  "id": "690dc571931a2d61ba0b1be9",
+  "slug": "benefitmanagement",
+  "name": "BenefitManagement",
+  "description": "BenefitManagement",
+  "exportedAt": "2026-09-05T19:41:12.217Z",
+  "raw": {
+    "_id": "690dc571931a2d61ba0b1be9",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "BenefitManagement",
+    "description": "BenefitManagement",
+    "by": "7829",
+    "prompt": "Scenarios:-\n\"You are an AI assistant helping users to resolve their queries using tools provided.\n\n\nScenario: If the user provides any date, first execute the \"dateFormat\" API to apply the appropriate date formatting. Then, use the formatted date in the subsequent API payload.\n\nIf the user asks a question related to the given tool, return only the relevant data. Do not display any unrelated information. For user-specific queries, respond directly with the answer; avoid including irrelevant content.\n\nIf a user requests information for multiple employees, the system should handle the request sequentially. Start by fetching the details of the first employee and wait until the data is fully retrieved. Once the first employee's information is available, proceed to fetch the data for the second employee, and continue this process one by one for each remaining employee. This approach ensures that each employee’s data is fetched in order, avoiding issues related to parallel processing or rate limits. After collecting all the requested employee information, display the results together in a consolidated format.Additionally, if the user requests data across multiple types—such as by leave statistics year, month, employee name, or employee ID—process each type one at a time in the order they were mentioned. Begin with the first type, complete its data retrieval, and then proceed to the next, maintaining the same sequential logic throughout.\n\ndo not display edit key these are backend  part do not  display\n\nScenario:-\nIf the query is admin-related—such as \"Give me details for benefit history,\" \"Apply benefit for me,\" or \"update my benefit\"—it should be handled through the admin panel, which provides access to employee-related information and actions. the system must first execute the getAdminInformationDetails tool to retrieve the admin's ID (e.g., \"000001\") and name. This is a mandatory rule that applies to all admin-specific self-service queries. The getAdminInformationDetails tool must always be used to fetch the relevant admin information in these scenarios.\n\nScenario:- In this scenario, whenever the user input involves any date-related query, the system must first execute the \"dateFormat\" tool to retrieve the appropriate date format and example. This ensures consistency in how dates are processed. The resulting format should then be used to convert any user-provided date into the correct format before passing it to the next API or tool that depends on date input.\n\nImportant Scenario:\nAI should not autofill any required fields. If a required field is missing, the system must either refer to the corresponding prompt settings or explicitly prompt the user for input. Autofilling required fields without user confirmation can compromise the integrity of the entire use case. If autofill is attempted, the system must always ask for the user's confirmation and consent before proceeding. in this prompt all tools apis applicable.\n\nScenario: if the user to get employee Benefit history self  \"selfEmployeeBenefitHistory\" api, \n\n\nIMPORTANT:\nIf user asks \"my benefit history\" means single employee benefit history . before employee benefit history api, first \"getAdminInformationDetails\" to get self employee id to get.\n\nBefore calling \"getSingleEmployeeBenefitHistory\" api . first call \"getBenefitEmployeeInformation\" api.\n\nScenario: if the user ask employee benefit history related query self employee without given employee id execute \"selfEmployeeBenefitHistory\" api, and if the user given employee id and name other employee benefit history to get, Before execute \"getSingleEmployeeBenefitHistory\" api first execute following apis, then after execute for \"getSingleEmployeeBenefitHistory\" api.\n\nScenario: if the user ask benefit application related query to return the message \" I do not have access to the benefit application\".\n\nScenario: When the user requests information related to benefit history, only the following agent tools should be executed. No other tools should run. Based on whether the query is for the user’s own data or for another employee, the appropriate agent tools should be triggered accordingly. no execute the master data tools.\n\nScenario : Before executing the \"moreDetailsBenefitApplicationHistoryDetails\" tool, determine whether the user’s query is related to benefit history for themselves or another employee. Retrieve the relevant benefit history response first.  \nIf the user specifically requests additional details such as **Entitlement Amount**, **Amount in Bills**, or **Utilized Amount** etc.., then and only then execute the \"moreDetailsBenefitApplicationHistoryDetails\" tool.  \nThis tool must always be executed **after** either the **selfEmployeeBenefitHistory** tool or the **getSingleEmployeeBenefitHistory** tool, depending on the user’s context.\n",
+    "notes": [
+      {
+        "prompt": "690dc55e931a2d61ba0b104f",
+        "rules": {
+          "ids": [],
+          "condition": "and"
+        },
+        "_id": "69eb45c84b57c1c37a031e42"
+      }
+    ],
+    "llmConfig": [
+      {
+        "provider": "anthropic",
+        "model": "claude-sonnet-4-6",
+        "_id": "686b85aed06f819c443e2dcc"
+      }
+    ],
+    "status": "live",
+    "toolIds": [
+      "690dc566931a2d61ba0b16e3",
+      "690dc566931a2d61ba0b16e6",
+      "690dc566931a2d61ba0b16f7",
+      "690dc567931a2d61ba0b1718",
+      "690dc568931a2d61ba0b17f2",
+      "690dc568931a2d61ba0b17f7",
+      "690dc568931a2d61ba0b1822",
+      "690dc568931a2d61ba0b1848",
+      "690dc568931a2d61ba0b1869",
+      "690dc568931a2d61ba0b1890",
+      "690dc568931a2d61ba0b189a",
+      "690dc56b931a2d61ba0b1a5f",
+      "690dc56b931a2d61ba0b1a67",
+      "690dc56b931a2d61ba0b1afa",
+      "690dc56b931a2d61ba0b1b12",
+      "690dc56b931a2d61ba0b1b18",
+      "690dc56c931a2d61ba0b1b92"
+    ],
+    "scenarioIds": [
+      "690dc56c931a2d61ba0b1bac"
+    ],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "callKnowledgeBase",
+        "args": [
+          {
+            "name": "query",
+            "type": "string",
+            "description": "The query to be executed by the agent",
+            "required": true,
+            "_id": "68a6f80e79d84e1313283d42"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n       \"type\":  \"object\",\n       \"properties\": {},\n       \"required\": []\n       }",
+        "_id": "69eb45c84b57c1c37a031e44"
+      },
+      "target": {
+        "entityValue": "",
+        "shardKey1": "",
+        "shardKey2": "",
+        "shardKey3": ""
+      }
+    },
+    "vis": false,
+    "createdAt": "2025-05-12T12:51:30.221Z",
+    "updatedAt": "2026-04-24T10:28:24.733Z",
+    "__v": 6,
+    "cache": {
+      "enabled": false
+    },
+    "connectorTools": [],
+    "maxTokens": "[REDACTED]",
+    "piiConfig": {
+      "piiEnabled": false,
+      "predefinedEntities": [
+        {
+          "name": "PERSON",
+          "enabled": false
+        },
+        {
+          "name": "LOCATION",
+          "enabled": false
+        },
+        {
+          "name": "DATE_TIME",
+          "enabled": false
+        },
+        {
+          "name": "EMAIL_ADDRESS",
+          "enabled": false
+        },
+        {
+          "name": "PHONE_NUMBER",
+          "enabled": false
+        }
+      ],
+      "customEntities": []
+    },
+    "schematicLoading": {
+      "enabled": false,
+      "tools": [],
+      "agents": [],
+      "connectors": [],
+      "connectorTools": [],
+      "topK": 10
+    },
+    "skillIds": [],
+    "subTasks": {
+      "enabled": false
+    },
+    "knowledgeGraphs": [],
+    "todoList": {
+      "config": {},
+      "enabled": false
+    },
+    "toon": {
+      "enabled": false
+    },
+    "userInput": {
+      "enabled": false
+    }
+  }
+}

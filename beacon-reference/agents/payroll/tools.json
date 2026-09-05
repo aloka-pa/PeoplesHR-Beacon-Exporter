@@ -1,0 +1,47 @@
+[
+  {
+    "toolId": "69eeb724d6deb5f99d4daa68",
+    "toolName": "getPayYears",
+    "path": "tools/getpayyears"
+  },
+  {
+    "toolId": "69eeb23ec801998ae0abcd87",
+    "toolName": "GetPayType",
+    "path": "tools/getpaytype"
+  },
+  {
+    "toolId": "69eeb94f6dd27c2ac5c49250",
+    "toolName": "getPayPeriods",
+    "path": "tools/getpayperiods"
+  },
+  {
+    "toolId": "69ead41bc3d239ade6352c8c",
+    "toolName": "GetExternalPaySlip",
+    "path": "tools/getexternalpayslip"
+  },
+  {
+    "toolId": "690dc56a931a2d61ba0b1a13",
+    "toolName": "getPayslip",
+    "path": "tools/getpayslip"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b9b",
+    "toolName": "getPaySlipInitialData",
+    "path": "tools/getpayslipinitialdata"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b1869",
+    "toolName": "getAdminInformationDetails",
+    "path": "tools/getadmininformationdetails"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a67",
+    "toolName": "getGlobalEmployeeSearch",
+    "path": "tools/getglobalemployeesearch"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b19ac",
+    "toolName": "getReportNavigators",
+    "path": "tools/getreportnavigators"
+  }
+]

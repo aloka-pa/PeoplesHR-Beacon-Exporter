@@ -1,0 +1,31 @@
+{
+  "name": "beacon-exporter",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local exporter/sync utility that discovers Beacon Agent Studio's API and mirrors agents, tools and transformers into a local reference folder for Claude Code.",
+  "type": "module",
+  "engines": {
+    "node": ">=18.17"
+  },
+  "scripts": {
+    "playwright:install": "playwright install chromium",
+    "beacon:discover": "tsx src/cli/discover.ts",
+    "beacon:export": "tsx src/cli/export.ts",
+    "beacon:validate": "tsx src/cli/validate.ts",
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
+    "playwright": "^1.47.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

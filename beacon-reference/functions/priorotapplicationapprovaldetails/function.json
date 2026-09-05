@@ -1,0 +1,24 @@
+{
+  "id": "690dc578931a2d61ba0b2061",
+  "slug": "priorotapplicationapprovaldetails",
+  "name": "PriorOTApplicationApprovalDetails",
+  "status": "live",
+  "createdAt": "2025-06-16T05:04:34.706Z",
+  "updatedAt": "2025-06-16T05:04:34.706Z",
+  "contentHash": "8ab8620cc4567123a90242bd7d2fb842d8d1fe6824995245c8a1d9ac5f4d2199",
+  "lastExportedAt": "2026-09-05T19:41:34.617Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc578931a2d61ba0b2061",
+    "name": "PriorOTApplicationApprovalDetails",
+    "status": "live",
+    "code": "(async function (args, matched) {\nconst matchedObjectArgs = args.EmployeeList.find( x => x.EmpDisplayName.trim() === matched.trim()); \n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"content-type\", \"application/json\");\n\n  const raw = JSON.stringify({\n    \"EmpNumber\": matchedObjectArgs.EmpNumber,\n    \"EmpDisplayNumber\": matchedObjectArgs.EmpDisplayNumber,\n    \"EmpDisplayName\": matchedObjectArgs.EmpDisplayName,\n    \"EmpCompleteName\": matchedObjectArgs.EmpCompleteName,\n    \"WfTypeCode\": matchedObjectArgs.WfTypeCode,\n    \"SearchMode\": matchedObjectArgs.SearchMode,\n    \"InitialWfmainId\": matchedObjectArgs.InitialWfmainId,\n    \"FromDate\": matchedObjectArgs.FromDate,\n    \"ToDate\": matchedObjectArgs.ToDate,\n    \"FromDateText\": matchedObjectArgs.FromDateText,\n    \"ToDateText\": matchedObjectArgs.ToDateText,\n    \"IsSelected\": false\n  });\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw,\n    redirect: \"follow\"\n  };\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")()\n  const response = await fetch(`${reqOptions}tnav9/api/PriorOT/GetPriorOTApprovalData/`, requestOptions)\n  const data = await response.text()\n  return  data ;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

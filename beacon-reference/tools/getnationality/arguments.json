@@ -1,0 +1,110 @@
+{
+  "arguments": [
+    {
+      "name": "nationalityCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "user enters the nationality code to search for and return the grid row details, including nationality name",
+      "advanced": false,
+      "raw": {
+        "name": "nationalityCode",
+        "type": "string",
+        "description": "user enters the nationality code to search for and return the grid row details, including nationality name",
+        "required": false,
+        "_id": "69521f62f1dea79e6a4c0ca8"
+      }
+    },
+    {
+      "name": "nationalityName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "user enters the nationality name to search for and return the grid row details, including nationality details",
+      "advanced": false,
+      "raw": {
+        "name": "nationalityName",
+        "type": "string",
+        "description": "user enters the nationality name to search for and return the grid row details, including nationality details",
+        "required": false,
+        "_id": "6956a0cfab9dbe6266af6f99"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set to \"all\" / \"true\" / \"yes\" / \"Show All\" / \"Available\" / \"List of\" / \"Existing\" to list nationalities page-by-page using the screen paging.",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "Set to \"all\" / \"true\" / \"yes\" / \"Show All\" / \"Available\" / \"List of\" / \"Existing\" to list nationalities page-by-page using the screen paging.",
+        "required": false,
+        "_id": "6980c92116270fa9b0b9fa95"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Number of rows per page, must match UI expectation (e.g., \"4\", \"6\", \"10\"). The transformer applies it using ChangePageSizeLinkButton.",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "Number of rows per page, must match UI expectation (e.g., \"4\", \"6\", \"10\"). The transformer applies it using ChangePageSizeLinkButton.",
+        "required": false,
+        "_id": "6980c92116270fa9b0b9fa96"
+      }
+    },
+    {
+      "name": "page",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Page number as a string. Example: \"19\" to fetch page 19 results",
+      "advanced": false,
+      "raw": {
+        "name": "page",
+        "type": "string",
+        "description": "Page number as a string. Example: \"19\" to fetch page 19 results",
+        "required": false,
+        "_id": "6980c92116270fa9b0b9fa97"
+      }
+    },
+    {
+      "name": "next",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set to \"yes\" to move to next page (uses the “Next Page” submit control)",
+      "advanced": false,
+      "raw": {
+        "name": "next",
+        "type": "string",
+        "description": "Set to \"yes\" to move to next page (uses the “Next Page” submit control)",
+        "required": false,
+        "_id": "6980c92116270fa9b0b9fa98"
+      }
+    },
+    {
+      "name": "cursor",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "JSON string returned by the tool; optional for future state passing (still string-only compatible).",
+      "advanced": false,
+      "raw": {
+        "name": "cursor",
+        "type": "string",
+        "description": "JSON string returned by the tool; optional for future state passing (still string-only compatible).",
+        "required": false,
+        "_id": "6980c92116270fa9b0b9fa99"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

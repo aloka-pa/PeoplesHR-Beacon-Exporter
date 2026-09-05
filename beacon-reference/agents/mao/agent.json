@@ -1,0 +1,941 @@
+{
+  "id": "6a4f413ffc8c6e9a5ddf3db3",
+  "slug": "mao",
+  "name": "MAO",
+  "description": "Multi agent orchestrator",
+  "exportedAt": "2026-09-05T19:41:12.194Z",
+  "raw": {
+    "_id": "6a4f413ffc8c6e9a5ddf3db3",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "MAO",
+    "description": "Multi agent orchestrator",
+    "by": "32692",
+    "prompt": "AbsenceManagementEmployee Agent: Route all queries related to employee leave, absence, attendance, leave application or cancellation, leave balance, leave history, leave summaries, leave statistics, covering employee details, or any absence-related employee information to the AbsenceManagementEmployee agent, which exclusively handles these domains using its internal tools and required headers, whereas admin-related absence queries must be routed to the AbsenceManagement agent.\n\nPayRoll Agent: Route all queries related to payroll, payslips, salary details, pay components, payroll reports, report navigation, or employee payroll search to the Payroll agent, which exclusively handles these domains using its internal tools\n\nPolicy docs Agent : Route all queries related to policy docs.\n\nHelp docs : Route all queries related to `how to`, or infor present in the knowledegehub.\n\nWorkfLows Agent: Route all queries related to workflows, workflow types, workflow groups, workflow configuration or setup, workflow classification, or searching employees for workflow assignment to the Workflows agent, which exclusively handles these domains using its internal tools\n\nEmployee Information\tAgent: Route all queries related to employee personal information, profile details, census data, education and professional qualifications, work experience, memberships, bank or credit card details, passport or labor card information, job specifications, position or grade details, reporting hierarchy, supervisor changes, language skills (assigned language of an employee), benefits (cash and non-cash), contract extensions, covering details, bulk employee actions, or self-service employee profile and qualification updates to the EmployeeInformation agent, which exclusively handles these domains using its internal tools and required headers. Note : When asked for covering details, use the  getCoveringDetails tool in this agent until and unless user mentioned the employee Id then call the languages in the EIM.\n\nRecruitment Agent: Route all queries related to recruitment, candidate shortlisting, applicant evaluation, hiring workflows, or accessing recruitment-related administrative information to the Recruitment agent, which exclusively handles these domains using its internal tools\n\nBenefitManagement Agent : Route all queries related to benefit master data, benefit definitions, benefit types, benefit categories, benefit structures, eligibility rules, benefit slabs, health plans, dependents, and benefit configuration even if they are administrative or setup-related, to the BenefitManagement agent. Any query related to just master data details.\n\nAbsenceManagement Agent : Route all administrative queries related to employee leave or absence management—including managing or viewing employee leave balances, leave history, summaries or statistics, approving or cancelling leaves, handling short leave requests or approvals, managing company leave policies, selecting or searching employees for leave actions, viewing covering employee details, or accessing leave-related administrative information—to the AbsenceManagement agent. This agent exclusively handles admin-level absence management using its internal tools and required headers, whereas employee self-service absence queries must be routed to the AbsenceManagementEmployee agent.\n\nAttendance Agent : Route all queries related to attendance management, including attendance modules or configurations, rounding or grace period rules, shift or roster management, overtime applications or approvals, employee or team attendance summaries, in-and-out details, attendance adjustments, or attendance-related administrative setup to the Attendance agent. This agent exclusively handles both admin-level attendance operations (such as configuration, approvals, team views, and policy management) and employee self-service attendance queries (such as personal attendance summaries, manual in/out entries, shift adjustments, and overtime applications) using its internal tools and required headers.\n\nEIM Administration : Route all queries related to enterprise information management (EIM) administration, including company definitions, locations or sub-locations, cost centres, qualifications, salary grades or grade–salary mappings, designations, corporate titles, job descriptions or categories, employee classifications, functions or functional roles, employee groups or employment types, memberships, benefits (cash and non-cash) assignment to salary grades, statutory or demographic attributes, currencies, setup or configuration management, subject, country, language (related queries except assigned language of an employee) , EIM modules or attributes, structural data to the EIMAdministration agent, which exclusively handles these administrative domains using its internal tools and required headers.\n\nif the user to ask the list of non cash benefit related query must be calling EIM agent.\n\nIf a user asks any query related to Training & Development, including modules such as Budget Utilization and Budget Allocation, the query must be handled by invoking the agent \"Training & Development | Phase 2 | Agent\".\n\nIf the user asks any knowledge-based query or how related, the request must be handled by invoking this agent with name is \"callKnowledgeBase\". For example, queries like \"How to apply leave?\".\n\nif the ask the rating method related query invoke the agent EIM Administration\n\nImportant Note :\nUse \"AbsenceManagementEmployee\" agent for retrieval of the one's own leave or self related details \nUse \"AbsenceManagement\" agent for retrieval of the other employees leave details \nAnd also when user mentioned the employee id then check if the employee id then invoke  \"AbsenceManagement\" agent\n\nIf the user asks about a finalized candidate, invoke the \"Recruitment\" agent using the tool named \"getShortListingDetails\".\n\nCRITICAL WORKFLOW RULE - MANDATORY HELP DOCS CHECK:\nBefore responding that any query is \"out of scope\" or \"not supported\", you MUST follow this exact sequence:\n**First Attempt**: Try to route the query to the appropriate specialized agent based on the module categories listed.\n**If Agent Returns \"Out of Scope\"**: DO NOT immediately tell the user it's out of scope. Instead, AUTOMATICALLY invoke the callKnowledgeBase function with the user's query.\n**Only After Help Docs Check**: If BOTH the specialized agent AND the help docs return no relevant information, then and only then respond that the request is out of scope.\nNEVER skip step 2. This is a mandatory checkpoint.\n\nHandling Dates and Relative Day References: When a user refers to a date using relative terms such as \"next Monday,\" \"tomorrow,\" \"this Friday,\" or similar expressions, do not attempt to resolve or calculate the actual date using the current UTC timestamp. Since the user's local timezone is not transmitted to the system, converting relative day references using server-side UTC time will result in incorrect dates. Instead, ask the user to provide the exact calendar date (e.g., \"Could you please provide the exact date, such as 28 May 2025?\") before proceeding with any date-sensitive action.\nCRITICAL DATE RULE: When users provide relative dates (tomorrow, next week, next Monday, etc.), ALWAYS ask for the exact date in DD/MM/YYYY format. Do not calculate or infer dates from the current date.\n\n**Important Note:** The Coordinator (MAO) agent must first determine whether the user's query matches an available sub-agent. If no matching sub-agent exists, it must immediately invoke the **`errorHandlingAgent`**. Under no circumstances should the request be routed to any other sub-agent.\n\nWhen **`errorHandlingAgent`** is invoked, it must invoke **`errorHandlingTool`** and return the tool's response **exactly as received** (for example, **\"Out Of Scope\"**).\n\n**Mandatory Rules:**\n\n* Do not invoke any other sub-agent.\n* Do not perform any additional reasoning or processing.\n* Do not generate your own response.\n* Do not ask follow-up questions.\n* Do not ask clarifying questions.\n* Do not provide suggested queries or related prompts.\n* Do not recommend alternative actions.\n* Do not infer the user's intent or make assumptions.\n* Do not generate hallucinated content or fabricate information.\n* Do not modify, append, prepend, or explain the tool's response.\n* Return **only** the output from **`errorHandlingTool`** and end the interaction immediately.\n\nThese rules are mandatory and take precedence over any default behavior that would otherwise generate follow-up questions, clarifications, suggestions, or conversational responses.",
+    "notes": [],
+    "llmConfig": [
+      {
+        "provider": "anthropic",
+        "model": "claude-sonnet-4-6",
+        "_id": "6a4f56a2da557df4fdc06d44"
+      },
+      {
+        "provider": "openai",
+        "model": "gpt-5.5",
+        "_id": "6a4f56a2da557df4fdc06d45"
+      }
+    ],
+    "maxTokens": "[REDACTED]",
+    "status": "live",
+    "toolIds": [],
+    "scenarioIds": [],
+    "skillIds": [],
+    "knowledgeGraphs": [],
+    "defaultAgents": {
+      "analyticsAgent": false,
+      "documentCanvas": true,
+      "etlAgent": false,
+      "domAgent": false,
+      "canvasComponent": {
+        "type": null,
+        "entityId": null
+      }
+    },
+    "analyticsPrompt": "",
+    "domAgent": {
+      "prompt": "",
+      "llmConfig": []
+    },
+    "cache": {
+      "enabled": true
+    },
+    "metaReasoning": false,
+    "toon": {
+      "enabled": false
+    },
+    "contextCompaction": {
+      "enabled": false,
+      "lastNInteractions": 5,
+      "windowSize": 20,
+      "tokenLimitSize": "[REDACTED]",
+      "summarization": false,
+      "prompt": "",
+      "llmConfig": [],
+      "batchSize": 5
+    },
+    "subTasks": {
+      "enabled": false
+    },
+    "todoList": {
+      "enabled": false
+    },
+    "userInput": {
+      "enabled": true
+    },
+    "schematicLoading": {
+      "enabled": false,
+      "tools": [],
+      "agents": [],
+      "connectors": [],
+      "connectorTools": [],
+      "topK": 10
+    },
+    "agents": [
+      {
+        "agentId": "690dc572931a2d61ba0b1c72",
+        "description": "Hit this agent when the user queries only for self employee related to Abscence Management for self employee related query invoke in this agent, \nif the user ask other employee related for absence Management, must be invoke \"AbsenceMangement\" agent call.",
+        "taskName": "Absence Management Employee MAO",
+        "rules": {
+          "ids": [
+            "690dc4b5931a2d61ba0a8085",
+            "690dc4b6931a2d61ba0a814c"
+          ],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callAbsenceManagementEmployeeAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f418f878afdc677d553d0"
+            },
+            {
+              "name": "languageToRespond",
+              "type": "string",
+              "description": "Language to respond the answer in",
+              "required": true,
+              "_id": "6a4f418f878afdc677d553d1"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e046a"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06cf1"
+      },
+      {
+        "agentId": "690dc571931a2d61ba0b1be3",
+        "description": "Hit this agent for any queries related for other employee related must be invoke in this Absence Management via only for admin\n\nImportant Note : if the user ask self related query for absence Management must be invoke agent is \"absenceManagementEmployee\" agent using.",
+        "taskName": "Absence Management MAO",
+        "rules": {
+          "ids": [
+            "690dc4b5931a2d61ba0a807f",
+            "6a1721b1ec57563bbd375426"
+          ],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callAbsenceManagementAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f42f79413768d2feb0669"
+            },
+            {
+              "name": "languageToRespond",
+              "type": "string",
+              "description": "language to respond the answer in ",
+              "required": true,
+              "_id": "6a4f42f79413768d2feb066a"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e046e"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06cf5"
+      },
+      {
+        "agentId": "690dc572931a2d61ba0b1c56",
+        "description": "Hit this agent for any queries relating to policy docs",
+        "taskName": "Policy Doc MAO",
+        "rules": {
+          "ids": [
+            "6a171d807afbd2b32156caf6"
+          ],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callPolicyDocsAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f42f79413768d2feb066d"
+            },
+            {
+              "name": "languageToRespond",
+              "type": "string",
+              "description": "language to respond the answer in ",
+              "required": true,
+              "_id": "6a4f42f79413768d2feb066e"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e0472"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06cf9"
+      },
+      {
+        "agentId": "690dc572931a2d61ba0b1c34",
+        "description": "Hit this agent for any queries related to workflows",
+        "taskName": "WorkfLows MAO",
+        "rules": {
+          "ids": [
+            "690dc4b6931a2d61ba0a8143",
+            "6a172090fdead46d59c66744"
+          ],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callWorkfLowsAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f42f79413768d2feb0671"
+            },
+            {
+              "name": "languageToRespond",
+              "type": "string",
+              "description": "language to respond the answer in ",
+              "required": true,
+              "_id": "6a4f42f79413768d2feb0672"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e0476"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06cfd"
+      },
+      {
+        "agentId": "690dc571931a2d61ba0b1bf4",
+        "description": "Hit this agent for any queries related to employee information",
+        "taskName": "Employee Information MAO",
+        "rules": {
+          "ids": [
+            "690dc4b6931a2d61ba0a80f5",
+            "6a171f110aff8588f2369290"
+          ],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callEmployeeInformationAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f42f79413768d2feb0675"
+            },
+            {
+              "name": "languageToRespond",
+              "type": "string",
+              "description": "language to respond the answer in ",
+              "required": true,
+              "_id": "6a4f42f79413768d2feb0676"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e047a"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d01"
+      },
+      {
+        "agentId": "690dc571931a2d61ba0b1bef",
+        "description": "Hit this agent for any queries related to recruitment details",
+        "taskName": "Recruitment MAO",
+        "rules": {
+          "ids": [
+            "690dc4b6931a2d61ba0a8149",
+            "6a1721f1ee3f5633a41ff7df"
+          ],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callRecruitmentAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f455cf9c3304a9935cdbc"
+            },
+            {
+              "name": "languageToRespond",
+              "type": "string",
+              "description": "language to respond the answer in ",
+              "required": true,
+              "_id": "6a4f455cf9c3304a9935cdbd"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e047e"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d05"
+      },
+      {
+        "agentId": "690dc571931a2d61ba0b1be9",
+        "description": "Hit this agent for any queries related to benefit management",
+        "taskName": "Benefit Management MAO",
+        "rules": {
+          "ids": [
+            "6a17211033d19bf9204601b2",
+            "690dc4b6931a2d61ba0a8140"
+          ],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callBenefitManagementAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f455cf9c3304a9935cdc0"
+            },
+            {
+              "name": "languageToRespond",
+              "type": "string",
+              "description": "language to respond the answer in ",
+              "required": true,
+              "_id": "6a4f455cf9c3304a9935cdc1"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e0482"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d09"
+      },
+      {
+        "agentId": "690dc571931a2d61ba0b1bc2",
+        "description": "Hit this agent for any queries related to EIM Administration module.",
+        "taskName": "EIM Administration MAO",
+        "rules": {
+          "ids": [
+            "690dc4b6931a2d61ba0a80f2",
+            "6a171f5050f7d8565f11e0db"
+          ],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callEIMAdministrationAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f455cf9c3304a9935cdc4"
+            },
+            {
+              "name": "languageToRespond",
+              "type": "string",
+              "description": "language to respond the answer in ",
+              "required": true,
+              "_id": "6a4f455cf9c3304a9935cdc5"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e0486"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d0d"
+      },
+      {
+        "agentId": "690dc572931a2d61ba0b1c51",
+        "description": "Hit this agent for any queries relating to payroll",
+        "taskName": "Pay Roll MAO",
+        "rules": {
+          "ids": [
+            "690dc4b6931a2d61ba0a8146",
+            "6a17222917220dc723730596"
+          ],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callPayRollAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f455cf9c3304a9935cdc8"
+            },
+            {
+              "name": "languageToRespond",
+              "type": "string",
+              "description": "language to respond the answer in ",
+              "required": true,
+              "_id": "6a4f455cf9c3304a9935cdc9"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e048a"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d11"
+      },
+      {
+        "agentId": "6955261cad06de92910e10aa",
+        "description": "Hit this agent for any queries relating to Training & Development",
+        "taskName": "Training & Development MAO",
+        "rules": {
+          "ids": [
+            "6993279c0a27c11d74cf099c"
+          ],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callTrainingDevelopmentPhase2AgentAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f455cf9c3304a9935cdcc"
+            },
+            {
+              "name": "languageToRespond",
+              "type": "string",
+              "description": "language to respond the answer in ",
+              "required": true,
+              "_id": "6a4f455cf9c3304a9935cdcd"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e048e"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d15"
+      },
+      {
+        "agentId": "690dc571931a2d61ba0b1bcd",
+        "description": "Hit this agent for any queries related to Attendance module",
+        "taskName": "Attendance MAO",
+        "rules": {
+          "ids": [
+            "690dc4b7931a2d61ba0a81b0",
+            "6a172145dff75931b9200e06"
+          ],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callAttendanceAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f455cf9c3304a9935cdd0"
+            },
+            {
+              "name": "languageToRespond",
+              "type": "string",
+              "description": "language to respond the answer in ",
+              "required": true,
+              "_id": "6a4f455cf9c3304a9935cdd1"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e0492"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d19"
+      },
+      {
+        "agentId": "690dc571931a2d61ba0b1c12",
+        "description": "Invoke this agent to auto generate advertisement description, along with this call for the dom agent and use that for filling the advertisement description",
+        "taskName": "",
+        "rules": {
+          "ids": [],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callGenarateAdvertisementAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f455cf9c3304a9935cdd4"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e0496"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d1d"
+      },
+      {
+        "agentId": "690dc572931a2d61ba0b1c30",
+        "description": "Invoke this agent to generate job description",
+        "taskName": "",
+        "rules": {
+          "ids": [],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callGenearateJobDescriptionAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f455cf9c3304a9935cdd7"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e0499"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d20"
+      },
+      {
+        "agentId": "690dc572931a2d61ba0b1c4f",
+        "description": "Invoke this agent to select leadership candidate",
+        "taskName": "",
+        "rules": {
+          "ids": [],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callSelectLeaderShipCandiatesAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f47c588f43f601b3141de"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e049c"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d23"
+      },
+      {
+        "agentId": "690dc571931a2d61ba0b1c14",
+        "description": "Invoke this agent to format year end assessment description",
+        "taskName": "",
+        "rules": {
+          "ids": [],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callFormatYearEndAssesmentDescAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f47c588f43f601b3141e1"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e049f"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d26"
+      },
+      {
+        "agentId": "690dc571931a2d61ba0b1c0e",
+        "description": "invoke this agent to generate job description",
+        "taskName": "",
+        "rules": {
+          "ids": [],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callGenarateJDAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f47c588f43f601b3141e4"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e04a2"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d29"
+      },
+      {
+        "agentId": "690dc571931a2d61ba0b1c16",
+        "description": "invoke this agent to format feedback and development",
+        "taskName": "",
+        "rules": {
+          "ids": [],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callFeedbackAndDevelopmentAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f47c588f43f601b3141e7"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e04a5"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d2c"
+      },
+      {
+        "agentId": "690dc572931a2d61ba0b1c32",
+        "description": "invoke this tool to format competency assessment",
+        "taskName": "",
+        "rules": {
+          "ids": [],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callCompetencyEvaluationAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f47c588f43f601b3141ea"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e04a8"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d2f"
+      },
+      {
+        "agentId": "690dc571931a2d61ba0b1c10",
+        "description": "invoke this agent to generate subject description",
+        "taskName": "",
+        "rules": {
+          "ids": [],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callGenarateSubjectDescriptionAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f47c588f43f601b3141ed"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e04ab"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d32"
+      },
+      {
+        "agentId": "696baf3fc2b2c4c21130c789",
+        "description": "invoke this agent to Fill Critical Incident Journal Description",
+        "taskName": "",
+        "rules": {
+          "ids": [],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callPerformanceAssessmentPhase2AgentAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f47c588f43f601b3141f0"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e04ae"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d35"
+      },
+      {
+        "agentId": "690dc572931a2d61ba0b1c5a",
+        "description": "invoke this agent to Generate Goal Plans",
+        "taskName": "",
+        "rules": {
+          "ids": [],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callGoalPanningAPIAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f47c588f43f601b3141f3"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e04b1"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d38"
+      },
+      {
+        "agentId": "69562bd4e05f6cdd1594bd17",
+        "description": "invoke this agent to fill training and dev module - Create Course Description",
+        "taskName": "",
+        "rules": {
+          "ids": [],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callTrainingDevelopmentWorkflowAssistPhase2AgentAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query string to send to the sub-agent",
+              "required": true,
+              "_id": "6a4f47c588f43f601b3141f6"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e04b4"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d3b"
+      },
+      {
+        "agentId": "6a4f55bb83026e3d233dceb1",
+        "description": "This agent provides error-handling support.",
+        "taskName": "",
+        "rules": {
+          "ids": [],
+          "condition": "and"
+        },
+        "signature": {
+          "name": "callerrorHandlingAgentAgent",
+          "args": [
+            {
+              "name": "query",
+              "type": "string",
+              "description": "The query to be executed by the agent",
+              "required": true,
+              "_id": "6a4f567483026e3d233e04b8"
+            }
+          ],
+          "isAdvanced": false,
+          "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+          "_id": "6a4f567483026e3d233e04b7"
+        },
+        "subTasks": {
+          "enabled": false,
+          "mandatory": false
+        },
+        "_id": "6a4f56a2da557df4fdc06d3e"
+      }
+    ],
+    "connectors": [],
+    "howTo": {
+      "enabled": true,
+      "description": "if the user ask knowledge based related query, must be invoke in this agent, like query \"How to apply leave\" etc..",
+      "taskName": "",
+      "rules": {
+        "ids": [
+          "6a171ecba56b0509e854ee6f"
+        ],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "callKnowledgeBase",
+        "args": [
+          {
+            "name": "query",
+            "type": "string",
+            "description": "The query to be executed by the agent",
+            "required": true,
+            "_id": "6a4f49c0d17af8a5a90bf928"
+          },
+          {
+            "name": "languageToRespond",
+            "type": "string",
+            "description": "Language to respond the answer in",
+            "required": true,
+            "_id": "6a4f49c0d17af8a5a90bf929"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6a4f56a2da557df4fdc06d41"
+      },
+      "subTasks": {
+        "enabled": false,
+        "mandatory": false
+      },
+      "target": {
+        "entityValue": "helpDoc",
+        "shardKey1": "",
+        "shardKey2": "",
+        "shardKey3": ""
+      }
+    },
+    "vis": false,
+    "piiConfig": {
+      "piiEnabled": false,
+      "predefinedEntities": [
+        {
+          "name": "PERSON",
+          "enabled": false
+        },
+        {
+          "name": "LOCATION",
+          "enabled": false
+        },
+        {
+          "name": "DATE_TIME",
+          "enabled": false
+        },
+        {
+          "name": "EMAIL_ADDRESS",
+          "enabled": false
+        },
+        {
+          "name": "PHONE_NUMBER",
+          "enabled": false
+        }
+      ],
+      "customEntities": []
+    },
+    "connectorTools": [],
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "createdAt": "2026-07-09T06:35:43.761Z",
+    "updatedAt": "2026-07-09T08:06:58.164Z",
+    "__v": 12
+  }
+}

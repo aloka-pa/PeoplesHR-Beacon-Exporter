@@ -1,0 +1,88 @@
+{
+  "id": "690dc568931a2d61ba0b18b9",
+  "slug": "fillsubjectdescription",
+  "name": "fillSubjectDescription",
+  "description": "fillSubjectDescription only need 4  lines context, do NOT ask the user for description, Create one based on the existing description, if empty create one using the subject. Always display the updated description and ask for consent from user before filling.",
+  "instructions": null,
+  "taskName": "filling the subject description",
+  "tags": [],
+  "status": "live",
+  "signature": "fillSubjectDescription",
+  "createdAt": "2025-05-30T08:35:02.143Z",
+  "updatedAt": "2025-11-12T14:03:04.952Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1c10",
+      "name": "GenarateSubjectDescription"
+    }
+  ],
+  "contentHash": "80438d2f1150a3763a9644bb95e4d1e19b73ada6082a66d098177cd914922ab7",
+  "lastExportedAt": "2026-09-05T19:39:23.189Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b18b9",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "fillSubjectDescription",
+      "description": "fillSubjectDescription only need 4  lines context, do NOT ask the user for description, Create one based on the existing description, if empty create one using the subject. Always display the updated description and ask for consent from user before filling.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "fillSubjectDescription",
+        "args": [
+          {
+            "name": "description",
+            "type": "string",
+            "description": "Generate the subject description and limit is 2000 characters  ",
+            "required": true,
+            "_id": "68396e27e50b37370a70dabd"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68396db612023867e6cd6258"
+      },
+      "by": "7829",
+      "fetcher": "(function(args){\n    return{\n        code:`(function(){\n            return {}\n        })`\n    }\n});\n\n\n",
+      "transformer": "(function (_data, args, reqOptions) {\n  const description = args.description.replace(/<\\/?[^>]+(>|$)/g, \"\"); \n\n  const iframeDoc = document.querySelector(\"#ifrmPage\")?.contentDocument;\n  if (!iframeDoc) {\n    return {\n      success: false,\n      message: \"iframe not found\"\n    };\n  }\n\n  const textarea = iframeDoc.querySelector(\"#descid\");\n  if (!textarea) {\n    return {\n      success: false,\n      message: \"#descid not found inside iframe\"\n    };\n  }\n\n  textarea.value = \"\"; \n  let i = 0;\n\n  const interval = setInterval(() => {\n    if (i < description.length) {\n      textarea.value = description.slice(0, i + 1);\n      i++;\n    } else {\n      clearInterval(interval);\n    }\n  }, 10); \n\n  return {\n    success: true,\n    message: \" do you need any formatting to this tell me i do it for you \"\n  };\n})\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "filling the subject description",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-30T08:35:02.143Z",
+      "updatedAt": "2025-11-12T14:03:04.952Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1c10",
+          "name": "GenarateSubjectDescription"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "fillSubjectDescription",
+      "args": [
+        {
+          "name": "description",
+          "type": "string",
+          "description": "Generate the subject description and limit is 2000 characters  ",
+          "required": true,
+          "_id": "68396e27e50b37370a70dabd"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68396db612023867e6cd6258"
+    },
+    "fetcher": "(function(args){\n    return{\n        code:`(function(){\n            return {}\n        })`\n    }\n});\n\n\n",
+    "transformer": "(function (_data, args, reqOptions) {\n  const description = args.description.replace(/<\\/?[^>]+(>|$)/g, \"\"); \n\n  const iframeDoc = document.querySelector(\"#ifrmPage\")?.contentDocument;\n  if (!iframeDoc) {\n    return {\n      success: false,\n      message: \"iframe not found\"\n    };\n  }\n\n  const textarea = iframeDoc.querySelector(\"#descid\");\n  if (!textarea) {\n    return {\n      success: false,\n      message: \"#descid not found inside iframe\"\n    };\n  }\n\n  textarea.value = \"\"; \n  let i = 0;\n\n  const interval = setInterval(() => {\n    if (i < description.length) {\n      textarea.value = description.slice(0, i + 1);\n      i++;\n    } else {\n      clearInterval(interval);\n    }\n  }, 10); \n\n  return {\n    success: true,\n    message: \" do you need any formatting to this tell me i do it for you \"\n  };\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

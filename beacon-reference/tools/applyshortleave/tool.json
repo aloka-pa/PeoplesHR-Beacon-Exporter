@@ -1,0 +1,78 @@
+{
+  "id": "690dc568931a2d61ba0b1866",
+  "slug": "applyshortleave",
+  "name": "applyShortLeave",
+  "description": "applyShortLeave , Before Executing this api you need to call \"getShortLeaveApprovalList\" and select the approval employee number.",
+  "instructions": null,
+  "taskName": "Applying Short Leave",
+  "tags": [
+    "Absence Management",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "applyShortLeave",
+  "createdAt": "2025-05-28T03:42:40.457Z",
+  "updatedAt": "2025-11-12T11:55:07.291Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be3",
+      "name": "AbsenceManagement"
+    }
+  ],
+  "contentHash": "6107a0c39b4ff7d707679b569ecc6e03e186bfd1c0120ebd2fa5489f95bb558e",
+  "lastExportedAt": "2026-09-05T19:39:23.219Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b1866",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "applyShortLeave",
+      "description": "applyShortLeave , Before Executing this api you need to call \"getShortLeaveApprovalList\" and select the approval employee number.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "applyShortLeave",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"reason\": {\n      \"type\": \"string\",\n      \"description\": \"Reason ID selected by the user from the 'getShortLeaveApprovalList' API.\"\n    },\n    \"comment\": {\n      \"type\": \"string\",\n      \"description\": \"Optional comment provided by the user explaining the short leave.\"\n    },\n    \"approverNumber\": {\n      \"type\": \"string\",\n      \"description\": \"Approver's employee ID, selected from the 'getShortLeaveApprovalList' API. ex:- '000001'\"\n    },\n    \"leaveDate\": {\n      \"type\": \"string\",\n      \"description\": \"Leave date in the format DD-MM-YYYY\"\n    },\n    \"startTime\": {\n      \"type\": \"string\",\n      \"pattern\": \"^\\\\d{2}\\\\.\\\\d{2}$\",\n      \"description\": \"Start time in 'HH.MM' 24-hour format. Example: '01.00'.\"\n    },\n    \"Year\": {\n      \"type\": \"string\",\n      \"description\": \"takes from the user year like 2025\"\n    },\n    \"endTime\": {\n      \"type\": \"string\",\n      \"pattern\": \"^\\\\d{2}\\\\.\\\\d{2}$\",\n      \"description\": \"End time in 'HH.MM' 24-hour format. Example: '09.00'.\"\n    }\n  },\n  \"required\": [\n    \"reason\",\n    \"approverNumber\",\n    \"leaveDate\",\n    \"startTime\",\n    \"endTime\",\n    \"Year\"\n  ]\n}\n",
+        "_id": "68368630d1954a2e4d345111"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function(data, args, reqOptions) {\n  const applyshortleave = await BeaconBar.executeFunction('shortleave')(args) \n  return applyshortleave;\n})",
+      "groupName": "",
+      "tags": [
+        "Absence Management",
+        "Headers"
+      ],
+      "taskName": "Applying Short Leave",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-28T03:42:40.457Z",
+      "updatedAt": "2025-11-12T11:55:07.291Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be3",
+          "name": "AbsenceManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "applyShortLeave",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"reason\": {\n      \"type\": \"string\",\n      \"description\": \"Reason ID selected by the user from the 'getShortLeaveApprovalList' API.\"\n    },\n    \"comment\": {\n      \"type\": \"string\",\n      \"description\": \"Optional comment provided by the user explaining the short leave.\"\n    },\n    \"approverNumber\": {\n      \"type\": \"string\",\n      \"description\": \"Approver's employee ID, selected from the 'getShortLeaveApprovalList' API. ex:- '000001'\"\n    },\n    \"leaveDate\": {\n      \"type\": \"string\",\n      \"description\": \"Leave date in the format DD-MM-YYYY\"\n    },\n    \"startTime\": {\n      \"type\": \"string\",\n      \"pattern\": \"^\\\\d{2}\\\\.\\\\d{2}$\",\n      \"description\": \"Start time in 'HH.MM' 24-hour format. Example: '01.00'.\"\n    },\n    \"Year\": {\n      \"type\": \"string\",\n      \"description\": \"takes from the user year like 2025\"\n    },\n    \"endTime\": {\n      \"type\": \"string\",\n      \"pattern\": \"^\\\\d{2}\\\\.\\\\d{2}$\",\n      \"description\": \"End time in 'HH.MM' 24-hour format. Example: '09.00'.\"\n    }\n  },\n  \"required\": [\n    \"reason\",\n    \"approverNumber\",\n    \"leaveDate\",\n    \"startTime\",\n    \"endTime\",\n    \"Year\"\n  ]\n}\n",
+      "_id": "68368630d1954a2e4d345111"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function(data, args, reqOptions) {\n  const applyshortleave = await BeaconBar.executeFunction('shortleave')(args) \n  return applyshortleave;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

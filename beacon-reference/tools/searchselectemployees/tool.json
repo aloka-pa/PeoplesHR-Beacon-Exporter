@@ -1,0 +1,73 @@
+{
+  "id": "690dc569931a2d61ba0b190d",
+  "slug": "searchselectemployees",
+  "name": "searchSelectEmployees",
+  "description": "search&SelectEmployees",
+  "instructions": null,
+  "taskName": "searchSelectEmployees",
+  "tags": [
+    "selectingCandidatePool"
+  ],
+  "status": "unlive",
+  "signature": "searchSelectEmployees",
+  "createdAt": "2025-06-03T12:38:09.137Z",
+  "updatedAt": "2025-06-03T12:38:09.137Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c4f",
+      "name": "SelectLeaderShipCandiates"
+    }
+  ],
+  "contentHash": "e3bfe60a65a833e0d5dfd6e2bc01c5cd880559961f433b2d7330b6ad76313e65",
+  "lastExportedAt": "2026-09-05T19:39:23.734Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b190d",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "searchSelectEmployees",
+      "description": "search&SelectEmployees",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "searchSelectEmployees",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "683eecb19f17a1a75c2a2a01"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function(data, args, reqOptions) {\n   const searchEmployees = await BeaconBar.executeFunction(\"searchEmployee\")();\n  const selectingEmployees = await BeaconBar.executeFunction(\"selectEmployees\")(searchEmployees)\n   return selectingEmployees;\n})",
+      "groupName": "",
+      "tags": [
+        "selectingCandidatePool"
+      ],
+      "taskName": "searchSelectEmployees",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-06-03T12:38:09.137Z",
+      "updatedAt": "2025-06-03T12:38:09.137Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c4f",
+          "name": "SelectLeaderShipCandiates"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "searchSelectEmployees",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "683eecb19f17a1a75c2a2a01"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function(data, args, reqOptions) {\n   const searchEmployees = await BeaconBar.executeFunction(\"searchEmployee\")();\n  const selectingEmployees = await BeaconBar.executeFunction(\"selectEmployees\")(searchEmployees)\n   return selectingEmployees;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

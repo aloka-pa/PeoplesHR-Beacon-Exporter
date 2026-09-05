@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    {
+      "name": "garcePeriodName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the grace period name if the user update to get the human update value if the user not update take before api data corresponding value will be take example \"hello123\"",
+      "advanced": false,
+      "raw": {
+        "name": "garcePeriodName",
+        "type": "string",
+        "description": "to get the grace period name if the user update to get the human update value if the user not update take before api data corresponding value will be take example \"hello123\"",
+        "required": true,
+        "_id": "685bfd0dafa936e2712696ef"
+      }
+    },
+    {
+      "name": "roundingPattern",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the grace rounding Pattern if the user update to get the human update value if the user not update take before api data corresponding value will be take name corresponding value will be take example \"000010\"",
+      "advanced": false,
+      "raw": {
+        "name": "roundingPattern",
+        "type": "string",
+        "description": "to get the grace rounding Pattern if the user update to get the human update value if the user not update take before api data corresponding value will be take name corresponding value will be take example \"000010\"",
+        "required": true,
+        "_id": "685bfd0dafa936e2712696f0"
+      }
+    },
+    {
+      "name": "previousGracePeriod",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the grace previous Grace Period if the user update to get the human update value if the user not update take before api data corresponding value will be take name corresponding value will be take example \"000010\"",
+      "advanced": false,
+      "raw": {
+        "name": "previousGracePeriod",
+        "type": "string",
+        "description": "to get the grace previous Grace Period if the user update to get the human update value if the user not update take before api data corresponding value will be take name corresponding value will be take example \"000010\"",
+        "required": true,
+        "_id": "685bfd0dafa936e2712696f1"
+      }
+    },
+    {
+      "name": "duration",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "if the user update will be take update value other then previous value take example \"5\" etc..",
+      "advanced": false,
+      "raw": {
+        "name": "duration",
+        "type": "string",
+        "description": "if the user update will be take update value other then previous value take example \"5\" etc..",
+        "required": true,
+        "_id": "685bfd0dafa936e2712696f2"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

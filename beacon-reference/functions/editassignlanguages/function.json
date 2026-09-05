@@ -1,0 +1,24 @@
+{
+  "id": "690dc57b931a2d61ba0b23c7",
+  "slug": "editassignlanguages",
+  "name": "editAssignLanguages",
+  "status": "live",
+  "createdAt": "2025-05-26T14:46:03.897Z",
+  "updatedAt": "2025-05-26T14:46:03.897Z",
+  "contentHash": "1231aada3cd763ad36c43404089a7c9a264b6d21be0dcdbf889f40159c7b055b",
+  "lastExportedAt": "2026-09-05T19:41:40.168Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57b931a2d61ba0b23c7",
+    "name": "editAssignLanguages",
+    "status": "live",
+    "code": "(async function (reqOptions) {\n  const args = BeaconBar.getSharedData(\"datsss\")\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"cache-control\", \"max-age=0\");\n  myHeaders.append(\"content-type\", \"application/x-www-form-urlencoded\");\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__LASTFOCUS\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", args.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", args.viewStateGenerator);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", args.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded.append(\"ctl00$hdnQuickmenu\", \"\");\n  urlencoded.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", args.employeenumber);\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded.append(\"ctl00$body$cboLanuage\", reqOptions.language);\n  urlencoded.append(\"ctl00$body$chkReading\", reqOptions.readingcheck);\n  urlencoded.append(\"ctl00$body$cboLanGradeReading\", reqOptions.gradeReading);\n  urlencoded.append(\"ctl00$body$chkWriting\", reqOptions.writingcheck);\n  urlencoded.append(\"ctl00$body$cboLanGradeWriting\", reqOptions.gradewriting);\n  urlencoded.append(\"ctl00$body$chkSpeaking\", reqOptions.speakingcheck);\n  urlencoded.append(\"ctl00$body$cboLanGradeSpeaking\", reqOptions.gradeSpeaking);\n  urlencoded.append(\"ctl00$body$txtPublicKey\", args.publicKey);\n  urlencoded.append(\"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"2\");\n  urlencoded.append(\"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdLanuages_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$butSave\", \"Save\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(\"https://devtest-echoengineers.phrsandbox.dev/hrb5/EIM/AssignLanguage.aspx\", requestOptions)\n  const data = await response.text();\n    function extractViewState(html) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(html, \"text/html\");\n\n    const empNumber = doc.querySelector(\"#ctl00_body_txtEmpNumber\")?.value || \"\";\n\n    const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n    const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const publicKey = doc.querySelector(\"#ctl00_body_txtPublicKey\")?.value || \"\";\n    \n\n    return {\n      viewState, viewStateGenerator, eventValidation , publicKey  , empNumber\n\n    }\n  }\n\n  return data;\n\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "690dc572931a2d61ba0b1c32",
+  "slug": "competency-evaluation",
+  "name": "Competency Evaluation",
+  "description": "Competency Evaluation",
+  "exportedAt": "2026-09-05T19:41:12.255Z",
+  "raw": {
+    "_id": "690dc572931a2d61ba0b1c32",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "Competency Evaluation",
+    "description": "Competency Evaluation",
+    "by": "1927",
+    "prompt": "Get the data and wait. show the description before filled . When the user says “Shall I fill this description?”, call the tool \"CompetencyEvaluationDescriptionFormattingUploading\" with the previously captured description.  first show what you filled then user confirms then fill. \n\nimp :- dont ask anything to the user just ask consent shall fill this .\n\nimp : - mimimum one approval comment is 300 characters",
+    "notes": [],
+    "llmConfig": [],
+    "status": "live",
+    "toolIds": [
+      "690dc568931a2d61ba0b18ed"
+    ],
+    "scenarioIds": [],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      }
+    },
+    "vis": false,
+    "createdAt": "2025-06-02T04:12:38.165Z",
+    "updatedAt": "2025-06-02T04:12:38.165Z",
+    "__v": 0
+  }
+}

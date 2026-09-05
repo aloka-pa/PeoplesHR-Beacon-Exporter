@@ -1,0 +1,216 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "ctl00_body_txtName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Location name. If the user provides a value, use that. Otherwise, fetch from the getSelectLocationDetails tool and populate this field.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Location name. If the user provides a value, use that. Otherwise, fetch from the getSelectLocationDetails tool and populate this field."
+      }
+    },
+    {
+      "name": "ctl00_body_txtAbbreviation",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Location abbreviation. Use user input if available, otherwise retrieve from the getSelectLocationDetails tool.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Location abbreviation. Use user input if available, otherwise retrieve from the getSelectLocationDetails tool."
+      }
+    },
+    {
+      "name": "ctl00_body_txttp",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Telephone number. Use user-provided input or fetch it from the getSelectLocationDetails tool if not provided.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Telephone number. Use user-provided input or fetch it from the getSelectLocationDetails tool if not provided."
+      }
+    },
+    {
+      "name": "ctl00_body_txtFax",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Fax number. Use the user-entered value or retrieve it from the getSelectLocationDetails tool if not provided.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Fax number. Use the user-entered value or retrieve it from the getSelectLocationDetails tool if not provided."
+      }
+    },
+    {
+      "name": "ctl00_body_txtemail",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Email address. Use user input or fetch from the getSelectLocationDetails tool if left blank.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "format": "email",
+        "description": "Email address. Use user input or fetch from the getSelectLocationDetails tool if left blank."
+      }
+    },
+    {
+      "name": "ctl00_body_txturl",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Website URL. Populate with user input or use data from the getSelectLocationDetails tool if empty.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "format": "uri",
+        "description": "Website URL. Populate with user input or use data from the getSelectLocationDetails tool if empty."
+      }
+    },
+    {
+      "name": "ctl00_body_txtaddress",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Address. Use the provided value or retrieve from the getSelectLocationDetails tool if not entered.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Address. Use the provided value or retrieve from the getSelectLocationDetails tool if not entered."
+      }
+    },
+    {
+      "name": "ctl00_body_ddlCountry",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Country. If not specified by the user, get the value from the getSelectLocationDetails tool and you take user give the country name corresponding value take",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Country. If not specified by the user, get the value from the getSelectLocationDetails tool and you take user give the country name corresponding value take"
+      }
+    },
+    {
+      "name": "ctl00_body_ddlProvince",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Province or state. Use user-provided input or default to the value from the getSelectLocationDetails tool and you take user give the Province name corresponding value take.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Province or state. Use user-provided input or default to the value from the getSelectLocationDetails tool and you take user give the Province name corresponding value take."
+      }
+    },
+    {
+      "name": "ctl00_body_ddlDistrict",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "District. Use input from the user or fallback to data from the getSelectLocationDetails tool and you take user give the District name corresponding value take",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "District. Use input from the user or fallback to data from the getSelectLocationDetails tool and you take user give the District name corresponding value take"
+      }
+    },
+    {
+      "name": "ctl00_body_cboTimeZone",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Time zone. Use the user-entered value or populate from the getSelectLocationDetails tool if blank.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Time zone. Use the user-entered value or populate from the getSelectLocationDetails tool if blank."
+      }
+    },
+    {
+      "name": "ctl00_body_txtHeadName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Head of location name. Use user-provided value or fetch from the getSelectLocationDetails tool.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Head of location name. Use user-provided value or fetch from the getSelectLocationDetails tool."
+      }
+    },
+    {
+      "name": "ctl00_body_txtHTitle",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Head's title or designation. If not provided by the user, get it from the getSelectLocationDetails tool.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Head's title or designation. If not provided by the user, get it from the getSelectLocationDetails tool."
+      }
+    },
+    {
+      "name": "ctl00_body_txtAdminName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Administrator name. Use input from the user or fetch from the getSelectLocationDetails tool.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Administrator name. Use input from the user or fetch from the getSelectLocationDetails tool."
+      }
+    },
+    {
+      "name": "ctl00_body_filMyFile",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Base64-encoded logo file to be uploaded. Optional input.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "contentEncoding": "base64",
+        "title": "Logo File (Binary Base64)",
+        "description": "Base64-encoded logo file to be uploaded. Optional input."
+      }
+    },
+    {
+      "name": "ctl00_body_butSave",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Trigger to save the form. Should always be set to 'Save'.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "Save"
+        ],
+        "description": "Trigger to save the form. Should always be set to 'Save'."
+      }
+    },
+    {
+      "name": "ctl00_body_hdnDefCountry",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Default country code or name. If not provided, populate from the getSelectLocationDetails tool.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Default country code or name. If not provided, populate from the getSelectLocationDetails tool."
+      }
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "id": "690dc56a931a2d61ba0b1a0b",
+  "slug": "changelanguage",
+  "name": "changeLanguage",
+  "description": "If the user requests a change in the assigned language, first execute the \"getAssignLanguageDetails\" tool. Then, after execute for \"updateLanguagesDetails\" tool.proceed with the then execute for \"changeLanguage\" tool, execute the \"updateEmployeeInformationDetails\" tool to complete the update.Before calling the APIs, reset the existing grade values. Prompt the user to provide new Reading, Writing, and Speaking grade selections. Display the list of available grades, and allow the user to choose one grade for each skill. in the api payload fields get to before api data get \"updateEmployeeInformationDetails\" tool. if the user change the language fields do not take grade values for \"updateEmployeeInformationDetails\" tool. display the all grade values prove by \"changeLanguage\" tool. select new grades don not take for old grades.",
+  "instructions": null,
+  "taskName": "Change The Language",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "changeLanguage",
+  "createdAt": "2025-06-14T11:48:19.990Z",
+  "updatedAt": "2025-06-14T11:48:19.990Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "813094444c4289e3a555998756de691900870a8d9a82b9488851ad3acc3c992b",
+  "lastExportedAt": "2026-09-05T19:39:23.562Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56a931a2d61ba0b1a0b",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "changeLanguage",
+      "description": "If the user requests a change in the assigned language, first execute the \"getAssignLanguageDetails\" tool. Then, after execute for \"updateLanguagesDetails\" tool.proceed with the then execute for \"changeLanguage\" tool, execute the \"updateEmployeeInformationDetails\" tool to complete the update.Before calling the APIs, reset the existing grade values. Prompt the user to provide new Reading, Writing, and Speaking grade selections. Display the list of available grades, and allow the user to choose one grade for each skill. in the api payload fields get to before api data get \"updateEmployeeInformationDetails\" tool. if the user change the language fields do not take grade values for \"updateEmployeeInformationDetails\" tool. display the all grade values prove by \"changeLanguage\" tool. select new grades don not take for old grades.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "changeLanguage",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"description\": \"if the user any value missing update data value to get for 'updateLanguagesDetails' tool to get all related data. and first execute in this tool 'updateLanguagesDetails' then after related data get after in this tool execute 'updateEmployeeInformationDetails' tool. and if the user change language related query return for 'change' use the keyword for 'languageChange'\",\n  \"properties\": {\n    \"languageCode\": {\n      \"type\": \"string\",\n      \"description\": \"The selected language code. Example: '000001' for English. to get before api example value as return\"\n    },\n    \"readingEnabled\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"on\"\n      ],\n      \"description\": \"Checkbox indicating if READING is selected. Value is 'on' if checked. to get before api value do not dynamically filled\"\n    },\n    \"readingRating\": {\n      \"type\": \"string\",\n      \"description\": \"Rating selected for READING. Examples: '5' = Excellent, '8' = Average. to get before api value what user select corresponding value return\"\n    },\n    \"writingEnabled\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"on\"\n      ],\n      \"description\": \"Checkbox indicating if WRITING is selected. Value is 'on' if checked.\"\n    },\n    \"writingRating\": {\n      \"type\": \"string\",\n      \"description\": \"Rating selected for WRITING. Examples: '5' = Excellent, '8' = Average.to get before api value what user select corresponding value return\"\n    },\n    \"speakingEnabled\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"on\"\n      ],\n      \"description\": \"Checkbox indicating if SPEAKING is selected. Value is 'on' if checked.\"\n    },\n    \"speakingRating\": {\n      \"type\": \"string\",\n      \"description\": \"Rating selected for SPEAKING. Examples: '5' = Excellent, '8' = Average.to get before api value what user select corresponding value return\"\n    },\n    \"employeeNumber\": {\n      \"type\": \"string\",\n      \"description\": \"Unique identifier assigned to the employee. Example: '000001'.\"\n    }\n  },\n  \"required\": [\n    \"languageCode\",\n    \"readingEnabled\",\n    \"readingRating\",\n    \"writingEnabled\",\n    \"writingRating\",\n    \"speakingEnabled\",\n    \"speakingRating\",\n    \"employeeNumber\"\n  ]\n}",
+        "_id": "684d61830b901749cd6d4899"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(window.language.publicKey, args.employeeNumber);\n  const changeLanguage = await BeaconBar.executeFunction(\"module\")(\n    {\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"ctl00$body$cboLanuage\",\n      __EVENTARGUMENT: \"\",\n      __LASTFOCUS: \"\",\n      __VIEWSTATE: window.language.viewState,\n      __VIEWSTATEGENERATOR: window.language.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.language.eventValidation,\n      \"ctl00$hdnDateFormat\": \"m/d/yy\",\n      \"ctl00$hdnQuickmenu\": \"\",\n      \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n      \"ctl00$body$EmpSearch$hdnEmpNumber\": args.employeeNumber,\n      \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n      \"ctl00$body$cboLanuage\": args.languageCode,\n      \"ctl00$body$chkReading\": args.readingEnabled,\n      \"ctl00$body$cboLanGradeReading\": args.readingRating,\n      \"ctl00$body$chkWriting\": args.writingEnabled,\n      \"ctl00$body$cboLanGradeWriting\": args.writingRating,\n      \"ctl00$body$chkSpeaking\": args.speakingEnabled,\n      \"ctl00$body$cboLanGradeSpeaking\": args.speakingRating,\n      \"ctl00$body$txtPublicKey\": window.language.publicKey,\n      \"ctl00$body$txtEmpNumber\": empEnc,\n      \"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"2\",\n      \"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdLanuages_ClientState\": \"\",\n    },\n    `${reqOptions.sl}/EIM/AssignLanguage.aspx`\n  );\n\n  window.language = changeLanguage;\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(changeLanguage.rawData, \"text/html\");\n\n  const selectElement = document.querySelector('#ctl00_body_cboLanGradeReading');\n  const options = selectElement.querySelectorAll('option');\n\n  const grades = Array.from(options).map(option => ({\n    name: option.textContent.trim(),\n    value: option.value\n  }));\n  return grades;\n\n})",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Change The Language",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-14T11:48:19.990Z",
+      "updatedAt": "2025-06-14T11:48:19.990Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "changeLanguage",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"description\": \"if the user any value missing update data value to get for 'updateLanguagesDetails' tool to get all related data. and first execute in this tool 'updateLanguagesDetails' then after related data get after in this tool execute 'updateEmployeeInformationDetails' tool. and if the user change language related query return for 'change' use the keyword for 'languageChange'\",\n  \"properties\": {\n    \"languageCode\": {\n      \"type\": \"string\",\n      \"description\": \"The selected language code. Example: '000001' for English. to get before api example value as return\"\n    },\n    \"readingEnabled\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"on\"\n      ],\n      \"description\": \"Checkbox indicating if READING is selected. Value is 'on' if checked. to get before api value do not dynamically filled\"\n    },\n    \"readingRating\": {\n      \"type\": \"string\",\n      \"description\": \"Rating selected for READING. Examples: '5' = Excellent, '8' = Average. to get before api value what user select corresponding value return\"\n    },\n    \"writingEnabled\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"on\"\n      ],\n      \"description\": \"Checkbox indicating if WRITING is selected. Value is 'on' if checked.\"\n    },\n    \"writingRating\": {\n      \"type\": \"string\",\n      \"description\": \"Rating selected for WRITING. Examples: '5' = Excellent, '8' = Average.to get before api value what user select corresponding value return\"\n    },\n    \"speakingEnabled\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"on\"\n      ],\n      \"description\": \"Checkbox indicating if SPEAKING is selected. Value is 'on' if checked.\"\n    },\n    \"speakingRating\": {\n      \"type\": \"string\",\n      \"description\": \"Rating selected for SPEAKING. Examples: '5' = Excellent, '8' = Average.to get before api value what user select corresponding value return\"\n    },\n    \"employeeNumber\": {\n      \"type\": \"string\",\n      \"description\": \"Unique identifier assigned to the employee. Example: '000001'.\"\n    }\n  },\n  \"required\": [\n    \"languageCode\",\n    \"readingEnabled\",\n    \"readingRating\",\n    \"writingEnabled\",\n    \"writingRating\",\n    \"speakingEnabled\",\n    \"speakingRating\",\n    \"employeeNumber\"\n  ]\n}",
+      "_id": "684d61830b901749cd6d4899"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(window.language.publicKey, args.employeeNumber);\n  const changeLanguage = await BeaconBar.executeFunction(\"module\")(\n    {\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"ctl00$body$cboLanuage\",\n      __EVENTARGUMENT: \"\",\n      __LASTFOCUS: \"\",\n      __VIEWSTATE: window.language.viewState,\n      __VIEWSTATEGENERATOR: window.language.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.language.eventValidation,\n      \"ctl00$hdnDateFormat\": \"m/d/yy\",\n      \"ctl00$hdnQuickmenu\": \"\",\n      \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n      \"ctl00$body$EmpSearch$hdnEmpNumber\": args.employeeNumber,\n      \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n      \"ctl00$body$cboLanuage\": args.languageCode,\n      \"ctl00$body$chkReading\": args.readingEnabled,\n      \"ctl00$body$cboLanGradeReading\": args.readingRating,\n      \"ctl00$body$chkWriting\": args.writingEnabled,\n      \"ctl00$body$cboLanGradeWriting\": args.writingRating,\n      \"ctl00$body$chkSpeaking\": args.speakingEnabled,\n      \"ctl00$body$cboLanGradeSpeaking\": args.speakingRating,\n      \"ctl00$body$txtPublicKey\": window.language.publicKey,\n      \"ctl00$body$txtEmpNumber\": empEnc,\n      \"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"2\",\n      \"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdLanuages_ClientState\": \"\",\n    },\n    `${reqOptions.sl}/EIM/AssignLanguage.aspx`\n  );\n\n  window.language = changeLanguage;\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(changeLanguage.rawData, \"text/html\");\n\n  const selectElement = document.querySelector('#ctl00_body_cboLanGradeReading');\n  const options = selectElement.querySelectorAll('option');\n\n  const grades = Array.from(options).map(option => ({\n    name: option.textContent.trim(),\n    value: option.value\n  }));\n  return grades;\n\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

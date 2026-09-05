@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "description",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Filling Advertisement Description limit is 2300 characters and takes as  it is with bold tags html bold tags.",
+      "advanced": false,
+      "raw": {
+        "name": "description",
+        "type": "string",
+        "description": "Filling Advertisement Description limit is 2300 characters and takes as  it is with bold tags html bold tags.",
+        "required": true,
+        "_id": "6839b396c45a7af87d5f03af"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

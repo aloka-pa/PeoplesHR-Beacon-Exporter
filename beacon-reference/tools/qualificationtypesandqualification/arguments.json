@@ -1,0 +1,256 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "postbackId",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The PostBack identifier required for editing a specific qualification record. This is retrieved from the 'getEducationalAndProfessionalQualificationsDetails' API and is used when updating existing data. to get for 'Edit Postback ID' for 'getEducationalAndProfessionalQualificationsDetails' tool if the user ask related qualification type related to get the edit postback id.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The PostBack identifier required for editing a specific qualification record. This is retrieved from the 'getEducationalAndProfessionalQualificationsDetails' API and is used when updating existing data. to get for 'Edit Postback ID' for 'getEducationalAndProfessionalQualificationsDetails' tool if the user ask related qualification type related to get the edit postback id."
+      }
+    },
+    {
+      "name": "employeeNumber",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Unique identifier for the employee.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Unique identifier for the employee."
+      }
+    },
+    {
+      "name": "qualificationTypeId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The ID representing the selected Qualification Type (e.g., Postgraduate Degree). This value is derived from user selection after displaying the available types from 'getEducationalAndProfessionalQualificationsDetails'. The user is not asked to provide this ID directly.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The ID representing the selected Qualification Type (e.g., Postgraduate Degree). This value is derived from user selection after displaying the available types from 'getEducationalAndProfessionalQualificationsDetails'. The user is not asked to provide this ID directly."
+      }
+    },
+    {
+      "name": "qualificationId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The specific ID of the selected qualification (e.g., MBA, BSc). This is selected by the user from the options shown, which are fetched after the Qualification Type is selected. The user is not expected to know or input the ID directly.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The specific ID of the selected qualification (e.g., MBA, BSc). This is selected by the user from the options shown, which are fetched after the Qualification Type is selected. The user is not expected to know or input the ID directly."
+      }
+    },
+    {
+      "name": "qualificationEffectStartDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "'qualificationEffectStartDate' The qualification effect start date must strictly follow the 'm/d/YYYY' format and should be captured before calling the final API. the 'getEducationalAndProfessionalQualificationsDetails' should be used. Additionally, the AI must not generate any random dates during this process.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "format": "date",
+        "description": "'qualificationEffectStartDate' The qualification effect start date must strictly follow the 'm/d/YYYY' format and should be captured before calling the final API. the 'getEducationalAndProfessionalQualificationsDetails' should be used. Additionally, the AI must not generate any random dates during this process."
+      }
+    },
+    {
+      "name": "qualificationEffectEndDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "'qualificationEffectEndDate' The qualification effect end date must strictly follow the 'm/d/YYYY' format and should be captured before calling the final API. the 'getEducationalAndProfessionalQualificationsDetails' should be used. Additionally, the AI must not generate any random dates during this process.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "format": "date",
+        "description": "'qualificationEffectEndDate' The qualification effect end date must strictly follow the 'm/d/YYYY' format and should be captured before calling the final API. the 'getEducationalAndProfessionalQualificationsDetails' should be used. Additionally, the AI must not generate any random dates during this process."
+      }
+    },
+    {
+      "name": "institutionName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Name of the school or institution from which the qualification was obtained.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Name of the school or institution from which the qualification was obtained."
+      }
+    },
+    {
+      "name": "qualificationStatus",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Status of the qualification. Options are sourced from 'getEducationalAndProfessionalQualificationsDetails' and may include: 0: Pass, 1: First Class, 2: Second Class, etc.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "0",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "description": "Status of the qualification. Options are sourced from 'getEducationalAndProfessionalQualificationsDetails' and may include: 0: Pass, 1: First Class, 2: Second Class, etc."
+      }
+    },
+    {
+      "name": "jobRelated",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Indicates whether the qualification is job-related. Values: 0 = No, 1 = Yes. Options are provided via 'getEducationalAndProfessionalQualificationsDetails'.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "0",
+          "1"
+        ],
+        "description": "Indicates whether the qualification is job-related. Values: 0 = No, 1 = Yes. Options are provided via 'getEducationalAndProfessionalQualificationsDetails'."
+      }
+    },
+    {
+      "name": "durationValue",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Numeric value representing the duration of the qualification (e.g., 4.00).",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Numeric value representing the duration of the qualification (e.g., 4.00)."
+      }
+    },
+    {
+      "name": "durationType",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Type of duration. Values include: 000001 = Years, 000002 = Months, 000003 = Weeks, 000004 = Days, 000005 = Hours. These options are fetched from 'getEducationalAndProfessionalQualificationsDetails'.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "000001",
+          "000002",
+          "000003",
+          "000004",
+          "000005"
+        ],
+        "description": "Type of duration. Values include: 000001 = Years, 000002 = Months, 000003 = Weeks, 000004 = Days, 000005 = Hours. These options are fetched from 'getEducationalAndProfessionalQualificationsDetails'."
+      }
+    },
+    {
+      "name": "yearOfPassing",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Year in which the qualification was obtained (e.g., 2023).",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Year in which the qualification was obtained (e.g., 2023)."
+      }
+    },
+    {
+      "name": "comments",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Any additional comments or notes regarding the qualification.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Any additional comments or notes regarding the qualification."
+      }
+    },
+    {
+      "name": "totalCost",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Total cost incurred for completing the qualification. dont take dynamic amount",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Total cost incurred for completing the qualification. dont take dynamic amount"
+      }
+    },
+    {
+      "name": "currencyForTotalCost",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Currency code for the total cost. The list of currencies is shown to the user, and the corresponding selected value is used. These values are fetched from 'getEducationalAndProfessionalQualificationsDetails'. dont take dynamic currency you get before api data get.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Currency code for the total cost. The list of currencies is shown to the user, and the corresponding selected value is used. These values are fetched from 'getEducationalAndProfessionalQualificationsDetails'. dont take dynamic currency you get before api data get."
+      }
+    },
+    {
+      "name": "CostEffectDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The start date of the qualification (format: YYYY-MM-DD).dont take dynamic effect data you get before api data get.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "format": "date",
+        "description": "The start date of the qualification (format: YYYY-MM-DD).dont take dynamic effect data you get before api data get."
+      }
+    },
+    {
+      "name": "reimbursedAmount",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The amount reimbursed for the qualification, if applicable.dont take dynamic reimbursed Amount you get before api data get.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The amount reimbursed for the qualification, if applicable.dont take dynamic reimbursed Amount you get before api data get."
+      }
+    },
+    {
+      "name": "currencyForReimbursement",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Currency code for the reimbursed amount. Users select from a displayed list of currencies, and the selected code is used. Data sourced from 'getEducationalAndProfessionalQualificationsDetails'.dont take dynamic reimbursed currency, you get before api data get.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Currency code for the reimbursed amount. Users select from a displayed list of currencies, and the selected code is used. Data sourced from 'getEducationalAndProfessionalQualificationsDetails'.dont take dynamic reimbursed currency, you get before api data get."
+      }
+    },
+    {
+      "name": "reimbursementEffectDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The end date of the qualification (format: YYYY-MM-DD). dont take dynamic effect data you get before api data get.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "format": "date",
+        "description": "The end date of the qualification (format: YYYY-MM-DD). dont take dynamic effect data you get before api data get."
+      }
+    }
+  ]
+}

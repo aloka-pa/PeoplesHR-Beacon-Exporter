@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "nationalityName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "the name of the new nationality record",
+      "advanced": false,
+      "raw": {
+        "name": "nationalityName",
+        "type": "string",
+        "description": "the name of the new nationality record",
+        "required": true,
+        "_id": "695228536730d25103d5fdf7"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

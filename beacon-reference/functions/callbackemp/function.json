@@ -1,0 +1,24 @@
+{
+  "id": "690dc57a931a2d61ba0b228a",
+  "slug": "callbackemp",
+  "name": "callbackemp",
+  "status": "live",
+  "createdAt": "2025-05-28T12:14:45.447Z",
+  "updatedAt": "2025-05-28T12:14:45.447Z",
+  "contentHash": "bd1242e84f2bcc86686cb75effb1b8bbd8985f38678b757b8596e6266b62e0fe",
+  "lastExportedAt": "2026-09-05T19:41:39.262Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57a931a2d61ba0b228a",
+    "name": "callbackemp",
+    "status": "live",
+    "code": "(async function () {\n  //done\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"priority\", \"u=0, i\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\")\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n  const digest = await BeaconBar.executeFunction(\"getDigest\")('CallbackID=18&ShowMode=3&ShowState=1&IsMultySelect=1');\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const response = await fetch(`${reqOptions}absence/ess/LeaveCommonComponantESS.aspx?CallbackID=18&ShowMode=3&ShowState=1&IsMultySelect=1&digest=${digest.digest}`, requestOptions)\n  const data = await response.text()\n  function extractViewState(html) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(html, \"text/html\");\n    const hdnurlESS = doc.querySelector(\"#hdnurlESS\")?.value || \"\";\n    const rawUrl = hdnurlESS;\n\n    const queryString = rawUrl.split('?')[1];\n\n    const params = new URLSearchParams(queryString);\n\n    const empNumber = params.get('empNumber');\n    const callBack = params.get('callBack');\n    return {\n      empNumber, callBack\n    }\n  }\n  const datas = extractViewState(data);\n  return datas;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "updatePriorOvertimeApplication",
+      "type": "array",
+      "required": true,
+      "defaultValue": null,
+      "description": "When a user updates multiple records, the system should prompt for all required fields for each date record before proceeding. This array contains objects for an intelligent overtime application processing system that uses AI-driven validation to ensure policy compliance and accurate time tracking, If the user updates multiple dates, you must ask for Pre OT and Post OT values for each individual date. Each date represents one record, so for bulk date updates, prompt the user to provide Pre OT and Post OT for every single date.",
+      "advanced": true,
+      "raw": {
+        "type": "array",
+        "description": "When a user updates multiple records, the system should prompt for all required fields for each date record before proceeding. This array contains objects for an intelligent overtime application processing system that uses AI-driven validation to ensure policy compliance and accurate time tracking, If the user updates multiple dates, you must ask for Pre OT and Post OT values for each individual date. Each date represents one record, so for bulk date updates, prompt the user to provide Pre OT and Post OT for every single date.",
+        "items": {
+          "type": "object",
+          "description": "If the user updates multiple dates, you must ask for Pre OT and Post OT values for each individual date. Each date represents one record, so for bulk date updates, prompt the user to provide Pre OT and Post OT for every single date.",
+          "properties": {
+            "PreOTHrsText": {
+              "type": "string",
+              "description": "The original pre-shift overtime hours that were previously recorded. This field captures the initial overtime allocation before any modifications, enabling the AI agent to calculate delta changes and maintain audit trails for compliance reporting."
+            },
+            "PostOTHrsText": {
+              "type": "string",
+              "description": "The revised post-shift overtime hours that represent the updated overtime allocation. This field allows the AI system to automatically recalculate total work hours, validate against maximum overtime limits, and trigger approval workflows when necessary."
+            },
+            "selectedDates": {
+              "type": "string",
+              "description": "no need take mutiple dates only evry record one date.Comma-separated list of specific dates for which the overtime application updates should be applied. Format: DD/MM/YY (e.g., '23/06/25, 24/06/25, 25/06/25'). The AI agent will parse these dates to ensure they fall within valid pay periods and check for any scheduling conflicts or overlapping requests."
+            },
+            "reason": {
+              "type": "string",
+              "description": "Standardized reason code for the overtime update request that enables automated categorization and approval routing. Values: '00003' = Extra covering hours (requires supervisor approval), '00002' = Month End Process (auto-approved for finance team), '00001' = Urgent shipping Request (requires immediate processing and client notification). The AI system uses these codes to trigger appropriate workflow automations. do not take ai user must be ask consent availebel reasion display user selected corresponding reasion id will be take."
+            },
+            "comments": {
+              "type": "string",
+              "description": "Optional free-text field for additional context, justification, or special instructions related to the overtime update. When provided, the AI agent can perform sentiment analysis and keyword extraction to flag potential issues, ensure proper documentation for audit purposes, and route requests requiring human review."
+            }
+          },
+          "required": [
+            "PreOTHrsText",
+            "PostOTHrsText",
+            "selectedDates",
+            "reason"
+          ]
+        }
+      }
+    }
+  ]
+}

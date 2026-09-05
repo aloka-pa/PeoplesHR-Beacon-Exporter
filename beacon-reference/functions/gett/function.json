@@ -1,0 +1,24 @@
+{
+  "id": "690dc583931a2d61ba0b2a76",
+  "slug": "gett",
+  "name": "getT",
+  "status": "live",
+  "createdAt": "2025-05-13T06:19:10.526Z",
+  "updatedAt": "2025-05-13T06:19:10.526Z",
+  "contentHash": "59c1e4e7294082002ec944f80c1e43ea3df8197d191e662e3c2ca7e582372904",
+  "lastExportedAt": "2026-09-05T19:41:42.855Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc583931a2d61ba0b2a76",
+    "name": "getT",
+    "status": "live",
+    "code": "(async function(url){\n    const myHeaders = new Headers();\n    myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n\n    const urlencoded = new URLSearchParams();\n    urlencoded.append(\"data\", url);\n\n    const requestOptions = {\n        method: \"POST\",\n        headers: myHeaders,\n        body: urlencoded,\n        redirect: \"follow\"\n    };\n\n    const res = await fetch(`https://${location.host}/hrb5/home/beaconutil`, requestOptions);\n    return res.text();\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

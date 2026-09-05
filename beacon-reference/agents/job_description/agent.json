@@ -1,0 +1,42 @@
+{
+  "id": "690dc571931a2d61ba0b1bc9",
+  "slug": "job_description",
+  "name": "Job_description",
+  "description": "Generate Job Description",
+  "exportedAt": "2026-09-05T19:41:12.280Z",
+  "raw": {
+    "_id": "690dc571931a2d61ba0b1bc9",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "Job_description",
+    "description": "Generate Job Description",
+    "by": "1927",
+    "prompt": "Get the data and wait.  show what you filleed the data When the user says “Shall I fill this description?”, call the tool \"fillJobDescription\" with the previously captured description.  first show what you filled then user confirms then fill. \n\nimp :- dont ask anything to the user just ask consent shall fill this.\n\nGenerate job description in 10 lines using the provided name, do not give empty headings to fill\n\nGive only details about the job",
+    "notes": [],
+    "llmConfig": [],
+    "status": "live",
+    "toolIds": [
+      "690dc560931a2d61ba0b1132"
+    ],
+    "scenarioIds": [],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      }
+    },
+    "vis": false,
+    "createdAt": "2025-04-24T05:11:02.697Z",
+    "updatedAt": "2025-04-24T05:11:02.697Z",
+    "__v": 0
+  }
+}

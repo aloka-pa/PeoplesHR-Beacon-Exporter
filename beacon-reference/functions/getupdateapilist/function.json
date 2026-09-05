@@ -1,0 +1,24 @@
+{
+  "id": "690dc583931a2d61ba0b2a7a",
+  "slug": "getupdateapilist",
+  "name": "getUpdateApiList",
+  "status": "live",
+  "createdAt": "2025-04-25T11:28:40.834Z",
+  "updatedAt": "2025-04-25T11:28:40.834Z",
+  "contentHash": "4a7ceb7dec8c67cf547a4bc81d91180714aab3cccd3b27ce1e11369b5f7ab671",
+  "lastExportedAt": "2026-09-05T19:41:44.517Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc583931a2d61ba0b2a7a",
+    "name": "getUpdateApiList",
+    "status": "live",
+    "code": "(async function (url) {\n    //done\n    const sl = await BeaconBar.getSharedData(\"sl\");\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n    myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n    const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n\n    const response = await fetch(`${location.origin}/${sl}/${url}`, requestOptions);\n    const data = await response.text();\n\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(data, 'text/html');\n\n    const details = {\n        viewState: doc.querySelector('#__VIEWSTATE')?.value || '',\n        eventValidation: doc.querySelector('#__EVENTVALIDATION')?.value || '',\n        viewStateGen: doc.querySelector('#__VIEWSTATEGENERATOR')?.value || '',\n        rawData: data\n    }\n    return details;\n});\n\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

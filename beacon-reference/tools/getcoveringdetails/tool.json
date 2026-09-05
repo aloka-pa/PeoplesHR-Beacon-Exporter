@@ -1,0 +1,98 @@
+{
+  "id": "690dc567931a2d61ba0b1795",
+  "slug": "getcoveringdetails",
+  "name": "getCoveringDetails",
+  "description": "in this tool generate the Covering Details. in the tool return employee covering details.",
+  "instructions": null,
+  "taskName": "Fetching Covering Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getCoveringDetails",
+  "createdAt": "2025-05-16T13:41:20.046Z",
+  "updatedAt": "2025-05-16T13:41:20.046Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "2fcc17dbf9546738aef65951fb412ded7b6a1d63a6e8fbfb822e82cde7bbb69b",
+  "lastExportedAt": "2026-09-05T19:39:23.928Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc567931a2d61ba0b1795",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getCoveringDetails",
+      "description": "in this tool generate the Covering Details. in the tool return employee covering details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getCoveringDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to give the employee id Example:- \"000001\" etc...",
+            "required": true,
+            "_id": "682740809a20c440e029d8dc"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "682740809a20c440e029d8db"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/empCoveringDetails.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  // const digest = await BeaconBar.executeFunction('getDigest')(\"IsShowButtons=1\");\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/empCoveringDetails.aspx\");\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n\n  const detailsText = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(detailsText, \"text/html\");\n\n  const empNumber = doc.querySelector('input[id=\"ctl00_body_EmpSearch_txtEmpDisplayNumber\"]')?.value || \"\";\n  // window.pqn = empNumber;\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"GetSearchResult\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewStateGenerator);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", empNumber);\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded.append(\"ctl00$body$hdnDisplayMethod\", \"1\");\n  urlencoded.append(\"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  urlencoded.append(\"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdCovringDtl_ClientState\", \"\");\n  urlencoded.append(\"ctl00$footers$hdnIsDateChanged\", \"1\");\n  urlencoded.append(\"ctl00$footers$txtempNo\", empNumber);\n\n  const responsePost = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  const textPost = await responsePost.text();\n  const docPost = parser.parseFromString(textPost, \"text/html\");\n\n  const rows = docPost.querySelectorAll(\"#ctl00_body_grdCovringDtl_ctl00 tbody tr\");\n  const allowanceDetails = Array.from(rows).map(row => {\n    const cells = row.querySelectorAll(\"td\");\n    return {\n      allowances: cells[0]?.textContent.trim() || \"\",\n      subGroupLevel: cells[1]?.textContent.trim() || \"\",\n      effectiveFromDate: cells[2]?.textContent.trim() || \"\",\n      effectiveToDate: cells[3]?.textContent.trim() || \"\",\n      personalGrade: cells[4]?.textContent.trim() || \"\",\n      remarks: cells[5]?.querySelector(\"textarea\")?.textContent.trim() || \"\",\n      attachments: cells[6]?.innerHTML.trim() || \"\"\n    };\n  });\n\n  const empNum = docPost.querySelector(\"#ctl00_body_EmpSearch_txtEmpDisplayNumber\").value || \"\";\n  if (empNum === args.id) {\n    return allowanceDetails;\n  } else {\n    return \"no availbel in the employee and display employee id.\"\n  }\n});\n",
+      "sampleRequest": {
+        "id": "000001"
+      },
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Fetching Covering Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-16T13:41:20.046Z",
+      "updatedAt": "2025-05-16T13:41:20.046Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getCoveringDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to give the employee id Example:- \"000001\" etc...",
+          "required": true,
+          "_id": "682740809a20c440e029d8dc"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "682740809a20c440e029d8db"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/empCoveringDetails.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  // const digest = await BeaconBar.executeFunction('getDigest')(\"IsShowButtons=1\");\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/empCoveringDetails.aspx\");\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n\n  const detailsText = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(detailsText, \"text/html\");\n\n  const empNumber = doc.querySelector('input[id=\"ctl00_body_EmpSearch_txtEmpDisplayNumber\"]')?.value || \"\";\n  // window.pqn = empNumber;\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"GetSearchResult\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewStateGenerator);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", empNumber);\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded.append(\"ctl00$body$hdnDisplayMethod\", \"1\");\n  urlencoded.append(\"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  urlencoded.append(\"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdCovringDtl_ClientState\", \"\");\n  urlencoded.append(\"ctl00$footers$hdnIsDateChanged\", \"1\");\n  urlencoded.append(\"ctl00$footers$txtempNo\", empNumber);\n\n  const responsePost = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  const textPost = await responsePost.text();\n  const docPost = parser.parseFromString(textPost, \"text/html\");\n\n  const rows = docPost.querySelectorAll(\"#ctl00_body_grdCovringDtl_ctl00 tbody tr\");\n  const allowanceDetails = Array.from(rows).map(row => {\n    const cells = row.querySelectorAll(\"td\");\n    return {\n      allowances: cells[0]?.textContent.trim() || \"\",\n      subGroupLevel: cells[1]?.textContent.trim() || \"\",\n      effectiveFromDate: cells[2]?.textContent.trim() || \"\",\n      effectiveToDate: cells[3]?.textContent.trim() || \"\",\n      personalGrade: cells[4]?.textContent.trim() || \"\",\n      remarks: cells[5]?.querySelector(\"textarea\")?.textContent.trim() || \"\",\n      attachments: cells[6]?.innerHTML.trim() || \"\"\n    };\n  });\n\n  const empNum = docPost.querySelector(\"#ctl00_body_EmpSearch_txtEmpDisplayNumber\").value || \"\";\n  if (empNum === args.id) {\n    return allowanceDetails;\n  } else {\n    return \"no availbel in the employee and display employee id.\"\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {
+        "id": "000001"
+      }
+    }
+  }
+}

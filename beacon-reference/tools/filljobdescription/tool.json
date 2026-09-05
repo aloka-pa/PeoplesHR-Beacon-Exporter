@@ -1,0 +1,88 @@
+{
+  "id": "690dc560931a2d61ba0b1132",
+  "slug": "filljobdescription",
+  "name": "fillJobDescription",
+  "description": "Generate job description",
+  "instructions": null,
+  "taskName": "Generate Job Description",
+  "tags": [],
+  "status": "live",
+  "signature": "fillJobDescription",
+  "createdAt": "2025-04-24T05:26:38.041Z",
+  "updatedAt": "2025-11-12T11:50:15.488Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc9",
+      "name": "Job_description"
+    }
+  ],
+  "contentHash": "b132b9a76923325e3d85b8c06c56b746caf293f510212126dcd62e9d63f20567",
+  "lastExportedAt": "2026-09-05T19:39:23.304Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc560931a2d61ba0b1132",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "fillJobDescription",
+      "description": "Generate job description",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "fillJobDescription",
+        "args": [
+          {
+            "name": "description",
+            "type": "string",
+            "description": "Generate the Job description.",
+            "required": true,
+            "_id": "680a27c4fb12ce73e850dab2"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6809cb8e8ce112be3ba17306"
+      },
+      "by": "7829",
+      "fetcher": "(function(args){\n    return{\n        code:`(function(){\n            return {}\n        })`\n    }\n});\n\n\n",
+      "transformer": "(function (_data, args, reqOptions) {\n  const description = new DOMParser().parseFromString(args.description, \"text/html\");\n  document.querySelector(\"#ifrmPage\").contentDocument.body.querySelector(\"#ctl00_body_txtdes\").textContent = description.body.textContent;\n  return {\n    success: true,\n  }\n})",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Generate Job Description",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-24T05:26:38.041Z",
+      "updatedAt": "2025-11-12T11:50:15.488Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc9",
+          "name": "Job_description"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "fillJobDescription",
+      "args": [
+        {
+          "name": "description",
+          "type": "string",
+          "description": "Generate the Job description.",
+          "required": true,
+          "_id": "680a27c4fb12ce73e850dab2"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6809cb8e8ce112be3ba17306"
+    },
+    "fetcher": "(function(args){\n    return{\n        code:`(function(){\n            return {}\n        })`\n    }\n});\n\n\n",
+    "transformer": "(function (_data, args, reqOptions) {\n  const description = new DOMParser().parseFromString(args.description, \"text/html\");\n  document.querySelector(\"#ifrmPage\").contentDocument.body.querySelector(\"#ctl00_body_txtdes\").textContent = description.body.textContent;\n  return {\n    success: true,\n  }\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

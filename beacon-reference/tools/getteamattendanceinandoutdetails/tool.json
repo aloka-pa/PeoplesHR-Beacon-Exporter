@@ -1,0 +1,133 @@
+{
+  "id": "690dc568931a2d61ba0b17e8",
+  "slug": "getteamattendanceinandoutdetails",
+  "name": "getTeamAttendanceInAndOutDetails",
+  "description": "To generate the Team Attendance In And Out Details using this tool, it is crucial to first cross-check the provided employee ID by executing the \"getPaginatedTypeaheadList\" API. If the search returns multiple employee records, display the corresponding employee names for the user to accurately select the intended employee. Only the selected employee’s ID will be used for further processing. Once the correct employee ID is verified, proceed to the next step by using this ID to execute the relevant API calls within the tool, following the specified workflow. This step-by-step approach ensures accurate and reliable retrieval of the employee's benefit history. and give response is table format.Analyze the user's query, and if it includes any reference or filter to subordinates, return the data under the \"Subordinates\" key. if the user subordinates related query dont ask for employe. if the user provide the date to call the \"date format\" api to take that date format.",
+  "instructions": null,
+  "taskName": "Fetching Team Attendance In And Out",
+  "tags": [
+    "Attendance",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getTeamAttendanceInAndOutDetails",
+  "createdAt": "2025-05-19T10:53:36.025Z",
+  "updatedAt": "2025-05-19T10:53:36.025Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "33dc2b8d87d5f4fa420c8434745c4fdf0d81c5f2dbcc98f04342df3a62ed4cae",
+  "lastExportedAt": "2026-09-05T19:39:23.885Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b17e8",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getTeamAttendanceInAndOutDetails",
+      "description": "To generate the Team Attendance In And Out Details using this tool, it is crucial to first cross-check the provided employee ID by executing the \"getPaginatedTypeaheadList\" API. If the search returns multiple employee records, display the corresponding employee names for the user to accurately select the intended employee. Only the selected employee’s ID will be used for further processing. Once the correct employee ID is verified, proceed to the next step by using this ID to execute the relevant API calls within the tool, following the specified workflow. This step-by-step approach ensures accurate and reliable retrieval of the employee's benefit history. and give response is table format.Analyze the user's query, and if it includes any reference or filter to subordinates, return the data under the \"Subordinates\" key. if the user subordinates related query dont ask for employe. if the user provide the date to call the \"date format\" api to take that date format.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getTeamAttendanceInAndOutDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to get the employee id for \"getPaginatedTypeaheadList\" api. Example:-\"000006\" or \"00001\" etc...",
+            "required": true,
+            "_id": "682b0db0b1cab61da6123ee7"
+          },
+          {
+            "name": "fromDate",
+            "type": "string",
+            "description": "to give the fromDate Example:-\"02/1/2023\" format date DD/MM/YYYY",
+            "required": true,
+            "_id": "682b0db0b1cab61da6123ee8"
+          },
+          {
+            "name": "toDate",
+            "type": "string",
+            "description": "to give the toDate Example:-\"02/1/2024\" format date DD/MM/YYYY",
+            "required": true,
+            "_id": "682b0db0b1cab61da6123ee9"
+          },
+          {
+            "name": "filterMode",
+            "type": "string",
+            "description": "Analyze the user's query, and if it includes any reference to subordinates, return the data under the \"Subordinates\" key. and in this key field is user query related required or not to anayze to get filter mode.",
+            "required": true,
+            "_id": "6841eeb049a79c114d15e3f5"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "682b0db0b1cab61da6123ee6"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"TNAV9/ManualInOut/ManualInOut/1?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  let rawPayload;\n\n  if (args.filterMode) {\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: false,\n      FilterMode: \"3\",\n      RosterCode: \"\",\n      callBackId: 1,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 1\n    };\n  } else {\n    const requestOptions = {\n      method: \"GET\",\n      headers: myHeaders,\n      redirect: \"follow\"\n    };\n\n    const response1 = await fetch(`${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`,\n      requestOptions\n    );\n\n    const details = await response1.json();\n    const empNumber = details?.Message || \"\";\n\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: false,\n      FilterMode: \"1\",\n      EmpNumber: empNumber,\n      RosterCode: \"\",\n      callBackId: 1,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 1\n    };\n  }\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      \"accept\": \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(`${location.origin}/${reqOptions.sl}/tnav9/api/ManualInOut/GetGridDataByCriteria/`, requestOptions1);\n\n  const details1 = await response2.json();\n  const teamAttendanceSummary = details1.ManualInOutDetailList.map((entry) => {\n    return {\n      Date: entry.InDateText || \"\",\n      Shift: entry.ShiftAbbreviation || \"\",\n      \"In Date\": entry.InDateText || \"\",\n      \"In Time\": entry.InTimeText || \"-\",\n      \"Out Date\": entry.OutDateText || \"\",\n      \"Out Time\": entry.OutTimeText || \"-\",\n      \"Updated Punches\": entry.PunchesCount || 0,\n      Breaks: entry.BreakCount || 0,\n      Reason: entry.ReasonCode === \"-1\" ? \"Select a reason\" : entry.ReasonCode || \"\",\n      Status: entry.RecordStatusText || \"\",\n      Leave: entry.LeaveDaysLabelString || \"\",\n    };\n  });\n  return teamAttendanceSummary;\n});\n",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "Headers"
+      ],
+      "taskName": "Fetching Team Attendance In And Out",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-19T10:53:36.025Z",
+      "updatedAt": "2025-05-19T10:53:36.025Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getTeamAttendanceInAndOutDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to get the employee id for \"getPaginatedTypeaheadList\" api. Example:-\"000006\" or \"00001\" etc...",
+          "required": true,
+          "_id": "682b0db0b1cab61da6123ee7"
+        },
+        {
+          "name": "fromDate",
+          "type": "string",
+          "description": "to give the fromDate Example:-\"02/1/2023\" format date DD/MM/YYYY",
+          "required": true,
+          "_id": "682b0db0b1cab61da6123ee8"
+        },
+        {
+          "name": "toDate",
+          "type": "string",
+          "description": "to give the toDate Example:-\"02/1/2024\" format date DD/MM/YYYY",
+          "required": true,
+          "_id": "682b0db0b1cab61da6123ee9"
+        },
+        {
+          "name": "filterMode",
+          "type": "string",
+          "description": "Analyze the user's query, and if it includes any reference to subordinates, return the data under the \"Subordinates\" key. and in this key field is user query related required or not to anayze to get filter mode.",
+          "required": true,
+          "_id": "6841eeb049a79c114d15e3f5"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "682b0db0b1cab61da6123ee6"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"TNAV9/ManualInOut/ManualInOut/1?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  let rawPayload;\n\n  if (args.filterMode) {\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: false,\n      FilterMode: \"3\",\n      RosterCode: \"\",\n      callBackId: 1,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 1\n    };\n  } else {\n    const requestOptions = {\n      method: \"GET\",\n      headers: myHeaders,\n      redirect: \"follow\"\n    };\n\n    const response1 = await fetch(`${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`,\n      requestOptions\n    );\n\n    const details = await response1.json();\n    const empNumber = details?.Message || \"\";\n\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: false,\n      FilterMode: \"1\",\n      EmpNumber: empNumber,\n      RosterCode: \"\",\n      callBackId: 1,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 1\n    };\n  }\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      \"accept\": \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(`${location.origin}/${reqOptions.sl}/tnav9/api/ManualInOut/GetGridDataByCriteria/`, requestOptions1);\n\n  const details1 = await response2.json();\n  const teamAttendanceSummary = details1.ManualInOutDetailList.map((entry) => {\n    return {\n      Date: entry.InDateText || \"\",\n      Shift: entry.ShiftAbbreviation || \"\",\n      \"In Date\": entry.InDateText || \"\",\n      \"In Time\": entry.InTimeText || \"-\",\n      \"Out Date\": entry.OutDateText || \"\",\n      \"Out Time\": entry.OutTimeText || \"-\",\n      \"Updated Punches\": entry.PunchesCount || 0,\n      Breaks: entry.BreakCount || 0,\n      Reason: entry.ReasonCode === \"-1\" ? \"Select a reason\" : entry.ReasonCode || \"\",\n      Status: entry.RecordStatusText || \"\",\n      Leave: entry.LeaveDaysLabelString || \"\",\n    };\n  });\n  return teamAttendanceSummary;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

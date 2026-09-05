@@ -1,0 +1,225 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "employeeNumber",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The employee's number as it is shown on screen, e.g. 000031. Either employeeNumber or employeeName must be provided. Leading zeros are optional. Note that some employees share a displayed number - the tool then asks which one rather than picking.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The employee's number as it is shown on screen, e.g. 000031. Either employeeNumber or employeeName must be provided. Leading zeros are optional. Note that some employees share a displayed number - the tool then asks which one rather than picking."
+      }
+    },
+    {
+      "name": "employeeName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The employee's name (full or partial). Either employeeNumber or employeeName must be provided. If it matches more than one person the tool asks which one - never pick for the user.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The employee's name (full or partial). Either employeeNumber or employeeName must be provided. If it matches more than one person the tool asks which one - never pick for the user."
+      }
+    },
+    {
+      "name": "date",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Date of the existing record to edit. Use the format returned by the dateFormat tool (MM/DD/YYYY for en-US, otherwise DD/MM/YYYY). Ask the user for this if not provided.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Date of the existing record to edit. Use the format returned by the dateFormat tool (MM/DD/YYYY for en-US, otherwise DD/MM/YYYY). Ask the user for this if not provided."
+      }
+    },
+    {
+      "name": "dateSelectMode",
+      "type": null,
+      "required": false,
+      "defaultValue": null,
+      "description": "Search Criteria date selection mode, matching the page radio buttons: last7days (Last 7 Days), last30days (Last 30 Days), period (By Period, uses fromDate/toDate). Defaults to period with a wide range.",
+      "advanced": true,
+      "raw": {
+        "enum": [
+          "last7days",
+          "last30days",
+          "period"
+        ],
+        "description": "Search Criteria date selection mode, matching the page radio buttons: last7days (Last 7 Days), last30days (Last 30 Days), period (By Period, uses fromDate/toDate). Defaults to period with a wide range."
+      }
+    },
+    {
+      "name": "fromDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Search range start date in the format returned by the dateFormat tool. Only used when dateSelectMode is period. If omitted, a wide default range is used. The date being edited must fall inside the range.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Search range start date in the format returned by the dateFormat tool. Only used when dateSelectMode is period. If omitted, a wide default range is used. The date being edited must fall inside the range."
+      }
+    },
+    {
+      "name": "toDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Search range end date in the format returned by the dateFormat tool. Only used when dateSelectMode is period. If omitted, a wide default range is used. The date being edited must fall inside the range.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Search range end date in the format returned by the dateFormat tool. Only used when dateSelectMode is period. If omitted, a wide default range is used. The date being edited must fall inside the range."
+      }
+    },
+    {
+      "name": "isGroupByEmployee",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional Group By Employee checkbox on the Search Criteria panel. Defaults to false.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Optional Group By Employee checkbox on the Search Criteria panel. Defaults to false."
+      }
+    },
+    {
+      "name": "rosterGroup",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional roster group id used to load the roster list via GetRostersByGroupId. Defaults to 1.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Optional roster group id used to load the roster list via GetRostersByGroupId. Defaults to 1."
+      }
+    },
+    {
+      "name": "rosterCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional roster code for GetGridDataByCriteria, e.g. 000005 for 'Roster 1'. Takes precedence over rosterName. If neither is given the tool uses 000017 ('Default Yes'), which is the roster the admin screen pre-selects.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Optional roster code for GetGridDataByCriteria, e.g. 000005 for 'Roster 1'. Takes precedence over rosterName. If neither is given the tool uses 000017 ('Default Yes'), which is the roster the admin screen pre-selects."
+      }
+    },
+    {
+      "name": "rosterName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional roster name, e.g. 'Roster 1'. Resolved to a roster code against the roster list. Ignored when rosterCode is given.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Optional roster name, e.g. 'Roster 1'. Resolved to a roster code against the roster list. Ignored when rosterCode is given."
+      }
+    },
+    {
+      "name": "inDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional new In date, in the format returned by the dateFormat tool. Defaults to the In date the grid already shows for that row. Only override this if the user explicitly wants a different In date.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Optional new In date, in the format returned by the dateFormat tool. Defaults to the In date the grid already shows for that row. Only override this if the user explicitly wants a different In date."
+      }
+    },
+    {
+      "name": "outDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional new Out date, in the format returned by the dateFormat tool. Defaults to the Out date the grid already shows, which is the NEXT day on a midnight/overnight shift. Only override this if the user explicitly wants a different Out date.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Optional new Out date, in the format returned by the dateFormat tool. Defaults to the Out date the grid already shows, which is the NEXT day on a midnight/overnight shift. Only override this if the user explicitly wants a different Out date."
+      }
+    },
+    {
+      "name": "inTime",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "New In time in HH:mm 24-hour format, e.g. 08:30. Must fall inside the shift's grace window, which the tool reports as shiftPeriod/shiftToolTip. Omit to keep the In time that is already recorded.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "New In time in HH:mm 24-hour format, e.g. 08:30. Must fall inside the shift's grace window, which the tool reports as shiftPeriod/shiftToolTip. Omit to keep the In time that is already recorded."
+      }
+    },
+    {
+      "name": "outTime",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "New Out time in HH:mm 24-hour format, e.g. 17:30. Must fall inside the shift's grace window, which the tool reports as shiftPeriod/shiftToolTip. Omit to keep the Out time that is already recorded.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "New Out time in HH:mm 24-hour format, e.g. 17:30. Must fall inside the shift's grace window, which the tool reports as shiftPeriod/shiftToolTip. Omit to keep the Out time that is already recorded."
+      }
+    },
+    {
+      "name": "breakInTime",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional new break in time in HH:mm 24-hour format. Break times are not mandatory - give them only if the user wants the break changed or added. If given, breakOutTime must be given too.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Optional new break in time in HH:mm 24-hour format. Break times are not mandatory - give them only if the user wants the break changed or added. If given, breakOutTime must be given too."
+      }
+    },
+    {
+      "name": "breakOutTime",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional new break out time in HH:mm 24-hour format. Break times are not mandatory - give them only if the user wants the break changed or added. If given, breakInTime must be given too.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Optional new break out time in HH:mm 24-hour format. Break times are not mandatory - give them only if the user wants the break changed or added. If given, breakInTime must be given too."
+      }
+    },
+    {
+      "name": "reason",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Reason/comment explaining why the manual in and out is being changed. Required before the update is submitted. No reason is needed for the break times on their own.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Reason/comment explaining why the manual in and out is being changed. Required before the update is submitted. No reason is needed for the break times on their own."
+      }
+    },
+    {
+      "name": "confirmed",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set to true only after the user has reviewed the preview of current vs new values and explicitly confirmed. Set to false (or omit) to just preview/validate without updating anything.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Set to true only after the user has reviewed the preview of current vs new values and explicitly confirmed. Set to false (or omit) to just preview/validate without updating anything."
+      }
+    }
+  ]
+}

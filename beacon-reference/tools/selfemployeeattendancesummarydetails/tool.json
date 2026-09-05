@@ -1,0 +1,124 @@
+{
+  "id": "690dc56b931a2d61ba0b1ae4",
+  "slug": "selfemployeeattendancesummarydetails",
+  "name": "selfEmployeeAttendanceSummaryDetails",
+  "description": "Before executing the getAttendanceSummaryDetails API:\n1.If the user’s query includes an employee ID or uses terms like “my”, “myself”, or “self”, first execute the adminInformation API to retrieve the employee ID of the logged-in user.\n2.Before processing any dates, you must first execute the dateFormat API to get the correct date format from its response and then use that format in subsequent API calls.\n3.If the query includes a roster filter (e.g., a roster name is mentioned without any employee ID), execute the rostersDetails API to get the correct roster ID. \nabove steps must be following other then final api is fail. date format must be take in the format example \"DD/MM/YYYY\", \"22/01/2023\".\n",
+  "instructions": null,
+  "taskName": "Fetching Self Employee Attendance Summary Details",
+  "tags": [
+    "Attendance",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "selfEmployeeAttendanceSummaryDetails",
+  "createdAt": "2025-08-19T14:16:16.612Z",
+  "updatedAt": "2025-11-10T12:11:05.116Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "3fdec4533b5eef8e635c546f02cf5820a0fbf0e9f4f023455b9261f3ca259537",
+  "lastExportedAt": "2026-09-05T19:39:23.371Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1ae4",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selfEmployeeAttendanceSummaryDetails",
+      "description": "Before executing the getAttendanceSummaryDetails API:\n1.If the user’s query includes an employee ID or uses terms like “my”, “myself”, or “self”, first execute the adminInformation API to retrieve the employee ID of the logged-in user.\n2.Before processing any dates, you must first execute the dateFormat API to get the correct date format from its response and then use that format in subsequent API calls.\n3.If the query includes a roster filter (e.g., a roster name is mentioned without any employee ID), execute the rostersDetails API to get the correct roster ID. \nabove steps must be following other then final api is fail. date format must be take in the format example \"DD/MM/YYYY\", \"22/01/2023\".\n",
+      "rules": {
+        "ids": [
+          "690dc4b5931a2d61ba0a8085"
+        ],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selfEmployeeAttendanceSummaryDetails",
+        "args": [
+          {
+            "name": "fromDate",
+            "type": "string",
+            "description": "to give the fromDate Example:-\"22/01/2023\" format date DD/MM/YYYY",
+            "required": true,
+            "_id": "68a48730560b6ad2e55c58f5"
+          },
+          {
+            "name": "toDate",
+            "type": "string",
+            "description": "to give the toDate Example:-\"25/12/2024\" format date DD/MM/YYYY",
+            "required": true,
+            "_id": "68a48730560b6ad2e55c58f6"
+          },
+          {
+            "name": "rosterCode",
+            "type": "string",
+            "description": "to get the user select roster corresponding id will be take roster CodeExample '000030' execute for \"rosetersDetails\" tool.",
+            "required": false,
+            "_id": "68a48730560b6ad2e55c58f7"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68a48730560b6ad2e55c58f4"
+      },
+      "by": "7337",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  \n  if (!BeaconBar.user.metaData.menus.includes(\"TNAV9/AttendanceSummary/AttendanceSummary/2?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  let rawPayload;\n\n  if (args.rosterCode) {\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"2\",\n      RosterCode: args.rosterCode,\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0,\n    };\n  } else {\n    const empNumber = await BeaconBar.executeFunction(\"selfEmployeeAttendanceSummarry\")();\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"1\",\n      EmpNumber: empNumber,\n      RosterCode: \"\",\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0,\n    };\n  }\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      accept: \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\",\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\",\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/${reqOptions.sl}/tnav9/api/AttendanceSummary/GetGridDataByCriteria/`,\n    requestOptions1\n  );\n\n  const details1 = await response2.json();\n  const attendanceSummary = details1.AttendanceSummaryDetailList.map((entry) => {\n    return {\n      Date: entry.DatInDateString?.split(\" \")[0] || \"-\",\n      Shift: entry.ShiftAbbreviation || \"OFF\",\n      InDate: entry.InDateText || \"-\",\n      InTime: entry.InTimeText || \"-\",\n      OutDate: entry.OutDateText || \"-\",\n      OutTime: entry.OutTimeText || \"-\",\n      Breaks: entry.BreakCount || 0,\n      Overtime: formatTime(entry.TotalOvertime),\n      EarlyMin: formatTime(entry.StartLate),\n      LateMin: formatTime(entry.EndLate),\n      WorkHours: formatTime(entry.WorkHours),\n      Nopay: entry.NopayDays ? entry.NopayDays.toFixed(2) : \"0.00\",\n      Leave: entry.LeaveDaysLabelString || \"\",\n      Notifications: entry.Message || \"\",\n      Comment: entry.Comment || \"\",\n    };\n  });\n\n  function formatTime(value) {\n    if (!value || value === 0) return \"00:00\";\n    const hours = Math.floor(value);\n    const minutes = Math.round((value - hours) * 60);\n    return `${String(hours).padStart(2, \"0\")}:${String(minutes).padStart(2, \"0\")}`;\n  }\n\n  if (attendanceSummary.length >= 5) {\n    await BeaconBar.executeFunction(\"downloadcsv\")(attendanceSummary);\n    return attendanceSummary.slice(0, 5);\n  }\n\n  return attendanceSummary;\n});\n",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "Headers"
+      ],
+      "taskName": "Fetching Self Employee Attendance Summary Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-19T14:16:16.612Z",
+      "updatedAt": "2025-11-10T12:11:05.116Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selfEmployeeAttendanceSummaryDetails",
+      "args": [
+        {
+          "name": "fromDate",
+          "type": "string",
+          "description": "to give the fromDate Example:-\"22/01/2023\" format date DD/MM/YYYY",
+          "required": true,
+          "_id": "68a48730560b6ad2e55c58f5"
+        },
+        {
+          "name": "toDate",
+          "type": "string",
+          "description": "to give the toDate Example:-\"25/12/2024\" format date DD/MM/YYYY",
+          "required": true,
+          "_id": "68a48730560b6ad2e55c58f6"
+        },
+        {
+          "name": "rosterCode",
+          "type": "string",
+          "description": "to get the user select roster corresponding id will be take roster CodeExample '000030' execute for \"rosetersDetails\" tool.",
+          "required": false,
+          "_id": "68a48730560b6ad2e55c58f7"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68a48730560b6ad2e55c58f4"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  \n  if (!BeaconBar.user.metaData.menus.includes(\"TNAV9/AttendanceSummary/AttendanceSummary/2?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  let rawPayload;\n\n  if (args.rosterCode) {\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"2\",\n      RosterCode: args.rosterCode,\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0,\n    };\n  } else {\n    const empNumber = await BeaconBar.executeFunction(\"selfEmployeeAttendanceSummarry\")();\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"1\",\n      EmpNumber: empNumber,\n      RosterCode: \"\",\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0,\n    };\n  }\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      accept: \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\",\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\",\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/${reqOptions.sl}/tnav9/api/AttendanceSummary/GetGridDataByCriteria/`,\n    requestOptions1\n  );\n\n  const details1 = await response2.json();\n  const attendanceSummary = details1.AttendanceSummaryDetailList.map((entry) => {\n    return {\n      Date: entry.DatInDateString?.split(\" \")[0] || \"-\",\n      Shift: entry.ShiftAbbreviation || \"OFF\",\n      InDate: entry.InDateText || \"-\",\n      InTime: entry.InTimeText || \"-\",\n      OutDate: entry.OutDateText || \"-\",\n      OutTime: entry.OutTimeText || \"-\",\n      Breaks: entry.BreakCount || 0,\n      Overtime: formatTime(entry.TotalOvertime),\n      EarlyMin: formatTime(entry.StartLate),\n      LateMin: formatTime(entry.EndLate),\n      WorkHours: formatTime(entry.WorkHours),\n      Nopay: entry.NopayDays ? entry.NopayDays.toFixed(2) : \"0.00\",\n      Leave: entry.LeaveDaysLabelString || \"\",\n      Notifications: entry.Message || \"\",\n      Comment: entry.Comment || \"\",\n    };\n  });\n\n  function formatTime(value) {\n    if (!value || value === 0) return \"00:00\";\n    const hours = Math.floor(value);\n    const minutes = Math.round((value - hours) * 60);\n    return `${String(hours).padStart(2, \"0\")}:${String(minutes).padStart(2, \"0\")}`;\n  }\n\n  if (attendanceSummary.length >= 5) {\n    await BeaconBar.executeFunction(\"downloadcsv\")(attendanceSummary);\n    return attendanceSummary.slice(0, 5);\n  }\n\n  return attendanceSummary;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

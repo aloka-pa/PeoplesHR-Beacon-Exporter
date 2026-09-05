@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "PayType",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Selected Pay Type from previous tool GetPayType",
+      "advanced": false,
+      "raw": {
+        "name": "PayType",
+        "type": "string",
+        "description": "Selected Pay Type from previous tool GetPayType",
+        "required": true,
+        "_id": "69eeb724d6deb5f99d4daa6a"
+      }
+    },
+    {
+      "name": "EmpNumber",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Employee Number (optional)",
+      "advanced": false,
+      "raw": {
+        "name": "EmpNumber",
+        "type": "string",
+        "description": "Employee Number (optional)",
+        "required": false,
+        "_id": "69eeb724d6deb5f99d4daa6b"
+      }
+    },
+    {
+      "name": "PaySchId",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Pay Schedule Id (optional)",
+      "advanced": false,
+      "raw": {
+        "name": "PaySchId",
+        "type": "string",
+        "description": "Pay Schedule Id (optional)",
+        "required": false,
+        "_id": "69eeb724d6deb5f99d4daa6c"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

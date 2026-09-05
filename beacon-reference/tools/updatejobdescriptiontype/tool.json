@@ -1,0 +1,105 @@
+{
+  "id": "690dc564931a2d61ba0b1488",
+  "slug": "updatejobdescriptiontype",
+  "name": "updateJobDescriptionType",
+  "description": "To update the Job Description Type, first execute the getEIMAttributeList API. If any fields are missing in the user input, the corresponding data will be automatically retrieved from the API response. Additionally, if the user chooses to change the Job Description Category, display all available categories and let the user select one. The corresponding value of the selected category will then be used for the update.",
+  "instructions": null,
+  "taskName": "Update Job Description Type",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateJobDescriptionType",
+  "createdAt": "2025-04-30T05:06:29.585Z",
+  "updatedAt": "2025-04-30T05:06:29.585Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "76797a7239052f5911169162e91fa65cc191e2db9f9f03ddb3311245861ccb18",
+  "lastExportedAt": "2026-09-05T19:39:24.416Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b1488",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateJobDescriptionType",
+      "description": "To update the Job Description Type, first execute the getEIMAttributeList API. If any fields are missing in the user input, the corresponding data will be automatically retrieved from the API response. Additionally, if the user chooses to change the Job Description Category, display all available categories and let the user select one. The corresponding value of the selected category will then be used for the update.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateJobDescriptionType",
+        "args": [
+          {
+            "name": "jobDescriptionTypeName",
+            "type": "string",
+            "description": "to updated the Job Description Type Name",
+            "required": true,
+            "_id": "6811afd55b9fb869c5798b33"
+          },
+          {
+            "name": "jobDescriptionCategory",
+            "type": "string",
+            "description": "to updated job Description Category display the all job Description Category then select one corresponding value will be take. data available for getJobDescriptionTypeDetails Api . Example:-\"000001\"",
+            "required": true,
+            "_id": "6811afd55b9fb869c5798b34"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6811afd55b9fb869c5798b32"
+      },
+      "by": "1927",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/JdType.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/JdType.aspx');\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`\n  } else {\n    url = `${window.origin}/${reqOptions.sl}/EIM/JdType.aspx`\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", window.jdt.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", window.jdt.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", window.jdt.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$butEdit\", \"Edit\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(url, requestOptions1);\n  const html1 = await response1.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html1, 'text/html');\n\n  const viewState = doc.querySelector('#__VIEWSTATE')?.value || '';\n  const eventValidation = doc.querySelector('#__EVENTVALIDATION')?.value || '';\n  const viewStateGen = doc.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", \"\");\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00$body$txtName\", args.jobDescriptionTypeName);\n  urlencoded2.append(\"ctl00$body$dpSalary\", args.jobDescriptionCategory);\n  urlencoded2.append(\"ctl00$body$butSave\", \"Save\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(url, requestOptions2);\n  const html2 = await response2.text();\n\n  if (response2.status === 200) {\n    return \"Update Sucessfully!!\";\n  } else {\n    return \"try again api is fail.\"\n  }\n})\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update Job Description Type",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-30T05:06:29.585Z",
+      "updatedAt": "2025-04-30T05:06:29.585Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateJobDescriptionType",
+      "args": [
+        {
+          "name": "jobDescriptionTypeName",
+          "type": "string",
+          "description": "to updated the Job Description Type Name",
+          "required": true,
+          "_id": "6811afd55b9fb869c5798b33"
+        },
+        {
+          "name": "jobDescriptionCategory",
+          "type": "string",
+          "description": "to updated job Description Category display the all job Description Category then select one corresponding value will be take. data available for getJobDescriptionTypeDetails Api . Example:-\"000001\"",
+          "required": true,
+          "_id": "6811afd55b9fb869c5798b34"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6811afd55b9fb869c5798b32"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/JdType.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/JdType.aspx');\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`\n  } else {\n    url = `${window.origin}/${reqOptions.sl}/EIM/JdType.aspx`\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", window.jdt.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", window.jdt.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", window.jdt.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$butEdit\", \"Edit\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(url, requestOptions1);\n  const html1 = await response1.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html1, 'text/html');\n\n  const viewState = doc.querySelector('#__VIEWSTATE')?.value || '';\n  const eventValidation = doc.querySelector('#__EVENTVALIDATION')?.value || '';\n  const viewStateGen = doc.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", \"\");\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00$body$txtName\", args.jobDescriptionTypeName);\n  urlencoded2.append(\"ctl00$body$dpSalary\", args.jobDescriptionCategory);\n  urlencoded2.append(\"ctl00$body$butSave\", \"Save\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(url, requestOptions2);\n  const html2 = await response2.text();\n\n  if (response2.status === 200) {\n    return \"Update Sucessfully!!\";\n  } else {\n    return \"try again api is fail.\"\n  }\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

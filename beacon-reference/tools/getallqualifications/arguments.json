@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "qualificationSearch",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "qualificationSearch ,Qualifiacation code :- 000001 ",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationSearch",
+        "type": "string",
+        "description": "qualificationSearch ,Qualifiacation code :- 000001 ",
+        "required": true,
+        "_id": "680f2284c4a1b2535b9d7375"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "hierarchyCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get hierarchy details for user prompt for hierarchy Code.",
+      "advanced": false,
+      "raw": {
+        "name": "hierarchyCode",
+        "type": "string",
+        "description": "to get hierarchy details for user prompt for hierarchy Code.",
+        "required": true,
+        "_id": "680d1b6384c6425fd5ba761f"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

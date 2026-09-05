@@ -1,0 +1,113 @@
+{
+  "id": "690dc567931a2d61ba0b1718",
+  "slug": "getbenefitemployeeinformation",
+  "name": "getBenefitEmployeeInformation",
+  "description": "in this tool generate the Employee Information. if the user specific employee benefit history information get first execute in the api. Always take the employee id only.",
+  "instructions": null,
+  "taskName": "Benefit Employee Information",
+  "tags": [
+    "BenefitManagement",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getBenefitEmployeeInformation",
+  "createdAt": "2025-05-13T13:38:15.340Z",
+  "updatedAt": "2026-07-24T06:57:48.971Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be9",
+      "name": "BenefitManagement"
+    }
+  ],
+  "contentHash": "0fcfa6f16c79019c033345793092a1fcb47c2e76821169e24ba0283e373beed9",
+  "lastExportedAt": "2026-09-05T19:39:21.996Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc567931a2d61ba0b1718",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getBenefitEmployeeInformation",
+      "description": "in this tool generate the Employee Information. if the user specific employee benefit history information get first execute in the api. Always take the employee id only.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getBenefitEmployeeInformation",
+        "args": [
+          {
+            "name": "empId",
+            "type": "string",
+            "description": "to give the employee id Ex:-\"A00006\"",
+            "required": true,
+            "_id": "68234b4783df648bbbe683c2"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6a630cec347f1334c9e25acb"
+      },
+      "by": "27739",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  }\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.some(x => x.includes(\"Benefitv9/AdminHistory/AdminHistory/?mvc=1\"))) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const details = await BeaconBar.executeFunction('empBenefitHistory')();\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n  try {\n    const response = await fetch(`${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetPaginatedTypeaheadList/?term=${args.empId}&empNumber=${details.empNumber2}&key=${details.keyValue}&_=${Date.now()}`, requestOptions);\n    const employeeDetails = await response.json();\n    return employeeDetails.results\n  }\n  catch {\n    return \"Access denied, you do not have access to view this information\"\n  }\n})",
+      "groupName": "",
+      "tags": [
+        "BenefitManagement",
+        "Headers"
+      ],
+      "taskName": "Benefit Employee Information",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-13T13:38:15.340Z",
+      "updatedAt": "2026-07-24T06:57:48.971Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be9",
+          "name": "BenefitManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getBenefitEmployeeInformation",
+      "args": [
+        {
+          "name": "empId",
+          "type": "string",
+          "description": "to give the employee id Ex:-\"A00006\"",
+          "required": true,
+          "_id": "68234b4783df648bbbe683c2"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6a630cec347f1334c9e25acb"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  }\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.some(x => x.includes(\"Benefitv9/AdminHistory/AdminHistory/?mvc=1\"))) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const details = await BeaconBar.executeFunction('empBenefitHistory')();\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n  try {\n    const response = await fetch(`${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetPaginatedTypeaheadList/?term=${args.empId}&empNumber=${details.empNumber2}&key=${details.keyValue}&_=${Date.now()}`, requestOptions);\n    const employeeDetails = await response.json();\n    return employeeDetails.results\n  }\n  catch {\n    return \"Access denied, you do not have access to view this information\"\n  }\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "description",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The finalized, rephrased course description that will be auto-filled into the Description & Target Group field",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The finalized, rephrased course description that will be auto-filled into the Description & Target Group field"
+      }
+    }
+  ]
+}

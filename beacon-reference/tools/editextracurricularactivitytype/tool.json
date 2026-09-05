@@ -1,0 +1,169 @@
+{
+  "id": "6953e247e62c2e2fca5eba6c",
+  "slug": "editextracurricularactivitytype",
+  "name": "editExtraCurricularActivityType",
+  "description": "Update an existing Extra Curricular Activity Type record by modifying its type name and/or category assignment. Only update the user-provided details; otherwise, remain unchanged.",
+  "instructions": null,
+  "taskName": "Editing Extra Curricular Activity Type Details",
+  "tags": [
+    "EIMAdmin",
+    "ExtraCurricularActivities"
+  ],
+  "status": "live",
+  "signature": "editExtraCurricularActivityType",
+  "createdAt": "2025-12-30T14:31:35.097Z",
+  "updatedAt": "2026-06-15T07:30:52.082Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "4565463188d58bc9972f04df9fb6712b47cea732ebd67da473316b88ad451fc0",
+  "lastExportedAt": "2026-09-05T19:39:22.405Z",
+  "raw": {
+    "basic": {
+      "_id": "6953e247e62c2e2fca5eba6c",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "editExtraCurricularActivityType",
+      "description": "Update an existing Extra Curricular Activity Type record by modifying its type name and/or category assignment. Only update the user-provided details; otherwise, remain unchanged.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "editExtraCurricularActivityType",
+        "args": [
+          {
+            "name": "ecaTypeCode",
+            "type": "string",
+            "description": "The activity type code to identify the record to edit (e.g., \"000001\"). Either ecaTypeCode or ecaTypeName must be provided.",
+            "required": false,
+            "_id": "6953e247e62c2e2fca5eba6e"
+          },
+          {
+            "name": "ecaTypeName",
+            "type": "string",
+            "description": "The activity type name to identify the record to edit (e.g., \"Learning\"). Either ecaTypeCode or ecaTypeName must be provided.",
+            "required": false,
+            "_id": "6953e247e62c2e2fca5eba6f"
+          },
+          {
+            "name": "newTypeName",
+            "type": "string",
+            "description": "The new name for the activity type. If not provided, the type name will remain unchanged. Maximum 120 characters.",
+            "required": false,
+            "_id": "6953e247e62c2e2fca5eba70"
+          },
+          {
+            "name": "newCategoryCode",
+            "type": "string",
+            "description": "The code of the new category to assign (e.g., \"000003\" for \"Arts / Creative\"). The user must provide either newCategoryCode or newCategoryName.",
+            "required": false,
+            "_id": "6953e247e62c2e2fca5eba71"
+          },
+          {
+            "name": "newCategoryName",
+            "type": "string",
+            "description": "The name of the new category to assign (e.g., \"Arts / Creative\"). The user must provide either newCategoryCode or newCategoryName.",
+            "required": false,
+            "_id": "6953e247e62c2e2fca5eba72"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6953e247e62c2e2fca5eba6d"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\r\n  return {\r\n    code: `(function(){\r\n        return [];\r\n      })`\r\n  };\r\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* Access validation */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/ExtraCulActivityType.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Extra Curricular Activity Type screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* Input validation */\n    if (!args?.ecaTypeCode && !args?.ecaTypeName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: either ecaTypeCode or ecaTypeName is required to identify the record\"\n      };\n    }\n\n    if (!args?.newTypeName && !args?.newCategoryCode && !args?.newCategoryName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: at least one of newTypeName, newCategoryCode, or newCategoryName must be provided to update the record\"\n      };\n    }\n\n    if (args?.newTypeName && args.newTypeName.length > 120) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: newTypeName must be 120 characters or less\"\n      };\n    }\n\n    /* Initial page state */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"ExtraCulActivityType\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/ExtraCulActivityType.aspx\");\n\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/ExtraCulActivityType.aspx`;\n\n    const parser = new DOMParser();\n\n    /* Determine search criteria */\n    let searchCriteria, searchValue;\n    if (args.ecaTypeCode) {\n      searchCriteria = \"EATYPE_CODE\";\n      searchValue = args.ecaTypeCode.trim();\n    } else {\n      searchCriteria = \"EATYPE_NAME\";\n      searchValue = args.ecaTypeName.trim();\n    }\n\n    /* Step 1: Search for the activity type */\n    const searchFormData = new FormData();\n    searchFormData.append(\"scrollLeft\", \"0\");\n    searchFormData.append(\"scrollTop\", \"0\");\n    searchFormData.append(\"__EVENTTARGET\", \"\");\n    searchFormData.append(\"__EVENTARGUMENT\", \"\");\n    searchFormData.append(\"__VIEWSTATE\", details.viewState);\n    searchFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    searchFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    searchFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n    searchFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    searchFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    searchFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n    searchFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n    searchFormData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n    searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n    searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    searchFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    const searchResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: searchFormData\n    });\n\n    const searchDoc = parser.parseFromString(await searchResponse.text(), \"text/html\");\n\n    const searchViewState = searchDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const searchEventValidation = searchDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const searchViewStateGen = searchDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Find matching row */\n    let row = null;\n    const rows = searchDoc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n    \n    for (const r of rows) {\n      const cells = r.querySelectorAll(\"td\");\n      const rowCode = cells[0]?.textContent.trim();\n      const rowType = cells[1]?.textContent.trim();\n      \n      if (args.ecaTypeCode && rowCode === args.ecaTypeCode) {\n        row = r;\n        break;\n      } else if (args.ecaTypeName && rowType === args.ecaTypeName) {\n        row = r;\n        break;\n      }\n    }\n\n    if (!row) {\n      return {\n        status: \"NOT_FOUND\",\n        message: `Extra Curricular Activity Type not found: \"${searchValue}\"`\n      };\n    }\n\n    /* Get edit link */\n    const editKey = row\n      .querySelector(\"a\")\n      ?.getAttribute(\"href\")\n      ?.match(/__doPostBack\\('([^']+)'/)?.[1];\n\n    if (!editKey) {\n      return {\n        status: \"ERROR\",\n        message: \"Unable to open activity type record for editing\"\n      };\n    }\n\n    /* Step 2: Click on row to open detail view */\n    const rowClickFormData = new FormData();\n    rowClickFormData.append(\"scrollLeft\", \"0\");\n    rowClickFormData.append(\"scrollTop\", \"0\");\n    rowClickFormData.append(\"__EVENTTARGET\", editKey);\n    rowClickFormData.append(\"__EVENTARGUMENT\", \"\");\n    rowClickFormData.append(\"__VIEWSTATE\", searchViewState);\n    rowClickFormData.append(\"__VIEWSTATEGENERATOR\", searchViewStateGen);\n    rowClickFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    rowClickFormData.append(\"__EVENTVALIDATION\", searchEventValidation);\n    rowClickFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    rowClickFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    rowClickFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n    rowClickFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n    rowClickFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    rowClickFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    rowClickFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n    rowClickFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    rowClickFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    const detailResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: rowClickFormData\n    });\n\n    const detailDoc = parser.parseFromString(await detailResponse.text(), \"text/html\");\n\n    /* Extract current values */\n    const currentCode = detailDoc.querySelector(\"#ctl00_body_txtCode\")?.value || \"\";\n    const currentTypeName = detailDoc.querySelector(\"#ctl00_body_txtName\")?.value || \"\";\n    const currentCategorySelect = detailDoc.querySelector(\"#ctl00_body_dprating\");\n    const currentCategoryCode = currentCategorySelect?.value || \"\";\n\n    const detailViewState = detailDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const detailEventValidation = detailDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const detailViewStateGen = detailDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Step 3: Click Edit button */\n    const editFormData = new FormData();\n    editFormData.append(\"scrollLeft\", \"0\");\n    editFormData.append(\"scrollTop\", \"0\");\n    editFormData.append(\"__EVENTTARGET\", \"\");\n    editFormData.append(\"__EVENTARGUMENT\", \"\");\n    editFormData.append(\"__VIEWSTATE\", detailViewState);\n    editFormData.append(\"__VIEWSTATEGENERATOR\", detailViewStateGen);\n    editFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    editFormData.append(\"__EVENTVALIDATION\", detailEventValidation);\n    editFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    editFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    editFormData.append(\"ctl00$body$butEdit\", \"Edit\");\n\n    const editModeResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: editFormData\n    });\n\n    const editModeDoc = parser.parseFromString(await editModeResponse.text(), \"text/html\");\n\n    const saveViewState = editModeDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const saveEventValidation = editModeDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const saveViewStateGen = editModeDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Determine new category code if category name is provided */\n    let finalCategoryCode = currentCategoryCode;\n    \n    if (args.newCategoryCode) {\n      finalCategoryCode = args.newCategoryCode.trim();\n    } else if (args.newCategoryName) {\n      const categorySelect = editModeDoc.querySelector(\"#ctl00_body_dprating\");\n      const categoryOptions = categorySelect?.querySelectorAll(\"option\");\n      \n      let foundCategory = false;\n      for (const option of categoryOptions) {\n        const optionText = option.textContent.trim();\n        const optionValue = option.value;\n        \n        if (optionValue !== \"\" && optionValue !== \"-1\" && \n            optionText.toLowerCase() === args.newCategoryName.toLowerCase()) {\n          finalCategoryCode = optionValue;\n          foundCategory = true;\n          break;\n        }\n      }\n      \n      if (!foundCategory) {\n        const availableCategories = Array.from(categoryOptions)\n          .filter(opt => opt.value !== \"\" && opt.value !== \"-1\")\n          .map(opt => opt.textContent.trim());\n        \n        return {\n          status: \"INVALID_ARGS\",\n          message: `Category \"${args.newCategoryName}\" not found`,\n          suggestion: `Available categories: ${availableCategories.join(\", \")}`\n        };\n      }\n    }\n\n    /* Determine final type name */\n    const finalTypeName = args.newTypeName ? args.newTypeName.trim() : currentTypeName;\n\n    /* Step 4: Save changes */\n    const saveFormData = new FormData();\n    saveFormData.append(\"scrollLeft\", \"0\");\n    saveFormData.append(\"scrollTop\", \"0\");\n    saveFormData.append(\"__EVENTTARGET\", \"\");\n    saveFormData.append(\"__EVENTARGUMENT\", \"\");\n    saveFormData.append(\"__VIEWSTATE\", saveViewState);\n    saveFormData.append(\"__VIEWSTATEGENERATOR\", saveViewStateGen);\n    saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    saveFormData.append(\"__EVENTVALIDATION\", saveEventValidation);\n    saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    saveFormData.append(\"ctl00$body$txtName\", finalTypeName);\n    saveFormData.append(\"ctl00$body$dprating\", finalCategoryCode);\n    saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n    const finalResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: saveFormData\n    });\n\n    const saveHtml = await finalResponse.text();\n\n    if (finalResponse.status === 200) {\n      const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n      const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n      \n      if (errorMsg) {\n        return {\n          status: \"ERROR\",\n          message: `Save failed: ${errorMsg.trim()}`\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: `Successfully updated Extra Curricular Activity Type (${currentCode})`,\n        ecaTypeCode: currentCode,\n        previousTypeName: currentTypeName,\n        newTypeName: finalTypeName,\n        previousCategoryCode: currentCategoryCode,\n        newCategoryCode: finalCategoryCode\n      };\n    }\n\n    return {\n      status: \"ERROR\",\n      message: \"Failed to update activity type. Please verify in the UI.\"\n    };\n\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err.message,\n      error: err.toString()\n    };\n  }\n})",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "ExtraCurricularActivities"
+      ],
+      "taskName": "Editing Extra Curricular Activity Type Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-30T14:31:35.097Z",
+      "updatedAt": "2026-06-15T07:30:52.082Z",
+      "__v": 2,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "editExtraCurricularActivityType",
+      "args": [
+        {
+          "name": "ecaTypeCode",
+          "type": "string",
+          "description": "The activity type code to identify the record to edit (e.g., \"000001\"). Either ecaTypeCode or ecaTypeName must be provided.",
+          "required": false,
+          "_id": "6953e247e62c2e2fca5eba6e"
+        },
+        {
+          "name": "ecaTypeName",
+          "type": "string",
+          "description": "The activity type name to identify the record to edit (e.g., \"Learning\"). Either ecaTypeCode or ecaTypeName must be provided.",
+          "required": false,
+          "_id": "6953e247e62c2e2fca5eba6f"
+        },
+        {
+          "name": "newTypeName",
+          "type": "string",
+          "description": "The new name for the activity type. If not provided, the type name will remain unchanged. Maximum 120 characters.",
+          "required": false,
+          "_id": "6953e247e62c2e2fca5eba70"
+        },
+        {
+          "name": "newCategoryCode",
+          "type": "string",
+          "description": "The code of the new category to assign (e.g., \"000003\" for \"Arts / Creative\"). The user must provide either newCategoryCode or newCategoryName.",
+          "required": false,
+          "_id": "6953e247e62c2e2fca5eba71"
+        },
+        {
+          "name": "newCategoryName",
+          "type": "string",
+          "description": "The name of the new category to assign (e.g., \"Arts / Creative\"). The user must provide either newCategoryCode or newCategoryName.",
+          "required": false,
+          "_id": "6953e247e62c2e2fca5eba72"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6953e247e62c2e2fca5eba6d"
+    },
+    "fetcher": "(function (args, reqOptions) {\r\n  return {\r\n    code: `(function(){\r\n        return [];\r\n      })`\r\n  };\r\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* Access validation */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/ExtraCulActivityType.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Extra Curricular Activity Type screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* Input validation */\n    if (!args?.ecaTypeCode && !args?.ecaTypeName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: either ecaTypeCode or ecaTypeName is required to identify the record\"\n      };\n    }\n\n    if (!args?.newTypeName && !args?.newCategoryCode && !args?.newCategoryName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: at least one of newTypeName, newCategoryCode, or newCategoryName must be provided to update the record\"\n      };\n    }\n\n    if (args?.newTypeName && args.newTypeName.length > 120) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: newTypeName must be 120 characters or less\"\n      };\n    }\n\n    /* Initial page state */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"ExtraCulActivityType\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/ExtraCulActivityType.aspx\");\n\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/ExtraCulActivityType.aspx`;\n\n    const parser = new DOMParser();\n\n    /* Determine search criteria */\n    let searchCriteria, searchValue;\n    if (args.ecaTypeCode) {\n      searchCriteria = \"EATYPE_CODE\";\n      searchValue = args.ecaTypeCode.trim();\n    } else {\n      searchCriteria = \"EATYPE_NAME\";\n      searchValue = args.ecaTypeName.trim();\n    }\n\n    /* Step 1: Search for the activity type */\n    const searchFormData = new FormData();\n    searchFormData.append(\"scrollLeft\", \"0\");\n    searchFormData.append(\"scrollTop\", \"0\");\n    searchFormData.append(\"__EVENTTARGET\", \"\");\n    searchFormData.append(\"__EVENTARGUMENT\", \"\");\n    searchFormData.append(\"__VIEWSTATE\", details.viewState);\n    searchFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    searchFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    searchFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n    searchFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    searchFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    searchFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n    searchFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n    searchFormData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n    searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n    searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    searchFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    const searchResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: searchFormData\n    });\n\n    const searchDoc = parser.parseFromString(await searchResponse.text(), \"text/html\");\n\n    const searchViewState = searchDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const searchEventValidation = searchDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const searchViewStateGen = searchDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Find matching row */\n    let row = null;\n    const rows = searchDoc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n    \n    for (const r of rows) {\n      const cells = r.querySelectorAll(\"td\");\n      const rowCode = cells[0]?.textContent.trim();\n      const rowType = cells[1]?.textContent.trim();\n      \n      if (args.ecaTypeCode && rowCode === args.ecaTypeCode) {\n        row = r;\n        break;\n      } else if (args.ecaTypeName && rowType === args.ecaTypeName) {\n        row = r;\n        break;\n      }\n    }\n\n    if (!row) {\n      return {\n        status: \"NOT_FOUND\",\n        message: `Extra Curricular Activity Type not found: \"${searchValue}\"`\n      };\n    }\n\n    /* Get edit link */\n    const editKey = row\n      .querySelector(\"a\")\n      ?.getAttribute(\"href\")\n      ?.match(/__doPostBack\\('([^']+)'/)?.[1];\n\n    if (!editKey) {\n      return {\n        status: \"ERROR\",\n        message: \"Unable to open activity type record for editing\"\n      };\n    }\n\n    /* Step 2: Click on row to open detail view */\n    const rowClickFormData = new FormData();\n    rowClickFormData.append(\"scrollLeft\", \"0\");\n    rowClickFormData.append(\"scrollTop\", \"0\");\n    rowClickFormData.append(\"__EVENTTARGET\", editKey);\n    rowClickFormData.append(\"__EVENTARGUMENT\", \"\");\n    rowClickFormData.append(\"__VIEWSTATE\", searchViewState);\n    rowClickFormData.append(\"__VIEWSTATEGENERATOR\", searchViewStateGen);\n    rowClickFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    rowClickFormData.append(\"__EVENTVALIDATION\", searchEventValidation);\n    rowClickFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    rowClickFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    rowClickFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n    rowClickFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n    rowClickFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    rowClickFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    rowClickFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n    rowClickFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    rowClickFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    const detailResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: rowClickFormData\n    });\n\n    const detailDoc = parser.parseFromString(await detailResponse.text(), \"text/html\");\n\n    /* Extract current values */\n    const currentCode = detailDoc.querySelector(\"#ctl00_body_txtCode\")?.value || \"\";\n    const currentTypeName = detailDoc.querySelector(\"#ctl00_body_txtName\")?.value || \"\";\n    const currentCategorySelect = detailDoc.querySelector(\"#ctl00_body_dprating\");\n    const currentCategoryCode = currentCategorySelect?.value || \"\";\n\n    const detailViewState = detailDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const detailEventValidation = detailDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const detailViewStateGen = detailDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Step 3: Click Edit button */\n    const editFormData = new FormData();\n    editFormData.append(\"scrollLeft\", \"0\");\n    editFormData.append(\"scrollTop\", \"0\");\n    editFormData.append(\"__EVENTTARGET\", \"\");\n    editFormData.append(\"__EVENTARGUMENT\", \"\");\n    editFormData.append(\"__VIEWSTATE\", detailViewState);\n    editFormData.append(\"__VIEWSTATEGENERATOR\", detailViewStateGen);\n    editFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    editFormData.append(\"__EVENTVALIDATION\", detailEventValidation);\n    editFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    editFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    editFormData.append(\"ctl00$body$butEdit\", \"Edit\");\n\n    const editModeResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: editFormData\n    });\n\n    const editModeDoc = parser.parseFromString(await editModeResponse.text(), \"text/html\");\n\n    const saveViewState = editModeDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const saveEventValidation = editModeDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const saveViewStateGen = editModeDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Determine new category code if category name is provided */\n    let finalCategoryCode = currentCategoryCode;\n    \n    if (args.newCategoryCode) {\n      finalCategoryCode = args.newCategoryCode.trim();\n    } else if (args.newCategoryName) {\n      const categorySelect = editModeDoc.querySelector(\"#ctl00_body_dprating\");\n      const categoryOptions = categorySelect?.querySelectorAll(\"option\");\n      \n      let foundCategory = false;\n      for (const option of categoryOptions) {\n        const optionText = option.textContent.trim();\n        const optionValue = option.value;\n        \n        if (optionValue !== \"\" && optionValue !== \"-1\" && \n            optionText.toLowerCase() === args.newCategoryName.toLowerCase()) {\n          finalCategoryCode = optionValue;\n          foundCategory = true;\n          break;\n        }\n      }\n      \n      if (!foundCategory) {\n        const availableCategories = Array.from(categoryOptions)\n          .filter(opt => opt.value !== \"\" && opt.value !== \"-1\")\n          .map(opt => opt.textContent.trim());\n        \n        return {\n          status: \"INVALID_ARGS\",\n          message: `Category \"${args.newCategoryName}\" not found`,\n          suggestion: `Available categories: ${availableCategories.join(\", \")}`\n        };\n      }\n    }\n\n    /* Determine final type name */\n    const finalTypeName = args.newTypeName ? args.newTypeName.trim() : currentTypeName;\n\n    /* Step 4: Save changes */\n    const saveFormData = new FormData();\n    saveFormData.append(\"scrollLeft\", \"0\");\n    saveFormData.append(\"scrollTop\", \"0\");\n    saveFormData.append(\"__EVENTTARGET\", \"\");\n    saveFormData.append(\"__EVENTARGUMENT\", \"\");\n    saveFormData.append(\"__VIEWSTATE\", saveViewState);\n    saveFormData.append(\"__VIEWSTATEGENERATOR\", saveViewStateGen);\n    saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    saveFormData.append(\"__EVENTVALIDATION\", saveEventValidation);\n    saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    saveFormData.append(\"ctl00$body$txtName\", finalTypeName);\n    saveFormData.append(\"ctl00$body$dprating\", finalCategoryCode);\n    saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n    const finalResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: saveFormData\n    });\n\n    const saveHtml = await finalResponse.text();\n\n    if (finalResponse.status === 200) {\n      const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n      const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n      \n      if (errorMsg) {\n        return {\n          status: \"ERROR\",\n          message: `Save failed: ${errorMsg.trim()}`\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: `Successfully updated Extra Curricular Activity Type (${currentCode})`,\n        ecaTypeCode: currentCode,\n        previousTypeName: currentTypeName,\n        newTypeName: finalTypeName,\n        previousCategoryCode: currentCategoryCode,\n        newCategoryCode: finalCategoryCode\n      };\n    }\n\n    return {\n      status: \"ERROR\",\n      message: \"Failed to update activity type. Please verify in the UI.\"\n    };\n\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err.message,\n      error: err.toString()\n    };\n  }\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

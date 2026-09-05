@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "bargainingUnitCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the generate Bargaining Unit Details.give the BargainingUnitCode.",
+      "advanced": false,
+      "raw": {
+        "name": "bargainingUnitCode",
+        "type": "string",
+        "description": "to get the generate Bargaining Unit Details.give the BargainingUnitCode.",
+        "required": true,
+        "_id": "68122aae8f0c9af526c5a1ae"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

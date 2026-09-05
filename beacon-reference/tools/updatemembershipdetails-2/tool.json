@@ -1,0 +1,105 @@
+{
+  "id": "690dc568931a2d61ba0b189f",
+  "slug": "updatemembershipdetails-2",
+  "name": "updateMemberShipDetails",
+  "description": "in this tool generate the user update membership details. Before in this api call first execute the \"getMembershipDetails\" api. in this tool return the response all currency name and values, and user select update membership details. then next execute for in the tool for \"updateMemberShipDetails\" api, after execute final must and should execute for \"updateEmployeeInformationDetails\" api under entity check membership Details . to get the updateId means edit id for \"getMembershipDetails\" api with data is \"membershipDetails\" object details. and must should required \"updateId\". then after must be execute for \"updateEmployeeInformationDetails\" api.Note: no dependancy \"getEmployeeInformationDetails\" api. ",
+  "instructions": null,
+  "taskName": "Fetching The Update MemberShip Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateMemberShipDetails",
+  "createdAt": "2025-05-29T13:50:30.822Z",
+  "updatedAt": "2025-05-29T13:50:30.822Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "917687e82e5d780d9aaa4e3d9310aaa944e0eff2e85e3f81a0c728ea9175dd34",
+  "lastExportedAt": "2026-09-05T19:39:23.797Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b189f",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateMemberShipDetails",
+      "description": "in this tool generate the user update membership details. Before in this api call first execute the \"getMembershipDetails\" api. in this tool return the response all currency name and values, and user select update membership details. then next execute for in the tool for \"updateMemberShipDetails\" api, after execute final must and should execute for \"updateEmployeeInformationDetails\" api under entity check membership Details . to get the updateId means edit id for \"getMembershipDetails\" api with data is \"membershipDetails\" object details. and must should required \"updateId\". then after must be execute for \"updateEmployeeInformationDetails\" api.Note: no dependancy \"getEmployeeInformationDetails\" api. ",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateMemberShipDetails",
+        "args": [
+          {
+            "name": "employeeNumber",
+            "type": "string",
+            "description": "to give the Unique identifier for the employee id or name.",
+            "required": true,
+            "_id": "68386626e50b37370a6f8f76"
+          },
+          {
+            "name": "updateId",
+            "type": "string",
+            "description": "to get update id for before api resposne to user select update name corresposnding update id will be take example 'ctl00$body$grdgrade$ctl00$ctl04$ctl01' to get update id for 'getMembershipDetails' tool.",
+            "required": true,
+            "_id": "68386626e50b37370a6f8f77"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68386626e50b37370a6f8f75"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/MemberOfProf.aspx\")) {\n      return \"It seems you don't have access. Please check with the HR Admin\";\n    }\n\n  const today = new Date();\n  const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        // param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/MemberOfProf.aspx\");\n\n  const editResponse = await BeaconBar.executeFunction('module')({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.updateId,\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: window.view.viewState,\n    __VIEWSTATEGENERATOR: window.view.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.view.eventValidation,\n    \"ctl00$hdnDateFormat\": \"m/d/yy\",\n    \"ctl00$hdnQuickmenu\": \"\",\n    \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": args.employeeNumber,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00$body$dpcountry\": \"-1\",\n    \"ctl00$body$CustomHiddenField\": \"\",\n    \"ctl00$body$dpmemship\": \"-1\",\n    \"ctl00$body$txtMemshipNum\": \"\",\n    \"ctl00$body$dpbasis\": \"-1\",\n    \"ctl00$body$dpmemtitles\": \"-1\",\n    \"ctl00$body$txtStartdate\": formattedDate,\n    \"ctl00$body$txtEndDate\": formattedDate,\n    \"ctl00$body$nurears\": \"\",\n    \"ctl00$body$dpIndCurrency\": \"000112\",\n    \"ctl00$body$txtIndEffDate\": formattedDate,\n    \"ctl00$body$nuBornAmount\": \"\",\n    \"ctl00$body$dpComCurrency\": \"000112\",\n    \"ctl00$body$txtComEffDate\": formattedDate,\n    \"ctl00$body$grdgrade$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdgrade_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdgrade$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdgrade_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdgrade_ClientState\": \"\",\n    \"ctl00$body$grdBarginingSummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdBarginingSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdBarginingSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdBarginingSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdBarginingSummary_ClientState\": \"\",\n    \"ctl00$body$txtempnumber\": args.employeeNumber,\n    \"ctl00$body$hdnSelectedTab\": \"0\",\n    \"ctl00$body$hdnHavePendingMemshipWFData\": \"0\",\n    \"ctl00$body$hdnHavePendingBargainWFData\": \"0\",\n    \"ctl00$body$txtPublicKey\": window.view.publicKey,\n    \"ctl00$body$hdnEventType\": \"1\",\n    \"ctl00$body$HiddenField1\": \"\"\n  }, `${reqOptions.sl}/${updateUrlData.pageUrl}`);\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(editResponse.rawData, \"text/html\");\n\n  window.pk = editResponse;\n\n  const select = document.querySelector(\"#ctl00_body_dpIndCurrency\");\n\n  const currencyOptions = Array.from(select.options)\n    .filter(option => option.value !== \"-1\") // Exclude default/empty placeholder\n    .map(option => ({\n      value: option.value,\n      label: option.textContent.trim()\n    }));\n\n  const userUpdateMebershipDetails = {\n    membershipType: {\n      label: document.querySelector(\"#ctl00_body_dpcountry\")?.selectedOptions[0]?.textContent.trim() || \"\",\n      value: document.querySelector(\"#ctl00_body_dpcountry\")?.value || \"\"\n    },\n    noOfMemberships: document.querySelector(\"#ctl00_body_numonth\")?.value.trim() || \"\",\n    membership: {\n      label: document.querySelector(\"#ctl00_body_dpmemship\")?.selectedOptions[0]?.textContent.trim() || \"\",\n      value: document.querySelector(\"#ctl00_body_dpmemship\")?.value || \"\"\n    },\n    membershipNumber: document.querySelector(\"#ctl00_body_txtMemshipNum\")?.value.trim() || \"\",\n    subscriptionOwnership: {\n      label: document.querySelector(\"#ctl00_body_dpbasis\")?.selectedOptions[0]?.textContent.trim() || \"\",\n      value: document.querySelector(\"#ctl00_body_dpbasis\")?.value || \"\"\n    },\n    membershipTitle: {\n      label: document.querySelector(\"#ctl00_body_dpmemtitles\")?.selectedOptions[0]?.textContent.trim() || \"\",\n      value: document.querySelector(\"#ctl00_body_dpmemtitles\")?.value || \"\"\n    },\n    commencementDate: document.querySelector(\"#ctl00_body_txtStartdate\")?.value.trim() || \"\",\n    renewalDate: document.querySelector(\"#ctl00_body_txtEndDate\")?.value.trim() || \"\",\n    paidByIndividualCurrency: {\n      label: document.querySelector(\"#ctl00_body_dpIndCurrency\")?.selectedOptions[0]?.textContent.trim() || \"\",\n      value: document.querySelector(\"#ctl00_body_dpIndCurrency\")?.value || \"\"\n    },\n    paidByIndividualEffDate: document.querySelector(\"#ctl00_body_txtIndEffDate\")?.value.trim() || \"\",\n    paidByCompanyCurrency: {\n      label: document.querySelector(\"#ctl00_body_dpComCurrency\")?.selectedOptions[0]?.textContent.trim() || \"\",\n      value: document.querySelector(\"#ctl00_body_dpComCurrency\")?.value || \"\"\n    },\n    paidbyIndividualAmount: document.querySelector(\"#ctl00_body_nurears\")?.value.trim() || \"\",\n    paidbyCompanyAmount: document.querySelector(\"#ctl00_body_nuBornAmount\")?.value.trim() || \"\",\n    paidByCompanyEffDate: document.querySelector(\"#ctl00_body_txtComEffDate\")?.value.trim() || \"\"\n  }\n  return { userUpdateMebershipDetails, currencyOptions }\n})",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Fetching The Update MemberShip Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-29T13:50:30.822Z",
+      "updatedAt": "2025-05-29T13:50:30.822Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateMemberShipDetails",
+      "args": [
+        {
+          "name": "employeeNumber",
+          "type": "string",
+          "description": "to give the Unique identifier for the employee id or name.",
+          "required": true,
+          "_id": "68386626e50b37370a6f8f76"
+        },
+        {
+          "name": "updateId",
+          "type": "string",
+          "description": "to get update id for before api resposne to user select update name corresposnding update id will be take example 'ctl00$body$grdgrade$ctl00$ctl04$ctl01' to get update id for 'getMembershipDetails' tool.",
+          "required": true,
+          "_id": "68386626e50b37370a6f8f77"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68386626e50b37370a6f8f75"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/MemberOfProf.aspx\")) {\n      return \"It seems you don't have access. Please check with the HR Admin\";\n    }\n\n  const today = new Date();\n  const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        // param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/MemberOfProf.aspx\");\n\n  const editResponse = await BeaconBar.executeFunction('module')({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.updateId,\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: window.view.viewState,\n    __VIEWSTATEGENERATOR: window.view.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.view.eventValidation,\n    \"ctl00$hdnDateFormat\": \"m/d/yy\",\n    \"ctl00$hdnQuickmenu\": \"\",\n    \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": args.employeeNumber,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00$body$dpcountry\": \"-1\",\n    \"ctl00$body$CustomHiddenField\": \"\",\n    \"ctl00$body$dpmemship\": \"-1\",\n    \"ctl00$body$txtMemshipNum\": \"\",\n    \"ctl00$body$dpbasis\": \"-1\",\n    \"ctl00$body$dpmemtitles\": \"-1\",\n    \"ctl00$body$txtStartdate\": formattedDate,\n    \"ctl00$body$txtEndDate\": formattedDate,\n    \"ctl00$body$nurears\": \"\",\n    \"ctl00$body$dpIndCurrency\": \"000112\",\n    \"ctl00$body$txtIndEffDate\": formattedDate,\n    \"ctl00$body$nuBornAmount\": \"\",\n    \"ctl00$body$dpComCurrency\": \"000112\",\n    \"ctl00$body$txtComEffDate\": formattedDate,\n    \"ctl00$body$grdgrade$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdgrade_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdgrade$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdgrade_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdgrade_ClientState\": \"\",\n    \"ctl00$body$grdBarginingSummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdBarginingSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdBarginingSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdBarginingSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdBarginingSummary_ClientState\": \"\",\n    \"ctl00$body$txtempnumber\": args.employeeNumber,\n    \"ctl00$body$hdnSelectedTab\": \"0\",\n    \"ctl00$body$hdnHavePendingMemshipWFData\": \"0\",\n    \"ctl00$body$hdnHavePendingBargainWFData\": \"0\",\n    \"ctl00$body$txtPublicKey\": window.view.publicKey,\n    \"ctl00$body$hdnEventType\": \"1\",\n    \"ctl00$body$HiddenField1\": \"\"\n  }, `${reqOptions.sl}/${updateUrlData.pageUrl}`);\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(editResponse.rawData, \"text/html\");\n\n  window.pk = editResponse;\n\n  const select = document.querySelector(\"#ctl00_body_dpIndCurrency\");\n\n  const currencyOptions = Array.from(select.options)\n    .filter(option => option.value !== \"-1\") // Exclude default/empty placeholder\n    .map(option => ({\n      value: option.value,\n      label: option.textContent.trim()\n    }));\n\n  const userUpdateMebershipDetails = {\n    membershipType: {\n      label: document.querySelector(\"#ctl00_body_dpcountry\")?.selectedOptions[0]?.textContent.trim() || \"\",\n      value: document.querySelector(\"#ctl00_body_dpcountry\")?.value || \"\"\n    },\n    noOfMemberships: document.querySelector(\"#ctl00_body_numonth\")?.value.trim() || \"\",\n    membership: {\n      label: document.querySelector(\"#ctl00_body_dpmemship\")?.selectedOptions[0]?.textContent.trim() || \"\",\n      value: document.querySelector(\"#ctl00_body_dpmemship\")?.value || \"\"\n    },\n    membershipNumber: document.querySelector(\"#ctl00_body_txtMemshipNum\")?.value.trim() || \"\",\n    subscriptionOwnership: {\n      label: document.querySelector(\"#ctl00_body_dpbasis\")?.selectedOptions[0]?.textContent.trim() || \"\",\n      value: document.querySelector(\"#ctl00_body_dpbasis\")?.value || \"\"\n    },\n    membershipTitle: {\n      label: document.querySelector(\"#ctl00_body_dpmemtitles\")?.selectedOptions[0]?.textContent.trim() || \"\",\n      value: document.querySelector(\"#ctl00_body_dpmemtitles\")?.value || \"\"\n    },\n    commencementDate: document.querySelector(\"#ctl00_body_txtStartdate\")?.value.trim() || \"\",\n    renewalDate: document.querySelector(\"#ctl00_body_txtEndDate\")?.value.trim() || \"\",\n    paidByIndividualCurrency: {\n      label: document.querySelector(\"#ctl00_body_dpIndCurrency\")?.selectedOptions[0]?.textContent.trim() || \"\",\n      value: document.querySelector(\"#ctl00_body_dpIndCurrency\")?.value || \"\"\n    },\n    paidByIndividualEffDate: document.querySelector(\"#ctl00_body_txtIndEffDate\")?.value.trim() || \"\",\n    paidByCompanyCurrency: {\n      label: document.querySelector(\"#ctl00_body_dpComCurrency\")?.selectedOptions[0]?.textContent.trim() || \"\",\n      value: document.querySelector(\"#ctl00_body_dpComCurrency\")?.value || \"\"\n    },\n    paidbyIndividualAmount: document.querySelector(\"#ctl00_body_nurears\")?.value.trim() || \"\",\n    paidbyCompanyAmount: document.querySelector(\"#ctl00_body_nuBornAmount\")?.value.trim() || \"\",\n    paidByCompanyEffDate: document.querySelector(\"#ctl00_body_txtComEffDate\")?.value.trim() || \"\"\n  }\n  return { userUpdateMebershipDetails, currencyOptions }\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

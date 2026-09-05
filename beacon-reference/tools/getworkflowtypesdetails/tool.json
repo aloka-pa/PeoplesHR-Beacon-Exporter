@@ -1,0 +1,83 @@
+{
+  "id": "690dc566931a2d61ba0b167c",
+  "slug": "getworkflowtypesdetails",
+  "name": "getWorkflowTypesDetails",
+  "description": "in this tool generate the getWorkflowTypesDetails.",
+  "instructions": null,
+  "taskName": "Fecthing Workflow Types Details",
+  "tags": [
+    "Workflow"
+  ],
+  "status": "unlive",
+  "signature": "getWorkflowTypesDetails",
+  "createdAt": "2025-05-05T09:47:41.056Z",
+  "updatedAt": "2026-07-17T12:54:47.087Z",
+  "assignedAgents": [],
+  "contentHash": "9c2f201fa24a1e38950e2678f1254ffada60aa1f6b8aee3a3db9010d66627192",
+  "lastExportedAt": "2026-09-05T19:39:22.055Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b167c",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getWorkflowTypesDetails",
+      "description": "in this tool generate the getWorkflowTypesDetails.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getWorkflowTypesDetails",
+        "args": [],
+        "isAdvanced": false,
+        "_id": "6a5a2617ea72568a2fc9634a"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getWorkflow\")(\"DefineWorkflowType\");\n\n  const workflowData = [];\n\n  const parser = new DOMParser();\n  let doc = parser.parseFromString(details.rawData, \"text/html\");\n\n  const extractRows = (document) => {\n    const rows = document.querySelectorAll(\"#ctl00_body_grdWFTypes > tbody > tr\");\n    const result = [];\n    rows.forEach((row) => {\n      const cells = row.querySelectorAll(\"td\");\n      if (cells.length >= 2) {\n        const module = cells[0].textContent.trim();\n        const description = cells[1].textContent.trim();\n        if (module && description) {\n          result.push({ module, description });\n        }\n      }\n    });\n    return result;\n  };\n\n  // Insert first API page\n  workflowData.push(...extractRows(doc));\n\n  let pageNumber = 2;\n  let hasMorePages = true;\n  let viewState = details.viewState;\n  let viewStateGen = details.viewStateGen;\n  let eventValidation = details.eventValidation;\n\n  while (hasMorePages) {\n    const response = await BeaconBar.executeFunction(\"Workflow\")({\n      \"ctl00_body_RadScriptManager1_HiddenField\": \"\",\n      __EVENTTARGET: \"ctl00$body$grdWFTypes\",\n      __EVENTARGUMENT: `Page$${pageNumber}`,\n      __VIEWSTATE: viewState,\n      __VIEWSTATEGENERATOR: viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: eventValidation,\n      \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n      \"ctl00$body$hdnFlModID\": \"\",\n      \"ctl00$body$hdnFldTypeCodeStatus\": \"\",\n      \"ctl00$body$hdnFldTypeCode\": \"\",\n    }, \"DefineWorkflowType\");\n\n    doc = parser.parseFromString(response.rawData, \"text/html\");\n    const currentRows = extractRows(doc);\n\n    if (currentRows.length === 0) {\n      hasMorePages = false;\n    } else {\n      workflowData.push(...currentRows);\n      viewState = response.viewState;\n      viewStateGen = response.viewStateGen;\n      eventValidation = response.eventValidation;\n      pageNumber++;\n    }\n  }\n\n  return workflowData;\n})\n",
+      "groupName": "",
+      "tags": [
+        "Workflow"
+      ],
+      "taskName": "Fecthing Workflow Types Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-05T09:47:41.056Z",
+      "updatedAt": "2026-07-17T12:54:47.087Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getWorkflowTypesDetails",
+      "args": [],
+      "isAdvanced": false,
+      "_id": "6a5a2617ea72568a2fc9634a"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getWorkflow\")(\"DefineWorkflowType\");\n\n  const workflowData = [];\n\n  const parser = new DOMParser();\n  let doc = parser.parseFromString(details.rawData, \"text/html\");\n\n  const extractRows = (document) => {\n    const rows = document.querySelectorAll(\"#ctl00_body_grdWFTypes > tbody > tr\");\n    const result = [];\n    rows.forEach((row) => {\n      const cells = row.querySelectorAll(\"td\");\n      if (cells.length >= 2) {\n        const module = cells[0].textContent.trim();\n        const description = cells[1].textContent.trim();\n        if (module && description) {\n          result.push({ module, description });\n        }\n      }\n    });\n    return result;\n  };\n\n  // Insert first API page\n  workflowData.push(...extractRows(doc));\n\n  let pageNumber = 2;\n  let hasMorePages = true;\n  let viewState = details.viewState;\n  let viewStateGen = details.viewStateGen;\n  let eventValidation = details.eventValidation;\n\n  while (hasMorePages) {\n    const response = await BeaconBar.executeFunction(\"Workflow\")({\n      \"ctl00_body_RadScriptManager1_HiddenField\": \"\",\n      __EVENTTARGET: \"ctl00$body$grdWFTypes\",\n      __EVENTARGUMENT: `Page$${pageNumber}`,\n      __VIEWSTATE: viewState,\n      __VIEWSTATEGENERATOR: viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: eventValidation,\n      \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n      \"ctl00$body$hdnFlModID\": \"\",\n      \"ctl00$body$hdnFldTypeCodeStatus\": \"\",\n      \"ctl00$body$hdnFldTypeCode\": \"\",\n    }, \"DefineWorkflowType\");\n\n    doc = parser.parseFromString(response.rawData, \"text/html\");\n    const currentRows = extractRows(doc);\n\n    if (currentRows.length === 0) {\n      hasMorePages = false;\n    } else {\n      workflowData.push(...currentRows);\n      viewState = response.viewState;\n      viewStateGen = response.viewStateGen;\n      eventValidation = response.eventValidation;\n      pageNumber++;\n    }\n  }\n\n  return workflowData;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

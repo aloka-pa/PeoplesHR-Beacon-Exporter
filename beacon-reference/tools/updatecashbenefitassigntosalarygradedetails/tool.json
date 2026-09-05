@@ -1,0 +1,78 @@
+{
+  "id": "690dc56c931a2d61ba0b1b62",
+  "slug": "updatecashbenefitassigntosalarygradedetails",
+  "name": "updateCashBenefitAssignToSalaryGradeDetails",
+  "description": "Before execute in the \"updateCashBenefitAssignToSalaryGradeDetails\" api.\n- first execute the \"getCashBenefitAssignToSalaryGradeDetails\" api, to get the user update record corresponding edit id will be take. ",
+  "instructions": null,
+  "taskName": "Update Cash Benefit Assign To Salary Grade Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateCashBenefitAssignToSalaryGradeDetails",
+  "createdAt": "2025-09-19T10:51:57.994Z",
+  "updatedAt": "2025-12-22T10:51:22.860Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "b4d21a9f6d4beb54f9823210cad079062da34f0d65114c53196bb0af1cf746de",
+  "lastExportedAt": "2026-09-05T19:39:23.152Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56c931a2d61ba0b1b62",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateCashBenefitAssignToSalaryGradeDetails",
+      "description": "Before execute in the \"updateCashBenefitAssignToSalaryGradeDetails\" api.\n- first execute the \"getCashBenefitAssignToSalaryGradeDetails\" api, to get the user update record corresponding edit id will be take. ",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateCashBenefitAssignToSalaryGradeDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {\n    \"editId\" : {\n      \"type\": \"string\",\n      \"description\" : \"Before get edit Id first execute 'getCashBenefitAssignToSalaryGradeDetails' api, user update record corresponding edit id will be take.\"\n    },\n    \"updateAmount\" : {\n      \"type\": \"string\",\n      \"description\" : \"user update amount will be take.\"\n    }\n  },\n  \"required\": [\"editId\",\"updateAmount\"]\n}",
+        "_id": "68cd35cdf1d9625bbe1e0389"
+      },
+      "by": "10329",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  debugger;\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignCashBenifit.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const modified = args.editId.replace(/\\$[^$]*$/, '$');\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.editId,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.cashBenefit.viewState,\n    __VIEWSTATEGENERATOR: window.cashBenefit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.cashBenefit.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$hdnQuickmenu\": \"1\"\n  }, \"AssignCashBenifit\");\n\n  const postBackResponse1 = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.editId,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: postBackResponse.viewState,\n    __VIEWSTATEGENERATOR: postBackResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: postBackResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$hdnQuickmenu\": \"1\",\n    [`${modified}nuamount`]: args.updateAmount\n  }, \"AssignCashBenifit\");\n\n  const postBackResponse2 = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.editId,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: postBackResponse1.viewState,\n    __VIEWSTATEGENERATOR: postBackResponse1.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: postBackResponse1.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$hdnQuickmenu\": \"1\",\n    \"ctl00$body$butSave\": \"Save\"\n  }, \"AssignCashBenifit\");\n\n  return \"update sucessfully\";\n})",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update Cash Benefit Assign To Salary Grade Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-09-19T10:51:57.994Z",
+      "updatedAt": "2025-12-22T10:51:22.860Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateCashBenefitAssignToSalaryGradeDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {\n    \"editId\" : {\n      \"type\": \"string\",\n      \"description\" : \"Before get edit Id first execute 'getCashBenefitAssignToSalaryGradeDetails' api, user update record corresponding edit id will be take.\"\n    },\n    \"updateAmount\" : {\n      \"type\": \"string\",\n      \"description\" : \"user update amount will be take.\"\n    }\n  },\n  \"required\": [\"editId\",\"updateAmount\"]\n}",
+      "_id": "68cd35cdf1d9625bbe1e0389"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  debugger;\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignCashBenifit.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const modified = args.editId.replace(/\\$[^$]*$/, '$');\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.editId,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.cashBenefit.viewState,\n    __VIEWSTATEGENERATOR: window.cashBenefit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.cashBenefit.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$hdnQuickmenu\": \"1\"\n  }, \"AssignCashBenifit\");\n\n  const postBackResponse1 = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.editId,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: postBackResponse.viewState,\n    __VIEWSTATEGENERATOR: postBackResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: postBackResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$hdnQuickmenu\": \"1\",\n    [`${modified}nuamount`]: args.updateAmount\n  }, \"AssignCashBenifit\");\n\n  const postBackResponse2 = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.editId,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: postBackResponse1.viewState,\n    __VIEWSTATEGENERATOR: postBackResponse1.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: postBackResponse1.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$hdnQuickmenu\": \"1\",\n    \"ctl00$body$butSave\": \"Save\"\n  }, \"AssignCashBenifit\");\n\n  return \"update sucessfully\";\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

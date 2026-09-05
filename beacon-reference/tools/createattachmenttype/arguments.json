@@ -1,0 +1,29 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "description",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Description or name of the attachment type (e.g., 'Attachment from Template Designer Module').",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Description or name of the attachment type (e.g., 'Attachment from Template Designer Module')."
+      }
+    },
+    {
+      "name": "isExpire",
+      "type": "boolean",
+      "required": true,
+      "defaultValue": null,
+      "description": "Whether the attachment has an expiration.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Whether the attachment has an expiration."
+      }
+    }
+  ]
+}

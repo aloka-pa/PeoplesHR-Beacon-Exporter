@@ -1,0 +1,24 @@
+{
+  "id": "690dc57a931a2d61ba0b2251",
+  "slug": "approverejectaction",
+  "name": "approveRejectAction",
+  "status": "live",
+  "createdAt": "2025-08-28T10:02:41.799Z",
+  "updatedAt": "2026-07-17T12:55:47.254Z",
+  "contentHash": "b0b0b70eb51a1ab9d527d82a0cac74a1c3b04e496808bf430d32970e6f075076",
+  "lastExportedAt": "2026-09-05T19:41:23.471Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57a931a2d61ba0b2251",
+    "name": "approveRejectAction",
+    "status": "live",
+    "code": "(function(action, stringresponse) {\n    \nconst response = stringresponse ? JSON.parse(stringresponse) : {};\n    BeaconBar.close();\n\n    if (action === \"Reject\") {\n        if (response && response.Message) {\n            BeaconBar.showSnackbar(response.Message, \"error\" , false);\n        } else {\n            BeaconBar.showSnackbar(\"Successfully Rejected\", \"error\" , false);\n        }\n    } else if (action === \"Approve\") {\n        if (response && response.Message) {\n            BeaconBar.showSnackbar(response.Message, \"success\" , false);\n        } else {\n            BeaconBar.showSnackbar(\"Successfully Approved\", \"success\" , false);\n        }\n    } else {\n    }\n})\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

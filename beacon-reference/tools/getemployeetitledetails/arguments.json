@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "empTitleCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the employee Title Code.",
+      "advanced": false,
+      "raw": {
+        "name": "empTitleCode",
+        "type": "string",
+        "description": "to give the employee Title Code.",
+        "required": true,
+        "_id": "68177870ea5a48ef0a517b58"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,88 @@
+{
+  "id": "690dc562931a2d61ba0b131d",
+  "slug": "createsalarygrade",
+  "name": "createSalaryGrade",
+  "description": "Before Execute in this tool. first execute the \"getCurrencyDetails\" Api then display available currency name then pic the currency name corresponding value will be take.",
+  "instructions": null,
+  "taskName": "Create Salary Grade",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "createSalaryGrade",
+  "createdAt": "2025-04-28T14:45:06.048Z",
+  "updatedAt": "2026-05-15T07:01:12.191Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "ee867909b8fe0977d368889f81dab54011286411e9a831d29b3797f48746de1e",
+  "lastExportedAt": "2026-09-05T19:39:22.634Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc562931a2d61ba0b131d",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createSalaryGrade",
+      "description": "Before Execute in this tool. first execute the \"getCurrencyDetails\" Api then display available currency name then pic the currency name corresponding value will be take.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createSalaryGrade",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtsalname\": {\n      \"type\": \"string\",\n      \"description\": \"Salary Grade Name (e.g., GCB Grade 04).\"\n    },\n    \"ctl00_body_cboCurrType\": {\n      \"type\": \"string\",\n      \"description\": \"Selected currency code (e.g., 000001 for AED). display the currency list to selected the currency name to get corresponding value for getCurrencyDetails api\"\n    },\n    \"ctl00_body_txtMin\": {\n      \"type\": \"number\",\n      \"description\": \"Minimum salary point. It must be less than equal to the Mid Point.\"\n    },\n    \"ctl00_body_txtMid\": {\n      \"type\": \"number\",\n      \"description\": \"Mid salary point. It must be greater than the Min Point and less than equal to the Max Point.\"\n    },\n    \"ctl00_body_txtMax\": {\n      \"type\": \"number\",\n      \"description\": \"Maximum salary point. It must be greater than equal to the Mid Point.\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtsalname\",\n    \"ctl00_body_cboCurrType\",\n    \"ctl00_body_txtMin\",\n    \"ctl00_body_txtMid\",\n    \"ctl00_body_txtMax\"\n  ]\n}",
+        "_id": "680f9472308fc882177e8379"
+      },
+      "by": "7829",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/SalaryGradeInfo.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n\n  myHeaders.append(\n    \"accept\",\n    \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\"\n  );\n\n  myHeaders.append(\n    \"accept-language\",\n    \"en-US,en;q=0.9\"\n  );\n\n  myHeaders.append(\n    \"x-requested-with\",\n    \"XMLHttpRequest\"\n  );\n\n  const urlencoded1 = new URLSearchParams();\n\n  urlencoded1.append(\n    \"ctl00_body_RadScriptManager_HiddenField\",\n    \";;HBS:en-GB:1bf6bb2e-a9e3-48c2-8258-789b8d94ae17:64806b3a\"\n  );\n\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n\n  urlencoded1.append(\n    \"__EVENTTARGET\",\n    \"ctl00$body$cboCurrType\"\n  );\n\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__LASTFOCUS\", \"\");\n\n  urlencoded1.append(\n    \"__VIEWSTATE\",\n    window.sg.viewState\n  );\n\n  urlencoded1.append(\n    \"__VIEWSTATEGENERATOR\",\n    window.sg.viewStateGen\n  );\n\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n\n  urlencoded1.append(\n    \"__EVENTVALIDATION\",\n    window.sg.eventValidation\n  );\n\n  urlencoded1.append(\n    \"ctl00$hdnDateFormat\",\n    \"dd/mm/yy\"\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$txtsalname\",\n    args[\"ctl00_body_txtsalname\"]\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$cboCurrType\",\n    args[\"ctl00_body_cboCurrType\"]\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$optsalary\",\n    \"0\"\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$txtMin\",\n    \"0\"\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$txtMid\",\n    \"0\"\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$txtMax\",\n    \"0\"\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$hdnDecimalFormat\",\n    \"2\"\n  );\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(\n    `${location.origin}/${reqOptions.sl}/EIM/SalaryGradeInfo.aspx`,\n    requestOptions1\n  );\n\n  const html1 = await response1.text();\n\n  const parser1 = new DOMParser();\n\n  const doc1 = parser1.parseFromString(\n    html1,\n    \"text/html\"\n  );\n\n  const viewState =\n    doc1.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n\n  const eventValidation =\n    doc1.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  const viewStateGen =\n    doc1.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  const urlencoded2 = new URLSearchParams();\n\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", \"\");\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__LASTFOCUS\", \"\");\n\n  urlencoded2.append(\n    \"__VIEWSTATE\",\n    viewState\n  );\n\n  urlencoded2.append(\n    \"__VIEWSTATEGENERATOR\",\n    viewStateGen\n  );\n\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n\n  urlencoded2.append(\n    \"__EVENTVALIDATION\",\n    eventValidation\n  );\n\n  urlencoded2.append(\n    \"ctl00$hdnDateFormat\",\n    \"dd/mm/yy\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$txtsalname\",\n    args[\"ctl00_body_txtsalname\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$cboCurrType\",\n    args[\"ctl00_body_cboCurrType\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$optsalary\",\n    \"0\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$txtMin\",\n    args[\"ctl00_body_txtMin\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$txtMid\",\n    args[\"ctl00_body_txtMid\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$txtMax\",\n    args[\"ctl00_body_txtMax\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$butSave\",\n    \"Save\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$hdnDecimalFormat\",\n    \"2\"\n  );\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/${reqOptions.sl}/EIM/SalaryGradeInfo.aspx`,\n    requestOptions2\n  );\n\n  const html2 = await response2.text();\n\n  return \"create successfully!\";\n\n})",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Create Salary Grade",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-28T14:45:06.048Z",
+      "updatedAt": "2026-05-15T07:01:12.191Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "createSalaryGrade",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtsalname\": {\n      \"type\": \"string\",\n      \"description\": \"Salary Grade Name (e.g., GCB Grade 04).\"\n    },\n    \"ctl00_body_cboCurrType\": {\n      \"type\": \"string\",\n      \"description\": \"Selected currency code (e.g., 000001 for AED). display the currency list to selected the currency name to get corresponding value for getCurrencyDetails api\"\n    },\n    \"ctl00_body_txtMin\": {\n      \"type\": \"number\",\n      \"description\": \"Minimum salary point. It must be less than equal to the Mid Point.\"\n    },\n    \"ctl00_body_txtMid\": {\n      \"type\": \"number\",\n      \"description\": \"Mid salary point. It must be greater than the Min Point and less than equal to the Max Point.\"\n    },\n    \"ctl00_body_txtMax\": {\n      \"type\": \"number\",\n      \"description\": \"Maximum salary point. It must be greater than equal to the Mid Point.\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtsalname\",\n    \"ctl00_body_cboCurrType\",\n    \"ctl00_body_txtMin\",\n    \"ctl00_body_txtMid\",\n    \"ctl00_body_txtMax\"\n  ]\n}",
+      "_id": "680f9472308fc882177e8379"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/SalaryGradeInfo.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n\n  myHeaders.append(\n    \"accept\",\n    \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\"\n  );\n\n  myHeaders.append(\n    \"accept-language\",\n    \"en-US,en;q=0.9\"\n  );\n\n  myHeaders.append(\n    \"x-requested-with\",\n    \"XMLHttpRequest\"\n  );\n\n  const urlencoded1 = new URLSearchParams();\n\n  urlencoded1.append(\n    \"ctl00_body_RadScriptManager_HiddenField\",\n    \";;HBS:en-GB:1bf6bb2e-a9e3-48c2-8258-789b8d94ae17:64806b3a\"\n  );\n\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n\n  urlencoded1.append(\n    \"__EVENTTARGET\",\n    \"ctl00$body$cboCurrType\"\n  );\n\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__LASTFOCUS\", \"\");\n\n  urlencoded1.append(\n    \"__VIEWSTATE\",\n    window.sg.viewState\n  );\n\n  urlencoded1.append(\n    \"__VIEWSTATEGENERATOR\",\n    window.sg.viewStateGen\n  );\n\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n\n  urlencoded1.append(\n    \"__EVENTVALIDATION\",\n    window.sg.eventValidation\n  );\n\n  urlencoded1.append(\n    \"ctl00$hdnDateFormat\",\n    \"dd/mm/yy\"\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$txtsalname\",\n    args[\"ctl00_body_txtsalname\"]\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$cboCurrType\",\n    args[\"ctl00_body_cboCurrType\"]\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$optsalary\",\n    \"0\"\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$txtMin\",\n    \"0\"\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$txtMid\",\n    \"0\"\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$txtMax\",\n    \"0\"\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$hdnDecimalFormat\",\n    \"2\"\n  );\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(\n    `${location.origin}/${reqOptions.sl}/EIM/SalaryGradeInfo.aspx`,\n    requestOptions1\n  );\n\n  const html1 = await response1.text();\n\n  const parser1 = new DOMParser();\n\n  const doc1 = parser1.parseFromString(\n    html1,\n    \"text/html\"\n  );\n\n  const viewState =\n    doc1.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n\n  const eventValidation =\n    doc1.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  const viewStateGen =\n    doc1.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  const urlencoded2 = new URLSearchParams();\n\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", \"\");\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__LASTFOCUS\", \"\");\n\n  urlencoded2.append(\n    \"__VIEWSTATE\",\n    viewState\n  );\n\n  urlencoded2.append(\n    \"__VIEWSTATEGENERATOR\",\n    viewStateGen\n  );\n\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n\n  urlencoded2.append(\n    \"__EVENTVALIDATION\",\n    eventValidation\n  );\n\n  urlencoded2.append(\n    \"ctl00$hdnDateFormat\",\n    \"dd/mm/yy\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$txtsalname\",\n    args[\"ctl00_body_txtsalname\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$cboCurrType\",\n    args[\"ctl00_body_cboCurrType\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$optsalary\",\n    \"0\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$txtMin\",\n    args[\"ctl00_body_txtMin\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$txtMid\",\n    args[\"ctl00_body_txtMid\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$txtMax\",\n    args[\"ctl00_body_txtMax\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$butSave\",\n    \"Save\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$hdnDecimalFormat\",\n    \"2\"\n  );\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/${reqOptions.sl}/EIM/SalaryGradeInfo.aspx`,\n    requestOptions2\n  );\n\n  const html2 = await response2.text();\n\n  return \"create successfully!\";\n\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

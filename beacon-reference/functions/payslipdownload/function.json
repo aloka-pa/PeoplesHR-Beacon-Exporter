@@ -1,0 +1,24 @@
+{
+  "id": "690dc586931a2d61ba0b2e1e",
+  "slug": "payslipdownload",
+  "name": "payslipDownload",
+  "status": "live",
+  "createdAt": "2025-06-13T12:18:29.715Z",
+  "updatedAt": "2025-06-13T12:18:29.715Z",
+  "contentHash": "8aab901b4ef3db037679dd8de067ec0ffeb3ef999470d7fd9d5425875506c9e4",
+  "lastExportedAt": "2026-09-05T19:41:35.043Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc586931a2d61ba0b2e1e",
+    "name": "payslipDownload",
+    "status": "live",
+    "code": "(async function (args , args2 = {}) {\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")()\n  const response = await fetch(`${reqOptions}GlobalPay/ESS/PaySlipView.aspx?Period=${args.Period}&Frequency=${args2.pfCode || 1}&Year=${args.Year}&EmpNo=${args.EmpNo}&RefreshButton=false&digest=${args.digest}`, requestOptions)\n  const data = await response.text();\n\n  return data;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

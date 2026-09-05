@@ -1,0 +1,73 @@
+{
+  "id": "690dc56a931a2d61ba0b1a08",
+  "slug": "getevalutions-2",
+  "name": "getEvalutions",
+  "description": "getEvalutions",
+  "instructions": null,
+  "taskName": "getEvalutions",
+  "tags": [
+    "Goal Planning"
+  ],
+  "status": "live",
+  "signature": "getEvalutions",
+  "createdAt": "2025-06-13T11:48:43.891Z",
+  "updatedAt": "2025-06-13T11:48:43.891Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c58",
+      "name": "goalPlaning"
+    }
+  ],
+  "contentHash": "17e2772c8deb72c173cc4372b35448c5d1e270a48e62be5de934ef3c2dca41e0",
+  "lastExportedAt": "2026-09-05T19:39:23.569Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56a931a2d61ba0b1a08",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getEvalutions",
+      "description": "getEvalutions",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getEvalutions",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "684c101b0b901749cd6bfefa"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function(data, args, reqOptions) {\n  const evalutionsData = await BeaconBar.executeFunction(\"getGoalEvalutionIds\")();\n  return evalutionsData;\n})",
+      "groupName": "",
+      "tags": [
+        "Goal Planning"
+      ],
+      "taskName": "getEvalutions",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-13T11:48:43.891Z",
+      "updatedAt": "2025-06-13T11:48:43.891Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c58",
+          "name": "goalPlaning"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getEvalutions",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "684c101b0b901749cd6bfefa"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function(data, args, reqOptions) {\n  const evalutionsData = await BeaconBar.executeFunction(\"getGoalEvalutionIds\")();\n  return evalutionsData;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

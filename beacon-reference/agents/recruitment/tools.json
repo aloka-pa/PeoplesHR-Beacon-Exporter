@@ -1,0 +1,17 @@
+[
+  {
+    "toolId": "690dc568931a2d61ba0b1869",
+    "toolName": "getAdminInformationDetails",
+    "path": "tools/getadmininformationdetails"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a5f",
+    "toolName": "dateFormat",
+    "path": "tools/dateformat"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b1712",
+    "toolName": "getShortListingDetails",
+    "path": "tools/getshortlistingdetails"
+  }
+]

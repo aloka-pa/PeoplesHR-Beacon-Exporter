@@ -1,0 +1,24 @@
+{
+  "id": "690dc586931a2d61ba0b2e67",
+  "slug": "pdftoblobconverter",
+  "name": "pdftoBlobconverter",
+  "status": "live",
+  "createdAt": "2025-06-09T11:11:02.019Z",
+  "updatedAt": "2025-06-09T11:11:02.019Z",
+  "contentHash": "68d617807461567993fb45d3bc692e1bd519081efcc0339c52be4460e4d522dd",
+  "lastExportedAt": "2026-09-05T19:41:36.984Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc586931a2d61ba0b2e67",
+    "name": "pdftoBlobconverter",
+    "status": "live",
+    "code": "function stringToUint8Array(str) {\n  const buf = new ArrayBuffer(str.length);\n  const bufView = new Uint8Array(buf);\n  for (let i = 0; i < str.length; i++) {\n    bufView[i] = str.charCodeAt(i) & 0xff; // take lowest byte only\n  }\n  return new Blob([bufView], { type: 'application/pdf' });\n}\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

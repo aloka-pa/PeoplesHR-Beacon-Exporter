@@ -1,0 +1,192 @@
+{
+  "id": "6952ab2a0ae74b035097924c",
+  "slug": "getqualificationdetails",
+  "name": "getQualificationDetails",
+  "description": "Retrieves qualification records from EIM module's Qualification Details page. Supports searching by qualification code or name with partial matching and returns all matches. Also supports returning the full list of qualifications using fetchMode (ALL/AVAILABLE/EXISTING/LIST) by triggering the Show All postback and extracting all grid rows.",
+  "instructions": null,
+  "taskName": "Fetching Qualification Details",
+  "tags": [
+    "EIMAdmin",
+    "QualificationInformation"
+  ],
+  "status": "live",
+  "signature": "getQualificationDetails",
+  "createdAt": "2025-12-29T16:24:10.587Z",
+  "updatedAt": "2026-04-03T06:04:44.965Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "95e65e6489675140b2919448aca5e400b8b411e58d87ebcf8a18ccfbd7ee62b8",
+  "lastExportedAt": "2026-09-05T19:39:22.747Z",
+  "raw": {
+    "basic": {
+      "_id": "6952ab2a0ae74b035097924c",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getQualificationDetails",
+      "description": "Retrieves qualification records from EIM module's Qualification Details page. Supports searching by qualification code or name with partial matching and returns all matches. Also supports returning the full list of qualifications using fetchMode (ALL/AVAILABLE/EXISTING/LIST) by triggering the Show All postback and extracting all grid rows.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getQualificationDetails",
+        "args": [
+          {
+            "name": "qualificationCode",
+            "type": "string",
+            "description": "Search qualifications by code. Supports partial matching and returns all matching rows. Ignored when fetchMode is set to return all records.\n  ",
+            "required": false,
+            "_id": "6952ab2a0ae74b035097924e"
+          },
+          {
+            "name": "qualificationName",
+            "type": "string",
+            "description": "Search qualifications by name. Supports partial matching (case-insensitive) and returns all matching rows. Ignored when fetchMode is set to return all records.",
+            "required": false,
+            "_id": "6952ab2a0ae74b035097924f"
+          },
+          {
+            "name": "fetchMode",
+            "type": "string",
+            "description": "Controls list retrieval. Use \"ALL\", \"AVAILABLE\", \"EXISTING\", or \"LIST\" to return all qualification records via Show All. When set, code/name search is skipped and all rows are returned.",
+            "required": false,
+            "_id": "697e162f972f5a0a65f6e126"
+          },
+          {
+            "name": "returnAll",
+            "type": "string",
+            "description": "\"all\" | \"available\" | \"existing\" | \"list\" triggers show-all behavior (your existing style); truthy strings also trigger show-all (optional; supported)",
+            "required": false,
+            "_id": "69808959af9f26f53d412c12"
+          },
+          {
+            "name": "pageNumber",
+            "type": "string",
+            "description": "fetch a single page (default \"1\")",
+            "required": false,
+            "_id": "69808959af9f26f53d412c13"
+          },
+          {
+            "name": "pageSize",
+            "type": "string",
+            "description": "requested size (default \"100\")",
+            "required": false,
+            "_id": "69808959af9f26f53d412c14"
+          },
+          {
+            "name": "autoFetchAllPages",
+            "type": "string",
+            "description": "truthy → fetch all pages and return all rows (default \"true\" when wantsAll)",
+            "required": false,
+            "_id": "69808959af9f26f53d412c15"
+          },
+          {
+            "name": "maxPages",
+            "type": "string",
+            "description": "safety limit (default \"50\")",
+            "required": false,
+            "_id": "69808959af9f26f53d412c16"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6952ab2a0ae74b035097924d"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Qualifications.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Qualifications screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Helpers (STRING ONLY)\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const toLower = (v) => okText(v).toLowerCase();\n    const isTruthy = (v) => {\n      const t = toLower(v);\n      return [\"true\",\"1\",\"yes\",\"y\",\"all\",\"showall\",\"show all\",\"list\",\"a list\",\"available\",\"existing\"].includes(t);\n    };\n\n    const fetchMode = toLower(args?.fetchMode);\n    const wantsAll =\n      [\"all\", \"available\", \"existing\", \"list\"].includes(fetchMode) || isTruthy(args?.returnAll);\n\n    const codeRaw = okText(args?.qualificationCode);\n    const nameRaw = okText(args?.qualificationName);\n\n    const pageNumberRaw = okText(args?.pageNumber) || \"1\";\n    const pageNumber = Number.isFinite(Number(pageNumberRaw)) ? Math.max(1, parseInt(pageNumberRaw, 10)) : 1;\n\n    const pageSizeRaw = okText(args?.pageSize) || \"100\";\n    const pageSize = Number.isFinite(Number(pageSizeRaw)) ? Math.max(1, parseInt(pageSizeRaw, 10)) : 100;\n\n    const autoFetchAllPages =\n      wantsAll ? true : isTruthy(args?.autoFetchAllPages); // for ALL requests, default TRUE\n\n    const maxPagesRaw = okText(args?.maxPages) || \"50\";\n    const maxPages = Number.isFinite(Number(maxPagesRaw)) ? Math.max(1, parseInt(maxPagesRaw, 10)) : 50;\n\n    // Validate input\n    if (!wantsAll && !codeRaw && !nameRaw) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: Provide qualificationCode or qualificationName, or set fetchMode/returnAll to ALL/AVAILABLE/EXISTING/LIST.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Decide search criteria + value\n     * ------------------------------------------------- */\n    let searchCriteria = \"QUALIFI_CODE\";\n    let searchValue = \"\";\n\n    if (!wantsAll) {\n      if (codeRaw) {\n        searchCriteria = \"QUALIFI_CODE\";\n        searchValue = codeRaw;\n      } else {\n        searchCriteria = \"QUALIFI_NAME\";\n        searchValue = nameRaw;\n      }\n    } else {\n      // Show all: criteria doesn't matter much; keep stable\n      searchCriteria = \"QUALIFI_CODE\";\n      searchValue = \"\";\n    }\n\n    /* -------------------------------------------------\n     * 4) URL + initial hidden fields\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"Qualifications\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Qualifications.aspx\");\n    const url = updateUrl?.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Qualifications.aspx`;\n\n    const parser = new DOMParser();\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const extractState = (doc) => ({\n      viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n      viewStateGen: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n      eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\"\n    });\n\n    const extractPagerInfo = (doc) => {\n      const pagerText = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\n      // Example: \"Displaying page 1 of 4, items 1 to 2 of 8.\"\n      const m = pagerText.match(/Displaying page\\s+(\\d+)\\s+of\\s+(\\d+).*?of\\s+(\\d+)/i);\n\n      const currentPage = m ? parseInt(m[1], 10) : 1;\n      const totalPages = m ? parseInt(m[2], 10) : 1;\n      const totalItems = m ? parseInt(m[3], 10) : null;\n\n      const pageTargets = {};\n      doc.querySelectorAll(\".PagerLeft_Default a\").forEach((a) => {\n        const pageNo = (a.textContent || \"\").trim();\n        const href = a.getAttribute(\"href\") || \"\";\n        const mm = href.match(/__doPostBack\\('([^']+)','([^']*)'\\)/);\n        if (pageNo && mm) pageTargets[pageNo] = { target: mm[1], arg: mm[2] || \"\" };\n      });\n\n      return { currentPage, totalPages, totalItems, pageTargets };\n    };\n\n    const extractRows = (doc) => {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const out = [];\n\n      for (const row of rows) {\n        const cells = row.querySelectorAll(\"td\");\n        if (cells.length < 2) continue;\n\n        // Based on your code: code, qualification, expiration\n        const code = (cells[0]?.textContent || \"\").trim();\n        const qualification = (cells[1]?.textContent || \"\").trim();\n        const expiration = (cells[2]?.textContent || \"\").trim(); // may exist\n\n        if (!code && !qualification) continue;\n\n        out.push({ code, qualification, expiration });\n      }\n      return out;\n    };\n\n    const applyFilter = (items) => {\n      if (wantsAll) return items;\n\n      const needle = (searchValue || \"\").toLowerCase();\n\n      if (codeRaw) {\n        // partial includes for code\n        return items.filter((r) => (r.code || \"\").toLowerCase().includes(needle));\n      }\n\n      // partial includes for name\n      return items.filter((r) => (r.qualification || \"\").toLowerCase().includes(needle));\n    };\n\n    /* -------------------------------------------------\n     * 5) POST #1: Search or Show All (page 1 state)\n     * ------------------------------------------------- */\n    const postSearchOrAll = async () => {\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", \"\");\n      formData.append(\"__EVENTARGUMENT\", \"\");\n      formData.append(\"__VIEWSTATE\", details.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      if (wantsAll) {\n        formData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n      } else {\n        formData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n      }\n\n      // page size request (server may clamp)\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n      return parser.parseFromString(html, \"text/html\");\n    };\n\n    /* -------------------------------------------------\n     * 6) Pager postback to a specific page (REAL FIX)\n     * ------------------------------------------------- */\n    const postToPage = async (fromDoc, targetPage) => {\n      const state = extractState(fromDoc);\n      const pager = extractPagerInfo(fromDoc);\n      const key = String(targetPage);\n      const event = pager.pageTargets[key];\n\n      if (!event?.target) return null;\n\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", event.target);\n      formData.append(\"__EVENTARGUMENT\", event.arg || \"\");\n      formData.append(\"__VIEWSTATE\", state.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", state.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      // Keep search context fields (safe)\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      // Keep pager fields (safe)\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", key);\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n      return parser.parseFromString(html, \"text/html\");\n    };\n\n    /* -------------------------------------------------\n     * 7) Execute\n     * ------------------------------------------------- */\n    const firstDoc = await postSearchOrAll();\n    let pager1 = extractPagerInfo(firstDoc);\n\n    // If user wants ALL: auto fetch all pages (default TRUE)\n    if (autoFetchAllPages) {\n      const all = [];\n\n      let currentDoc = firstDoc;\n      let pager = pager1;\n\n      let safety = 0;\n      while (safety < maxPages) {\n        safety += 1;\n\n        const rows = extractRows(currentDoc);\n        const filtered = applyFilter(rows);\n        all.push(...filtered);\n\n        if (!(pager.currentPage < pager.totalPages)) break;\n\n        const nextPage = pager.currentPage + 1;\n        const nextDoc = await postToPage(currentDoc, nextPage);\n        if (!nextDoc) break;\n\n        currentDoc = nextDoc;\n        pager = extractPagerInfo(currentDoc);\n      }\n\n      if (!all.length) {\n        return {\n          status: \"NOT_FOUND\",\n          message: wantsAll\n            ? \"No qualification records found.\"\n            : `No qualification records found matching \"${searchValue}\".`,\n          searchedFor: wantsAll ? \"ALL\" : searchValue\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        mode: wantsAll ? \"ALL\" : (codeRaw ? \"CODE_SEARCH\" : \"NAME_SEARCH\"),\n        count: all.length,\n        qualifications: all\n      };\n    }\n\n    // Single-page mode: return requested page + prompt for more\n    let finalDoc = firstDoc;\n    const safeTarget = Math.min(pageNumber, pager1.totalPages || pageNumber);\n\n    if (safeTarget > 1) {\n      const paged = await postToPage(firstDoc, safeTarget);\n      if (paged) finalDoc = paged;\n    }\n\n    const pager = extractPagerInfo(finalDoc);\n    const rows = extractRows(finalDoc);\n    const filtered = applyFilter(rows);\n\n    const moreAvailable = pager.currentPage < pager.totalPages;\n    const nextPage = moreAvailable ? String(pager.currentPage + 1) : \"\";\n\n    if (!filtered.length) {\n      return {\n        status: \"NOT_FOUND\",\n        message: wantsAll\n          ? `No qualification records found on page ${pager.currentPage}.`\n          : `No qualification records found matching \"${searchValue}\".`,\n        pageNumber: String(pager.currentPage),\n        totalPages: String(pager.totalPages || 1),\n        moreAvailable: moreAvailable ? \"true\" : \"false\",\n        nextPage\n      };\n    }\n\n    return {\n      status: \"SUCCESS\",\n      mode: wantsAll ? \"ALL_PAGE\" : (codeRaw ? \"CODE_SEARCH\" : \"NAME_SEARCH\"),\n      pageNumber: String(pager.currentPage),\n      totalPages: String(pager.totalPages || 1),\n      moreAvailable: moreAvailable ? \"true\" : \"false\",\n      nextPage,\n      count: filtered.length,\n      qualifications: filtered\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unknown error\",\n      error: String(err)\n    };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "QualificationInformation"
+      ],
+      "taskName": "Fetching Qualification Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-29T16:24:10.587Z",
+      "updatedAt": "2026-04-03T06:04:44.965Z",
+      "__v": 9,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getQualificationDetails",
+      "args": [
+        {
+          "name": "qualificationCode",
+          "type": "string",
+          "description": "Search qualifications by code. Supports partial matching and returns all matching rows. Ignored when fetchMode is set to return all records.\n  ",
+          "required": false,
+          "_id": "6952ab2a0ae74b035097924e"
+        },
+        {
+          "name": "qualificationName",
+          "type": "string",
+          "description": "Search qualifications by name. Supports partial matching (case-insensitive) and returns all matching rows. Ignored when fetchMode is set to return all records.",
+          "required": false,
+          "_id": "6952ab2a0ae74b035097924f"
+        },
+        {
+          "name": "fetchMode",
+          "type": "string",
+          "description": "Controls list retrieval. Use \"ALL\", \"AVAILABLE\", \"EXISTING\", or \"LIST\" to return all qualification records via Show All. When set, code/name search is skipped and all rows are returned.",
+          "required": false,
+          "_id": "697e162f972f5a0a65f6e126"
+        },
+        {
+          "name": "returnAll",
+          "type": "string",
+          "description": "\"all\" | \"available\" | \"existing\" | \"list\" triggers show-all behavior (your existing style); truthy strings also trigger show-all (optional; supported)",
+          "required": false,
+          "_id": "69808959af9f26f53d412c12"
+        },
+        {
+          "name": "pageNumber",
+          "type": "string",
+          "description": "fetch a single page (default \"1\")",
+          "required": false,
+          "_id": "69808959af9f26f53d412c13"
+        },
+        {
+          "name": "pageSize",
+          "type": "string",
+          "description": "requested size (default \"100\")",
+          "required": false,
+          "_id": "69808959af9f26f53d412c14"
+        },
+        {
+          "name": "autoFetchAllPages",
+          "type": "string",
+          "description": "truthy → fetch all pages and return all rows (default \"true\" when wantsAll)",
+          "required": false,
+          "_id": "69808959af9f26f53d412c15"
+        },
+        {
+          "name": "maxPages",
+          "type": "string",
+          "description": "safety limit (default \"50\")",
+          "required": false,
+          "_id": "69808959af9f26f53d412c16"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6952ab2a0ae74b035097924d"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Qualifications.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Qualifications screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Helpers (STRING ONLY)\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const toLower = (v) => okText(v).toLowerCase();\n    const isTruthy = (v) => {\n      const t = toLower(v);\n      return [\"true\",\"1\",\"yes\",\"y\",\"all\",\"showall\",\"show all\",\"list\",\"a list\",\"available\",\"existing\"].includes(t);\n    };\n\n    const fetchMode = toLower(args?.fetchMode);\n    const wantsAll =\n      [\"all\", \"available\", \"existing\", \"list\"].includes(fetchMode) || isTruthy(args?.returnAll);\n\n    const codeRaw = okText(args?.qualificationCode);\n    const nameRaw = okText(args?.qualificationName);\n\n    const pageNumberRaw = okText(args?.pageNumber) || \"1\";\n    const pageNumber = Number.isFinite(Number(pageNumberRaw)) ? Math.max(1, parseInt(pageNumberRaw, 10)) : 1;\n\n    const pageSizeRaw = okText(args?.pageSize) || \"100\";\n    const pageSize = Number.isFinite(Number(pageSizeRaw)) ? Math.max(1, parseInt(pageSizeRaw, 10)) : 100;\n\n    const autoFetchAllPages =\n      wantsAll ? true : isTruthy(args?.autoFetchAllPages); // for ALL requests, default TRUE\n\n    const maxPagesRaw = okText(args?.maxPages) || \"50\";\n    const maxPages = Number.isFinite(Number(maxPagesRaw)) ? Math.max(1, parseInt(maxPagesRaw, 10)) : 50;\n\n    // Validate input\n    if (!wantsAll && !codeRaw && !nameRaw) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: Provide qualificationCode or qualificationName, or set fetchMode/returnAll to ALL/AVAILABLE/EXISTING/LIST.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Decide search criteria + value\n     * ------------------------------------------------- */\n    let searchCriteria = \"QUALIFI_CODE\";\n    let searchValue = \"\";\n\n    if (!wantsAll) {\n      if (codeRaw) {\n        searchCriteria = \"QUALIFI_CODE\";\n        searchValue = codeRaw;\n      } else {\n        searchCriteria = \"QUALIFI_NAME\";\n        searchValue = nameRaw;\n      }\n    } else {\n      // Show all: criteria doesn't matter much; keep stable\n      searchCriteria = \"QUALIFI_CODE\";\n      searchValue = \"\";\n    }\n\n    /* -------------------------------------------------\n     * 4) URL + initial hidden fields\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"Qualifications\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Qualifications.aspx\");\n    const url = updateUrl?.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Qualifications.aspx`;\n\n    const parser = new DOMParser();\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const extractState = (doc) => ({\n      viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n      viewStateGen: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n      eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\"\n    });\n\n    const extractPagerInfo = (doc) => {\n      const pagerText = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\n      // Example: \"Displaying page 1 of 4, items 1 to 2 of 8.\"\n      const m = pagerText.match(/Displaying page\\s+(\\d+)\\s+of\\s+(\\d+).*?of\\s+(\\d+)/i);\n\n      const currentPage = m ? parseInt(m[1], 10) : 1;\n      const totalPages = m ? parseInt(m[2], 10) : 1;\n      const totalItems = m ? parseInt(m[3], 10) : null;\n\n      const pageTargets = {};\n      doc.querySelectorAll(\".PagerLeft_Default a\").forEach((a) => {\n        const pageNo = (a.textContent || \"\").trim();\n        const href = a.getAttribute(\"href\") || \"\";\n        const mm = href.match(/__doPostBack\\('([^']+)','([^']*)'\\)/);\n        if (pageNo && mm) pageTargets[pageNo] = { target: mm[1], arg: mm[2] || \"\" };\n      });\n\n      return { currentPage, totalPages, totalItems, pageTargets };\n    };\n\n    const extractRows = (doc) => {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const out = [];\n\n      for (const row of rows) {\n        const cells = row.querySelectorAll(\"td\");\n        if (cells.length < 2) continue;\n\n        // Based on your code: code, qualification, expiration\n        const code = (cells[0]?.textContent || \"\").trim();\n        const qualification = (cells[1]?.textContent || \"\").trim();\n        const expiration = (cells[2]?.textContent || \"\").trim(); // may exist\n\n        if (!code && !qualification) continue;\n\n        out.push({ code, qualification, expiration });\n      }\n      return out;\n    };\n\n    const applyFilter = (items) => {\n      if (wantsAll) return items;\n\n      const needle = (searchValue || \"\").toLowerCase();\n\n      if (codeRaw) {\n        // partial includes for code\n        return items.filter((r) => (r.code || \"\").toLowerCase().includes(needle));\n      }\n\n      // partial includes for name\n      return items.filter((r) => (r.qualification || \"\").toLowerCase().includes(needle));\n    };\n\n    /* -------------------------------------------------\n     * 5) POST #1: Search or Show All (page 1 state)\n     * ------------------------------------------------- */\n    const postSearchOrAll = async () => {\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", \"\");\n      formData.append(\"__EVENTARGUMENT\", \"\");\n      formData.append(\"__VIEWSTATE\", details.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      if (wantsAll) {\n        formData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n      } else {\n        formData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n      }\n\n      // page size request (server may clamp)\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n      return parser.parseFromString(html, \"text/html\");\n    };\n\n    /* -------------------------------------------------\n     * 6) Pager postback to a specific page (REAL FIX)\n     * ------------------------------------------------- */\n    const postToPage = async (fromDoc, targetPage) => {\n      const state = extractState(fromDoc);\n      const pager = extractPagerInfo(fromDoc);\n      const key = String(targetPage);\n      const event = pager.pageTargets[key];\n\n      if (!event?.target) return null;\n\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", event.target);\n      formData.append(\"__EVENTARGUMENT\", event.arg || \"\");\n      formData.append(\"__VIEWSTATE\", state.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", state.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      // Keep search context fields (safe)\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      // Keep pager fields (safe)\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", key);\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n      return parser.parseFromString(html, \"text/html\");\n    };\n\n    /* -------------------------------------------------\n     * 7) Execute\n     * ------------------------------------------------- */\n    const firstDoc = await postSearchOrAll();\n    let pager1 = extractPagerInfo(firstDoc);\n\n    // If user wants ALL: auto fetch all pages (default TRUE)\n    if (autoFetchAllPages) {\n      const all = [];\n\n      let currentDoc = firstDoc;\n      let pager = pager1;\n\n      let safety = 0;\n      while (safety < maxPages) {\n        safety += 1;\n\n        const rows = extractRows(currentDoc);\n        const filtered = applyFilter(rows);\n        all.push(...filtered);\n\n        if (!(pager.currentPage < pager.totalPages)) break;\n\n        const nextPage = pager.currentPage + 1;\n        const nextDoc = await postToPage(currentDoc, nextPage);\n        if (!nextDoc) break;\n\n        currentDoc = nextDoc;\n        pager = extractPagerInfo(currentDoc);\n      }\n\n      if (!all.length) {\n        return {\n          status: \"NOT_FOUND\",\n          message: wantsAll\n            ? \"No qualification records found.\"\n            : `No qualification records found matching \"${searchValue}\".`,\n          searchedFor: wantsAll ? \"ALL\" : searchValue\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        mode: wantsAll ? \"ALL\" : (codeRaw ? \"CODE_SEARCH\" : \"NAME_SEARCH\"),\n        count: all.length,\n        qualifications: all\n      };\n    }\n\n    // Single-page mode: return requested page + prompt for more\n    let finalDoc = firstDoc;\n    const safeTarget = Math.min(pageNumber, pager1.totalPages || pageNumber);\n\n    if (safeTarget > 1) {\n      const paged = await postToPage(firstDoc, safeTarget);\n      if (paged) finalDoc = paged;\n    }\n\n    const pager = extractPagerInfo(finalDoc);\n    const rows = extractRows(finalDoc);\n    const filtered = applyFilter(rows);\n\n    const moreAvailable = pager.currentPage < pager.totalPages;\n    const nextPage = moreAvailable ? String(pager.currentPage + 1) : \"\";\n\n    if (!filtered.length) {\n      return {\n        status: \"NOT_FOUND\",\n        message: wantsAll\n          ? `No qualification records found on page ${pager.currentPage}.`\n          : `No qualification records found matching \"${searchValue}\".`,\n        pageNumber: String(pager.currentPage),\n        totalPages: String(pager.totalPages || 1),\n        moreAvailable: moreAvailable ? \"true\" : \"false\",\n        nextPage\n      };\n    }\n\n    return {\n      status: \"SUCCESS\",\n      mode: wantsAll ? \"ALL_PAGE\" : (codeRaw ? \"CODE_SEARCH\" : \"NAME_SEARCH\"),\n      pageNumber: String(pager.currentPage),\n      totalPages: String(pager.totalPages || 1),\n      moreAvailable: moreAvailable ? \"true\" : \"false\",\n      nextPage,\n      count: filtered.length,\n      qualifications: filtered\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unknown error\",\n      error: String(err)\n    };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

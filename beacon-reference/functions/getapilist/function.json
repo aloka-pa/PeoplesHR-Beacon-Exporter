@@ -1,0 +1,24 @@
+{
+  "id": "690dc57d931a2d61ba0b26a5",
+  "slug": "getapilist",
+  "name": "getApiList",
+  "status": "live",
+  "createdAt": "2025-07-28T10:44:22.474Z",
+  "updatedAt": "2025-07-28T10:44:22.474Z",
+  "contentHash": "f4f0c6f664e55aa4d6d5aa1b33a9cd16d708a956b2a75317b17e93cebc84ef25",
+  "lastExportedAt": "2026-09-05T19:41:31.427Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57d931a2d61ba0b26a5",
+    "name": "getApiList",
+    "status": "live",
+    "code": "(async function (url) {\n    //done\n    const sl = await BeaconBar.getSharedData(\"sl\");\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n    myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n    const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n\n    // Determine if the URL already includes .aspx or a full path\n    let finalUrl = url.includes(\".aspx\") ? `${location.origin}/${sl}/${url}` : `${location.origin}/${sl}/EIM/${url}.aspx`;\n\n    const response = await fetch(finalUrl, requestOptions);\n    const data = await response.text();\n\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(data, 'text/html');\n\n    const details = {\n        viewState: doc.querySelector('#__VIEWSTATE')?.value || '',\n        eventValidation: doc.querySelector('#__EVENTVALIDATION')?.value || '',\n        viewStateGen: doc.querySelector('#__VIEWSTATEGENERATOR')?.value || '',\n        rawData: data\n    };\n\n    return details;\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

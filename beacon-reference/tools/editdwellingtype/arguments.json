@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "dwellingCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The dwelling type code to identify the record to edit (e.g., \"000006\"). Either dwellingCode or dwellingType must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "dwellingCode",
+        "type": "string",
+        "description": "The dwelling type code to identify the record to edit (e.g., \"000006\"). Either dwellingCode or dwellingType must be provided.",
+        "required": false,
+        "_id": "69542af7582bc4265d51687e"
+      }
+    },
+    {
+      "name": "dwellingType",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The dwelling type name to identify the record to edit (e.g., \"Apartment\"). Either dwellingCode or dwellingType must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "dwellingType",
+        "type": "string",
+        "description": "The dwelling type name to identify the record to edit (e.g., \"Apartment\"). Either dwellingCode or dwellingType must be provided.",
+        "required": false,
+        "_id": "69542af7582bc4265d51687f"
+      }
+    },
+    {
+      "name": "newDwellingType",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The new name for the dwelling type.",
+      "advanced": false,
+      "raw": {
+        "name": "newDwellingType",
+        "type": "string",
+        "description": "The new name for the dwelling type.",
+        "required": true,
+        "_id": "69542af7582bc4265d516880"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

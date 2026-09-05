@@ -1,0 +1,24 @@
+{
+  "id": "690dc587931a2d61ba0b2f4c",
+  "slug": "saveemployeeselectresult",
+  "name": "saveEmployeeSelectResult",
+  "status": "live",
+  "createdAt": "2025-05-28T14:12:08.901Z",
+  "updatedAt": "2026-07-17T12:55:59.581Z",
+  "contentHash": "d454235d17538aa2d55f41973fefb613e15b3e432efb0c4e411d00e8c57c93fa",
+  "lastExportedAt": "2026-09-05T19:41:16.485Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc587931a2d61ba0b2f4c",
+    "name": "saveEmployeeSelectResult",
+    "status": "live",
+    "code": "(async function (args) {\n  //done\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"content-type\", \"application/json; charset=UTF-8\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const empl = BeaconBar.getSharedData(\"utils\");\n  const request = await BeaconBar.executeFunction(\"getkeysforLeave\")();\n  BeaconBar.setSharedData(\"request\", request);\n\n  const allEmployeeDetails = BeaconBar.getSharedData(\"selectEmployees\");\n\n  let selectedEmployeesData = [];\n\n  if (args.includes(\"allEmployees\")) {\n    selectedEmployeesData = allEmployeeDetails.map(emp => ({\n      SE_UNIQUE_KEY: request,\n      SE_EMP_NUMBER: emp.empCode,\n      SE_EMP_NAME: emp.empName,\n      SE_DATE_JOINED: emp.dob\n    }));\n  } else {\n    selectedEmployeesData = allEmployeeDetails\n      .filter(emp => args.includes(emp.empCode) || args.includes(emp.empName))\n      .map(emp => ({\n        SE_UNIQUE_KEY: request,\n        SE_EMP_NUMBER: emp.empCode,\n        SE_EMP_NAME: emp.empName,\n        SE_DATE_JOINED: emp.dob\n      }));\n  }\n  const payload = {\n    loggedEmpNumber: empl.EmpNumber,\n    key: empl.KeyValue,\n    uniqueKey: request,\n    data: selectedEmployeesData,\n    isAdvancedSearch: \"1\"\n  };\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: JSON.stringify(payload),\n    redirect: \"follow\"\n  };\n\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n\n  const response = await fetch(`${reqOptions}CommonComponents/Search/SaveSearchResults/`, requestOptions);\n  const data = await response.json();\n\n  await BeaconBar.executeFunction(\"getSearchCreteria\")(empl.KeyValue);\n\n  return data;\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

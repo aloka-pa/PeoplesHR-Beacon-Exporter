@@ -1,0 +1,22 @@
+[
+  {
+    "toolId": "690dc56b931a2d61ba0b1a9a",
+    "toolName": "loadEvalutionGoals",
+    "path": "tools/loadevalutiongoals"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a9e",
+    "toolName": "loadGoals",
+    "path": "tools/loadgoals"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a8b",
+    "toolName": "getEvalutions",
+    "path": "tools/getevalutions"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a92",
+    "toolName": "createGoalPlanning",
+    "path": "tools/creategoalplanning"
+  }
+]

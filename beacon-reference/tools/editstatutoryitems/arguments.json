@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "statutoryCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The statutory item code to identify the record to edit (e.g., \"000005\"). Either statutoryCode or statutoryName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "statutoryCode",
+        "type": "string",
+        "description": "The statutory item code to identify the record to edit (e.g., \"000005\"). Either statutoryCode or statutoryName must be provided.",
+        "required": false,
+        "_id": "695432faa3bf12e8ee6fa229"
+      }
+    },
+    {
+      "name": "statutoryName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The statutory item name to identify the record to edit (e.g., \"Pension Scheme\"). Either statutoryCode or statutoryName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "statutoryName",
+        "type": "string",
+        "description": "The statutory item name to identify the record to edit (e.g., \"Pension Scheme\"). Either statutoryCode or statutoryName must be provided.",
+        "required": false,
+        "_id": "695432faa3bf12e8ee6fa22a"
+      }
+    },
+    {
+      "name": "newStatutoryName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The new name for the statutory item.",
+      "advanced": false,
+      "raw": {
+        "name": "newStatutoryName",
+        "type": "string",
+        "description": "The new name for the statutory item.",
+        "required": true,
+        "_id": "695432faa3bf12e8ee6fa22b"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

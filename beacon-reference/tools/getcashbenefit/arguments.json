@@ -1,0 +1,34 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "salaryGradeName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The salary grade name",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "80,000",
+          "Engineers",
+          "BarbadosDollar"
+        ],
+        "description": "The salary grade name"
+      }
+    },
+    {
+      "name": "salaryGradeCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Call 'getSalaryGradeCode' with the salary grade name to get the salary grade code.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Call 'getSalaryGradeCode' with the salary grade name to get the salary grade code."
+      }
+    }
+  ]
+}

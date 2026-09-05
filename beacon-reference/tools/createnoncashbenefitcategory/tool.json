@@ -1,0 +1,75 @@
+{
+  "id": "690dc564931a2d61ba0b1522",
+  "slug": "createnoncashbenefitcategory",
+  "name": "createNonCashBenefitCategory",
+  "description": "in this tool generate NonCash Benefit Category.",
+  "instructions": null,
+  "taskName": "Create NonCashBenefit Category",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createNonCashBenefitCategory",
+  "createdAt": "2025-05-02T05:40:18.641Z",
+  "updatedAt": "2025-05-02T05:40:18.641Z",
+  "assignedAgents": [],
+  "contentHash": "007351d632bc863e40aeefecf345bdbe7c3b46dd455cb567ef635db962f73a34",
+  "lastExportedAt": "2026-09-05T19:39:24.319Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b1522",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createNonCashBenefitCategory",
+      "description": "in this tool generate NonCash Benefit Category.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createNonCashBenefitCategory",
+        "args": [
+          {
+            "name": "ctl00$body$txtName",
+            "type": "string",
+            "description": "create non cash benefit.give description name.",
+            "required": true,
+            "_id": "68145ac223977c0e7a36fa66"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68145ac223977c0e7a36fa65"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"NonCashBenifitCategory\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"NBENCAT_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"4\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"NonCashBenifitCategory\");\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: newInt.viewState,\n    __VIEWSTATEGENERATOR: newInt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: newInt.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtName\": args.ctl00$body$txtName || \"\",\n    \"ctl00$body$butSave\": \"Save\"\n  }, \"NonCashBenifitCategory\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.getElementById(\"ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const description = doc.getElementById(\"ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  return {\n    code,\n    description\n  };\n})\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create NonCashBenefit Category",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-02T05:40:18.641Z",
+      "updatedAt": "2025-05-02T05:40:18.641Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createNonCashBenefitCategory",
+      "args": [
+        {
+          "name": "ctl00$body$txtName",
+          "type": "string",
+          "description": "create non cash benefit.give description name.",
+          "required": true,
+          "_id": "68145ac223977c0e7a36fa66"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68145ac223977c0e7a36fa65"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"NonCashBenifitCategory\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"NBENCAT_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"4\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"NonCashBenifitCategory\");\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: newInt.viewState,\n    __VIEWSTATEGENERATOR: newInt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: newInt.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtName\": args.ctl00$body$txtName || \"\",\n    \"ctl00$body$butSave\": \"Save\"\n  }, \"NonCashBenifitCategory\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.getElementById(\"ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const description = doc.getElementById(\"ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  return {\n    code,\n    description\n  };\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "id": "690dc56b931a2d61ba0b1ab9",
+  "slug": "selfemployeeleavesummary",
+  "name": "selfEmployeeLeaveSummary",
+  "description": "in this api return for only self employee leave summary details. no other employee leave summary provide.",
+  "instructions": null,
+  "taskName": "Fetching the Self Employee Leave Summary Details",
+  "tags": [
+    "Absent Management",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "selfEmployeeLeaveSummary",
+  "createdAt": "2025-08-18T08:24:17.015Z",
+  "updatedAt": "2025-08-18T08:24:17.015Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c72",
+      "name": "AbsenceManagementEmployee"
+    }
+  ],
+  "contentHash": "ffe26ba4bbd73ed0897a4ec4804045268e29dd52315704e845852b76c6bca617",
+  "lastExportedAt": "2026-09-05T19:39:23.469Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1ab9",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selfEmployeeLeaveSummary",
+      "description": "in this api return for only self employee leave summary details. no other employee leave summary provide.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selfEmployeeLeaveSummary",
+        "args": [
+          {
+            "name": "year",
+            "type": "string",
+            "description": "to give the year of the summary details.",
+            "required": true,
+            "_id": "68a2e3314b46c47085f72960"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68a2e3314b46c47085f7295f"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return []\n    })`\n  }\n})\n",
+      "transformer": "(async function (data, args, reqOptions) {\n  const empKey = await BeaconBar.executeFunction(\"employeeLeaveApplication\")();\n  const myHeaders = new Headers({\n    \"__cfafvalue\": window.csrf,\n    \"accept\": \"application/json, text/javascript, */*; q=0.01\",\n    \"accept-language\": \"en-US,en;q=0.9\",\n    \"Content-Type\": \"application/x-www-form-urlencoded\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n  });\n\n  const raw = new URLSearchParams({\n    EmpNumber: empKey,\n    LeaveYear: args.year,\n    IsReject: \"0\",\n    _search: \"false\",\n    nd: Date.now().toString(),\n    rows: \"1000\",\n    page: \"1\",\n    sidx: \"\",\n    sord: \"asc\"\n  }).toString();\n\n  const url = `${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveHistory/GetLeaveStatusDetails`;\n  const request = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw\n  };\n\n  const response = await fetch(url, request);\n  const datass = await response.json();\n\n  const summarDetails = datass.map(item => ({\n    fromDate: item.LDetail.FromDate,\n    toDate: item.LDetail.ToDate,\n    appliedDate: item.LDetail.EditDate,\n    leaveType: item.LeaveTypeName,\n    days: item.LDetail.LeaveAmountText,\n    status: item.Status.replace(/<\\/?[^>]+(>|$)/g, \"\"),\n    reasonForLeave: item.LeaveReason || item.Comment || \"\",\n    coveringEmployee: item.LeaveActingEmp\n  }));\n  return summarDetails;\n})\n",
+      "groupName": "",
+      "tags": [
+        "Absent Management",
+        "Headers"
+      ],
+      "taskName": "Fetching the Self Employee Leave Summary Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-18T08:24:17.015Z",
+      "updatedAt": "2025-08-18T08:24:17.015Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c72",
+          "name": "AbsenceManagementEmployee"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selfEmployeeLeaveSummary",
+      "args": [
+        {
+          "name": "year",
+          "type": "string",
+          "description": "to give the year of the summary details.",
+          "required": true,
+          "_id": "68a2e3314b46c47085f72960"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68a2e3314b46c47085f7295f"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return []\n    })`\n  }\n})\n",
+    "transformer": "(async function (data, args, reqOptions) {\n  const empKey = await BeaconBar.executeFunction(\"employeeLeaveApplication\")();\n  const myHeaders = new Headers({\n    \"__cfafvalue\": window.csrf,\n    \"accept\": \"application/json, text/javascript, */*; q=0.01\",\n    \"accept-language\": \"en-US,en;q=0.9\",\n    \"Content-Type\": \"application/x-www-form-urlencoded\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n  });\n\n  const raw = new URLSearchParams({\n    EmpNumber: empKey,\n    LeaveYear: args.year,\n    IsReject: \"0\",\n    _search: \"false\",\n    nd: Date.now().toString(),\n    rows: \"1000\",\n    page: \"1\",\n    sidx: \"\",\n    sord: \"asc\"\n  }).toString();\n\n  const url = `${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveHistory/GetLeaveStatusDetails`;\n  const request = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw\n  };\n\n  const response = await fetch(url, request);\n  const datass = await response.json();\n\n  const summarDetails = datass.map(item => ({\n    fromDate: item.LDetail.FromDate,\n    toDate: item.LDetail.ToDate,\n    appliedDate: item.LDetail.EditDate,\n    leaveType: item.LeaveTypeName,\n    days: item.LDetail.LeaveAmountText,\n    status: item.Status.replace(/<\\/?[^>]+(>|$)/g, \"\"),\n    reasonForLeave: item.LeaveReason || item.Comment || \"\",\n    coveringEmployee: item.LeaveActingEmp\n  }));\n  return summarDetails;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

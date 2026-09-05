@@ -1,0 +1,24 @@
+{
+  "id": "690dc583931a2d61ba0b2ab8",
+  "slug": "getworkflowids",
+  "name": "getWorkFlowIDs",
+  "status": "live",
+  "createdAt": "2025-05-20T05:20:28.636Z",
+  "updatedAt": "2025-05-20T05:20:28.636Z",
+  "contentHash": "b0282e09eda0d6aa65cebf27b0a162adcce98f666201472a30aa87d4a51463d3",
+  "lastExportedAt": "2026-09-05T19:41:41.525Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc583931a2d61ba0b2ab8",
+    "name": "getWorkFlowIDs",
+    "status": "live",
+    "code": "(async function(){\n        const reqOptions = BeaconBar.executeFunction(\"reqOptions\")();\n\n    const myHeaders = new Headers();\nmyHeaders.append(\"accept\", \"*/*\");\nmyHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\nmyHeaders.append(\"priority\", \"u=1, i\");\n\nconst requestOptions = {\n  method: \"GET\",\n  headers: myHeaders,\n  redirect: \"follow\"\n};\n\nconst digest = BeaconBar.executeFunction(\"getDigest\")('bs=4');\nconst response = await fetch(`${reqOptions}WorkFlowV5/Approval/Summary?bs=4&digest=${digest}`, requestOptions)\n  const data = await response.text();\nconst extractModules = (htmlString) => {\n  const doc = new DOMParser().parseFromString(htmlString, \"text/html\");\n  const select = doc.querySelector(\"#selectWFModules\");\n  if (!select) return [];\n\n  const options = select.querySelectorAll(\"option\");\n  const modules = [];\n\n  options.forEach((opt) => {\n    const [moduleId, workflowId] = opt.value.split(\" _ \").map(v => v.trim());\n    const name = opt.textContent.trim();\n\n    if (moduleId === \"0\" || name.toLowerCase() === \"all\") return;\n\n    modules.push({\n      name,\n      moduleId,\n      workflowId,\n    });\n  });\n\n  return modules;\n};\nconst datas = extractModules(data);\n  return datas\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

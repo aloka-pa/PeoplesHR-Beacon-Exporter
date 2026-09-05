@@ -1,0 +1,24 @@
+{
+  "id": "690dc580931a2d61ba0b27e8",
+  "slug": "geteimapii",
+  "name": "getEIMApii",
+  "status": "live",
+  "createdAt": "2025-04-30T09:29:46.634Z",
+  "updatedAt": "2025-04-30T09:29:46.634Z",
+  "contentHash": "98e24762697198e653c3c799eda18c01d8fefe206643abd7a2874317862c0cf6",
+  "lastExportedAt": "2026-09-05T19:41:43.918Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc580931a2d61ba0b27e8",
+    "name": "getEIMApii",
+    "status": "live",
+    "code": "(async function (params, url) {\n  //done\n  const sl = await BeaconBar.getSharedData(\"sl\");\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const body = new URLSearchParams({ ...params });\n\n  let finalUrl = url.includes(\".aspx\") ? `${location.origin}/${sl}/${url}` : `${location.origin}/${sl}/EIM/${url}.aspx`;\n\n  const response = await fetch(finalUrl, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: body,\n    redirect: \"follow\"\n  });\n\n  const html = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html, 'text/html');\n\n  const anchor = doc.querySelector('tr[id^=\"ctl00_body_grdsummary_ctl00__\"] a[href^=\"javascript:__doPostBack\"]');\n  const href = anchor?.getAttribute('href') || \"\";\n  const match = href.match(/__doPostBack\\('([^']+)'/);\n  const postBackCode = match ? match[1] : \"\";\n\n  const viewState = doc.querySelector('#__VIEWSTATE')?.value || '';\n  const eventValidation = doc.querySelector('#__EVENTVALIDATION')?.value || '';\n  const viewStateGen = doc.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n\n  const finalData = {\n    rawData: html,\n    postBackCode,\n    viewState,\n    eventValidation,\n    viewStateGen\n  }\n  if (response.status === 200) {\n    return finalData;\n  } else {\n    return false;\n  }\n})\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

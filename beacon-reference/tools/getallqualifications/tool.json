@@ -1,0 +1,91 @@
+{
+  "id": "690dc561931a2d61ba0b121e",
+  "slug": "getallqualifications",
+  "name": "getAllQualifications",
+  "description": "get All Qualifications",
+  "instructions": null,
+  "taskName": "Fetching Qualifications",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getAllQualifications",
+  "createdAt": "2025-04-28T06:39:00.964Z",
+  "updatedAt": "2025-04-28T06:39:00.964Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "5f501dab7e0b1ba229ffce228a1248d628940dd62fb2f0fc28c3cb3a0de3ac80",
+  "lastExportedAt": "2026-09-05T19:39:24.501Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc561931a2d61ba0b121e",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getAllQualifications",
+      "description": "get All Qualifications",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getAllQualifications",
+        "args": [
+          {
+            "name": "qualificationSearch",
+            "type": "string",
+            "description": "qualificationSearch ,Qualifiacation code :- 000001 ",
+            "required": true,
+            "_id": "680f2284c4a1b2535b9d7375"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "680f2284c4a1b2535b9d7374"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"QualificationType\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$hdnIsHead\", \"\");\n  urlencoded1.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"QUALIFI_TYPE_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", args.qualificationSearch);\n  urlencoded1.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  urlencoded1.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"5\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  // urlencoded1.append(\"ctl00$body$hdnDefCountry\", \"\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`/${reqOptions.sl}/EIM/QualificationType.aspx`, requestOptions1);\n  const html1 = await response1.text();\n  const viewDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html1);\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html1, \"text/html\");\n\n  const row = doc.querySelector(\"#ctl00_body_grdsummary_ctl00__0\");\n  const key = row?.querySelector(\"a\")?.getAttribute(\"href\")?.match(/__doPostBack\\('([^']+)'/)?.[1] || null;\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", key);\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewDetails.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewDetails.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", viewDetails.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded.append(\"ctl00$body$ContentSearch$cboCriteria\", \"QUALIFI_TYPE_CODE\");\n  urlencoded.append(\"ctl00$body$ContentSearch$txtContent\", args.qualificationSearch);\n  urlencoded.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/EIM/QualificationType.aspx`, requestOptions);\n  const html = await response.text();\n  const finalDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html);\n  window.qt = finalDetails;\n\n  if (row) {\n    const cells = row.querySelectorAll(\"td\");\n    const code = cells[0]?.textContent.trim();\n    const qualificationType = cells[1]?.textContent.trim();\n    return { code, qualificationType };\n  } else {\n    return null;\n  }\n})\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Fetching Qualifications",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-28T06:39:00.964Z",
+      "updatedAt": "2025-04-28T06:39:00.964Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getAllQualifications",
+      "args": [
+        {
+          "name": "qualificationSearch",
+          "type": "string",
+          "description": "qualificationSearch ,Qualifiacation code :- 000001 ",
+          "required": true,
+          "_id": "680f2284c4a1b2535b9d7375"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "680f2284c4a1b2535b9d7374"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"QualificationType\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$hdnIsHead\", \"\");\n  urlencoded1.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"QUALIFI_TYPE_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", args.qualificationSearch);\n  urlencoded1.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  urlencoded1.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"5\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  // urlencoded1.append(\"ctl00$body$hdnDefCountry\", \"\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`/${reqOptions.sl}/EIM/QualificationType.aspx`, requestOptions1);\n  const html1 = await response1.text();\n  const viewDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html1);\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html1, \"text/html\");\n\n  const row = doc.querySelector(\"#ctl00_body_grdsummary_ctl00__0\");\n  const key = row?.querySelector(\"a\")?.getAttribute(\"href\")?.match(/__doPostBack\\('([^']+)'/)?.[1] || null;\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", key);\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewDetails.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewDetails.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", viewDetails.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded.append(\"ctl00$body$ContentSearch$cboCriteria\", \"QUALIFI_TYPE_CODE\");\n  urlencoded.append(\"ctl00$body$ContentSearch$txtContent\", args.qualificationSearch);\n  urlencoded.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/EIM/QualificationType.aspx`, requestOptions);\n  const html = await response.text();\n  const finalDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html);\n  window.qt = finalDetails;\n\n  if (row) {\n    const cells = row.querySelectorAll(\"td\");\n    const code = cells[0]?.textContent.trim();\n    const qualificationType = cells[1]?.textContent.trim();\n    return { code, qualificationType };\n  } else {\n    return null;\n  }\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

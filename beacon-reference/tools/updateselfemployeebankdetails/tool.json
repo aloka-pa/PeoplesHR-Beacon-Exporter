@@ -1,0 +1,191 @@
+{
+  "id": "690dc56c931a2d61ba0b1b65",
+  "slug": "updateselfemployeebankdetails",
+  "name": "updateSelfEmployeeBankDetails",
+  "description": "Before updating Self Employee Bank Details:\n1.First, call the selfEmployeeBankDetails API to fetch the bank details details and identify any missing any required fields. will using field corresponding value.\n2.If some fields are not updated, note that Bank Name,Branch Name and  Account Number are hidden fields and cannot be modified. remaining following fields are update.\n3. before provide the date in user, first execute date format api then get date format. Ex : \"29/08/2025\"\nFinally, update the employee’s Bank Details details with the allowed fields.",
+  "instructions": null,
+  "taskName": "Update The Self Employee Bank Details",
+  "tags": [
+    "Employee Information"
+  ],
+  "status": "draft",
+  "signature": "updateSelfEmployeeBankDetails",
+  "createdAt": "2025-08-28T10:36:23.956Z",
+  "updatedAt": "2025-08-28T10:36:23.956Z",
+  "assignedAgents": [],
+  "contentHash": "10a075a08e94621d6e661eaeac8697564ae53b41779bc75655ccce43ca5a4aca",
+  "lastExportedAt": "2026-09-05T19:39:23.423Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56c931a2d61ba0b1b65",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateSelfEmployeeBankDetails",
+      "description": "Before updating Self Employee Bank Details:\n1.First, call the selfEmployeeBankDetails API to fetch the bank details details and identify any missing any required fields. will using field corresponding value.\n2.If some fields are not updated, note that Bank Name,Branch Name and  Account Number are hidden fields and cannot be modified. remaining following fields are update.\n3. before provide the date in user, first execute date format api then get date format. Ex : \"29/08/2025\"\nFinally, update the employee’s Bank Details details with the allowed fields.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateSelfEmployeeBankDetails",
+        "args": [
+          {
+            "name": "nameGivenToTheBank",
+            "type": "string",
+            "description": "If the user updates the nameGivenToTheBank field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.",
+            "required": true,
+            "_id": "68b031276539bc13a5f1d232"
+          },
+          {
+            "name": "currenCode",
+            "type": "string",
+            "description": "If the user updates the currency name corresponding code will be take field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. Ex:-\"000082\"",
+            "required": true,
+            "_id": "68b031276539bc13a5f1d233"
+          },
+          {
+            "name": "accountTypeName",
+            "type": "string",
+            "description": "If the user updates the account TypeName field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.",
+            "required": true,
+            "_id": "68b031276539bc13a5f1d234"
+          },
+          {
+            "name": "accountTypeCode",
+            "type": "string",
+            "description": "If the user updates the account type name corresponding code will be take field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. Ex:-\"0\"",
+            "required": true,
+            "_id": "68b031276539bc13a5f1d235"
+          },
+          {
+            "name": "comments",
+            "type": "string",
+            "description": "If the user updates the comments or remarks field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. in the field is optional.",
+            "required": true,
+            "_id": "68b031276539bc13a5f1d236"
+          },
+          {
+            "name": "amountOrPercentage",
+            "type": "string",
+            "description": "If the user updates the Amount Or Percentage field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. if the user change amount to percentage below 100 amount provide.",
+            "required": true,
+            "_id": "68b031276539bc13a5f1d237"
+          },
+          {
+            "name": "order",
+            "type": "string",
+            "description": "before api response check if the same order dont accept, user consent order number will be change.",
+            "required": true,
+            "_id": "68b031276539bc13a5f1d238"
+          },
+          {
+            "name": "startDate",
+            "type": "string",
+            "description": "If the user updates the startDate field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.before update the date first execute date format api, use response date format.",
+            "required": true,
+            "_id": "68b031276539bc13a5f1d239"
+          },
+          {
+            "name": "endDate",
+            "type": "string",
+            "description": "If the user updates the endDate field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.before update the date first execute date format api, use response date format.",
+            "required": true,
+            "_id": "68b031276539bc13a5f1d23a"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68b031276539bc13a5f1d231"
+      },
+      "by": "2414",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return []\n      })`\n    };\n  })",
+      "transformer": "(function(data, args, reqOptions) {\n  return data;\n})",
+      "groupName": "",
+      "tags": [
+        "Employee Information"
+      ],
+      "taskName": "Update The Self Employee Bank Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "draft",
+      "createdAt": "2025-08-28T10:36:23.956Z",
+      "updatedAt": "2025-08-28T10:36:23.956Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "updateSelfEmployeeBankDetails",
+      "args": [
+        {
+          "name": "nameGivenToTheBank",
+          "type": "string",
+          "description": "If the user updates the nameGivenToTheBank field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.",
+          "required": true,
+          "_id": "68b031276539bc13a5f1d232"
+        },
+        {
+          "name": "currenCode",
+          "type": "string",
+          "description": "If the user updates the currency name corresponding code will be take field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. Ex:-\"000082\"",
+          "required": true,
+          "_id": "68b031276539bc13a5f1d233"
+        },
+        {
+          "name": "accountTypeName",
+          "type": "string",
+          "description": "If the user updates the account TypeName field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.",
+          "required": true,
+          "_id": "68b031276539bc13a5f1d234"
+        },
+        {
+          "name": "accountTypeCode",
+          "type": "string",
+          "description": "If the user updates the account type name corresponding code will be take field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. Ex:-\"0\"",
+          "required": true,
+          "_id": "68b031276539bc13a5f1d235"
+        },
+        {
+          "name": "comments",
+          "type": "string",
+          "description": "If the user updates the comments or remarks field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. in the field is optional.",
+          "required": true,
+          "_id": "68b031276539bc13a5f1d236"
+        },
+        {
+          "name": "amountOrPercentage",
+          "type": "string",
+          "description": "If the user updates the Amount Or Percentage field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. if the user change amount to percentage below 100 amount provide.",
+          "required": true,
+          "_id": "68b031276539bc13a5f1d237"
+        },
+        {
+          "name": "order",
+          "type": "string",
+          "description": "before api response check if the same order dont accept, user consent order number will be change.",
+          "required": true,
+          "_id": "68b031276539bc13a5f1d238"
+        },
+        {
+          "name": "startDate",
+          "type": "string",
+          "description": "If the user updates the startDate field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.before update the date first execute date format api, use response date format.",
+          "required": true,
+          "_id": "68b031276539bc13a5f1d239"
+        },
+        {
+          "name": "endDate",
+          "type": "string",
+          "description": "If the user updates the endDate field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.before update the date first execute date format api, use response date format.",
+          "required": true,
+          "_id": "68b031276539bc13a5f1d23a"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68b031276539bc13a5f1d231"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return []\n      })`\n    };\n  })",
+    "transformer": "(function(data, args, reqOptions) {\n  return data;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

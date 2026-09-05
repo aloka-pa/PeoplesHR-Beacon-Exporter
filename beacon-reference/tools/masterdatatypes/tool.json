@@ -1,0 +1,78 @@
+{
+  "id": "690dc568931a2d61ba0b1848",
+  "slug": "masterdatatypes",
+  "name": "masterDataTypes",
+  "description": "in this tool generate the master data types details. do not display the index value, and master data type value this both are not show only display master data types names only display.",
+  "instructions": null,
+  "taskName": "Fetching Master Date Type Details",
+  "tags": [
+    "BenefitManagement",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "masterDataTypes",
+  "createdAt": "2025-05-26T11:22:27.660Z",
+  "updatedAt": "2025-11-12T11:54:26.249Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be9",
+      "name": "BenefitManagement"
+    }
+  ],
+  "contentHash": "5a00d79ea0762345b433121c12207756da9548742c6d238c1c715034c43a408d",
+  "lastExportedAt": "2026-09-05T19:39:23.232Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b1848",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "masterDataTypes",
+      "description": "in this tool generate the master data types details. do not display the index value, and master data type value this both are not show only display master data types names only display.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "masterDataTypes",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68344ef347214892d83d4cb6"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"Benefit/DefineMasterData.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('Benefit/DefineMasterData.aspx');\n  let url;\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"Benefit/DefineMasterData.aspx\"\n  }\n  const detail = await BeaconBar.executeFunction('getmodule')(url);\n\n  window.details = detail;\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(detail.rawData, \"text/html\");\n\n  const listItems = document.querySelectorAll('#body_cboMasterDataType_DropDown .rcbList .rcbItem');\n  const values = [...detail.rawData.matchAll(/\"value\":\\s*\"([^\"]+)\"/g)]\n    .map(m => m[1])\n    .filter(v => v.trim() !== \"\");\n  const masterDataReimbursementTypes = [];\n  let valueIndex = 0;\n\n  listItems.forEach((item) => {\n    const text = item.textContent.trim();\n    if (text) {\n      masterDataReimbursementTypes.push({\n        index: valueIndex + 1,\n        text: text,\n        value: values[valueIndex]\n      });\n      valueIndex++;\n    }\n  });\n  return masterDataReimbursementTypes;\n});\n",
+      "groupName": "",
+      "tags": [
+        "BenefitManagement",
+        "Headers"
+      ],
+      "taskName": "Fetching Master Date Type Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-26T11:22:27.660Z",
+      "updatedAt": "2025-11-12T11:54:26.249Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be9",
+          "name": "BenefitManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "masterDataTypes",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68344ef347214892d83d4cb6"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"Benefit/DefineMasterData.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('Benefit/DefineMasterData.aspx');\n  let url;\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"Benefit/DefineMasterData.aspx\"\n  }\n  const detail = await BeaconBar.executeFunction('getmodule')(url);\n\n  window.details = detail;\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(detail.rawData, \"text/html\");\n\n  const listItems = document.querySelectorAll('#body_cboMasterDataType_DropDown .rcbList .rcbItem');\n  const values = [...detail.rawData.matchAll(/\"value\":\\s*\"([^\"]+)\"/g)]\n    .map(m => m[1])\n    .filter(v => v.trim() !== \"\");\n  const masterDataReimbursementTypes = [];\n  let valueIndex = 0;\n\n  listItems.forEach((item) => {\n    const text = item.textContent.trim();\n    if (text) {\n      masterDataReimbursementTypes.push({\n        index: valueIndex + 1,\n        text: text,\n        value: values[valueIndex]\n      });\n      valueIndex++;\n    }\n  });\n  return masterDataReimbursementTypes;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

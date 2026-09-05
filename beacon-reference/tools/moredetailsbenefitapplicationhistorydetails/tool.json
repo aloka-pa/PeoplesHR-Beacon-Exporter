@@ -1,0 +1,161 @@
+{
+  "id": "690dc56c931a2d61ba0b1b92",
+  "slug": "moredetailsbenefitapplicationhistorydetails",
+  "name": "moreDetailsBenefitApplicationHistoryDetails",
+  "description": "Before executing the \"moreDetailsBenefitApplicationHistoryDetails\" tool, determine whether the user’s query is related to benefit history for themselves or another employee. Retrieve the relevant benefit history response first.  \nIf the user specifically requests additional details such as **Entitlement Amount**, **Amount in Bills**, or **Utilized Amount** etc.., then and only then execute the \"moreDetailsBenefitApplicationHistoryDetails\" tool.  \nThis tool must always be executed **after** either the **selfEmployeeBenefitHistory** tool or the **getSingleEmployeeBenefitHistory** tool, depending on the user’s context.",
+  "instructions": null,
+  "taskName": "More Details For Benefit History Details",
+  "tags": [
+    "BenefitManagement",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "moreDetailsBenefitApplicationHistoryDetails",
+  "createdAt": "2025-10-26T17:38:51.507Z",
+  "updatedAt": "2025-10-26T17:38:51.507Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be9",
+      "name": "BenefitManagement"
+    }
+  ],
+  "contentHash": "383c4e71605facf219770b9ce8cd38feca582bfc976249230cf3e0872f8094f1",
+  "lastExportedAt": "2026-09-05T19:39:23.400Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56c931a2d61ba0b1b92",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "moreDetailsBenefitApplicationHistoryDetails",
+      "description": "Before executing the \"moreDetailsBenefitApplicationHistoryDetails\" tool, determine whether the user’s query is related to benefit history for themselves or another employee. Retrieve the relevant benefit history response first.  \nIf the user specifically requests additional details such as **Entitlement Amount**, **Amount in Bills**, or **Utilized Amount** etc.., then and only then execute the \"moreDetailsBenefitApplicationHistoryDetails\" tool.  \nThis tool must always be executed **after** either the **selfEmployeeBenefitHistory** tool or the **getSingleEmployeeBenefitHistory** tool, depending on the user’s context.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "moreDetailsBenefitApplicationHistoryDetails",
+        "args": [
+          {
+            "name": "ENCRYPT_EMP_NUMBER",
+            "type": "string",
+            "description": "based before api benefit history Benefit_Type corresponding ENCRYPT_EMP_NUMBER will be take",
+            "required": true,
+            "_id": "68fe611815a2021ab1026817"
+          },
+          {
+            "name": "BET_APP_ID",
+            "type": "string",
+            "description": "based before api benefit history Benefit_Type corresponding BET_APP_ID will be take ex : 20, 17 etc..",
+            "required": true,
+            "_id": "68fe611815a2021ab1026818"
+          },
+          {
+            "name": "BET_CODE",
+            "type": "string",
+            "description": "based before api benefit history Benefit_Type corresponding BET_CODE will be take ex : '200000'",
+            "required": true,
+            "_id": "68fe611815a2021ab1026819"
+          },
+          {
+            "name": "fromDate",
+            "type": "string",
+            "description": "before user given from date.",
+            "required": true,
+            "_id": "68fe611815a2021ab102681a"
+          },
+          {
+            "name": "toDate",
+            "type": "string",
+            "description": "before user given to date will be take.",
+            "required": true,
+            "_id": "68fe611815a2021ab102681b"
+          },
+          {
+            "name": "BET_APPY_DATE",
+            "type": "string",
+            "description": "based before api benefit history Applied Date Benefit_Type corresponding BET_APPY_DATE will be take. ",
+            "required": true,
+            "_id": "68fe611815a2021ab102681c"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68fe5cab73f22bf658115aa2"
+      },
+      "by": "2414",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  let params;\n  if(window.empNumber12){\n    params = `mvc=1&bs=4&empNumber=${args.ENCRYPT_EMP_NUMBER}&appId=${args.BET_APP_ID}&betCode=${args.BET_CODE}&mode=-1&isFIrstLoad=0&isAllHistory=1&SEmployee=${window.empNumber12 || ''}&SFrmDate=${args.fromDate}&SToDate=${args.toDate}&SBetCode=undefined&BetAppYear=${args.BET_APPY_DATE}`;\n  }else{\n    params = `mvc=1&bs=4&empNumber=${args.ENCRYPT_EMP_NUMBER}&appId=${args.BET_APP_ID}&betCode=${args.BET_CODE}&mode=-1&isFIrstLoad=0&BetAppYear=${args.BET_APPY_DATE}`;\n  }\n\n  const digestkey = await BeaconBar.executeFunction('getDigest')(params);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8,te;q=0.7\");\n  myHeaders.append(\"content-type\", \"application/json; charset=UTF-8\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const summary = await fetch(`${window.origin}/hr/BenefitV9/Application/ApplicationSummary/?${params}&digest=${digestkey.digest}`, requestOptions);\n  const text = await summary.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(text, \"text/html\");\n  const scriptTag = Array.from(doc.querySelectorAll(\"script\")).find(s => s.textContent.includes(\"window.BenefitApplicationObj\"));\n  const regex = /window\\.BenefitApplicationObj\\s*=\\s*'([^']+)'/;\n  const match = scriptTag?.textContent.match(regex);\n  const jsonData = JSON.parse(match[1]);\n\n  const extracted = {\n    betAppYear: jsonData.BetAppYear,\n    appId: jsonData.AppId,\n    betCode: jsonData.CurrentBenefitTypeCode || jsonData.BmApplication?.BetCode,\n    cancelWfMainId: jsonData.CancelWfMainId,\n    empNumber: jsonData.Employee?.EmpNumber,\n    isWorkflow: jsonData.IsWorkflow,\n    keyValue: jsonData.KeyValue,\n    visibilityState: jsonData.VisibilityState,\n    wfMainId: jsonData.WfMainId\n  };\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: JSON.stringify(extracted),\n    redirect: \"follow\"\n  };\n\n  const details = await fetch(`${window.origin}/hr/BenefitV9/api/ApplicationApi/GetApplicationStructure/`, requestOptions1);\n  const data1 = await details.json();\n\n  return data1;\n})\n",
+      "groupName": "",
+      "tags": [
+        "BenefitManagement",
+        "Headers"
+      ],
+      "taskName": "More Details For Benefit History Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-10-26T17:38:51.507Z",
+      "updatedAt": "2025-10-26T17:38:51.507Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be9",
+          "name": "BenefitManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "moreDetailsBenefitApplicationHistoryDetails",
+      "args": [
+        {
+          "name": "ENCRYPT_EMP_NUMBER",
+          "type": "string",
+          "description": "based before api benefit history Benefit_Type corresponding ENCRYPT_EMP_NUMBER will be take",
+          "required": true,
+          "_id": "68fe611815a2021ab1026817"
+        },
+        {
+          "name": "BET_APP_ID",
+          "type": "string",
+          "description": "based before api benefit history Benefit_Type corresponding BET_APP_ID will be take ex : 20, 17 etc..",
+          "required": true,
+          "_id": "68fe611815a2021ab1026818"
+        },
+        {
+          "name": "BET_CODE",
+          "type": "string",
+          "description": "based before api benefit history Benefit_Type corresponding BET_CODE will be take ex : '200000'",
+          "required": true,
+          "_id": "68fe611815a2021ab1026819"
+        },
+        {
+          "name": "fromDate",
+          "type": "string",
+          "description": "before user given from date.",
+          "required": true,
+          "_id": "68fe611815a2021ab102681a"
+        },
+        {
+          "name": "toDate",
+          "type": "string",
+          "description": "before user given to date will be take.",
+          "required": true,
+          "_id": "68fe611815a2021ab102681b"
+        },
+        {
+          "name": "BET_APPY_DATE",
+          "type": "string",
+          "description": "based before api benefit history Applied Date Benefit_Type corresponding BET_APPY_DATE will be take. ",
+          "required": true,
+          "_id": "68fe611815a2021ab102681c"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68fe5cab73f22bf658115aa2"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  let params;\n  if(window.empNumber12){\n    params = `mvc=1&bs=4&empNumber=${args.ENCRYPT_EMP_NUMBER}&appId=${args.BET_APP_ID}&betCode=${args.BET_CODE}&mode=-1&isFIrstLoad=0&isAllHistory=1&SEmployee=${window.empNumber12 || ''}&SFrmDate=${args.fromDate}&SToDate=${args.toDate}&SBetCode=undefined&BetAppYear=${args.BET_APPY_DATE}`;\n  }else{\n    params = `mvc=1&bs=4&empNumber=${args.ENCRYPT_EMP_NUMBER}&appId=${args.BET_APP_ID}&betCode=${args.BET_CODE}&mode=-1&isFIrstLoad=0&BetAppYear=${args.BET_APPY_DATE}`;\n  }\n\n  const digestkey = await BeaconBar.executeFunction('getDigest')(params);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8,te;q=0.7\");\n  myHeaders.append(\"content-type\", \"application/json; charset=UTF-8\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const summary = await fetch(`${window.origin}/hr/BenefitV9/Application/ApplicationSummary/?${params}&digest=${digestkey.digest}`, requestOptions);\n  const text = await summary.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(text, \"text/html\");\n  const scriptTag = Array.from(doc.querySelectorAll(\"script\")).find(s => s.textContent.includes(\"window.BenefitApplicationObj\"));\n  const regex = /window\\.BenefitApplicationObj\\s*=\\s*'([^']+)'/;\n  const match = scriptTag?.textContent.match(regex);\n  const jsonData = JSON.parse(match[1]);\n\n  const extracted = {\n    betAppYear: jsonData.BetAppYear,\n    appId: jsonData.AppId,\n    betCode: jsonData.CurrentBenefitTypeCode || jsonData.BmApplication?.BetCode,\n    cancelWfMainId: jsonData.CancelWfMainId,\n    empNumber: jsonData.Employee?.EmpNumber,\n    isWorkflow: jsonData.IsWorkflow,\n    keyValue: jsonData.KeyValue,\n    visibilityState: jsonData.VisibilityState,\n    wfMainId: jsonData.WfMainId\n  };\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: JSON.stringify(extracted),\n    redirect: \"follow\"\n  };\n\n  const details = await fetch(`${window.origin}/hr/BenefitV9/api/ApplicationApi/GetApplicationStructure/`, requestOptions1);\n  const data1 = await details.json();\n\n  return data1;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

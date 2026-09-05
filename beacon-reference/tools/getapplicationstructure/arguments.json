@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "benCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The argument will be used to fetch the benefit type name corresponding to the benCode from the getBenefitApplicationTypesDetails API.",
+      "advanced": false,
+      "raw": {
+        "name": "benCode",
+        "type": "string",
+        "description": "The argument will be used to fetch the benefit type name corresponding to the benCode from the getBenefitApplicationTypesDetails API.",
+        "required": true,
+        "_id": "682d871f2819f52d85633578"
+      }
+    },
+    {
+      "name": "benefitName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The argument will be used to fetch the benefit type name from the getBenefitApplicationTypesDetails API.",
+      "advanced": false,
+      "raw": {
+        "name": "benefitName",
+        "type": "string",
+        "description": "The argument will be used to fetch the benefit type name from the getBenefitApplicationTypesDetails API.",
+        "required": true,
+        "_id": "682dbc24b36076aec685c6b7"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

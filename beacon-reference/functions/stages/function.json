@@ -1,0 +1,24 @@
+{
+  "id": "690dc58c931a2d61ba0b3382",
+  "slug": "stages",
+  "name": "stages",
+  "status": "live",
+  "createdAt": "2025-05-19T12:20:20.982Z",
+  "updatedAt": "2026-07-17T12:56:03.590Z",
+  "contentHash": "7c265fbece6a0a8d93a86475b38161c48c4beba34123ad4461e145e574c86b23",
+  "lastExportedAt": "2026-09-05T19:41:14.377Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58c931a2d61ba0b3382",
+    "name": "stages",
+    "status": "live",
+    "code": "(async function (req , evaluationId) {\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n    myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\n    const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n\n    try {\n        const response = await fetch(`${req}PerfV8//api/FinalAssessment/GetStages?evaluationId=${evaluationId}`, requestOptions);\n        \n        if (!response.ok) {\n            throw new Error(`HTTP error! Status: ${response.status}`);\n        }\n\n        const data = await response.json();  \n        return data;\n    } catch (error) {\n    }\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

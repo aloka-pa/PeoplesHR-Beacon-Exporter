@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "empId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the employee display number example \"000001\"",
+      "advanced": false,
+      "raw": {
+        "name": "empId",
+        "type": "string",
+        "description": "to give the employee display number example \"000001\"",
+        "required": true,
+        "_id": "68207aa395ae2ca7d961bd10"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+browser-profile/
+auth/
+*.har
+discovery-output/
+
+# editor/OS noise
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,153 @@
+{
+  "id": "690dc568931a2d61ba0b1871",
+  "slug": "getcompanyleavedetails",
+  "name": "getCompanyLeaveDetails",
+  "description": "getCompanyLeaveDetails , before calling this api you need to call \"selectEmployee\" api and show all the employees execute this tool for queries related to absent or on leave employees on a specified date.",
+  "instructions": null,
+  "taskName": "fetching Company Leave Details",
+  "tags": [
+    "Absence Management",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getCompanyLeaveDetails",
+  "createdAt": "2025-05-27T09:47:53.913Z",
+  "updatedAt": "2026-07-17T12:52:30.721Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be3",
+      "name": "AbsenceManagement"
+    }
+  ],
+  "contentHash": "6ffc67208ed4003ceb22e29aab6b412383c5d762891ed3c44b6fdafad3e17c36",
+  "lastExportedAt": "2026-09-05T19:39:22.149Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b1871",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getCompanyLeaveDetails",
+      "description": "getCompanyLeaveDetails , before calling this api you need to call \"selectEmployee\" api and show all the employees execute this tool for queries related to absent or on leave employees on a specified date.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getCompanyLeaveDetails",
+        "args": [
+          {
+            "name": "employeeId",
+            "type": "string",
+            "description": "employeeId , takes from the user if does not not give not necessary ",
+            "required": true,
+            "_id": "68358a490e517193e8cb40bf"
+          },
+          {
+            "name": "fromDate",
+            "type": "string",
+            "description": "Ex:- \"2025-01-01\"",
+            "required": true,
+            "_id": "68358a490e517193e8cb40c0"
+          },
+          {
+            "name": "toDate",
+            "type": "string",
+            "description": "toDate , Ex:-  \"2025-12-31\"",
+            "required": true,
+            "_id": "68358a490e517193e8cb40c1"
+          },
+          {
+            "name": "selectingEmployeeIdsOrName",
+            "type": "string",
+            "description": "selectingEmployeeIdsOrName  if user gives  the employeeName or Ids only take or else take \"allEmployees\"",
+            "required": true,
+            "_id": "683725520646ef6bf152476e"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a258ecbe767bd96786f58"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"absence/ess/ViewSubbordinateLeaveDetail.aspx?subo=0\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const saveEmployeeSelectResult = await BeaconBar.executeFunction(\"saveEmployeeSelectResult\")(args.selectingEmployeeIdsOrName);\n   BeaconBar.setSharedData(\"saveEmployeeSelectResult\", saveEmployeeSelectResult);\n  try {\n    const leaveDetails = await BeaconBar.executeFunction(\"getLeave\")(args);\n    const leaveDetail = await BeaconBar.executeFunction(\"getLeaves\")(args);\n   BeaconBar.setSharedData(\"leaveDetails\", leaveDetails)\n   function extractLeaveDataFromHTML(htmlString) {\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(htmlString, \"text/html\");\n\n  const table = doc.querySelector(\"#body_SubbordinateLeaveHistoryView_grdStatutory_ctl00\");\n  const rows = table?.querySelectorAll(\"tr\");\n\n  const data = [];\n  let currentEmployeeName = \"\";\n\n  rows.forEach((row) => {\n    if (row.classList.contains(\"GroupHeader_Default\")) {\n      const nameCell = row.querySelector(\"td[title*='Click to view Leave Balances']\");\n      const nameText = nameCell?.innerText?.trim() || \"\";\n      // Extract actual name from: \"Name: 000002 - Peter Pascal\"\n      const match = nameText.match(/Name:\\s*(.+)/);\n      currentEmployeeName = match ? match[1] : \"\";\n    }\n\n    if (\n      row.classList.contains(\"GridRow_Default\") ||\n      row.classList.contains(\"GridAltRow_Default\")\n    ) {\n      const cells = row.querySelectorAll(\"td\");\n\n      const leaveRecord = {\n        employee: currentEmployeeName,\n        fromDate: cells[1]?.textContent.trim(),\n        toDate: cells[2]?.textContent.trim(),\n        leaveType: cells[3]?.textContent.trim(),\n        days: cells[4]?.textContent.trim(),\n        status: cells[6]?.textContent.trim(),\n        comments: cells[7]?.textContent.trim(),\n        coveringEmployee: cells[8]?.textContent.trim(),\n        initiatedBy: cells[9]?.textContent.trim(),\n        cancellationReason: cells[10]?.textContent.trim(),\n      };\n\n      data.push(leaveRecord);\n    }\n  });\n\n  return data;\n}\nfunction extractShortLeaveFromHTML(htmlString) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(htmlString, 'text/html');\n\n    const rows = doc.querySelectorAll('#body_SubbordinateLeaveHistoryView_grdShort_ctl00 tbody tr');\n    const data = [];\n\n    let currentName = \"\";\n\n    rows.forEach(row => {\n        if (row.classList.contains('GroupHeader_Default')) {\n            const nameText = row.querySelector('p')?.textContent.trim() || \"\";\n            const match = nameText.match(/Name:\\s*(.*)/);\n            currentName = match ? match[1] : \"\";\n        } else {\n            const cells = row.querySelectorAll('td');\n            if (cells.length >= 9) {\n                data.push({\n                    name: currentName,\n                    date: cells[1].textContent.trim(),\n                    fromTime: cells[2].textContent.trim(),\n                    toTime: cells[3].textContent.trim(),\n                    leaveType: cells[4].textContent.trim(),\n                    status: cells[5].textContent.trim(),\n                    leaveComments: cells[6].textContent.trim(),\n                    initiatedBy: cells[7].textContent.trim(),\n                    cancellationReason: cells[8].textContent.trim()\n                });\n            }\n        }\n    });\n\n    return data;\n}\n\nconst datasss = extractLeaveDataFromHTML(leaveDetail)\nconst shortleaveDetails = extractShortLeaveFromHTML(leaveDetail);\nconst companyleaveDetails = datasss.slice(0, 10)\nif(datasss.length>10){\n BeaconBar.executeFunction(\"downloadcsv\")(datasss);\n}\n   return {\n  shortleaveDetails: shortleaveDetails.length < 1 \n    ? \"No employees are on leave\" \n    : shortleaveDetails,\n  companyleaveDetails\n};\n\n  } catch (error) {\n    return {\n      ...data,\n      error: error.message || \"An unknown error occurred\"\n    };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "Absence Management",
+        "Headers"
+      ],
+      "taskName": "fetching Company Leave Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-27T09:47:53.913Z",
+      "updatedAt": "2026-07-17T12:52:30.721Z",
+      "__v": 2,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be3",
+          "name": "AbsenceManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getCompanyLeaveDetails",
+      "args": [
+        {
+          "name": "employeeId",
+          "type": "string",
+          "description": "employeeId , takes from the user if does not not give not necessary ",
+          "required": true,
+          "_id": "68358a490e517193e8cb40bf"
+        },
+        {
+          "name": "fromDate",
+          "type": "string",
+          "description": "Ex:- \"2025-01-01\"",
+          "required": true,
+          "_id": "68358a490e517193e8cb40c0"
+        },
+        {
+          "name": "toDate",
+          "type": "string",
+          "description": "toDate , Ex:-  \"2025-12-31\"",
+          "required": true,
+          "_id": "68358a490e517193e8cb40c1"
+        },
+        {
+          "name": "selectingEmployeeIdsOrName",
+          "type": "string",
+          "description": "selectingEmployeeIdsOrName  if user gives  the employeeName or Ids only take or else take \"allEmployees\"",
+          "required": true,
+          "_id": "683725520646ef6bf152476e"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a258ecbe767bd96786f58"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"absence/ess/ViewSubbordinateLeaveDetail.aspx?subo=0\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const saveEmployeeSelectResult = await BeaconBar.executeFunction(\"saveEmployeeSelectResult\")(args.selectingEmployeeIdsOrName);\n   BeaconBar.setSharedData(\"saveEmployeeSelectResult\", saveEmployeeSelectResult);\n  try {\n    const leaveDetails = await BeaconBar.executeFunction(\"getLeave\")(args);\n    const leaveDetail = await BeaconBar.executeFunction(\"getLeaves\")(args);\n   BeaconBar.setSharedData(\"leaveDetails\", leaveDetails)\n   function extractLeaveDataFromHTML(htmlString) {\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(htmlString, \"text/html\");\n\n  const table = doc.querySelector(\"#body_SubbordinateLeaveHistoryView_grdStatutory_ctl00\");\n  const rows = table?.querySelectorAll(\"tr\");\n\n  const data = [];\n  let currentEmployeeName = \"\";\n\n  rows.forEach((row) => {\n    if (row.classList.contains(\"GroupHeader_Default\")) {\n      const nameCell = row.querySelector(\"td[title*='Click to view Leave Balances']\");\n      const nameText = nameCell?.innerText?.trim() || \"\";\n      // Extract actual name from: \"Name: 000002 - Peter Pascal\"\n      const match = nameText.match(/Name:\\s*(.+)/);\n      currentEmployeeName = match ? match[1] : \"\";\n    }\n\n    if (\n      row.classList.contains(\"GridRow_Default\") ||\n      row.classList.contains(\"GridAltRow_Default\")\n    ) {\n      const cells = row.querySelectorAll(\"td\");\n\n      const leaveRecord = {\n        employee: currentEmployeeName,\n        fromDate: cells[1]?.textContent.trim(),\n        toDate: cells[2]?.textContent.trim(),\n        leaveType: cells[3]?.textContent.trim(),\n        days: cells[4]?.textContent.trim(),\n        status: cells[6]?.textContent.trim(),\n        comments: cells[7]?.textContent.trim(),\n        coveringEmployee: cells[8]?.textContent.trim(),\n        initiatedBy: cells[9]?.textContent.trim(),\n        cancellationReason: cells[10]?.textContent.trim(),\n      };\n\n      data.push(leaveRecord);\n    }\n  });\n\n  return data;\n}\nfunction extractShortLeaveFromHTML(htmlString) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(htmlString, 'text/html');\n\n    const rows = doc.querySelectorAll('#body_SubbordinateLeaveHistoryView_grdShort_ctl00 tbody tr');\n    const data = [];\n\n    let currentName = \"\";\n\n    rows.forEach(row => {\n        if (row.classList.contains('GroupHeader_Default')) {\n            const nameText = row.querySelector('p')?.textContent.trim() || \"\";\n            const match = nameText.match(/Name:\\s*(.*)/);\n            currentName = match ? match[1] : \"\";\n        } else {\n            const cells = row.querySelectorAll('td');\n            if (cells.length >= 9) {\n                data.push({\n                    name: currentName,\n                    date: cells[1].textContent.trim(),\n                    fromTime: cells[2].textContent.trim(),\n                    toTime: cells[3].textContent.trim(),\n                    leaveType: cells[4].textContent.trim(),\n                    status: cells[5].textContent.trim(),\n                    leaveComments: cells[6].textContent.trim(),\n                    initiatedBy: cells[7].textContent.trim(),\n                    cancellationReason: cells[8].textContent.trim()\n                });\n            }\n        }\n    });\n\n    return data;\n}\n\nconst datasss = extractLeaveDataFromHTML(leaveDetail)\nconst shortleaveDetails = extractShortLeaveFromHTML(leaveDetail);\nconst companyleaveDetails = datasss.slice(0, 10)\nif(datasss.length>10){\n BeaconBar.executeFunction(\"downloadcsv\")(datasss);\n}\n   return {\n  shortleaveDetails: shortleaveDetails.length < 1 \n    ? \"No employees are on leave\" \n    : shortleaveDetails,\n  companyleaveDetails\n};\n\n  } catch (error) {\n    return {\n      ...data,\n      error: error.message || \"An unknown error occurred\"\n    };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

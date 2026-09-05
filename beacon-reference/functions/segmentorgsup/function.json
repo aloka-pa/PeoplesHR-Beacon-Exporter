@@ -1,0 +1,24 @@
+{
+  "id": "6a17149017220dc72372c95f",
+  "slug": "segmentorgsup",
+  "name": "segmentOrgsup",
+  "status": "live",
+  "createdAt": "2026-05-27T15:58:08.972Z",
+  "updatedAt": "2026-05-28T07:39:15.915Z",
+  "contentHash": "4ee6d7681617abf2739f7b34ce2c6c18a726a2b8f05fe68ea139cf87f7d914e0",
+  "lastExportedAt": "2026-09-05T19:41:26.577Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "6a17149017220dc72372c95f",
+    "name": "segmentOrgsup",
+    "status": "live",
+    "code": "(function () {\n    const enabledAgents = JSON.parse(\n        localStorage.getItem('enabledAgents') || '[]'\n    );\n    return enabledAgents\n        .map(agent => String(agent).toLowerCase())\n        .includes('orgsup'.toLowerCase());\n})",
+    "by": "7829",
+    "__v": 3
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "salaryGradeValue",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to salary grade value to get for gradeDetails api. then available all salary grades then pick one grade corresponding value will be take.",
+      "advanced": false,
+      "raw": {
+        "name": "salaryGradeValue",
+        "type": "string",
+        "description": "to salary grade value to get for gradeDetails api. then available all salary grades then pick one grade corresponding value will be take.",
+        "required": true,
+        "_id": "6810da348363f608426f2c84"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

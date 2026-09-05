@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "membershipType",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to updated membership Type name.",
+      "advanced": false,
+      "raw": {
+        "name": "membershipType",
+        "type": "string",
+        "description": "to updated membership Type name.",
+        "required": true,
+        "_id": "6811d1987c1d0fe37e246bff"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

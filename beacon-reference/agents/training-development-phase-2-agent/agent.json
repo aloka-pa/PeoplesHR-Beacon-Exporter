@@ -1,0 +1,95 @@
+{
+  "id": "6955261cad06de92910e10aa",
+  "slug": "training-development-phase-2-agent",
+  "name": "Training & Development | Phase 2 | Agent",
+  "description": "Training & Development Budget Assistant is an AI-powered conversational assistant that streamlines training budget management and course administration. It enables users to instantly query budget allocations and utilization across organizational hierarchies and financial periods, while guiding administrators through an interactive process to generate well-structured, professional course descriptions by collecting key details such as topic, audience, duration, and learning objectives.",
+  "exportedAt": "2026-09-05T19:41:12.221Z",
+  "raw": {
+    "_id": "6955261cad06de92910e10aa",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "Training & Development | Phase 2 | Agent",
+    "description": "Training & Development Budget Assistant is an AI-powered conversational assistant that streamlines training budget management and course administration. It enables users to instantly query budget allocations and utilization across organizational hierarchies and financial periods, while guiding administrators through an interactive process to generate well-structured, professional course descriptions by collecting key details such as topic, audience, duration, and learning objectives.",
+    "by": "10308",
+    "prompt": "",
+    "notes": [],
+    "llmConfig": [],
+    "status": "live",
+    "toolIds": [
+      "695524daa4e4f389f90f1d7a",
+      "69552f87921cbb106adf3556",
+      "6956293bab9dbe6266aec3e1"
+    ],
+    "scenarioIds": [],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "cache": {
+      "enabled": false
+    },
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "callKnowledgeBase",
+        "args": [
+          {
+            "name": "query",
+            "type": "string",
+            "description": "The query to be executed by the agent",
+            "required": true,
+            "_id": "6955261cad06de92910e10ac"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n       \"type\":  \"object\",\n       \"properties\": {},\n       \"required\": []\n       }",
+        "_id": "697c30ee14552d935646f46d"
+      },
+      "target": {
+        "entityValue": "",
+        "shardKey1": "",
+        "shardKey2": "",
+        "shardKey3": ""
+      }
+    },
+    "vis": false,
+    "piiConfig": {
+      "piiEnabled": false,
+      "predefinedEntities": [
+        {
+          "name": "PERSON",
+          "enabled": false
+        },
+        {
+          "name": "LOCATION",
+          "enabled": false
+        },
+        {
+          "name": "DATE_TIME",
+          "enabled": false
+        },
+        {
+          "name": "EMAIL_ADDRESS",
+          "enabled": false
+        },
+        {
+          "name": "PHONE_NUMBER",
+          "enabled": false
+        }
+      ],
+      "customEntities": []
+    },
+    "createdAt": "2025-12-31T13:33:16.533Z",
+    "updatedAt": "2026-01-30T04:17:50.268Z",
+    "__v": 3,
+    "maxTokens": "[REDACTED]"
+  }
+}

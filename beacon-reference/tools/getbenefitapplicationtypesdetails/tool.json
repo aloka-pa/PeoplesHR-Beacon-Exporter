@@ -1,0 +1,91 @@
+{
+  "id": "690dc568931a2d61ba0b17f7",
+  "slug": "getbenefitapplicationtypesdetails",
+  "name": "getBenefitApplicationTypesDetails",
+  "description": "in this tool generate the Benefit Applications Types.",
+  "instructions": null,
+  "taskName": "Fetching Benefit Applications Types",
+  "tags": [
+    "BenefitManagement",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getBenefitApplicationTypesDetails",
+  "createdAt": "2025-05-21T06:40:16.470Z",
+  "updatedAt": "2025-05-21T06:40:16.470Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be9",
+      "name": "BenefitManagement"
+    }
+  ],
+  "contentHash": "5806ae74b7de8cac109686c22e28824494c58bf7a6811c67f487d1230be169af",
+  "lastExportedAt": "2026-09-05T19:39:23.871Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b17f7",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getBenefitApplicationTypesDetails",
+      "description": "in this tool generate the Benefit Applications Types.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getBenefitApplicationTypesDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to give the employee id for example \"000001\",\"000010\" etc...",
+            "required": true,
+            "_id": "682d7550dd86265a343c90e2"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "682d7550dd86265a343c90e1"
+      },
+      "by": "2414",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"Benefitv9/Application/Application/?mode=2&mvc=1\")) {\n      return \"It seems you don't have access. Please check with the HR Admin\";\n    }\n  const details = await BeaconBar.executeFunction(\"benefitApplication\")(args.id);\n  if (details.empnumber) {\n    const jsonHeaders = new Headers();\n    jsonHeaders.append(\"Accept\", \"application/json, text/javascript, */*; q=0.01\");\n    jsonHeaders.append(\"Content-Type\", \"application/json; charset=UTF-8\");\n    jsonHeaders.append(\"X-Requested-With\", \"XMLHttpRequest\");\n\n    const raw = JSON.stringify({\n      empNumber: details.empnumber,\n      key: details.keyvalue,\n      type: \"0\",\n      mode: \"2\"\n    });\n\n    const requestOptions = {\n      method: \"POST\",\n      headers: jsonHeaders,\n      body: raw,\n      redirect: \"follow\"\n    };\n\n    const response = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/ApplicationApi/GetApplicationByEmployee`, requestOptions);\n    const details1 = await response.json();\n\n    window.Emp = details1?.Employee?.EmpNumber;\n\n    return details1.benefitTypes;\n  } else {\n    return details;\n  }\n})\n",
+      "groupName": "",
+      "tags": [
+        "BenefitManagement",
+        "Headers"
+      ],
+      "taskName": "Fetching Benefit Applications Types",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-21T06:40:16.470Z",
+      "updatedAt": "2025-05-21T06:40:16.470Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be9",
+          "name": "BenefitManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getBenefitApplicationTypesDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to give the employee id for example \"000001\",\"000010\" etc...",
+          "required": true,
+          "_id": "682d7550dd86265a343c90e2"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "682d7550dd86265a343c90e1"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"Benefitv9/Application/Application/?mode=2&mvc=1\")) {\n      return \"It seems you don't have access. Please check with the HR Admin\";\n    }\n  const details = await BeaconBar.executeFunction(\"benefitApplication\")(args.id);\n  if (details.empnumber) {\n    const jsonHeaders = new Headers();\n    jsonHeaders.append(\"Accept\", \"application/json, text/javascript, */*; q=0.01\");\n    jsonHeaders.append(\"Content-Type\", \"application/json; charset=UTF-8\");\n    jsonHeaders.append(\"X-Requested-With\", \"XMLHttpRequest\");\n\n    const raw = JSON.stringify({\n      empNumber: details.empnumber,\n      key: details.keyvalue,\n      type: \"0\",\n      mode: \"2\"\n    });\n\n    const requestOptions = {\n      method: \"POST\",\n      headers: jsonHeaders,\n      body: raw,\n      redirect: \"follow\"\n    };\n\n    const response = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/ApplicationApi/GetApplicationByEmployee`, requestOptions);\n    const details1 = await response.json();\n\n    window.Emp = details1?.Employee?.EmpNumber;\n\n    return details1.benefitTypes;\n  } else {\n    return details;\n  }\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

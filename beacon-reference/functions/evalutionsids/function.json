@@ -1,0 +1,24 @@
+{
+  "id": "690dc57c931a2d61ba0b25cc",
+  "slug": "evalutionsids",
+  "name": "evalutionsIds",
+  "status": "live",
+  "createdAt": "2025-05-19T09:54:21.449Z",
+  "updatedAt": "2025-05-19T09:54:21.449Z",
+  "contentHash": "f0f407c35f13d7215dbbef92b155bfa64806ebb348a546ddea869af40b8421d0",
+  "lastExportedAt": "2026-09-05T19:41:41.956Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57c931a2d61ba0b25cc",
+    "name": "evalutionsIds",
+    "status": "live",
+    "code": "(async function(req) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${req}PerfV8//api/FinalAssessment/LoadOngoingGoalEvaluations`, requestOptions);\n  const data = await response.text();  \n  return data;\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

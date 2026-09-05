@@ -1,0 +1,152 @@
+{
+  "id": "690dc56c931a2d61ba0b1b43",
+  "slug": "updateselfemployeeeducationalandqualificationdetails",
+  "name": "updateSelfEmployeeEducationalAndQualificationDetails",
+  "description": "Before updating Self Employee Educational and Qualification Details:\n1.First, call the selfEmployeeEducationalAndQualificationDetails API to fetch the educational and qualification details and identify any missing any required fields. will using field corresponding value.\n2.If some fields are not updated, note that Qualification Type and Qualification are hidden fields and cannot be modified. Only the following fields can be updated: School/Institute, Status, Year of Qualification, and Remarks.\nFinally, update the employee’s educational and qualification details with the allowed fields.",
+  "instructions": null,
+  "taskName": "Update Self Employee Educational And Qualification Details",
+  "tags": [
+    "Employee Information",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateSelfEmployeeEducationalAndQualificationDetai",
+  "createdAt": "2025-08-28T06:52:19.668Z",
+  "updatedAt": "2025-11-10T12:17:15.316Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "1c604ba5f532bc88308f58f68586d278b3deece3f174679108e1737d4b5ffbe4",
+  "lastExportedAt": "2026-09-05T19:39:23.337Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56c931a2d61ba0b1b43",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateSelfEmployeeEducationalAndQualificationDetails",
+      "description": "Before updating Self Employee Educational and Qualification Details:\n1.First, call the selfEmployeeEducationalAndQualificationDetails API to fetch the educational and qualification details and identify any missing any required fields. will using field corresponding value.\n2.If some fields are not updated, note that Qualification Type and Qualification are hidden fields and cannot be modified. Only the following fields can be updated: School/Institute, Status, Year of Qualification, and Remarks.\nFinally, update the employee’s educational and qualification details with the allowed fields.",
+      "rules": {
+        "ids": [
+          "690dc4b5931a2d61ba0a8085"
+        ],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateSelfEmployeeEducationalAndQualificationDetai",
+        "args": [
+          {
+            "name": "schoolOrInstitute",
+            "type": "string",
+            "description": "If the user updates the School/Institute field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.",
+            "required": true,
+            "_id": "68affca3488e9eb71439083a"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "description": "If the user updates the status field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. Ex: Pass, Fail etc.. will be before status data only QualStatusDescription.",
+            "required": true,
+            "_id": "68affca3488e9eb71439083b"
+          },
+          {
+            "name": "yearOfQualification",
+            "type": "string",
+            "description": "If the user updates the Year Of Qualification field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.",
+            "required": true,
+            "_id": "68affca3488e9eb71439083c"
+          },
+          {
+            "name": "remarks",
+            "type": "string",
+            "description": "If the user updates the Remarks field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. in the optional field",
+            "required": true,
+            "_id": "68affca3488e9eb71439083d"
+          },
+          {
+            "name": "qualificationName",
+            "type": "string",
+            "description": "The Qualification Name field is not being updated. Which record will be updated in this case—will it use the Reference field as the required field for identifying the record Ex:-\"Project Management Professional\".",
+            "required": true,
+            "_id": "68affca3488e9eb71439083e"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68affca3488e9eb714390839"
+      },
+      "by": "7337",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const fields = [\n    \"QualificationTypeCaption\",\n    \"Qualification\",\n    \"QualificationSchoolCaption\",\n    \"QualificationStatusCaption\",\n    \"Year\",\n    \"QualificationRemarksCaption\"\n  ];\n\n  for (const x of fields) {\n    const myHeaders = new Headers({\n      \"accept\": \"*/*\",\n      \"accept-language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n      \"content-type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    });\n\n    const response = await fetch(\n      `${location.origin}/${reqOptions.sl}/EIMV9/api/CommonAPI/getMessage/?type=Qualification&key=${x}&_=${Date.now()}`,\n      {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n      }\n    );\n    await response.json();\n\n    const response1 = await fetch(\n      `${location.origin}/${reqOptions.sl}/EIMV9/api/CommonAPI/getMessage/?type=EIMCommon&key=ValidateblankValue&_=${Date.now()}`,\n      {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n      }\n    );\n    await response1.json();\n  }\n\n  // 🔹 Update records only after all field calls are done\n  window.payData.forEach(x => {\n    if (x.QuliObj.QualificationName === args.qualificationName) {\n      if (args.status) {\n        x.StatusObj.QualStatusCode = args.status;\n        x.StatusObj.QualStatusDescription = args.status;\n      }\n      if (args.yearOfQualification) {\n        x.QualYear = args.yearOfQualification;\n      }\n      if (args.schoolOrInstitute) {\n        x.Institute = args.schoolOrInstitute;\n      }\n      if (args.remarks) {\n        x.Comment = args.remarks;\n      }\n    }\n  });\n\n  window.payData = window.payData.map(({ MBBSObj, ...rest }) => {\n    const { MBBSCode, ...objRest } = MBBSObj; // remove MBBSCode\n    return { ...rest, MBBSObj: objRest };\n  });\n\n  // 🔹 Save API executes only after loop & updates\n  const saveHeaders = new Headers({\n    \"accept\": \"*/*\",\n    \"accept-language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n    \"content-type\": \"application/json\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n  });\n\n  const saveResponse = await fetch(\n    `${location.origin}/${reqOptions.sl}/EIMV9/api/QualificationAPI/SaveQualificationData/`,\n    {\n      method: \"POST\",\n      headers: saveHeaders,\n      body: JSON.stringify(window.payData),\n      redirect: \"follow\"\n    }\n  );\n\n  const flatData = window.payData.map(item => ({\n    EmpNumber: item.EmpNumber,\n    TypeCode: item.TypeObj?.QualTypeCode || \"\",\n    TypeName: item.TypeObj?.QualTypeName || \"\",\n    QualificationCode: item.QuliObj?.QualificationCode || \"\",\n    QualificationName: item.QuliObj?.QualificationName || \"\",\n    MBBSName: item.MBBSObj?.MBBSName || \"\",\n    Institute: item.Institute || \"\",\n    StatusName: item.StatusObj?.QualStatusDescription || \"\", // Flattened\n    QualificationYear: parseInt(item.QualYear) || \"\",\n    Remarks: item.Comment || \"\",\n    Distinction: item.Distinction || \"\",\n    MedleReword: item.MedleReword || \"\",\n    Sequence: item.Sequence || 0,\n    ActionType: item.ActionType || 0,\n    UpdateInsert: item.UpdateInsert || 0, // ensure included\n    AdmissionDate: item.AdmissionDate || \"\",\n    EffectiveDate: item.EffectiveDate || \"\",\n    CourseMethod: item.CourseMethod || 0,\n    CourseType: item.CourseType || 0,\n    EmpSubjectList: item.EmpSubjectList || []\n  }));\n\n  let raw = JSON.stringify({\n    \"ProfConfig\": window.educate.ProfConfig,\n    \"LoginEmp\": window.educate.LoginEmp,\n    \"PendingApproval\": false,\n    \"EmpNumber\": window.educate.EmpNumber,\n    \"EmpDisplayNumber\": window.educate.EmpDisplayNumber,\n    \"EmployeeProfile\": 1,\n    \"FilterQualifiClassifiWise\": false,\n    \"FilterClassificationQualiTypeWise\": false,\n    \"CourseMethodFlg\": 1,\n    \"CourseTypeFlg\": 1,\n    \"IsHaveSubordinates\": false,\n    \"EnableEditing\": true,\n    \"IsAllowFutureYear\": true,\n    \"IsAllowFutureYearStatus\": \"In Progress\",\n    \"QulifiTypeList\": window.educate.TypeObjList,\n    \"ClassificationTypeList\": window.educate.ClassificationObjList,\n    \"AllQualificationList\": window.educate.QualObjList,\n    \"QualificationList\": [],\n    \"MBBSList\": [],\n    \"Institute\": \"\",\n    \"QulifiStatusList\": window.educate.StatusObjList,\n    \"QulifiYear\": \"\",\n    \"Remarks\": \"\",\n    \"Distinction\": \"\",\n    \"MedleReword\": \"\",\n    \"Sequence\": 1,\n    \"EmployeeSubjectList\": [],\n    \"SubjectList\": [],\n    \"IsSubjectNewEntry\": true,\n    \"IsFeildsExpanded\": false,\n    \"IsHaveAnyChange\": false,\n    \"IsNewEntry\": true,\n    \"IsHaveAnyChangeInSubjectList\": false,\n    \"EmployeeQualificationList\": flatData,\n    \"EmployeeQualificationListOriginal\": flatData\n  });\n\n  const loadSaveData = await fetch(\n    `${location.origin}/${reqOptions.sl}/EIMV9/api/QualificationAPI/LoadEmployeeQualificationsOnReset/`,\n    {\n      method: \"POST\",\n      headers: saveHeaders,\n      body: raw,\n      redirect: \"follow\"\n    }\n  );\n\n  return await loadSaveData.json();\n});\n",
+      "groupName": "",
+      "tags": [
+        "Employee Information",
+        "Headers"
+      ],
+      "taskName": "Update Self Employee Educational And Qualification Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-28T06:52:19.668Z",
+      "updatedAt": "2025-11-10T12:17:15.316Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateSelfEmployeeEducationalAndQualificationDetai",
+      "args": [
+        {
+          "name": "schoolOrInstitute",
+          "type": "string",
+          "description": "If the user updates the School/Institute field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.",
+          "required": true,
+          "_id": "68affca3488e9eb71439083a"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "description": "If the user updates the status field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. Ex: Pass, Fail etc.. will be before status data only QualStatusDescription.",
+          "required": true,
+          "_id": "68affca3488e9eb71439083b"
+        },
+        {
+          "name": "yearOfQualification",
+          "type": "string",
+          "description": "If the user updates the Year Of Qualification field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.",
+          "required": true,
+          "_id": "68affca3488e9eb71439083c"
+        },
+        {
+          "name": "remarks",
+          "type": "string",
+          "description": "If the user updates the Remarks field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. in the optional field",
+          "required": true,
+          "_id": "68affca3488e9eb71439083d"
+        },
+        {
+          "name": "qualificationName",
+          "type": "string",
+          "description": "The Qualification Name field is not being updated. Which record will be updated in this case—will it use the Reference field as the required field for identifying the record Ex:-\"Project Management Professional\".",
+          "required": true,
+          "_id": "68affca3488e9eb71439083e"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68affca3488e9eb714390839"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const fields = [\n    \"QualificationTypeCaption\",\n    \"Qualification\",\n    \"QualificationSchoolCaption\",\n    \"QualificationStatusCaption\",\n    \"Year\",\n    \"QualificationRemarksCaption\"\n  ];\n\n  for (const x of fields) {\n    const myHeaders = new Headers({\n      \"accept\": \"*/*\",\n      \"accept-language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n      \"content-type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    });\n\n    const response = await fetch(\n      `${location.origin}/${reqOptions.sl}/EIMV9/api/CommonAPI/getMessage/?type=Qualification&key=${x}&_=${Date.now()}`,\n      {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n      }\n    );\n    await response.json();\n\n    const response1 = await fetch(\n      `${location.origin}/${reqOptions.sl}/EIMV9/api/CommonAPI/getMessage/?type=EIMCommon&key=ValidateblankValue&_=${Date.now()}`,\n      {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n      }\n    );\n    await response1.json();\n  }\n\n  // 🔹 Update records only after all field calls are done\n  window.payData.forEach(x => {\n    if (x.QuliObj.QualificationName === args.qualificationName) {\n      if (args.status) {\n        x.StatusObj.QualStatusCode = args.status;\n        x.StatusObj.QualStatusDescription = args.status;\n      }\n      if (args.yearOfQualification) {\n        x.QualYear = args.yearOfQualification;\n      }\n      if (args.schoolOrInstitute) {\n        x.Institute = args.schoolOrInstitute;\n      }\n      if (args.remarks) {\n        x.Comment = args.remarks;\n      }\n    }\n  });\n\n  window.payData = window.payData.map(({ MBBSObj, ...rest }) => {\n    const { MBBSCode, ...objRest } = MBBSObj; // remove MBBSCode\n    return { ...rest, MBBSObj: objRest };\n  });\n\n  // 🔹 Save API executes only after loop & updates\n  const saveHeaders = new Headers({\n    \"accept\": \"*/*\",\n    \"accept-language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n    \"content-type\": \"application/json\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n  });\n\n  const saveResponse = await fetch(\n    `${location.origin}/${reqOptions.sl}/EIMV9/api/QualificationAPI/SaveQualificationData/`,\n    {\n      method: \"POST\",\n      headers: saveHeaders,\n      body: JSON.stringify(window.payData),\n      redirect: \"follow\"\n    }\n  );\n\n  const flatData = window.payData.map(item => ({\n    EmpNumber: item.EmpNumber,\n    TypeCode: item.TypeObj?.QualTypeCode || \"\",\n    TypeName: item.TypeObj?.QualTypeName || \"\",\n    QualificationCode: item.QuliObj?.QualificationCode || \"\",\n    QualificationName: item.QuliObj?.QualificationName || \"\",\n    MBBSName: item.MBBSObj?.MBBSName || \"\",\n    Institute: item.Institute || \"\",\n    StatusName: item.StatusObj?.QualStatusDescription || \"\", // Flattened\n    QualificationYear: parseInt(item.QualYear) || \"\",\n    Remarks: item.Comment || \"\",\n    Distinction: item.Distinction || \"\",\n    MedleReword: item.MedleReword || \"\",\n    Sequence: item.Sequence || 0,\n    ActionType: item.ActionType || 0,\n    UpdateInsert: item.UpdateInsert || 0, // ensure included\n    AdmissionDate: item.AdmissionDate || \"\",\n    EffectiveDate: item.EffectiveDate || \"\",\n    CourseMethod: item.CourseMethod || 0,\n    CourseType: item.CourseType || 0,\n    EmpSubjectList: item.EmpSubjectList || []\n  }));\n\n  let raw = JSON.stringify({\n    \"ProfConfig\": window.educate.ProfConfig,\n    \"LoginEmp\": window.educate.LoginEmp,\n    \"PendingApproval\": false,\n    \"EmpNumber\": window.educate.EmpNumber,\n    \"EmpDisplayNumber\": window.educate.EmpDisplayNumber,\n    \"EmployeeProfile\": 1,\n    \"FilterQualifiClassifiWise\": false,\n    \"FilterClassificationQualiTypeWise\": false,\n    \"CourseMethodFlg\": 1,\n    \"CourseTypeFlg\": 1,\n    \"IsHaveSubordinates\": false,\n    \"EnableEditing\": true,\n    \"IsAllowFutureYear\": true,\n    \"IsAllowFutureYearStatus\": \"In Progress\",\n    \"QulifiTypeList\": window.educate.TypeObjList,\n    \"ClassificationTypeList\": window.educate.ClassificationObjList,\n    \"AllQualificationList\": window.educate.QualObjList,\n    \"QualificationList\": [],\n    \"MBBSList\": [],\n    \"Institute\": \"\",\n    \"QulifiStatusList\": window.educate.StatusObjList,\n    \"QulifiYear\": \"\",\n    \"Remarks\": \"\",\n    \"Distinction\": \"\",\n    \"MedleReword\": \"\",\n    \"Sequence\": 1,\n    \"EmployeeSubjectList\": [],\n    \"SubjectList\": [],\n    \"IsSubjectNewEntry\": true,\n    \"IsFeildsExpanded\": false,\n    \"IsHaveAnyChange\": false,\n    \"IsNewEntry\": true,\n    \"IsHaveAnyChangeInSubjectList\": false,\n    \"EmployeeQualificationList\": flatData,\n    \"EmployeeQualificationListOriginal\": flatData\n  });\n\n  const loadSaveData = await fetch(\n    `${location.origin}/${reqOptions.sl}/EIMV9/api/QualificationAPI/LoadEmployeeQualificationsOnReset/`,\n    {\n      method: \"POST\",\n      headers: saveHeaders,\n      body: raw,\n      redirect: \"follow\"\n    }\n  );\n\n  return await loadSaveData.json();\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

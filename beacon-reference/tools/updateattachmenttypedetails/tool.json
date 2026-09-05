@@ -1,0 +1,88 @@
+{
+  "id": "690dc566931a2d61ba0b1679",
+  "slug": "updateattachmenttypedetails",
+  "name": "updateAttachmentTypeDetails",
+  "description": "In this tool, start by executing the \"getEIMAttributeList\" API to retrieve the existing data. If any required fields are missing from the user input, fetch the corresponding values using the getEIMAttributeList API to ensure completeness.",
+  "instructions": null,
+  "taskName": "Update Attachment Type Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateAttachmentTypeDetails",
+  "createdAt": "2025-05-05T05:53:50.439Z",
+  "updatedAt": "2026-05-15T07:06:45.941Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "adfce95de344519cc378771a92f4a7ea49c128fd210ee22a4530f12451722399",
+  "lastExportedAt": "2026-09-05T19:39:22.578Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b1679",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateAttachmentTypeDetails",
+      "description": "In this tool, start by executing the \"getEIMAttributeList\" API to retrieve the existing data. If any required fields are missing from the user input, fetch the corresponding values using the getEIMAttributeList API to ensure completeness.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateAttachmentTypeDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtDesc\": {\n      \"type\": \"string\",\n      \"description\": \"Description or name of the attachment type (e.g., 'Attachment from Template Designer Module').\"\n    },\n    \"ctl00_body_ChkisExpire\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Checkbox indicating if the attachment has an expiration (value is 'on' when checked).\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtDesc\",\n    \"ctl00_body_ChkisExpire\"\n  ]\n}",
+        "_id": "6818526e79ebe9607c195478"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/AttachmentType.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/AttachmentType.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"AttachmentType\";\n  }\n\n  const editInit =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.at.viewState,\n      __VIEWSTATEGENERATOR: window.at.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.at.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$butEdit\": \"Edit\"\n\n    }, url);\n\n  const payload = {\n\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n\n    \"ctl00$body$txtDesc\":\n      args[\"ctl00_body_txtDesc\"] || \"\",\n\n    \"ctl00$body$butSave\": \"Save\"\n  };\n\n  if (\n    args[\"ctl00_body_ChkisExpire\"] === \"on\"\n  ) {\n    payload[\"ctl00$body$ChkisExpire\"] = \"on\";\n  }\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )(payload, url);\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const code =\n    doc.querySelector(\"#ctl00_body_txtCode\")\n      ?.value?.trim() || \"\";\n\n  const attachmentType =\n    doc.querySelector(\"#ctl00_body_txtDesc\")\n      ?.value?.trim() || \"\";\n\n  const expiration =\n    doc.querySelector(\"#ctl00_body_ChkisExpire\")\n      ?.checked || false;\n\n  const updatedetails = {\n    code,\n    attachmentType,\n    expiration\n  };\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\";\n  } else {\n    return updatedetails;\n  }\n\n});",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update Attachment Type Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-05T05:53:50.439Z",
+      "updatedAt": "2026-05-15T07:06:45.941Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateAttachmentTypeDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtDesc\": {\n      \"type\": \"string\",\n      \"description\": \"Description or name of the attachment type (e.g., 'Attachment from Template Designer Module').\"\n    },\n    \"ctl00_body_ChkisExpire\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Checkbox indicating if the attachment has an expiration (value is 'on' when checked).\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtDesc\",\n    \"ctl00_body_ChkisExpire\"\n  ]\n}",
+      "_id": "6818526e79ebe9607c195478"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/AttachmentType.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/AttachmentType.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"AttachmentType\";\n  }\n\n  const editInit =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.at.viewState,\n      __VIEWSTATEGENERATOR: window.at.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.at.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$butEdit\": \"Edit\"\n\n    }, url);\n\n  const payload = {\n\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n\n    \"ctl00$body$txtDesc\":\n      args[\"ctl00_body_txtDesc\"] || \"\",\n\n    \"ctl00$body$butSave\": \"Save\"\n  };\n\n  if (\n    args[\"ctl00_body_ChkisExpire\"] === \"on\"\n  ) {\n    payload[\"ctl00$body$ChkisExpire\"] = \"on\";\n  }\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )(payload, url);\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const code =\n    doc.querySelector(\"#ctl00_body_txtCode\")\n      ?.value?.trim() || \"\";\n\n  const attachmentType =\n    doc.querySelector(\"#ctl00_body_txtDesc\")\n      ?.value?.trim() || \"\";\n\n  const expiration =\n    doc.querySelector(\"#ctl00_body_ChkisExpire\")\n      ?.checked || false;\n\n  const updatedetails = {\n    code,\n    attachmentType,\n    expiration\n  };\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\";\n  } else {\n    return updatedetails;\n  }\n\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

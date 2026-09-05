@@ -1,0 +1,24 @@
+{
+  "id": "690dc580931a2d61ba0b2757",
+  "slug": "getdesignationpersonaldetails",
+  "name": "getDesignationPersonalDetails",
+  "status": "live",
+  "createdAt": "2025-06-13T10:36:39.952Z",
+  "updatedAt": "2026-07-17T12:55:52.506Z",
+  "contentHash": "2574afafdede2a8b558d83084a5ee0aed2915ad953d70906eddad9aaf423bbfe",
+  "lastExportedAt": "2026-09-05T19:41:21.499Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc580931a2d61ba0b2757",
+    "name": "getDesignationPersonalDetails",
+    "status": "live",
+    "code": "(async function () {\n  try {\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"*/*\");\n    myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\n    const requestOptions = {\n      method: \"GET\",\n      headers: myHeaders,\n      redirect: \"follow\"\n    };\n\n    const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n    const digest = await BeaconBar.executeFunction(\"getDigest\")(\"subordinate=0&mvc=1\");\n\n    const url = `${reqOptions}EIMV9/Personal/Personal?subordinate=0&mvc=1&digest=${digest.digest}&_=${Date.now()}`;\n    const response = await fetch(url, requestOptions);\n    const data = await response.text();\n\n    const match = data.match(/var\\s+modelPersonal\\s*=\\s*({[\\s\\S]*?});/);\n\n    if (match && match[1]) {\n      const objectOnlyText = match[1];\n\n      const objectOnly = (new Function(`return ${objectOnlyText}`))();\n\n\n      return objectOnly.EmployeeInfor.ObjDesignation;\n    } else {\n      return null;\n    }\n  } catch (err) {\n    return null;\n  }\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

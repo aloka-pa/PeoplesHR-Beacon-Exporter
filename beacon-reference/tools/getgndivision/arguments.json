@@ -1,0 +1,80 @@
+{
+  "arguments": [
+    {
+      "name": "gnDivisionCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The unique code of the GN Division to search for (e.g., '000001'). Performs exact match search. Either gnDivisionCode or gnDivisionName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "gnDivisionCode",
+        "type": "string",
+        "description": "The unique code of the GN Division to search for (e.g., '000001'). Performs exact match search. Either gnDivisionCode or gnDivisionName must be provided.",
+        "required": false,
+        "_id": "695391e44e49fbb5234c1eb8"
+      }
+    },
+    {
+      "name": "gnDivisionName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The name of the GN Division to search for (e.g., 'Warahanthuduwa'). Performs partial, case-insensitive match search. Either gnDivisionCode or gnDivisionName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "gnDivisionName",
+        "type": "string",
+        "description": "The name of the GN Division to search for (e.g., 'Warahanthuduwa'). Performs partial, case-insensitive match search. Either gnDivisionCode or gnDivisionName must be provided.",
+        "required": false,
+        "_id": "695391e44e49fbb5234c1eb9"
+      }
+    },
+    {
+      "name": "fetchDetails",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Controls whether to fetch detailed information when only one result is found. Set to 'no' to skip detailed fetch and return only basic search results. Default behavior fetches details, including dsDivisionCode.",
+      "advanced": false,
+      "raw": {
+        "name": "fetchDetails",
+        "type": "string",
+        "description": "Controls whether to fetch detailed information when only one result is found. Set to 'no' to skip detailed fetch and return only basic search results. Default behavior fetches details, including dsDivisionCode.",
+        "required": false,
+        "_id": "695391e44e49fbb5234c1eba"
+      }
+    },
+    {
+      "name": "dsDivisionName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "DS Division name (partial match, case-insensitive). Uses criteria value D.DSDIV_NAME. (optional)",
+      "advanced": false,
+      "raw": {
+        "name": "dsDivisionName",
+        "type": "string",
+        "description": "DS Division name (partial match, case-insensitive). Uses criteria value D.DSDIV_NAME. (optional)",
+        "required": false,
+        "_id": "697f71b806bab0b106a7eb87"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "\"yes\" to return all GN Divisions (clicks Show All).\nAlso auto-triggers if any provided search value equals: \"all\", \"available\", \"existing\", \"list\", \"show all\".",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "\"yes\" to return all GN Divisions (clicks Show All).\nAlso auto-triggers if any provided search value equals: \"all\", \"available\", \"existing\", \"list\", \"show all\".",
+        "required": false,
+        "_id": "697f71b806bab0b106a7eb88"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,24 @@
+{
+  "id": "690dc579931a2d61ba0b2180",
+  "slug": "shortleavereject",
+  "name": "ShortleaveReject",
+  "status": "live",
+  "createdAt": "2025-09-02T19:10:57.341Z",
+  "updatedAt": "2025-09-02T19:10:57.341Z",
+  "contentHash": "96bb799b106583bbad3b8dcd14053b2986879f4a4e04f49a87c856d17e5ba83d",
+  "lastExportedAt": "2026-09-05T19:41:27.789Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc579931a2d61ba0b2180",
+    "name": "ShortleaveReject",
+    "status": "live",
+    "code": "(async function(comment){\n    const myHeaders = new Headers();\n    const tokenShortLeave = BeaconBar.getSharedData(\"tokenShortLeave\");\nmyHeaders.append(\"__cfafvalue\",tokenShortLeave );\nmyHeaders.append(\"accept\", \"*/*\");\nmyHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\nmyHeaders.append(\"content-type\", \"application/json\");\n\nconst Ldetails =BeaconBar.getSharedData(\"Ldetails\")\nconst raw = JSON.stringify({\n  \"LDetail\": {\n    \"WFMainID\": Ldetails.modelApproval.SLDetail.WFMainID,\n    \"ApprovalEmpNumber\": Ldetails.modelApproval.SLDetail.ApprovalEmpNumber,\n    \"Comment\": comment,\n    \"EmpNumber\": Ldetails.modelApproval.SLDetail.EmpNumber\n  },\n  \"LeaveCategory\": 0\n});\n\nconst requestOptions = {\n  method: \"POST\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\nconst reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n \nconst response = await fetch(`${reqOptions}AbsenceV9/api/LeaveApproval/SubmitLeaveApplicationReject/`, requestOptions)\n  const data = await  response.text()\nreturn data ;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "id": "690dc563931a2d61ba0b1396",
+  "slug": "createratingmethod",
+  "name": "createRatingMethod",
+  "description": "createRatingMethod",
+  "instructions": null,
+  "taskName": "creating Rating Method",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createRatingMethod",
+  "createdAt": "2025-04-28T14:47:19.824Z",
+  "updatedAt": "2025-04-28T14:47:19.824Z",
+  "assignedAgents": [],
+  "contentHash": "99f5e2b675f14d5f93e7870eee2f1f9bb6c08846ee7f01adb324c7fff1388dac",
+  "lastExportedAt": "2026-09-05T19:39:24.474Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc563931a2d61ba0b1396",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createRatingMethod",
+      "description": "createRatingMethod",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createRatingMethod",
+        "args": [
+          {
+            "name": "ratingMethod",
+            "type": "string",
+            "description": "ratingMethod , Ex:- SkillRatingMethod",
+            "required": true,
+            "_id": "68107997095a85d40a9fe44f"
+          },
+          {
+            "name": "grade",
+            "type": "string",
+            "description": "grade , Ex:- \"A\" or \"1\"",
+            "required": true,
+            "_id": "68107997095a85d40a9fe450"
+          },
+          {
+            "name": "minimumMarks",
+            "type": "string",
+            "description": "minimumMarks , Ex:-\"10\"",
+            "required": true,
+            "_id": "68107997095a85d40a9fe451"
+          },
+          {
+            "name": "maximumMarks",
+            "type": "string",
+            "description": "maximumMarks , Ex:- \"100\"",
+            "required": true,
+            "_id": "681081ab9031d6e4b3dde1fc"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "680f94f7cb343494a0b4a9e1"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"RatingMethods\");\n\n  const commonHeaders = new Headers({\n    \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\",\n    \"accept-language\": \"en-US,en;q=0.9\",\n    \"content-type\": \"application/x-www-form-urlencoded\"\n  });\n\n  const searchParams = new URLSearchParams();\n  searchParams.append(\"scrollLeft\", \"0\");\n  searchParams.append(\"scrollTop\", \"0\");\n  searchParams.append(\"__EVENTTARGET\", \"\");\n  searchParams.append(\"__EVENTARGUMENT\", \"\");\n  searchParams.append(\"__VIEWSTATE\", details.viewState);\n  searchParams.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  searchParams.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  searchParams.append(\"__EVENTVALIDATION\", details.eventValidation);\n  searchParams.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  searchParams.append(\"ctl00$body$hdnIsHead\", \"\");\n  searchParams.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n  searchParams.append(\"ctl00$body$ContentSearch$cboCriteria\", \"RATING_CODE\");\n  searchParams.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  searchParams.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  searchParams.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  searchParams.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"7\");\n  searchParams.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  searchParams.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  searchParams.append(\"ctl00$body$butNew\", \"New\");\n\n  const searchResponse = await fetch(\"/hr/EIM/RatingMethods.aspx\", {\n    method: \"POST\",\n    headers: commonHeaders,\n    body: searchParams,\n    redirect: \"follow\"\n  });\n\n  const searchHtml = await searchResponse.text();\n  const finalDetails = await BeaconBar.executeFunction(\"getDomExtract\")(searchHtml);\n  window.rm = finalDetails;\n\n  const submitParams1 = new URLSearchParams();\n  submitParams1.append(\"__EVENTTARGET\", \"ctl00$body$nuninimun\");\n  submitParams1.append(\"__EVENTARGUMENT\", \"\");\n  submitParams1.append(\"__VIEWSTATE\", window.rm.viewState);\n  submitParams1.append(\"__VIEWSTATEGENERATOR\", window.rm.viewStateGen);\n  submitParams1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  submitParams1.append(\"__EVENTVALIDATION\", window.rm.eventValidation);\n  submitParams1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  submitParams1.append(\"ctl00$body$txtName\", args.ratingMethod);\n  submitParams1.append(\"ctl00$body$txtgrade\", args.grade);\n  submitParams1.append(\"ctl00$body$nuninimun\", args.minimumMarks);\n  submitParams1.append(\"ctl00$body$numax\", \"\");\n  submitParams1.append(\"ctl00$body$nuAvg\", \"\");\n\n  const submitResponse1 = await fetch(\"/hr/EIM/RatingMethods.aspx\", {\n    method: \"POST\",\n    headers: commonHeaders,\n    body: submitParams1,\n    redirect: \"follow\"\n  });\n\n  const submitHtml1 = await submitResponse1.text();\n  const finalDetails1 = await BeaconBar.executeFunction(\"getDomExtract\")(submitHtml1);\n  window.sy = finalDetails1;\n\n  const submitParams2 = new URLSearchParams();\n  submitParams2.append(\"__EVENTTARGET\", \"ctl00$body$numax\");\n  submitParams2.append(\"__EVENTARGUMENT\", \"\");\n  submitParams2.append(\"__VIEWSTATE\", window.sy.viewState);\n  submitParams2.append(\"__VIEWSTATEGENERATOR\", window.sy.viewStateGen);\n  submitParams2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  submitParams2.append(\"__EVENTVALIDATION\", window.sy.eventValidation);\n  submitParams2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  submitParams2.append(\"ctl00$body$txtName\", args.ratingMethod);\n  submitParams2.append(\"ctl00$body$txtgrade\", args.grade);\n  submitParams2.append(\"ctl00$body$nuninimun\", args.minimumMarks);\n  submitParams2.append(\"ctl00$body$numax\", args.maximumMarks);\n  submitParams2.append(\"ctl00$body$nuAvg\", \"\");\n\n  const submitResponse2 = await fetch(\"/hr/EIM/RatingMethods.aspx\", {\n    method: \"POST\",\n    headers: commonHeaders,\n    body: submitParams2,\n    redirect: \"follow\"\n  });\n\n  const submitHtml2 = await submitResponse2.text();\n  const finalDetails2 = await BeaconBar.executeFunction(\"getDomExtract\")(submitHtml2);\n  window.sy = finalDetails2;\n\n  const average = (args.minimumMarks + args.maximumMarks) / 2;\n\n  const submitParams3 = new URLSearchParams();\n  submitParams3.append(\"__EVENTTARGET\", \"ctl00$body$btnsavesub\");\n  submitParams3.append(\"__EVENTARGUMENT\", \"\");\n  submitParams3.append(\"__VIEWSTATE\", window.sy.viewState);\n  submitParams3.append(\"__VIEWSTATEGENERATOR\", window.sy.viewStateGen);\n  submitParams3.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  submitParams3.append(\"__EVENTVALIDATION\", window.sy.eventValidation);\n  submitParams3.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  submitParams3.append(\"ctl00$body$txtName\", args.ratingMethod);\n  submitParams3.append(\"ctl00$body$txtgrade\", args.grade);\n  submitParams3.append(\"ctl00$body$nuninimun\", args.minimumMarks);\n  submitParams3.append(\"ctl00$body$numax\", args.maximumMarks);\n  submitParams3.append(\"ctl00$body$nuAvg\", average);\n\n  const submitResponse3 = await fetch(\"/hr/EIM/RatingMethods.aspx\", {\n    method: \"POST\",\n    headers: commonHeaders,\n    body: submitParams3,\n    redirect: \"follow\"\n  });\n\n  const submitHtml3 = await submitResponse3.text();\n  const finalDetails3 = await BeaconBar.executeFunction(\"getDomExtract\")(submitHtml3);\n  window.sy = finalDetails3;\n\n  const submitParams4 = new URLSearchParams();\n  submitParams4.append(\"scrollLeft\", \"0\");\n  submitParams4.append(\"scrollTop\", \"0\");\n  submitParams4.append(\"__EVENTTARGET\", \"\");\n  submitParams4.append(\"__EVENTARGUMENT\", \"\");\n  submitParams4.append(\"__VIEWSTATE\", window.sy.viewState);\n  submitParams4.append(\"__LASTFOCUS\", \"\");\n  submitParams4.append(\"__VIEWSTATEGENERATOR\", window.sy.viewStateGen);\n  submitParams4.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  submitParams4.append(\"__EVENTVALIDATION\", window.sy.eventValidation);\n  submitParams4.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  submitParams4.append(\"ctl00$body$txtName\", args.ratingMethod);\n  submitParams4.append(\"ctl00$body$txtgrade\", \"\");\n  submitParams4.append(\"ctl00$body$nuninimun\", \"\");\n  submitParams4.append(\"ctl00$body$numax\", \"\");\n  submitParams4.append(\"ctl00$body$nuAvg\", \"\");\n  submitParams4.append(\"ctl00$body$grdgrade$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  submitParams4.append(\"ctl00_body_grdgrade_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  submitParams4.append(\"ctl00$body$grdgrade$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  submitParams4.append(\"ctl00_body_grdgrade_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  submitParams4.append(\"ctl00_body_grdgrade_ClientState\", \"\");\n  submitParams4.append(\"ctl00$body$butSave\", \"Save\");\n\n  const submitResponse4 = await fetch(\"/hr/EIM/RatingMethods.aspx\", {\n    method: \"POST\",\n    headers: commonHeaders,\n    body: submitParams4,\n    redirect: \"follow\"\n  });\n\n  const submitHtml4 = await submitResponse4.text();\n  return \"create rating method!!\";\n});\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "creating Rating Method",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-28T14:47:19.824Z",
+      "updatedAt": "2025-04-28T14:47:19.824Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createRatingMethod",
+      "args": [
+        {
+          "name": "ratingMethod",
+          "type": "string",
+          "description": "ratingMethod , Ex:- SkillRatingMethod",
+          "required": true,
+          "_id": "68107997095a85d40a9fe44f"
+        },
+        {
+          "name": "grade",
+          "type": "string",
+          "description": "grade , Ex:- \"A\" or \"1\"",
+          "required": true,
+          "_id": "68107997095a85d40a9fe450"
+        },
+        {
+          "name": "minimumMarks",
+          "type": "string",
+          "description": "minimumMarks , Ex:-\"10\"",
+          "required": true,
+          "_id": "68107997095a85d40a9fe451"
+        },
+        {
+          "name": "maximumMarks",
+          "type": "string",
+          "description": "maximumMarks , Ex:- \"100\"",
+          "required": true,
+          "_id": "681081ab9031d6e4b3dde1fc"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "680f94f7cb343494a0b4a9e1"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"RatingMethods\");\n\n  const commonHeaders = new Headers({\n    \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\",\n    \"accept-language\": \"en-US,en;q=0.9\",\n    \"content-type\": \"application/x-www-form-urlencoded\"\n  });\n\n  const searchParams = new URLSearchParams();\n  searchParams.append(\"scrollLeft\", \"0\");\n  searchParams.append(\"scrollTop\", \"0\");\n  searchParams.append(\"__EVENTTARGET\", \"\");\n  searchParams.append(\"__EVENTARGUMENT\", \"\");\n  searchParams.append(\"__VIEWSTATE\", details.viewState);\n  searchParams.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  searchParams.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  searchParams.append(\"__EVENTVALIDATION\", details.eventValidation);\n  searchParams.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  searchParams.append(\"ctl00$body$hdnIsHead\", \"\");\n  searchParams.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n  searchParams.append(\"ctl00$body$ContentSearch$cboCriteria\", \"RATING_CODE\");\n  searchParams.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  searchParams.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  searchParams.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  searchParams.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"7\");\n  searchParams.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  searchParams.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  searchParams.append(\"ctl00$body$butNew\", \"New\");\n\n  const searchResponse = await fetch(\"/hr/EIM/RatingMethods.aspx\", {\n    method: \"POST\",\n    headers: commonHeaders,\n    body: searchParams,\n    redirect: \"follow\"\n  });\n\n  const searchHtml = await searchResponse.text();\n  const finalDetails = await BeaconBar.executeFunction(\"getDomExtract\")(searchHtml);\n  window.rm = finalDetails;\n\n  const submitParams1 = new URLSearchParams();\n  submitParams1.append(\"__EVENTTARGET\", \"ctl00$body$nuninimun\");\n  submitParams1.append(\"__EVENTARGUMENT\", \"\");\n  submitParams1.append(\"__VIEWSTATE\", window.rm.viewState);\n  submitParams1.append(\"__VIEWSTATEGENERATOR\", window.rm.viewStateGen);\n  submitParams1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  submitParams1.append(\"__EVENTVALIDATION\", window.rm.eventValidation);\n  submitParams1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  submitParams1.append(\"ctl00$body$txtName\", args.ratingMethod);\n  submitParams1.append(\"ctl00$body$txtgrade\", args.grade);\n  submitParams1.append(\"ctl00$body$nuninimun\", args.minimumMarks);\n  submitParams1.append(\"ctl00$body$numax\", \"\");\n  submitParams1.append(\"ctl00$body$nuAvg\", \"\");\n\n  const submitResponse1 = await fetch(\"/hr/EIM/RatingMethods.aspx\", {\n    method: \"POST\",\n    headers: commonHeaders,\n    body: submitParams1,\n    redirect: \"follow\"\n  });\n\n  const submitHtml1 = await submitResponse1.text();\n  const finalDetails1 = await BeaconBar.executeFunction(\"getDomExtract\")(submitHtml1);\n  window.sy = finalDetails1;\n\n  const submitParams2 = new URLSearchParams();\n  submitParams2.append(\"__EVENTTARGET\", \"ctl00$body$numax\");\n  submitParams2.append(\"__EVENTARGUMENT\", \"\");\n  submitParams2.append(\"__VIEWSTATE\", window.sy.viewState);\n  submitParams2.append(\"__VIEWSTATEGENERATOR\", window.sy.viewStateGen);\n  submitParams2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  submitParams2.append(\"__EVENTVALIDATION\", window.sy.eventValidation);\n  submitParams2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  submitParams2.append(\"ctl00$body$txtName\", args.ratingMethod);\n  submitParams2.append(\"ctl00$body$txtgrade\", args.grade);\n  submitParams2.append(\"ctl00$body$nuninimun\", args.minimumMarks);\n  submitParams2.append(\"ctl00$body$numax\", args.maximumMarks);\n  submitParams2.append(\"ctl00$body$nuAvg\", \"\");\n\n  const submitResponse2 = await fetch(\"/hr/EIM/RatingMethods.aspx\", {\n    method: \"POST\",\n    headers: commonHeaders,\n    body: submitParams2,\n    redirect: \"follow\"\n  });\n\n  const submitHtml2 = await submitResponse2.text();\n  const finalDetails2 = await BeaconBar.executeFunction(\"getDomExtract\")(submitHtml2);\n  window.sy = finalDetails2;\n\n  const average = (args.minimumMarks + args.maximumMarks) / 2;\n\n  const submitParams3 = new URLSearchParams();\n  submitParams3.append(\"__EVENTTARGET\", \"ctl00$body$btnsavesub\");\n  submitParams3.append(\"__EVENTARGUMENT\", \"\");\n  submitParams3.append(\"__VIEWSTATE\", window.sy.viewState);\n  submitParams3.append(\"__VIEWSTATEGENERATOR\", window.sy.viewStateGen);\n  submitParams3.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  submitParams3.append(\"__EVENTVALIDATION\", window.sy.eventValidation);\n  submitParams3.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  submitParams3.append(\"ctl00$body$txtName\", args.ratingMethod);\n  submitParams3.append(\"ctl00$body$txtgrade\", args.grade);\n  submitParams3.append(\"ctl00$body$nuninimun\", args.minimumMarks);\n  submitParams3.append(\"ctl00$body$numax\", args.maximumMarks);\n  submitParams3.append(\"ctl00$body$nuAvg\", average);\n\n  const submitResponse3 = await fetch(\"/hr/EIM/RatingMethods.aspx\", {\n    method: \"POST\",\n    headers: commonHeaders,\n    body: submitParams3,\n    redirect: \"follow\"\n  });\n\n  const submitHtml3 = await submitResponse3.text();\n  const finalDetails3 = await BeaconBar.executeFunction(\"getDomExtract\")(submitHtml3);\n  window.sy = finalDetails3;\n\n  const submitParams4 = new URLSearchParams();\n  submitParams4.append(\"scrollLeft\", \"0\");\n  submitParams4.append(\"scrollTop\", \"0\");\n  submitParams4.append(\"__EVENTTARGET\", \"\");\n  submitParams4.append(\"__EVENTARGUMENT\", \"\");\n  submitParams4.append(\"__VIEWSTATE\", window.sy.viewState);\n  submitParams4.append(\"__LASTFOCUS\", \"\");\n  submitParams4.append(\"__VIEWSTATEGENERATOR\", window.sy.viewStateGen);\n  submitParams4.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  submitParams4.append(\"__EVENTVALIDATION\", window.sy.eventValidation);\n  submitParams4.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  submitParams4.append(\"ctl00$body$txtName\", args.ratingMethod);\n  submitParams4.append(\"ctl00$body$txtgrade\", \"\");\n  submitParams4.append(\"ctl00$body$nuninimun\", \"\");\n  submitParams4.append(\"ctl00$body$numax\", \"\");\n  submitParams4.append(\"ctl00$body$nuAvg\", \"\");\n  submitParams4.append(\"ctl00$body$grdgrade$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  submitParams4.append(\"ctl00_body_grdgrade_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  submitParams4.append(\"ctl00$body$grdgrade$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  submitParams4.append(\"ctl00_body_grdgrade_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  submitParams4.append(\"ctl00_body_grdgrade_ClientState\", \"\");\n  submitParams4.append(\"ctl00$body$butSave\", \"Save\");\n\n  const submitResponse4 = await fetch(\"/hr/EIM/RatingMethods.aspx\", {\n    method: \"POST\",\n    headers: commonHeaders,\n    body: submitParams4,\n    redirect: \"follow\"\n  });\n\n  const submitHtml4 = await submitResponse4.text();\n  return \"create rating method!!\";\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

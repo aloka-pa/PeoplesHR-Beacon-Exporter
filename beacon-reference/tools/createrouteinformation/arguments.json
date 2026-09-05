@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "routeName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name for the new route (e.g., \"new route\", \"Eastern Highway\")",
+      "advanced": false,
+      "raw": {
+        "name": "routeName",
+        "type": "string",
+        "description": "The name for the new route (e.g., \"new route\", \"Eastern Highway\")",
+        "required": true,
+        "_id": "69541e980eece7a2ce8da345"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

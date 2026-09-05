@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the employee id for getBenefitEmployeeInformation api. Example:-\"000006\"",
+      "advanced": false,
+      "raw": {
+        "name": "id",
+        "type": "string",
+        "description": "to get the employee id for getBenefitEmployeeInformation api. Example:-\"000006\"",
+        "required": true,
+        "_id": "682337b842e72e1f30f6b0cf"
+      }
+    },
+    {
+      "name": "fromDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Ask user to provide the fromDate D/M/YYYY. If user not provided ask user to provide.",
+      "advanced": false,
+      "raw": {
+        "name": "fromDate",
+        "type": "string",
+        "description": "Ask user to provide the fromDate D/M/YYYY. If user not provided ask user to provide.",
+        "required": true,
+        "_id": "68235a6ef8ee07a423d3dbdb"
+      }
+    },
+    {
+      "name": "toDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "ask user to provide toDate D/M/YYYY. If user not provided ask user to provide.",
+      "advanced": false,
+      "raw": {
+        "name": "toDate",
+        "type": "string",
+        "description": "ask user to provide toDate D/M/YYYY. If user not provided ask user to provide.",
+        "required": true,
+        "_id": "68235a6ef8ee07a423d3dbdc"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

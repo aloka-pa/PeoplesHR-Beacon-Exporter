@@ -1,0 +1,91 @@
+{
+  "id": "690dc568931a2d61ba0b1878",
+  "slug": "getshortleaveapprovallist",
+  "name": "getShortLeaveApprovalList",
+  "description": "getShortLeaveApprovalList",
+  "instructions": null,
+  "taskName": "fetching ShortLeaveApprovalList",
+  "tags": [
+    "Absence Management",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getShortLeaveApprovalList",
+  "createdAt": "2025-05-28T03:06:26.210Z",
+  "updatedAt": "2025-05-28T03:06:26.210Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be3",
+      "name": "AbsenceManagement"
+    }
+  ],
+  "contentHash": "d66094d1b8f12c7161c36231d2188dfd8d20fa7f49cb39a1dfe3ec0a729013f9",
+  "lastExportedAt": "2026-09-05T19:39:23.828Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b1878",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getShortLeaveApprovalList",
+      "description": "getShortLeaveApprovalList",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getShortLeaveApprovalList",
+        "args": [
+          {
+            "name": "employeeId",
+            "type": "string",
+            "description": "employeeId , ex:- \"000002\"",
+            "required": true,
+            "_id": "68367db2a9dc599680facf1b"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68367db2a9dc599680facf1a"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const ApprovalEmpNumber = await BeaconBar.executeFunction(\"approvalList\")(args.employeeId)\n  return ApprovalEmpNumber;\n})",
+      "groupName": "",
+      "tags": [
+        "Absence Management",
+        "Headers"
+      ],
+      "taskName": "fetching ShortLeaveApprovalList",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-28T03:06:26.210Z",
+      "updatedAt": "2025-05-28T03:06:26.210Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be3",
+          "name": "AbsenceManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getShortLeaveApprovalList",
+      "args": [
+        {
+          "name": "employeeId",
+          "type": "string",
+          "description": "employeeId , ex:- \"000002\"",
+          "required": true,
+          "_id": "68367db2a9dc599680facf1b"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68367db2a9dc599680facf1a"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const ApprovalEmpNumber = await BeaconBar.executeFunction(\"approvalList\")(args.employeeId)\n  return ApprovalEmpNumber;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

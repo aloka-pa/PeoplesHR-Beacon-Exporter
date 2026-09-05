@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "functionRoleCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the functionRoleCode.",
+      "advanced": false,
+      "raw": {
+        "name": "functionRoleCode",
+        "type": "string",
+        "description": "to give the functionRoleCode.",
+        "required": true,
+        "_id": "6814c74bbf13cf04f2350447"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

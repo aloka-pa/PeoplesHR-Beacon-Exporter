@@ -1,0 +1,75 @@
+{
+  "id": "690dc56b931a2d61ba0b1b12",
+  "slug": "selfbenefitapplicationtypes",
+  "name": "selfBenefitApplicationTypes",
+  "description": "in this tool generate the self employee Benefit Applications Types.",
+  "instructions": null,
+  "taskName": "Fetching The Self Employee Benefit Applications Types",
+  "tags": [
+    "BenefitManagement",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "selfBenefitApplicationTypes",
+  "createdAt": "2025-08-21T14:37:08.587Z",
+  "updatedAt": "2025-08-21T14:37:08.587Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be9",
+      "name": "BenefitManagement"
+    }
+  ],
+  "contentHash": "b5f6c230136563185a33d6cb2d91e215d3db5506d0e7dfb3c157906d8ddafff2",
+  "lastExportedAt": "2026-09-05T19:39:23.439Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1b12",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selfBenefitApplicationTypes",
+      "description": "in this tool generate the self employee Benefit Applications Types.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selfBenefitApplicationTypes",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68a72f14d171ad75f29c93df"
+      },
+      "by": "2414",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"selfEmployeeApplyBenefitApplication\")();\n  window.Emp = details.empNumber;\n  window.benEmp = {\n    appId : details.appId,\n    keyValue : details.keyValue,\n    betAppYear : details.betAppYear\n  }\n  return details.benefitTypes;\n})\n",
+      "groupName": "",
+      "tags": [
+        "BenefitManagement",
+        "Headers"
+      ],
+      "taskName": "Fetching The Self Employee Benefit Applications Types",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-21T14:37:08.587Z",
+      "updatedAt": "2025-08-21T14:37:08.587Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be9",
+          "name": "BenefitManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selfBenefitApplicationTypes",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68a72f14d171ad75f29c93df"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"selfEmployeeApplyBenefitApplication\")();\n  window.Emp = details.empNumber;\n  window.benEmp = {\n    appId : details.appId,\n    keyValue : details.keyValue,\n    betAppYear : details.betAppYear\n  }\n  return details.benefitTypes;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

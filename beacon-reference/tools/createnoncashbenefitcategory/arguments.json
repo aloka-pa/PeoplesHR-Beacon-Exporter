@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "ctl00$body$txtName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "create non cash benefit.give description name.",
+      "advanced": false,
+      "raw": {
+        "name": "ctl00$body$txtName",
+        "type": "string",
+        "description": "create non cash benefit.give description name.",
+        "required": true,
+        "_id": "68145ac223977c0e7a36fa66"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

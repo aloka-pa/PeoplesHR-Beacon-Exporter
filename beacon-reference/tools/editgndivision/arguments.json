@@ -1,0 +1,80 @@
+{
+  "arguments": [
+    {
+      "name": "gnDivisionCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The unique code of the GN Division to edit (e.g., '000001'). Performs exact match search. Either gnDivisionCode or gnDivisionName must be provided to identify the record.",
+      "advanced": false,
+      "raw": {
+        "name": "gnDivisionCode",
+        "type": "string",
+        "description": "The unique code of the GN Division to edit (e.g., '000001'). Performs exact match search. Either gnDivisionCode or gnDivisionName must be provided to identify the record.",
+        "required": true,
+        "_id": "69539519c4a4daa640c04952"
+      }
+    },
+    {
+      "name": "gnDivisionName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name of the GN Division to edit (e.g., 'Warahanthuduwa'). Performs exact match search. Either gnDivisionCode or gnDivisionName must be provided to identify the record.",
+      "advanced": false,
+      "raw": {
+        "name": "gnDivisionName",
+        "type": "string",
+        "description": "The name of the GN Division to edit (e.g., 'Warahanthuduwa'). Performs exact match search. Either gnDivisionCode or gnDivisionName must be provided to identify the record.",
+        "required": true,
+        "_id": "69539519c4a4daa640c04953"
+      }
+    },
+    {
+      "name": "newGNDivisionName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The new name for the GN Division (e.g., 'Warahanthuduwa South'). If not provided, the existing name will be retained.",
+      "advanced": false,
+      "raw": {
+        "name": "newGNDivisionName",
+        "type": "string",
+        "description": "The new name for the GN Division (e.g., 'Warahanthuduwa South'). If not provided, the existing name will be retained.",
+        "required": false,
+        "_id": "69539519c4a4daa640c04954"
+      }
+    },
+    {
+      "name": "dsDivisionCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The DS Division code to assign to this GN Division (e.g., '000014'). Direct code value from the dropdown. Either dsDivisionCode or dsDivisionName can be provided. If neither is provided, the existing DS Division will be retained.",
+      "advanced": false,
+      "raw": {
+        "name": "dsDivisionCode",
+        "type": "string",
+        "description": "The DS Division code to assign to this GN Division (e.g., '000014'). Direct code value from the dropdown. Either dsDivisionCode or dsDivisionName can be provided. If neither is provided, the existing DS Division will be retained.",
+        "required": false,
+        "_id": "69539519c4a4daa640c04955"
+      }
+    },
+    {
+      "name": "dsDivisionName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The DS Division name to assign to the GN Division. Will be looked up in the dropdown to find the corresponding code. Either dsDivisionCode or dsDivisionName can be provided. If neither is provided, the existing DS Division will be retained.",
+      "advanced": false,
+      "raw": {
+        "name": "dsDivisionName",
+        "type": "string",
+        "description": "The DS Division name to assign to the GN Division. Will be looked up in the dropdown to find the corresponding code. Either dsDivisionCode or dsDivisionName can be provided. If neither is provided, the existing DS Division will be retained.",
+        "required": false,
+        "_id": "69539519c4a4daa640c04956"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

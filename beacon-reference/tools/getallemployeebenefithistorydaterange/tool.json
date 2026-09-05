@@ -1,0 +1,105 @@
+{
+  "id": "690dc568931a2d61ba0b189a",
+  "slug": "getallemployeebenefithistorydaterange",
+  "name": "getAllEmployeeBenefitHistoryDateRange",
+  "description": " if the user any date format you must will be take in this format \"D/M/YYYY\" if you need clarify the date format to execute for \"dateFormat\" api. to get the current date format.\nIf user asks employee benefit history for all employees call getEmployeeBenefitHistoryDateRange  api.\n",
+  "instructions": null,
+  "taskName": "Fetching Employee Benefit History All Employees",
+  "tags": [
+    "BenefitManagement",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getAllEmployeeBenefitHistoryDateRange",
+  "createdAt": "2025-05-28T16:53:08.488Z",
+  "updatedAt": "2025-05-28T16:53:08.488Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be9",
+      "name": "BenefitManagement"
+    }
+  ],
+  "contentHash": "18c4129f3d50280445f2e6efc710b59becf5ec54dc50464cb071f214138e4a2a",
+  "lastExportedAt": "2026-09-05T19:39:23.805Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b189a",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getAllEmployeeBenefitHistoryDateRange",
+      "description": " if the user any date format you must will be take in this format \"D/M/YYYY\" if you need clarify the date format to execute for \"dateFormat\" api. to get the current date format.\nIf user asks employee benefit history for all employees call getEmployeeBenefitHistoryDateRange  api.\n",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getAllEmployeeBenefitHistoryDateRange",
+        "args": [
+          {
+            "name": "fromDate",
+            "type": "string",
+            "description": "to give the fromDate Example:-\"12/1/2023\" format date D/M/YYYY",
+            "required": true,
+            "_id": "68373f740e517193e8cf0713"
+          },
+          {
+            "name": "toDate",
+            "type": "string",
+            "description": "to give the toDate Example:-\"12/1/2024\" format date D/M/YYYY",
+            "required": true,
+            "_id": "68373f740e517193e8cf0714"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68373f740e517193e8cf0712"
+      },
+      "by": "2414",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const params = JSON.stringify({ \"EmpNumber\": \"0\", \"FromDate\": args.fromDate, \"ToDate\": args.toDate })\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: {\n      \"content-type\": \"application/json; charset=UTF-8\",\n      \"x-requested-with\" : \"XMLHttpRequest\"\n    },\n    body: params,\n    redirect: \"follow\"\n  };\n\n  const response3 = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/AdminHistoryApi/GetHistoryByEmployee`, requestOptions2);\n  const details2 = await response3.json();\n\n  const extractedData = details2.HistoryDataTableVm.DataTableRowVms.map(row => {\n    const statusSpan = document.createElement(\"div\");\n    statusSpan.innerHTML = row.Status || '';\n    const statusText = statusSpan.textContent.trim();\n\n    return {\n      Employee: row.Employee || '',\n      Reference_No: row.Reference_No || '',\n      Benefit_Type: row.Benefit_Type || '',\n      Applied_Date: row.Applied_Date || '',\n      Applied_Amount_Unit: row[\"Applied_Amount_/_Unit\"] || '',\n      Status: statusText,\n      ENCRYPT_EMP_NUMBER : row.ENCRYPT_EMP_NUMBER || '',\n      BET_CODE : row.BET_CODE || '',\n      BET_APP_ID : row.BET_APP_ID || '',\n    };\n  });\n\n  if(extractedData.length>=5){\n    await BeaconBar.executeFunction(\"downloadcsv\")(extractedData);\n    return extractedData.slice(0,5);\n  }\n\n  return extractedData;\n})",
+      "groupName": "",
+      "tags": [
+        "BenefitManagement",
+        "Headers"
+      ],
+      "taskName": "Fetching Employee Benefit History All Employees",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-28T16:53:08.488Z",
+      "updatedAt": "2025-05-28T16:53:08.488Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be9",
+          "name": "BenefitManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getAllEmployeeBenefitHistoryDateRange",
+      "args": [
+        {
+          "name": "fromDate",
+          "type": "string",
+          "description": "to give the fromDate Example:-\"12/1/2023\" format date D/M/YYYY",
+          "required": true,
+          "_id": "68373f740e517193e8cf0713"
+        },
+        {
+          "name": "toDate",
+          "type": "string",
+          "description": "to give the toDate Example:-\"12/1/2024\" format date D/M/YYYY",
+          "required": true,
+          "_id": "68373f740e517193e8cf0714"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68373f740e517193e8cf0712"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const params = JSON.stringify({ \"EmpNumber\": \"0\", \"FromDate\": args.fromDate, \"ToDate\": args.toDate })\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: {\n      \"content-type\": \"application/json; charset=UTF-8\",\n      \"x-requested-with\" : \"XMLHttpRequest\"\n    },\n    body: params,\n    redirect: \"follow\"\n  };\n\n  const response3 = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/AdminHistoryApi/GetHistoryByEmployee`, requestOptions2);\n  const details2 = await response3.json();\n\n  const extractedData = details2.HistoryDataTableVm.DataTableRowVms.map(row => {\n    const statusSpan = document.createElement(\"div\");\n    statusSpan.innerHTML = row.Status || '';\n    const statusText = statusSpan.textContent.trim();\n\n    return {\n      Employee: row.Employee || '',\n      Reference_No: row.Reference_No || '',\n      Benefit_Type: row.Benefit_Type || '',\n      Applied_Date: row.Applied_Date || '',\n      Applied_Amount_Unit: row[\"Applied_Amount_/_Unit\"] || '',\n      Status: statusText,\n      ENCRYPT_EMP_NUMBER : row.ENCRYPT_EMP_NUMBER || '',\n      BET_CODE : row.BET_CODE || '',\n      BET_APP_ID : row.BET_APP_ID || '',\n    };\n  });\n\n  if(extractedData.length>=5){\n    await BeaconBar.executeFunction(\"downloadcsv\")(extractedData);\n    return extractedData.slice(0,5);\n  }\n\n  return extractedData;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

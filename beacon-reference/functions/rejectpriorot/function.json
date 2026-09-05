@@ -1,0 +1,24 @@
+{
+  "id": "690dc578931a2d61ba0b20b3",
+  "slug": "rejectpriorot",
+  "name": "RejectPriorOt",
+  "status": "live",
+  "createdAt": "2025-06-16T06:18:37.860Z",
+  "updatedAt": "2025-06-16T06:18:37.860Z",
+  "contentHash": "13d357a986e5ea767e8d91d0aa4e8ff6cdc4f9fc8c853a7db06641614d96a981",
+  "lastExportedAt": "2026-09-05T19:41:34.344Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc578931a2d61ba0b20b3",
+    "name": "RejectPriorOt",
+    "status": "live",
+    "code": "(async function (ApprovalComment) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"content-type\", \"application/json\");\n\n  const objectss = BeaconBar.getSharedData(\"PriorOTDetailList\");\n  const objects = objectss.PriorOTDetailList;\n\n  const processedData = objects.map((entry, index) => {\n    const updatedEntry = JSON.parse(JSON.stringify(entry));\n\n    if (index === 0) {\n      updatedEntry.IsSelected = true;\n      updatedEntry.PriorDetail.AppComment = ApprovalComment;\n    }\n\n    return updatedEntry;\n  });\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: JSON.stringify({ PriorOTDetailList: processedData }), \n    redirect: \"follow\"\n  };\n\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const response = await fetch(`${reqOptions}tnav9/api/PriorOT/RejectPriorOTApplications/`, requestOptions);\n  const data = await response.text();\n  return data;\n})\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

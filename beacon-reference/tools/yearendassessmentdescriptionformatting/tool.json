@@ -1,0 +1,89 @@
+{
+  "id": "690dc568931a2d61ba0b18bd",
+  "slug": "yearendassessmentdescriptionformatting",
+  "name": "yearEndAssessmentDescriptionFormatting",
+  "description": "yearEndAssessmentDescriptionFormatting",
+  "instructions": null,
+  "taskName": "DescriptionFormatting",
+  "tags": [
+    "WorkFlowAssist"
+  ],
+  "status": "live",
+  "signature": "yearEndAssessmentDescriptionFormatting",
+  "createdAt": "2025-05-30T10:07:54.430Z",
+  "updatedAt": "2025-05-30T10:07:54.430Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1c14",
+      "name": "formatYearEndAssesmentDesc"
+    }
+  ],
+  "contentHash": "867f9aad13dbb1f7e2f4844edf8fdcdcc666b561e915a60fe44ec2fc50897c2b",
+  "lastExportedAt": "2026-09-05T19:39:23.790Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b18bd",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "yearEndAssessmentDescriptionFormatting",
+      "description": "yearEndAssessmentDescriptionFormatting",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "yearEndAssessmentDescriptionFormatting",
+        "args": [
+          {
+            "name": "approvalcomments",
+            "type": "string",
+            "description": "approvalcomments are getting no of and need take as semicolon separated in the description and dont take \"appraiser\" word does not taken limit is 2000 characters  and no need to take sub headings like \"comment:\" like this ",
+            "required": true,
+            "_id": "6839837aee810f144aeb58f5"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6839837aee810f144aeb58f4"
+      },
+      "by": "1927",
+      "fetcher": "(function(args){\n    return{\n        code:`(function(){\n            return {}\n        })`\n    }\n});\n\n\n",
+      "transformer": "(function (_data, args, reqOptions) {\n  const iframe = document.querySelector(\"#ifrmPage\");\n  if (!iframe || !iframe.contentDocument) {\n    return { success: false, message: \"Iframe not found.\" };\n  }\n\n  const iframeWindow = iframe.contentWindow;\n  const CKEDITOR = iframeWindow.CKEDITOR;\n\n  if (!CKEDITOR) {\n    return { success: false, message: \"CKEDITOR not found in iframe.\" };\n  }\n\n  const rawComments = args.approvalcomments || \"no Appraiser comment found\";\n\n  const cleanedComments = rawComments\n    .replace(/\\*\\*(.*?)\\*\\*/g, \"<b>$1</b>\")\n    .replace(/\\n/g, \"<br>\")\n    .split(\";\")\n    .map(c => c.trim())\n    .filter(c => c.length > 0);\n\n  const allSpans = iframe.contentDocument.querySelectorAll('span[data-bind]');\n  const editableSpans = Array.from(allSpans).filter(span => {\n    const bindVal = span.getAttribute(\"data-bind\") || \"\";\n    return (\n      bindVal.includes(\"html: AppraiserComment\") ||\n      bindVal.includes(\"html: AppraiseeComment\") ||\n      bindVal.includes(\"html: ReviewerComment\")\n    );\n  });\n\n  let updatedCount = 0;\n\n  function updateCKEditorContent(editorId, newContent) {\n    if (CKEDITOR.instances[editorId]) {\n      CKEDITOR.instances[editorId].setData(newContent);\n      CKEDITOR.instances[editorId].updateElement();\n    } else {\n      CKEDITOR.on('instanceReady', function (event) {\n        if (event.editor.name === editorId) {\n          event.editor.setData(newContent);\n          event.editor.updateElement();\n        }\n      });\n    }\n  }\n\n  for (let i = 0; i < editableSpans.length && i < cleanedComments.length; i++) {\n    const span = editableSpans[i];\n    const comment = cleanedComments[i];\n    \n    span.innerHTML = comment;\n    \n    const parentDiv = span.closest('.longTextEditor');\n    if (parentDiv) {\n      const textarea = parentDiv.querySelector('textarea');\n      if (textarea) {\n        for (let editorName in CKEDITOR.instances) {\n          const editor = CKEDITOR.instances[editorName];\n          if (editor.element.$ === textarea) {\n            updateCKEditorContent(editorName, comment);\n            break;\n          }\n        }\n      }\n    }\n    \n    updatedCount++;\n  }\n\n  return {\n    success: true,\n    totalUpdated: updatedCount,\n    message: `${updatedCount} comment(s) updated and synced with CKEditor + Knockout. Save will capture the new values.`\n  };\n});",
+      "groupName": "",
+      "tags": [
+        "WorkFlowAssist"
+      ],
+      "taskName": "DescriptionFormatting",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-30T10:07:54.430Z",
+      "updatedAt": "2025-05-30T10:07:54.430Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1c14",
+          "name": "formatYearEndAssesmentDesc"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "yearEndAssessmentDescriptionFormatting",
+      "args": [
+        {
+          "name": "approvalcomments",
+          "type": "string",
+          "description": "approvalcomments are getting no of and need take as semicolon separated in the description and dont take \"appraiser\" word does not taken limit is 2000 characters  and no need to take sub headings like \"comment:\" like this ",
+          "required": true,
+          "_id": "6839837aee810f144aeb58f5"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6839837aee810f144aeb58f4"
+    },
+    "fetcher": "(function(args){\n    return{\n        code:`(function(){\n            return {}\n        })`\n    }\n});\n\n\n",
+    "transformer": "(function (_data, args, reqOptions) {\n  const iframe = document.querySelector(\"#ifrmPage\");\n  if (!iframe || !iframe.contentDocument) {\n    return { success: false, message: \"Iframe not found.\" };\n  }\n\n  const iframeWindow = iframe.contentWindow;\n  const CKEDITOR = iframeWindow.CKEDITOR;\n\n  if (!CKEDITOR) {\n    return { success: false, message: \"CKEDITOR not found in iframe.\" };\n  }\n\n  const rawComments = args.approvalcomments || \"no Appraiser comment found\";\n\n  const cleanedComments = rawComments\n    .replace(/\\*\\*(.*?)\\*\\*/g, \"<b>$1</b>\")\n    .replace(/\\n/g, \"<br>\")\n    .split(\";\")\n    .map(c => c.trim())\n    .filter(c => c.length > 0);\n\n  const allSpans = iframe.contentDocument.querySelectorAll('span[data-bind]');\n  const editableSpans = Array.from(allSpans).filter(span => {\n    const bindVal = span.getAttribute(\"data-bind\") || \"\";\n    return (\n      bindVal.includes(\"html: AppraiserComment\") ||\n      bindVal.includes(\"html: AppraiseeComment\") ||\n      bindVal.includes(\"html: ReviewerComment\")\n    );\n  });\n\n  let updatedCount = 0;\n\n  function updateCKEditorContent(editorId, newContent) {\n    if (CKEDITOR.instances[editorId]) {\n      CKEDITOR.instances[editorId].setData(newContent);\n      CKEDITOR.instances[editorId].updateElement();\n    } else {\n      CKEDITOR.on('instanceReady', function (event) {\n        if (event.editor.name === editorId) {\n          event.editor.setData(newContent);\n          event.editor.updateElement();\n        }\n      });\n    }\n  }\n\n  for (let i = 0; i < editableSpans.length && i < cleanedComments.length; i++) {\n    const span = editableSpans[i];\n    const comment = cleanedComments[i];\n    \n    span.innerHTML = comment;\n    \n    const parentDiv = span.closest('.longTextEditor');\n    if (parentDiv) {\n      const textarea = parentDiv.querySelector('textarea');\n      if (textarea) {\n        for (let editorName in CKEDITOR.instances) {\n          const editor = CKEDITOR.instances[editorName];\n          if (editor.element.$ === textarea) {\n            updateCKEditorContent(editorName, comment);\n            break;\n          }\n        }\n      }\n    }\n    \n    updatedCount++;\n  }\n\n  return {\n    success: true,\n    totalUpdated: updatedCount,\n    message: `${updatedCount} comment(s) updated and synced with CKEditor + Knockout. Save will capture the new values.`\n  };\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

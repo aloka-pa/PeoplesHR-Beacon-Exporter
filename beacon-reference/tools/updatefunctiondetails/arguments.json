@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "functionName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the function name or description.",
+      "advanced": false,
+      "raw": {
+        "name": "functionName",
+        "type": "string",
+        "description": "to give the function name or description.",
+        "required": true,
+        "_id": "6814bb637c1d0fe37e2836c7"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

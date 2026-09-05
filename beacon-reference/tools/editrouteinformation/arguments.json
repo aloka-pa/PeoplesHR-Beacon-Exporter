@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "routeCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The unique route code/ID to identify which route to update (e.g., \"000003\")",
+      "advanced": false,
+      "raw": {
+        "name": "routeCode",
+        "type": "string",
+        "description": "The unique route code/ID to identify which route to update (e.g., \"000003\")",
+        "required": false,
+        "_id": "695419d7a1e1ab0f84aadb5c"
+      }
+    },
+    {
+      "name": "routeName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The exact route name to identify which route to update (e.g., \"Southern Expressway\")",
+      "advanced": false,
+      "raw": {
+        "name": "routeName",
+        "type": "string",
+        "description": "The exact route name to identify which route to update (e.g., \"Southern Expressway\")",
+        "required": false,
+        "_id": "695419d7a1e1ab0f84aadb5d"
+      }
+    },
+    {
+      "name": "newRouteName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The new name for the route (e.g., \"Outer Circular Highway (OCH) - updated\")",
+      "advanced": false,
+      "raw": {
+        "name": "newRouteName",
+        "type": "string",
+        "description": "The new name for the route (e.g., \"Outer Circular Highway (OCH) - updated\")",
+        "required": true,
+        "_id": "695419d7a1e1ab0f84aadb5e"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

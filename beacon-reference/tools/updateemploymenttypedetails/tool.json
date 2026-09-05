@@ -1,0 +1,88 @@
+{
+  "id": "690dc565931a2d61ba0b1604",
+  "slug": "updateemploymenttypedetails",
+  "name": "updateEmploymentTypeDetails",
+  "description": "To update the employee type details using this tool, begin by executing the \"getEIMAttributeList\" API to retrieve the existing configuration. The system provides predefined duration types along with their corresponding values: \"Years\" as \"000001\", \"Months\" as \"000002\", \"Weeks\" as \"000003\", \"Days\" as \"000004\", and \"Hours\" as \"000005\". If any field is modified, first verify whether the \"Date Limited\" checkbox is enabled. If it is, prompt the user to choose a duration type from the available list, and use the corresponding value in the update. Similarly, if the \"Retirement Age\" option is selected, collect both male and female retirement age inputs from the user. Additionally, ensure that the \"Employment Category\" is either \"Full-Time\" or \"Part-Time\". If any of the required fields are missing during the update process, re-fetch the corresponding data using the getEIMAttributeList API to ensure completeness and accuracy. and if the user any missing field to getEIMAttributeList api.",
+  "instructions": null,
+  "taskName": "update Employment Type Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateEmploymentTypeDetails",
+  "createdAt": "2025-05-03T17:09:05.074Z",
+  "updatedAt": "2026-05-15T07:09:40.754Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "c331257bbc0425984dcf326afe42e8dc8ae83d89ebcd3dc218cc0cd99283d5ec",
+  "lastExportedAt": "2026-09-05T19:39:22.521Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc565931a2d61ba0b1604",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateEmploymentTypeDetails",
+      "description": "To update the employee type details using this tool, begin by executing the \"getEIMAttributeList\" API to retrieve the existing configuration. The system provides predefined duration types along with their corresponding values: \"Years\" as \"000001\", \"Months\" as \"000002\", \"Weeks\" as \"000003\", \"Days\" as \"000004\", and \"Hours\" as \"000005\". If any field is modified, first verify whether the \"Date Limited\" checkbox is enabled. If it is, prompt the user to choose a duration type from the available list, and use the corresponding value in the update. Similarly, if the \"Retirement Age\" option is selected, collect both male and female retirement age inputs from the user. Additionally, ensure that the \"Employment Category\" is either \"Full-Time\" or \"Part-Time\". If any of the required fields are missing during the update process, re-fetch the corresponding data using the getEIMAttributeList API to ensure completeness and accuracy. and if the user any missing field to getEIMAttributeList api.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateEmploymentTypeDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtempdesc\": {\n      \"type\": \"string\",\n      \"description\": \"Name or label of the Employment Type (e.g., Permanent, Contractual).\"\n    },\n    \"ctl00_body_cbisdatelimit\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Indicates if the employment has a date limit (checkbox).\"\n    },\n    \"ctl00_body_nuDuration\": {\n      \"type\": \"string\",\n      \"description\": \"Duration of employment (only required if Date Limited is enabled).\"\n    },\n    \"ctl00_body_dpDurationType\": {\n      \"type\": \"string\",\n      \"description\": \"Duration unit (e.g., Months, Years) (only required if Date Limited is enabled).\"\n    },\n    \"ctl00_body_chkRetirementAge\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Indicates if retirement age is applicable (checkbox).\"\n    },\n    \"ctl00_body_nuAgeofMale\": {\n      \"type\": \"string\",\n      \"description\": \"Retirement age for males (required if Retirement Age is enabled).\"\n    },\n    \"ctl00_body_nuAgeofFemale\": {\n      \"type\": \"string\",\n      \"description\": \"Retirement age for females (required if Retirement Age is enabled).\"\n    },\n    \"ctl00_body_dpempcat\": {\n      \"type\": \"string\",\n      \"description\": \"Employment category (e.g., Full-Time, Part-Time).\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtempdesc\",\n    \"ctl00_body_cbisdatelimit\",\n    \"ctl00_body_chkRetirementAge\",\n    \"ctl00_body_dpempcat\"\n  ],\n  \"dependencies\": {\n    \"ctl00_body_cbisdatelimit\": {\n      \"required\": [\n        \"ctl00_body_cbisdatelimit\",\n        \"ctl00_body_nuDuration\",\n        \"ctl00_body_dpDurationType\"\n      ]\n    },\n    \"ctl00_body_chkRetirementAge\": {\n      \"required\": [\n        \"ctl00_body_chkRetirementAge\",\n        \"ctl00_body_nuAgeofMale\",\n        \"ctl00_body_nuAgeofFemale\"\n      ]\n    }\n  }\n}",
+        "_id": "68164db17c1d0fe37e2954f7"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/EmployeementType.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/EmployeementType.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"EmployeementType\";\n  }\n\n  const editInit =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.et.viewState,\n      __VIEWSTATEGENERATOR: window.et.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.et.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$butEdit\": \"Edit\"\n\n    }, url);\n\n  const payload = {\n\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n    \"ctl00$body$txtempdesc\":\n      args[\"ctl00_body_txtempdesc\"] || \"\",\n\n    \"ctl00$body$dpempcat\":\n      args[\"ctl00_body_dpempcat\"] || \"\",\n\n    \"ctl00$body$butSave\": \"Save\"\n  };\n\n  if (\n    args[\"ctl00_body_cbisdatelimit\"] === \"on\"\n  ) {\n\n    payload[\"ctl00$body$cbisdatelimit\"] = \"on\";\n\n    payload[\"ctl00$body$nuDuration\"] =\n      args[\"ctl00_body_nuDuration\"] || \"\";\n\n    payload[\"ctl00$body$dpDurationType\"] =\n      args[\"ctl00_body_dpDurationType\"] || \"\";\n\n  }\n\n  if (\n    args[\"ctl00_body_chkRetirementAge\"] === \"on\"\n  ) {\n\n    payload[\"ctl00$body$chkRetirementAge\"] = \"on\";\n\n    payload[\"ctl00$body$nuAgeofMale\"] =\n      args[\"ctl00_body_nuAgeofMale\"] || \"\";\n\n    payload[\"ctl00$body$nuAgeofFemale\"] =\n      args[\"ctl00_body_nuAgeofFemale\"] || \"\";\n\n  }\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )(payload, url);\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const updateemployeeTypeDetails = {\n\n    code:\n      doc.querySelector(\"#ctl00_body_txtempcode\")\n        ?.value?.trim() || \"\",\n\n    employmentType:\n      doc.querySelector(\"#ctl00_body_txtempdesc\")\n        ?.value?.trim() || \"\",\n\n    dateLimited:\n      doc.querySelector(\"#ctl00_body_cbisdatelimit\")\n        ?.checked || false,\n\n    duration:\n      doc.querySelector(\"#ctl00_body_nuDuration\")\n        ?.value?.trim() || \"\",\n\n    durationUnit:\n      doc.querySelector(\n        \"#ctl00_body_dpDurationType option:checked\"\n      )?.textContent.trim() || \"\",\n\n    retirementAgeRequired:\n      doc.querySelector(\n        \"#ctl00_body_chkRetirementAge\"\n      )?.checked || false,\n\n    retirementAgeMale:\n      doc.querySelector(\"#ctl00_body_nuAgeofMale\")\n        ?.value?.trim() || \"\",\n\n    retirementAgeFemale:\n      doc.querySelector(\"#ctl00_body_nuAgeofFemale\")\n        ?.value?.trim() || \"\",\n\n    employmentCategory:\n      doc.querySelector(\n        \"#ctl00_body_dpempcat option:checked\"\n      )?.textContent.trim() || \"\"\n  };\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\";\n  } else {\n    return updateemployeeTypeDetails;\n  }\n\n});",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "update Employment Type Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-03T17:09:05.074Z",
+      "updatedAt": "2026-05-15T07:09:40.754Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateEmploymentTypeDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtempdesc\": {\n      \"type\": \"string\",\n      \"description\": \"Name or label of the Employment Type (e.g., Permanent, Contractual).\"\n    },\n    \"ctl00_body_cbisdatelimit\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Indicates if the employment has a date limit (checkbox).\"\n    },\n    \"ctl00_body_nuDuration\": {\n      \"type\": \"string\",\n      \"description\": \"Duration of employment (only required if Date Limited is enabled).\"\n    },\n    \"ctl00_body_dpDurationType\": {\n      \"type\": \"string\",\n      \"description\": \"Duration unit (e.g., Months, Years) (only required if Date Limited is enabled).\"\n    },\n    \"ctl00_body_chkRetirementAge\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Indicates if retirement age is applicable (checkbox).\"\n    },\n    \"ctl00_body_nuAgeofMale\": {\n      \"type\": \"string\",\n      \"description\": \"Retirement age for males (required if Retirement Age is enabled).\"\n    },\n    \"ctl00_body_nuAgeofFemale\": {\n      \"type\": \"string\",\n      \"description\": \"Retirement age for females (required if Retirement Age is enabled).\"\n    },\n    \"ctl00_body_dpempcat\": {\n      \"type\": \"string\",\n      \"description\": \"Employment category (e.g., Full-Time, Part-Time).\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtempdesc\",\n    \"ctl00_body_cbisdatelimit\",\n    \"ctl00_body_chkRetirementAge\",\n    \"ctl00_body_dpempcat\"\n  ],\n  \"dependencies\": {\n    \"ctl00_body_cbisdatelimit\": {\n      \"required\": [\n        \"ctl00_body_cbisdatelimit\",\n        \"ctl00_body_nuDuration\",\n        \"ctl00_body_dpDurationType\"\n      ]\n    },\n    \"ctl00_body_chkRetirementAge\": {\n      \"required\": [\n        \"ctl00_body_chkRetirementAge\",\n        \"ctl00_body_nuAgeofMale\",\n        \"ctl00_body_nuAgeofFemale\"\n      ]\n    }\n  }\n}",
+      "_id": "68164db17c1d0fe37e2954f7"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/EmployeementType.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/EmployeementType.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"EmployeementType\";\n  }\n\n  const editInit =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.et.viewState,\n      __VIEWSTATEGENERATOR: window.et.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.et.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$butEdit\": \"Edit\"\n\n    }, url);\n\n  const payload = {\n\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n    \"ctl00$body$txtempdesc\":\n      args[\"ctl00_body_txtempdesc\"] || \"\",\n\n    \"ctl00$body$dpempcat\":\n      args[\"ctl00_body_dpempcat\"] || \"\",\n\n    \"ctl00$body$butSave\": \"Save\"\n  };\n\n  if (\n    args[\"ctl00_body_cbisdatelimit\"] === \"on\"\n  ) {\n\n    payload[\"ctl00$body$cbisdatelimit\"] = \"on\";\n\n    payload[\"ctl00$body$nuDuration\"] =\n      args[\"ctl00_body_nuDuration\"] || \"\";\n\n    payload[\"ctl00$body$dpDurationType\"] =\n      args[\"ctl00_body_dpDurationType\"] || \"\";\n\n  }\n\n  if (\n    args[\"ctl00_body_chkRetirementAge\"] === \"on\"\n  ) {\n\n    payload[\"ctl00$body$chkRetirementAge\"] = \"on\";\n\n    payload[\"ctl00$body$nuAgeofMale\"] =\n      args[\"ctl00_body_nuAgeofMale\"] || \"\";\n\n    payload[\"ctl00$body$nuAgeofFemale\"] =\n      args[\"ctl00_body_nuAgeofFemale\"] || \"\";\n\n  }\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )(payload, url);\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const updateemployeeTypeDetails = {\n\n    code:\n      doc.querySelector(\"#ctl00_body_txtempcode\")\n        ?.value?.trim() || \"\",\n\n    employmentType:\n      doc.querySelector(\"#ctl00_body_txtempdesc\")\n        ?.value?.trim() || \"\",\n\n    dateLimited:\n      doc.querySelector(\"#ctl00_body_cbisdatelimit\")\n        ?.checked || false,\n\n    duration:\n      doc.querySelector(\"#ctl00_body_nuDuration\")\n        ?.value?.trim() || \"\",\n\n    durationUnit:\n      doc.querySelector(\n        \"#ctl00_body_dpDurationType option:checked\"\n      )?.textContent.trim() || \"\",\n\n    retirementAgeRequired:\n      doc.querySelector(\n        \"#ctl00_body_chkRetirementAge\"\n      )?.checked || false,\n\n    retirementAgeMale:\n      doc.querySelector(\"#ctl00_body_nuAgeofMale\")\n        ?.value?.trim() || \"\",\n\n    retirementAgeFemale:\n      doc.querySelector(\"#ctl00_body_nuAgeofFemale\")\n        ?.value?.trim() || \"\",\n\n    employmentCategory:\n      doc.querySelector(\n        \"#ctl00_body_dpempcat option:checked\"\n      )?.textContent.trim() || \"\"\n  };\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\";\n  } else {\n    return updateemployeeTypeDetails;\n  }\n\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

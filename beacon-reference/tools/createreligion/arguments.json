@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "religionName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "the name of the new religion record",
+      "advanced": false,
+      "raw": {
+        "name": "religionName",
+        "type": "string",
+        "description": "the name of the new religion record",
+        "required": true,
+        "_id": "69521b70523b1a6c1c532112"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "empList",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the user select employee index list example \"1\", \"2\", \"5\", ...",
+      "advanced": false,
+      "raw": {
+        "name": "empList",
+        "type": "string",
+        "description": "to get the user select employee index list example \"1\", \"2\", \"5\", ...",
+        "required": true,
+        "_id": "6840291cab3bbef3c88b6382"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,24 @@
+{
+  "id": "690dc58d931a2d61ba0b34ec",
+  "slug": "workflowtypess",
+  "name": "workflowTypess",
+  "status": "live",
+  "createdAt": "2025-05-20T05:40:51.181Z",
+  "updatedAt": "2026-07-17T12:56:05.101Z",
+  "contentHash": "4704ec8ac5951f19447fedd191dfa7ccf51bd3e57aca510c7ac9b98382f18506",
+  "lastExportedAt": "2026-09-05T19:41:13.016Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58d931a2d61ba0b34ec",
+    "name": "workflowTypess",
+    "status": "live",
+    "code": "(async function (wfTypeCode , wfModuleCode) {\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n    myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n    myHeaders.append(\"content-type\", \"application/json; charset=UTF-8\");\n\n    const reqOptions = BeaconBar.executeFunction(\"reqOptions\")();\n\n    const raw = JSON.stringify({\n        wfTypeCode: wfTypeCode,\n        wf_tab: \"0\",\n        wfModuleCode : wfModuleCode\n        });\n\n    const requestOptions = {\n        method: \"POST\",\n        headers: myHeaders,\n        body: raw,\n        redirect: \"follow\"\n    };\n\n    try {\n        const response = await fetch(`${reqOptions}workflowv5/Approval/GetWorkflowTypeData/`, requestOptions);\n\n        if (!response.ok) {\n            throw new Error(`HTTP error! Status: ${response.status}`);\n        }\n\n        const data = await response.text(); \n        return data;\n\n    } catch (error) {\n    }\n});",
+    "by": "34476",
+    "__v": 1
+  }
+}

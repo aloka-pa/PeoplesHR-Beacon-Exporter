@@ -1,0 +1,24 @@
+{
+  "id": "690dc57b931a2d61ba0b23c5",
+  "slug": "downloadcsv",
+  "name": "downloadcsv",
+  "status": "live",
+  "createdAt": "2025-05-27T10:09:04.395Z",
+  "updatedAt": "2025-05-27T10:09:04.395Z",
+  "contentHash": "74612ba246398974bd640c7027913c4d1fcfa6310d03c127d61732ac3b27d6d0",
+  "lastExportedAt": "2026-09-05T19:41:39.726Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57b931a2d61ba0b23c5",
+    "name": "downloadcsv",
+    "status": "live",
+    "code": "(function (data , name) {\n    //done\n    if (!data?.length) {\n        return null;\n    }\n\n    const csvHeaders = Object.keys(data[0]).join(',') + '\\n';\n    const csvRows = data.map(row =>\n        Object.values(row).map(value => `\"${value}\"`).join(',')\n    );\n    const csvString = csvHeaders + csvRows.join('\\n');\n\n    const encodedCsv = encodeURIComponent(csvString);\n    const csvUrl = `data:text/csv;charset=utf-8,${encodedCsv}`;\n\n    window.BeaconBar.setDownloadForChatAIMessage({\n        url: csvUrl,\n        name:`${name || \"download\"}` ,\n        type: \"csv\",\n        fileName: `${name || \"download\"}.csv`,\n        // size: \"128 KB\", // Optional\n        target: \"_blank\", // Optional\n        replace: true\n    });\n\n    return csvUrl;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

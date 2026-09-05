@@ -1,0 +1,24 @@
+{
+  "id": "690dc587931a2d61ba0b2f50",
+  "slug": "savegoal",
+  "name": "savegoal",
+  "status": "live",
+  "createdAt": "2025-08-04T18:11:22.904Z",
+  "updatedAt": "2026-07-17T12:55:59.739Z",
+  "contentHash": "25f4182801f87faacd4a90e80df393adb7432705eab8847489f101e6060c13af",
+  "lastExportedAt": "2026-09-05T19:41:16.349Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc587931a2d61ba0b2f50",
+    "name": "savegoal",
+    "status": "live",
+    "code": "(async function (goal) {\n  const employeeNo = BeaconBar.getSharedData(\"employeeNo\");\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"content-type\", \"application/json; charset=UTF-8\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n  const totalGoals = BeaconBar.getSharedData(\"totalGoals\");\n  const payload = {\n    EVAL_ID: goal.EVAL_ID,\n    EMP_NUMBER: employeeNo,\n    GOAL_ID: totalGoals +1,\n    GOAL_VERSION_NO: \"1\",\n    TARGET_DATE: goal.targetDate,//\"2025-08-04T00:00:00\",\n    GOAL_DESC: goal.goalDesc,\n    GOAL_TYPEID: goal.GGRP_ID,\n    GOAL_WEIGHTAGE: \"0\",\n    GOAL_IMPORTANCE: \"0\",\n    GOAL_MANDATORY_FLG: \"0\",\n    GOAL_INITIATOR_FLG: \"2\",\n    SUP_REJECTED: false,\n    SUP_REJECT_COMMENT: \"\",\n    REV_REJECTED: false,\n    REV_REJECT_COMMENT: null,\n    ACTIONS: {\n      GOAL_ACTION: \"\",\n      GOAL_MEASURE: \"\",\n      ISEDIT: \"\",\n      STEP_ID: \"\"\n    },\n    IS_EMPTY: \"1\",\n    IS_SAVE: 0,\n    GOAL_TITLE: goal.goalTitle,\n    GOAL_KPI_TYPE_ID: \"-1\",\n    GOAL_KPI_ACTUAL_CURR_ID: \"000001\",\n    GOAL_CLASSIFICATION: null,\n    GOAL_RET_METHOD_ID: null,\n    GOAL_KPI_ACTUAL_CURR_VISIBLED: false,\n    GOAL_KPI_FULLFILL_VISIBLED: false,\n    GOAL_KPI_ACTUAL_AMOUNT: \"\",\n    GOAL_KPI_CutOff_Value: \"\",\n    GOAL_KPI_PRECENTAGE_VISIBLED: false,\n    GOAL_MANDATORY_FLG_VAL: false,\n    GOAL_MANDATORY_FLG_TEXT: \"No\",\n    SHOW_DELETE: true,\n    SUP_REJECTED_TEXT: \"No\",\n    REV_REJECTED_TEXT: \"No\",\n    SHOW_SUP_REJECT_CONTROLS: false,\n    SHOW_REV_REJECT_CONTROLS: false,\n    ACTIONS_MEASURES: [],\n    Original: {\n      EVAL_ID:goal.EVAL_ID ,\n      EMP_NUMBER: employeeNo,\n      GOAL_ID: totalGoals +1,\n      GOAL_VERSION_NO: \"1\",\n      GOAL_DESC:goal.goalDesc,\n      TARGET_DATE: goal.targetDate,//\"2025-08-04T00:00:00\",\n      GOAL_TYPEID: goal.GGRP_ID,\n      GOAL_WEIGHTAGE: \"0\",\n      GOAL_IMPORTANCE: \"0\",\n      GOAL_MANDATORY_FLG: \"0\",\n      GOAL_INITIATOR_FLG: \"2\",\n      ACTIONS_MEASURES: [],\n      SUP_REJECTED: false,\n      SUP_REJECT_COMMENT: null,\n      REV_REJECTED: false,\n      REV_REJECT_COMMENT: null,\n      IS_EMPTY: \"1\",\n      IS_SAVE: 0,\n      GOAL_KPI_TYPE_ID: \"-1\",\n      GOAL_KPI_ACTUAL_AMOUNT: \"\",\n      GOAL_KPI_ACTUAL_CURR_ID: \"-1\",\n      GOAL_TITLE: goal.goalTitle,\n      GOAL_CLASSIFICATION: null,\n      GOAL_RET_METHOD_ID: null,\n      KPI_REVIEW_FREQUENCY: null,\n      IS_MONTHY_REVIEW: 0,\n      GOAL_KPI_CutOff_Value: \"\"\n    }\n  };\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: JSON.stringify(payload),\n    redirect: \"follow\"\n  };\nconst reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const response = await fetch(`${reqOptions}PerfV8/GoalPlanning/SaveGoalandCheckKPIPlan`, requestOptions);\n  const result = await response.text();\n  return result;\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

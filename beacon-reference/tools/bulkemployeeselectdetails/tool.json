@@ -1,0 +1,91 @@
+{
+  "id": "690dc569931a2d61ba0b1965",
+  "slug": "bulkemployeeselectdetails",
+  "name": "bulkEmployeeSelectDetails",
+  "description": "Before executing this tool, you must first run the \"bulkEmployees\" tool, as the employee name, ID, and their corresponding main index are essential. If the user has not selected any specific employee names or IDs, display the full list of employees. Once the user selects one or more employees, extract the corresponding index values based on the selected employee names or IDs. These index values should then be return string  format \"1\", \"2\", \"5\", ... and index values must should every value string like \"0\",\"1\" This formatted list must be assigned to the tool’s argument named empList.",
+  "instructions": null,
+  "taskName": "Fetching Employees Selected List",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "bulkEmployeeSelectDetails",
+  "createdAt": "2025-06-04T11:08:12.991Z",
+  "updatedAt": "2025-06-04T11:08:12.991Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "37d0ff1fe4645e17ca92cd0a4a10a591329e8ca4a84dd6926f163798425a2411",
+  "lastExportedAt": "2026-09-05T19:39:23.678Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b1965",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "bulkEmployeeSelectDetails",
+      "description": "Before executing this tool, you must first run the \"bulkEmployees\" tool, as the employee name, ID, and their corresponding main index are essential. If the user has not selected any specific employee names or IDs, display the full list of employees. Once the user selects one or more employees, extract the corresponding index values based on the selected employee names or IDs. These index values should then be return string  format \"1\", \"2\", \"5\", ... and index values must should every value string like \"0\",\"1\" This formatted list must be assigned to the tool’s argument named empList.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "bulkEmployeeSelectDetails",
+        "args": [
+          {
+            "name": "empList",
+            "type": "string",
+            "description": "to get the user select employee index list example \"1\", \"2\", \"5\", ...",
+            "required": true,
+            "_id": "6840291cab3bbef3c88b6382"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6840291cab3bbef3c88b6381"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Reportsto.aspx?IsShowButtons=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const indexList = args.empList.split(',').map(s => s.trim());\n  const employeeResponse = await BeaconBar.executeFunction('module')({\n    \"__EVENTTARGET\": \"\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": window.beaurl.payload.viewState,\n    \"__VIEWSTATEGENERATOR\": window.beaurl.payload.viewStateGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": window.beaurl.payload.eventValidation,\n    \"RadWindowManager2_ClientState\": \"\",\n    \"EmployeeSearch$ctl05$RadioButtonGroup1\": \"ctl07\",\n    \"EmployeeSearch$ctl05$ctl14\": \"0\",\n    \"EmployeeSearch$ctl05$ctl16\": \"\",\n    \"EmployeeSearch$ctl05$ctl21\": \"\",\n    \"EmployeeSearch$ctl05$ctl40\": \"Submit\",\n    \"EmployeeSearch$ctl06$ctl00$ctl08$colMultiEmpCheckSelectCheckBox\": \"on\",\n    \"EmployeeSearch$ctl06$ctl00$ctl10$colMultiEmpCheckSelectCheckBox\": \"on\",\n    \"EmployeeSearch$ctl06$ctl00$ctl12$colMultiEmpCheckSelectCheckBox\": \"on\",\n    \"EmployeeSearch_ctl06_ClientState\": JSON.stringify({\n      selectedIndexes: indexList,\n      reorderedColumns: [],\n      expandedItems: [],\n      expandedGroupItems: [],\n      expandedFilterItems: [],\n      deletedItems: [],\n      popUpLocations: {},\n      draggedItemsIndexes: []\n    }),\n    \"hdnReturnId\": \"\"\n  }, window.beaurl.url);\n\n  const text = employeeResponse.rawData;\n  return \"successfully employee selected\";\n});\n",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Fetching Employees Selected List",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-04T11:08:12.991Z",
+      "updatedAt": "2025-06-04T11:08:12.991Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "bulkEmployeeSelectDetails",
+      "args": [
+        {
+          "name": "empList",
+          "type": "string",
+          "description": "to get the user select employee index list example \"1\", \"2\", \"5\", ...",
+          "required": true,
+          "_id": "6840291cab3bbef3c88b6382"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6840291cab3bbef3c88b6381"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Reportsto.aspx?IsShowButtons=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const indexList = args.empList.split(',').map(s => s.trim());\n  const employeeResponse = await BeaconBar.executeFunction('module')({\n    \"__EVENTTARGET\": \"\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": window.beaurl.payload.viewState,\n    \"__VIEWSTATEGENERATOR\": window.beaurl.payload.viewStateGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": window.beaurl.payload.eventValidation,\n    \"RadWindowManager2_ClientState\": \"\",\n    \"EmployeeSearch$ctl05$RadioButtonGroup1\": \"ctl07\",\n    \"EmployeeSearch$ctl05$ctl14\": \"0\",\n    \"EmployeeSearch$ctl05$ctl16\": \"\",\n    \"EmployeeSearch$ctl05$ctl21\": \"\",\n    \"EmployeeSearch$ctl05$ctl40\": \"Submit\",\n    \"EmployeeSearch$ctl06$ctl00$ctl08$colMultiEmpCheckSelectCheckBox\": \"on\",\n    \"EmployeeSearch$ctl06$ctl00$ctl10$colMultiEmpCheckSelectCheckBox\": \"on\",\n    \"EmployeeSearch$ctl06$ctl00$ctl12$colMultiEmpCheckSelectCheckBox\": \"on\",\n    \"EmployeeSearch_ctl06_ClientState\": JSON.stringify({\n      selectedIndexes: indexList,\n      reorderedColumns: [],\n      expandedItems: [],\n      expandedGroupItems: [],\n      expandedFilterItems: [],\n      deletedItems: [],\n      popUpLocations: {},\n      draggedItemsIndexes: []\n    }),\n    \"hdnReturnId\": \"\"\n  }, window.beaurl.url);\n\n  const text = employeeResponse.rawData;\n  return \"successfully employee selected\";\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "690dc57c931a2d61ba0b25ca",
+  "slug": "evalutiondetails",
+  "name": "evalutionDetails",
+  "status": "live",
+  "createdAt": "2025-06-12T11:06:26.803Z",
+  "updatedAt": "2026-07-17T12:55:50.194Z",
+  "contentHash": "1b758b40f375ff5d3d9936bed251992ea4e11314df9541047ec3bcfc572cccd0",
+  "lastExportedAt": "2026-09-05T19:41:22.420Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57c931a2d61ba0b25ca",
+    "name": "evalutionDetails",
+    "status": "live",
+    "code": "(async function(args) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"content-type\", \"application/x-www-form-urlencoded; charset=UTF-8\");\n\n  const evalId = encodeURIComponent(args.Eval_id || \"\");    \n  const appPage = encodeURIComponent(args.Apppage || \"1\");   \n\n  const raw = `Eval_id=${evalId}&Apppage=${appPage}`;\n\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")(); \n\n  const response = await fetch(`${reqOptions}PerfV8/GoalPlanning/LoadEvaluationDetails`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw,\n    redirect: \"follow\"\n  });\n\n  if (!response.ok) {\n    return null;\n  }\n\n  const data = await response.text();\n  return data;\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

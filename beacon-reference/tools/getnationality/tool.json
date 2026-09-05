@@ -1,0 +1,178 @@
+{
+  "id": "69521e639d6620f7020953b4",
+  "slug": "getnationality",
+  "name": "getNationality",
+  "description": "This tool retrieves Nationality master data from the EIM Nationality screen and supports both targeted searches (by code or name) and UI-accurate page-by-page listing. It replicates the screen’s paging behavior by applying the selected page size using the same Change Page Size postback and navigating pages using the Go-to-Page postback, enabling responses like “get all nationalities” followed by “yes” for the next page or “get from page 19” for direct page jumps. The tool returns only the records shown on the requested UI page and indicates whether more pages are available.",
+  "instructions": null,
+  "taskName": "Fetching Nationalities",
+  "tags": [
+    "EIMAdmin",
+    "Nationality&ReligionInformation"
+  ],
+  "status": "live",
+  "signature": "getNationality",
+  "createdAt": "2025-12-29T06:23:31.465Z",
+  "updatedAt": "2026-02-02T16:07:48.526Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "3686a432facebcd2fbf73288dcae8e3468e914106604488db63becf0b14f76e3",
+  "lastExportedAt": "2026-09-05T19:39:22.943Z",
+  "raw": {
+    "basic": {
+      "_id": "69521e639d6620f7020953b4",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getNationality",
+      "description": "This tool retrieves Nationality master data from the EIM Nationality screen and supports both targeted searches (by code or name) and UI-accurate page-by-page listing. It replicates the screen’s paging behavior by applying the selected page size using the same Change Page Size postback and navigating pages using the Go-to-Page postback, enabling responses like “get all nationalities” followed by “yes” for the next page or “get from page 19” for direct page jumps. The tool returns only the records shown on the requested UI page and indicates whether more pages are available.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getNationality",
+        "args": [
+          {
+            "name": "nationalityCode",
+            "type": "string",
+            "description": "user enters the nationality code to search for and return the grid row details, including nationality name",
+            "required": false,
+            "_id": "69521f62f1dea79e6a4c0ca8"
+          },
+          {
+            "name": "nationalityName",
+            "type": "string",
+            "description": "user enters the nationality name to search for and return the grid row details, including nationality details",
+            "required": false,
+            "_id": "6956a0cfab9dbe6266af6f99"
+          },
+          {
+            "name": "returnAll",
+            "type": "string",
+            "description": "Set to \"all\" / \"true\" / \"yes\" / \"Show All\" / \"Available\" / \"List of\" / \"Existing\" to list nationalities page-by-page using the screen paging.",
+            "required": false,
+            "_id": "6980c92116270fa9b0b9fa95"
+          },
+          {
+            "name": "pageSize",
+            "type": "string",
+            "description": "Number of rows per page, must match UI expectation (e.g., \"4\", \"6\", \"10\"). The transformer applies it using ChangePageSizeLinkButton.",
+            "required": false,
+            "_id": "6980c92116270fa9b0b9fa96"
+          },
+          {
+            "name": "page",
+            "type": "string",
+            "description": "Page number as a string. Example: \"19\" to fetch page 19 results",
+            "required": false,
+            "_id": "6980c92116270fa9b0b9fa97"
+          },
+          {
+            "name": "next",
+            "type": "string",
+            "description": "Set to \"yes\" to move to next page (uses the “Next Page” submit control)",
+            "required": false,
+            "_id": "6980c92116270fa9b0b9fa98"
+          },
+          {
+            "name": "cursor",
+            "type": "string",
+            "description": "JSON string returned by the tool; optional for future state passing (still string-only compatible).",
+            "required": false,
+            "_id": "6980c92116270fa9b0b9fa99"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "69521e639d6620f7020953b5"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 0) Helpers (STRING ARGS ONLY)\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const isEmpty = (v) => okText(v) === \"\";\n    const toLower = (v) => okText(v).toLowerCase();\n    const safeInt = (v, def = 1) => {\n      const t = okText(v);\n      const n = Number(t);\n      return Number.isFinite(n) && n > 0 ? Math.floor(n) : def;\n    };\n\n    const parseJsonSafe = (s) => {\n      try {\n        const t = okText(s);\n        if (!t) return null;\n        return JSON.parse(t);\n      } catch {\n        return null;\n      }\n    };\n\n    const toJsonString = (obj) => {\n      try { return JSON.stringify(obj || {}); } catch { return \"\"; }\n    };\n\n    function getHidden(doc, sel) {\n      return doc.querySelector(sel)?.value || \"\";\n    }\n\n    function parsePagerInfo(doc) {\n      // \"Displaying page 2 of 34, items 7 to 12 of 202.\"\n      const pagerRight = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\n      const text = pagerRight.replace(/\\s+/g, \" \").trim();\n      const m = text.match(/Displaying page\\s+(\\d+)\\s+of\\s+(\\d+),\\s+items\\s+(\\d+)\\s+to\\s+(\\d+)\\s+of\\s+(\\d+)/i);\n\n      if (!m) return { currentPage: null, totalPages: null, totalItems: null, raw: text };\n\n      return {\n        currentPage: safeInt(m[1], 1),\n        totalPages: safeInt(m[2], 1),\n        totalItems: safeInt(m[5], 0),\n        raw: text\n      };\n    }\n\n    function extractGridRows(doc) {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const results = [];\n      for (const r of rows) {\n        const tds = r.querySelectorAll(\"td\");\n        const code = tds[0]?.textContent?.trim() || \"\";\n        const name = tds[1]?.textContent?.trim() || \"\";\n        if (code || name) results.push({ code, nationalityName: name });\n      }\n      return results;\n    }\n\n    function filterMatches(items, { nationalityCode, nationalityName, matchType }) {\n      const mt = (matchType || \"partial\").toLowerCase(); // partial | exact\n      const hasCode = !isEmpty(nationalityCode);\n      const hasName = !isEmpty(nationalityName);\n      if (!hasCode && !hasName) return items; // showAll case\n\n      const codeNeedle = toLower(nationalityCode);\n      const nameNeedle = toLower(nationalityName);\n\n      return items.filter((it) => {\n        const codeHay = toLower(it.code);\n        const nameHay = toLower(it.nationalityName);\n\n        if (hasCode && hasName) {\n          const codeOk = mt === \"exact\" ? codeHay === codeNeedle : codeHay.includes(codeNeedle);\n          const nameOk = mt === \"exact\" ? nameHay === nameNeedle : nameHay.includes(nameNeedle);\n          return codeOk && nameOk;\n        }\n\n        if (hasCode) return mt === \"exact\" ? codeHay === codeNeedle : codeHay.includes(codeNeedle);\n        return mt === \"exact\" ? nameHay === nameNeedle : nameHay.includes(nameNeedle);\n      });\n    }\n\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Nationality.aspx\")) {\n      return { status: \"NO_ACCESS\", message: \"You do not have access to Nationality screen. Please contact HR Admin.\" };\n    }\n\n    /* -------------------------------------------------\n     * 2) Args (ALL STRINGS)\n     * ------------------------------------------------- */\n    const mode = toLower(args?.mode || \"search\");            // \"search\" | \"showall\"\n    const matchType = toLower(args?.matchType || \"partial\"); // \"partial\" | \"exact\"\n\n    const nationalityCode = okText(args?.nationalityCode);\n    const nationalityName = okText(args?.nationalityName);\n\n    // IMPORTANT: use UI page size (you said you set it to 4/6/10 etc.)\n    const pageSize = safeInt(args?.pageSize, 10);            // default 10 if not provided\n    const page = safeInt(args?.page, 1);                     // \"get from page 19\" => page=19\n\n    // Cursor is a STRINGIFIED JSON (optional)\n    const cursorIn = parseJsonSafe(args?.cursor);\n\n    // Validation\n    if (mode === \"search\" && isEmpty(nationalityCode) && isEmpty(nationalityName)) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Please provide nationalityCode or nationalityName (or use mode='showall' to list all nationalities).\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Build URL + Headers\n     * ------------------------------------------------- */\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Nationality.aspx\");\n    const url = updateurl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Nationality.aspx`;\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const parser = new DOMParser();\n\n    /* -------------------------------------------------\n     * 4) Establish grid state (FIRST CALL vs NEXT CALL)\n     *    - If cursor is provided, reuse it (so \"yes\" can truly go next)\n     *    - Else start fresh via getApiList(\"Nationality\")\n     * ------------------------------------------------- */\n    let viewState = okText(cursorIn?.__VIEWSTATE);\n    let viewStateGen = okText(cursorIn?.__VIEWSTATEGENERATOR);\n    let eventValidation = okText(cursorIn?.__EVENTVALIDATION);\n    let criteria = okText(cursorIn?.criteria);\n    let searchValue = okText(cursorIn?.searchValue);\n    let effectiveMode = okText(cursorIn?.mode) || mode;\n\n    // Decide criteria/searchValue when starting fresh\n    if (!viewState || !viewStateGen || !eventValidation) {\n      const details = await BeaconBar.executeFunction(\"getApiList\")(\"Nationality\");\n      viewState = details.viewState;\n      viewStateGen = details.viewStateGen;\n      eventValidation = details.eventValidation;\n\n      // UI supports NAT_CODE / NAT_NAME\n      if (!isEmpty(nationalityCode)) {\n        criteria = \"NAT_CODE\";\n        searchValue = nationalityCode;\n      } else if (!isEmpty(nationalityName)) {\n        criteria = \"NAT_NAME\";\n        searchValue = nationalityName;\n      } else {\n        criteria = \"NAT_CODE\";\n        searchValue = \"\";\n      }\n\n      effectiveMode = mode;\n    }\n\n    /* -------------------------------------------------\n     * 5) Step A: Load grid (Search or Show All) on page 1\n     *    - This sets the SAME server-side state as clicking Search / Show All in UI\n     * ------------------------------------------------- */\n    const firstFormData = new FormData();\n    firstFormData.append(\"scrollLeft\", \"0\");\n    firstFormData.append(\"scrollTop\", \"0\");\n    firstFormData.append(\"__EVENTTARGET\", \"\");\n    firstFormData.append(\"__EVENTARGUMENT\", \"\");\n    firstFormData.append(\"__VIEWSTATE\", viewState);\n    firstFormData.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n    firstFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    firstFormData.append(\"__EVENTVALIDATION\", eventValidation);\n\n    firstFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    firstFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    firstFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", criteria);\n    firstFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n    // pager controls (match your network payload)\n    firstFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    firstFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    firstFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n    firstFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    firstFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    if (effectiveMode === \"showall\") {\n      firstFormData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n    } else {\n      firstFormData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n    }\n\n    const firstResp = await fetch(url, { method: \"POST\", headers, body: firstFormData });\n    const firstHtml = await firstResp.text();\n    const firstDoc = parser.parseFromString(firstHtml, \"text/html\");\n\n    // Refresh state after server responds (critical for paging)\n    viewState = getHidden(firstDoc, \"#__VIEWSTATE\");\n    viewStateGen = getHidden(firstDoc, \"#__VIEWSTATEGENERATOR\");\n    eventValidation = getHidden(firstDoc, \"#__EVENTVALIDATION\");\n\n    if (!viewState || !viewStateGen || !eventValidation) {\n      return { status: \"ERROR\", message: \"Failed to load Nationality grid state (missing ASP.NET hidden fields).\" };\n    }\n\n    /* -------------------------------------------------\n     * 6) Step B: Jump to requested page using GoToPageLinkButton\n     *    - Works for ANY page number (including 19, 34, etc.)\n     * ------------------------------------------------- */\n    let workingDoc = firstDoc;\n\n    if (page > 1) {\n      const gotoFormData = new FormData();\n      gotoFormData.append(\"scrollLeft\", \"0\");\n      gotoFormData.append(\"scrollTop\", \"0\");\n\n      // Trigger Go button\n      gotoFormData.append(\"__EVENTTARGET\", \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\");\n      gotoFormData.append(\"__EVENTARGUMENT\", \"\");\n\n      gotoFormData.append(\"__VIEWSTATE\", viewState);\n      gotoFormData.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n      gotoFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      gotoFormData.append(\"__EVENTVALIDATION\", eventValidation);\n\n      gotoFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      gotoFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      // keep context\n      gotoFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", criteria);\n      gotoFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      // server reads this field value\n      gotoFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", String(page));\n      gotoFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n\n      gotoFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      gotoFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      gotoFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const gotoResp = await fetch(url, { method: \"POST\", headers, body: gotoFormData });\n      const gotoHtml = await gotoResp.text();\n      const gotoDoc = parser.parseFromString(gotoHtml, \"text/html\");\n\n      viewState = getHidden(gotoDoc, \"#__VIEWSTATE\");\n      viewStateGen = getHidden(gotoDoc, \"#__VIEWSTATEGENERATOR\");\n      eventValidation = getHidden(gotoDoc, \"#__EVENTVALIDATION\");\n\n      workingDoc = gotoDoc;\n    }\n\n    /* -------------------------------------------------\n     * 7) Extract rows + filter (matchType applies client-side)\n     * ------------------------------------------------- */\n    const pager = parsePagerInfo(workingDoc);\n    const pageItems = extractGridRows(workingDoc);\n\n    const matched = filterMatches(pageItems, { nationalityCode, nationalityName, matchType });\n\n    if (!pageItems || pageItems.length === 0) {\n      return {\n        status: \"NOT_FOUND\",\n        message: effectiveMode === \"showall\"\n          ? \"No Nationalities found.\"\n          : `No Nationalities found matching \"${searchValue}\"`,\n        page: pager.currentPage ?? page,\n        pageSize: pageSize\n      };\n    }\n\n    // Next page availability based on pager text\n    const hasMore = pager.totalPages ? ((pager.currentPage ?? page) < pager.totalPages) : (pageItems.length === pageSize);\n    const nextPage = hasMore ? ((pager.currentPage ?? page) + 1) : null;\n\n    /* -------------------------------------------------\n     * 8) Return (cursor as STRING)\n     * ------------------------------------------------- */\n    return {\n      status: \"SUCCESS\",\n      mode: effectiveMode,\n      matchType: matchType,\n      criteria: criteria,\n      searchValue: searchValue,\n      page: pager.currentPage ?? page,\n      pageSize: pageSize,\n      totalPages: pager.totalPages,\n      totalItems: pager.totalItems,\n      countReturned: matched.length,\n      hasMore: !!nextPage,\n      nextPage: nextPage ? String(nextPage) : \"\",\n      message: nextPage\n        ? `Here are ${matched.length} nationalities from page ${(pager.currentPage ?? page)}. There are more nationalities available. Would you like to see the next page?`\n        : `Here are ${matched.length} nationalities from page ${(pager.currentPage ?? page)}. No more pages.`,\n      nationalities: matched,\n      cursor: toJsonString({\n        __VIEWSTATE: viewState,\n        __VIEWSTATEGENERATOR: viewStateGen,\n        __EVENTVALIDATION: eventValidation,\n        criteria: criteria,\n        searchValue: searchValue,\n        mode: effectiveMode,\n        pageSize: String(pageSize)\n      })\n    };\n  } catch (err) {\n    return { status: \"ERROR\", message: err?.message || \"Unexpected error\", error: err?.toString?.() || String(err) };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "Nationality&ReligionInformation"
+      ],
+      "taskName": "Fetching Nationalities",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-29T06:23:31.465Z",
+      "updatedAt": "2026-02-02T16:07:48.526Z",
+      "__v": 5,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getNationality",
+      "args": [
+        {
+          "name": "nationalityCode",
+          "type": "string",
+          "description": "user enters the nationality code to search for and return the grid row details, including nationality name",
+          "required": false,
+          "_id": "69521f62f1dea79e6a4c0ca8"
+        },
+        {
+          "name": "nationalityName",
+          "type": "string",
+          "description": "user enters the nationality name to search for and return the grid row details, including nationality details",
+          "required": false,
+          "_id": "6956a0cfab9dbe6266af6f99"
+        },
+        {
+          "name": "returnAll",
+          "type": "string",
+          "description": "Set to \"all\" / \"true\" / \"yes\" / \"Show All\" / \"Available\" / \"List of\" / \"Existing\" to list nationalities page-by-page using the screen paging.",
+          "required": false,
+          "_id": "6980c92116270fa9b0b9fa95"
+        },
+        {
+          "name": "pageSize",
+          "type": "string",
+          "description": "Number of rows per page, must match UI expectation (e.g., \"4\", \"6\", \"10\"). The transformer applies it using ChangePageSizeLinkButton.",
+          "required": false,
+          "_id": "6980c92116270fa9b0b9fa96"
+        },
+        {
+          "name": "page",
+          "type": "string",
+          "description": "Page number as a string. Example: \"19\" to fetch page 19 results",
+          "required": false,
+          "_id": "6980c92116270fa9b0b9fa97"
+        },
+        {
+          "name": "next",
+          "type": "string",
+          "description": "Set to \"yes\" to move to next page (uses the “Next Page” submit control)",
+          "required": false,
+          "_id": "6980c92116270fa9b0b9fa98"
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "description": "JSON string returned by the tool; optional for future state passing (still string-only compatible).",
+          "required": false,
+          "_id": "6980c92116270fa9b0b9fa99"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "69521e639d6620f7020953b5"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 0) Helpers (STRING ARGS ONLY)\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const isEmpty = (v) => okText(v) === \"\";\n    const toLower = (v) => okText(v).toLowerCase();\n    const safeInt = (v, def = 1) => {\n      const t = okText(v);\n      const n = Number(t);\n      return Number.isFinite(n) && n > 0 ? Math.floor(n) : def;\n    };\n\n    const parseJsonSafe = (s) => {\n      try {\n        const t = okText(s);\n        if (!t) return null;\n        return JSON.parse(t);\n      } catch {\n        return null;\n      }\n    };\n\n    const toJsonString = (obj) => {\n      try { return JSON.stringify(obj || {}); } catch { return \"\"; }\n    };\n\n    function getHidden(doc, sel) {\n      return doc.querySelector(sel)?.value || \"\";\n    }\n\n    function parsePagerInfo(doc) {\n      // \"Displaying page 2 of 34, items 7 to 12 of 202.\"\n      const pagerRight = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\n      const text = pagerRight.replace(/\\s+/g, \" \").trim();\n      const m = text.match(/Displaying page\\s+(\\d+)\\s+of\\s+(\\d+),\\s+items\\s+(\\d+)\\s+to\\s+(\\d+)\\s+of\\s+(\\d+)/i);\n\n      if (!m) return { currentPage: null, totalPages: null, totalItems: null, raw: text };\n\n      return {\n        currentPage: safeInt(m[1], 1),\n        totalPages: safeInt(m[2], 1),\n        totalItems: safeInt(m[5], 0),\n        raw: text\n      };\n    }\n\n    function extractGridRows(doc) {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const results = [];\n      for (const r of rows) {\n        const tds = r.querySelectorAll(\"td\");\n        const code = tds[0]?.textContent?.trim() || \"\";\n        const name = tds[1]?.textContent?.trim() || \"\";\n        if (code || name) results.push({ code, nationalityName: name });\n      }\n      return results;\n    }\n\n    function filterMatches(items, { nationalityCode, nationalityName, matchType }) {\n      const mt = (matchType || \"partial\").toLowerCase(); // partial | exact\n      const hasCode = !isEmpty(nationalityCode);\n      const hasName = !isEmpty(nationalityName);\n      if (!hasCode && !hasName) return items; // showAll case\n\n      const codeNeedle = toLower(nationalityCode);\n      const nameNeedle = toLower(nationalityName);\n\n      return items.filter((it) => {\n        const codeHay = toLower(it.code);\n        const nameHay = toLower(it.nationalityName);\n\n        if (hasCode && hasName) {\n          const codeOk = mt === \"exact\" ? codeHay === codeNeedle : codeHay.includes(codeNeedle);\n          const nameOk = mt === \"exact\" ? nameHay === nameNeedle : nameHay.includes(nameNeedle);\n          return codeOk && nameOk;\n        }\n\n        if (hasCode) return mt === \"exact\" ? codeHay === codeNeedle : codeHay.includes(codeNeedle);\n        return mt === \"exact\" ? nameHay === nameNeedle : nameHay.includes(nameNeedle);\n      });\n    }\n\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Nationality.aspx\")) {\n      return { status: \"NO_ACCESS\", message: \"You do not have access to Nationality screen. Please contact HR Admin.\" };\n    }\n\n    /* -------------------------------------------------\n     * 2) Args (ALL STRINGS)\n     * ------------------------------------------------- */\n    const mode = toLower(args?.mode || \"search\");            // \"search\" | \"showall\"\n    const matchType = toLower(args?.matchType || \"partial\"); // \"partial\" | \"exact\"\n\n    const nationalityCode = okText(args?.nationalityCode);\n    const nationalityName = okText(args?.nationalityName);\n\n    // IMPORTANT: use UI page size (you said you set it to 4/6/10 etc.)\n    const pageSize = safeInt(args?.pageSize, 10);            // default 10 if not provided\n    const page = safeInt(args?.page, 1);                     // \"get from page 19\" => page=19\n\n    // Cursor is a STRINGIFIED JSON (optional)\n    const cursorIn = parseJsonSafe(args?.cursor);\n\n    // Validation\n    if (mode === \"search\" && isEmpty(nationalityCode) && isEmpty(nationalityName)) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Please provide nationalityCode or nationalityName (or use mode='showall' to list all nationalities).\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Build URL + Headers\n     * ------------------------------------------------- */\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Nationality.aspx\");\n    const url = updateurl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Nationality.aspx`;\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const parser = new DOMParser();\n\n    /* -------------------------------------------------\n     * 4) Establish grid state (FIRST CALL vs NEXT CALL)\n     *    - If cursor is provided, reuse it (so \"yes\" can truly go next)\n     *    - Else start fresh via getApiList(\"Nationality\")\n     * ------------------------------------------------- */\n    let viewState = okText(cursorIn?.__VIEWSTATE);\n    let viewStateGen = okText(cursorIn?.__VIEWSTATEGENERATOR);\n    let eventValidation = okText(cursorIn?.__EVENTVALIDATION);\n    let criteria = okText(cursorIn?.criteria);\n    let searchValue = okText(cursorIn?.searchValue);\n    let effectiveMode = okText(cursorIn?.mode) || mode;\n\n    // Decide criteria/searchValue when starting fresh\n    if (!viewState || !viewStateGen || !eventValidation) {\n      const details = await BeaconBar.executeFunction(\"getApiList\")(\"Nationality\");\n      viewState = details.viewState;\n      viewStateGen = details.viewStateGen;\n      eventValidation = details.eventValidation;\n\n      // UI supports NAT_CODE / NAT_NAME\n      if (!isEmpty(nationalityCode)) {\n        criteria = \"NAT_CODE\";\n        searchValue = nationalityCode;\n      } else if (!isEmpty(nationalityName)) {\n        criteria = \"NAT_NAME\";\n        searchValue = nationalityName;\n      } else {\n        criteria = \"NAT_CODE\";\n        searchValue = \"\";\n      }\n\n      effectiveMode = mode;\n    }\n\n    /* -------------------------------------------------\n     * 5) Step A: Load grid (Search or Show All) on page 1\n     *    - This sets the SAME server-side state as clicking Search / Show All in UI\n     * ------------------------------------------------- */\n    const firstFormData = new FormData();\n    firstFormData.append(\"scrollLeft\", \"0\");\n    firstFormData.append(\"scrollTop\", \"0\");\n    firstFormData.append(\"__EVENTTARGET\", \"\");\n    firstFormData.append(\"__EVENTARGUMENT\", \"\");\n    firstFormData.append(\"__VIEWSTATE\", viewState);\n    firstFormData.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n    firstFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    firstFormData.append(\"__EVENTVALIDATION\", eventValidation);\n\n    firstFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    firstFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    firstFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", criteria);\n    firstFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n    // pager controls (match your network payload)\n    firstFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    firstFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    firstFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n    firstFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    firstFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    if (effectiveMode === \"showall\") {\n      firstFormData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n    } else {\n      firstFormData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n    }\n\n    const firstResp = await fetch(url, { method: \"POST\", headers, body: firstFormData });\n    const firstHtml = await firstResp.text();\n    const firstDoc = parser.parseFromString(firstHtml, \"text/html\");\n\n    // Refresh state after server responds (critical for paging)\n    viewState = getHidden(firstDoc, \"#__VIEWSTATE\");\n    viewStateGen = getHidden(firstDoc, \"#__VIEWSTATEGENERATOR\");\n    eventValidation = getHidden(firstDoc, \"#__EVENTVALIDATION\");\n\n    if (!viewState || !viewStateGen || !eventValidation) {\n      return { status: \"ERROR\", message: \"Failed to load Nationality grid state (missing ASP.NET hidden fields).\" };\n    }\n\n    /* -------------------------------------------------\n     * 6) Step B: Jump to requested page using GoToPageLinkButton\n     *    - Works for ANY page number (including 19, 34, etc.)\n     * ------------------------------------------------- */\n    let workingDoc = firstDoc;\n\n    if (page > 1) {\n      const gotoFormData = new FormData();\n      gotoFormData.append(\"scrollLeft\", \"0\");\n      gotoFormData.append(\"scrollTop\", \"0\");\n\n      // Trigger Go button\n      gotoFormData.append(\"__EVENTTARGET\", \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\");\n      gotoFormData.append(\"__EVENTARGUMENT\", \"\");\n\n      gotoFormData.append(\"__VIEWSTATE\", viewState);\n      gotoFormData.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n      gotoFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      gotoFormData.append(\"__EVENTVALIDATION\", eventValidation);\n\n      gotoFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      gotoFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      // keep context\n      gotoFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", criteria);\n      gotoFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      // server reads this field value\n      gotoFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", String(page));\n      gotoFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n\n      gotoFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      gotoFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      gotoFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const gotoResp = await fetch(url, { method: \"POST\", headers, body: gotoFormData });\n      const gotoHtml = await gotoResp.text();\n      const gotoDoc = parser.parseFromString(gotoHtml, \"text/html\");\n\n      viewState = getHidden(gotoDoc, \"#__VIEWSTATE\");\n      viewStateGen = getHidden(gotoDoc, \"#__VIEWSTATEGENERATOR\");\n      eventValidation = getHidden(gotoDoc, \"#__EVENTVALIDATION\");\n\n      workingDoc = gotoDoc;\n    }\n\n    /* -------------------------------------------------\n     * 7) Extract rows + filter (matchType applies client-side)\n     * ------------------------------------------------- */\n    const pager = parsePagerInfo(workingDoc);\n    const pageItems = extractGridRows(workingDoc);\n\n    const matched = filterMatches(pageItems, { nationalityCode, nationalityName, matchType });\n\n    if (!pageItems || pageItems.length === 0) {\n      return {\n        status: \"NOT_FOUND\",\n        message: effectiveMode === \"showall\"\n          ? \"No Nationalities found.\"\n          : `No Nationalities found matching \"${searchValue}\"`,\n        page: pager.currentPage ?? page,\n        pageSize: pageSize\n      };\n    }\n\n    // Next page availability based on pager text\n    const hasMore = pager.totalPages ? ((pager.currentPage ?? page) < pager.totalPages) : (pageItems.length === pageSize);\n    const nextPage = hasMore ? ((pager.currentPage ?? page) + 1) : null;\n\n    /* -------------------------------------------------\n     * 8) Return (cursor as STRING)\n     * ------------------------------------------------- */\n    return {\n      status: \"SUCCESS\",\n      mode: effectiveMode,\n      matchType: matchType,\n      criteria: criteria,\n      searchValue: searchValue,\n      page: pager.currentPage ?? page,\n      pageSize: pageSize,\n      totalPages: pager.totalPages,\n      totalItems: pager.totalItems,\n      countReturned: matched.length,\n      hasMore: !!nextPage,\n      nextPage: nextPage ? String(nextPage) : \"\",\n      message: nextPage\n        ? `Here are ${matched.length} nationalities from page ${(pager.currentPage ?? page)}. There are more nationalities available. Would you like to see the next page?`\n        : `Here are ${matched.length} nationalities from page ${(pager.currentPage ?? page)}. No more pages.`,\n      nationalities: matched,\n      cursor: toJsonString({\n        __VIEWSTATE: viewState,\n        __VIEWSTATEGENERATOR: viewStateGen,\n        __EVENTVALIDATION: eventValidation,\n        criteria: criteria,\n        searchValue: searchValue,\n        mode: effectiveMode,\n        pageSize: String(pageSize)\n      })\n    };\n  } catch (err) {\n    return { status: \"ERROR\", message: err?.message || \"Unexpected error\", error: err?.toString?.() || String(err) };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

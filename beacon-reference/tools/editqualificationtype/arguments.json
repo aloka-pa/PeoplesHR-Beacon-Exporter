@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "qualificationTypeCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Qualification Type code to identify the record (e.g., 000002). If provided, search will be performed by code and the exact matching row will be opened.",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationTypeCode",
+        "type": "string",
+        "description": "Qualification Type code to identify the record (e.g., 000002). If provided, search will be performed by code and the exact matching row will be opened.",
+        "required": false,
+        "_id": "697e1b2b8534fce07a46105a"
+      }
+    },
+    {
+      "name": "qualificationTypeName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Qualification Type name to identify the record (supports partial match, case-insensitive). If multiple records match, the transformer returns the matching list and does not edit.",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationTypeName",
+        "type": "string",
+        "description": "Qualification Type name to identify the record (supports partial match, case-insensitive). If multiple records match, the transformer returns the matching list and does not edit.",
+        "required": false,
+        "_id": "697e1b2b8534fce07a46105b"
+      }
+    },
+    {
+      "name": "newQualificationTypeName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "New Qualification Type name to save in the record. Required when a single record is matched and you want to update it.",
+      "advanced": false,
+      "raw": {
+        "name": "newQualificationTypeName",
+        "type": "string",
+        "description": "New Qualification Type name to save in the record. Required when a single record is matched and you want to update it.",
+        "required": true,
+        "_id": "697e1b2b8534fce07a46105c"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

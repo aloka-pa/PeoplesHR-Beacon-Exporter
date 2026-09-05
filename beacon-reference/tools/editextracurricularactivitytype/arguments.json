@@ -1,0 +1,80 @@
+{
+  "arguments": [
+    {
+      "name": "ecaTypeCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The activity type code to identify the record to edit (e.g., \"000001\"). Either ecaTypeCode or ecaTypeName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "ecaTypeCode",
+        "type": "string",
+        "description": "The activity type code to identify the record to edit (e.g., \"000001\"). Either ecaTypeCode or ecaTypeName must be provided.",
+        "required": false,
+        "_id": "6953e247e62c2e2fca5eba6e"
+      }
+    },
+    {
+      "name": "ecaTypeName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The activity type name to identify the record to edit (e.g., \"Learning\"). Either ecaTypeCode or ecaTypeName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "ecaTypeName",
+        "type": "string",
+        "description": "The activity type name to identify the record to edit (e.g., \"Learning\"). Either ecaTypeCode or ecaTypeName must be provided.",
+        "required": false,
+        "_id": "6953e247e62c2e2fca5eba6f"
+      }
+    },
+    {
+      "name": "newTypeName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The new name for the activity type. If not provided, the type name will remain unchanged. Maximum 120 characters.",
+      "advanced": false,
+      "raw": {
+        "name": "newTypeName",
+        "type": "string",
+        "description": "The new name for the activity type. If not provided, the type name will remain unchanged. Maximum 120 characters.",
+        "required": false,
+        "_id": "6953e247e62c2e2fca5eba70"
+      }
+    },
+    {
+      "name": "newCategoryCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The code of the new category to assign (e.g., \"000003\" for \"Arts / Creative\"). The user must provide either newCategoryCode or newCategoryName.",
+      "advanced": false,
+      "raw": {
+        "name": "newCategoryCode",
+        "type": "string",
+        "description": "The code of the new category to assign (e.g., \"000003\" for \"Arts / Creative\"). The user must provide either newCategoryCode or newCategoryName.",
+        "required": false,
+        "_id": "6953e247e62c2e2fca5eba71"
+      }
+    },
+    {
+      "name": "newCategoryName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The name of the new category to assign (e.g., \"Arts / Creative\"). The user must provide either newCategoryCode or newCategoryName.",
+      "advanced": false,
+      "raw": {
+        "name": "newCategoryName",
+        "type": "string",
+        "description": "The name of the new category to assign (e.g., \"Arts / Creative\"). The user must provide either newCategoryCode or newCategoryName.",
+        "required": false,
+        "_id": "6953e247e62c2e2fca5eba72"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "gnDivisionName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name for the new GN Division (e.g., 'Dahampura'). This field is required and cannot be empty.",
+      "advanced": false,
+      "raw": {
+        "name": "gnDivisionName",
+        "type": "string",
+        "description": "The name for the new GN Division (e.g., 'Dahampura'). This field is required and cannot be empty.",
+        "required": true,
+        "_id": "695399d6ae6788d5ccfc1fe5"
+      }
+    },
+    {
+      "name": "dsDivision",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The DS Division code or name to assign to this GN Division. Can be either a 6-digit code (e.g., '000005') or a DS Division name (e.g., 'Moratuwa'). Either dsDivision or dsDivisionName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "dsDivision",
+        "type": "string",
+        "description": "The DS Division code or name to assign to this GN Division. Can be either a 6-digit code (e.g., '000005') or a DS Division name (e.g., 'Moratuwa'). Either dsDivision or dsDivisionName must be provided.",
+        "required": true,
+        "_id": "695399d6ae6788d5ccfc1fe6"
+      }
+    },
+    {
+      "name": "dsDivisionName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The DS Division name to assign to this GN Division (e.g., 'Moratuwa'). Performs a case-insensitive exact match to find the corresponding code. Either dsDivision or dsDivisionName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "dsDivisionName",
+        "type": "string",
+        "description": "The DS Division name to assign to this GN Division (e.g., 'Moratuwa'). Performs a case-insensitive exact match to find the corresponding code. Either dsDivision or dsDivisionName must be provided.",
+        "required": true,
+        "_id": "695399d6ae6788d5ccfc1fe7"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

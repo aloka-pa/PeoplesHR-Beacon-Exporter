@@ -1,0 +1,105 @@
+{
+  "id": "690dc569931a2d61ba0b1969",
+  "slug": "createreportinghierarchydetails",
+  "name": "createReportingHierarchyDetails",
+  "description": "If the user's query is to create Reporting Hierarchy Details or involves direct or indirect subordinate-related information, the process should begin by executing the \"bulkEmployeeSelectDetails\" tool to select the relevant employees. This ensures that only the intended employees are included in the hierarchy setup. Once the employee selection is complete, proceed with the \"createReportingHierarchyDetails\" tool to establish the reporting structure. Before creating the hierarchy, prompt the user to specify the type of reporting hierarchy they wish to create—Direct or Indirect Subordinates—to ensure accurate configuration. Subordinates types \"Indirect Subordinates\" and \"Direct Subordinates\".",
+  "instructions": null,
+  "taskName": "Add The Direct and Indirect Subordinates",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "createReportingHierarchyDetails",
+  "createdAt": "2025-06-04T13:03:09.958Z",
+  "updatedAt": "2025-06-04T13:03:09.958Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "dba731c3cc212d4cb969336b6331369534ae2a831f0922d426f0a289a0fd2a00",
+  "lastExportedAt": "2026-09-05T19:39:23.671Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b1969",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createReportingHierarchyDetails",
+      "description": "If the user's query is to create Reporting Hierarchy Details or involves direct or indirect subordinate-related information, the process should begin by executing the \"bulkEmployeeSelectDetails\" tool to select the relevant employees. This ensures that only the intended employees are included in the hierarchy setup. Once the employee selection is complete, proceed with the \"createReportingHierarchyDetails\" tool to establish the reporting structure. Before creating the hierarchy, prompt the user to specify the type of reporting hierarchy they wish to create—Direct or Indirect Subordinates—to ensure accurate configuration. Subordinates types \"Indirect Subordinates\" and \"Direct Subordinates\".",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createReportingHierarchyDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to give user employee id example '000001'",
+            "required": true,
+            "_id": "6840440dc004f6529545547e"
+          },
+          {
+            "name": "type",
+            "type": "string",
+            "description": "To determine the type of subordinates, there are two options: \"Indirect Subordinates\" and \"Direct Subordinates\".",
+            "required": true,
+            "_id": "6840440dc004f6529545547f"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6840440dc004f6529545547d"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Reportsto.aspx?IsShowButtons=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const viewSt = window.rh.viewState;\n  const viewstGen = window.rh.viewStateGen;\n  const event = window.rh.eventValidation;\n  const publicKey = window.rh.publicKey;\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"IsShowButtons=1\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/Reportsto.aspx?IsShowButtons=1\");\n\n  const digest = await BeaconBar.executeFunction(\"getDigest\")(\"IsShowButtons=1\");\n  const isDirect = args.type === \"Direct Subordinates\";\n  const eventTarget = isDirect ? \"GetSearchResultMultipleDirect\" : \"GetSearchResultMultipleIndirect\";\n\n  const employeeResponse = await BeaconBar.executeFunction('module')({\n    \"scrollLeft\": \"0\",\n    \"scrollTop\": \"0\",\n    \"__EVENTTARGET\": eventTarget,\n    \"__EVENTARGUMENT\": \"\",\n    \"__VIEWSTATE\": viewSt,\n    \"__VIEWSTATEGENERATOR\": viewstGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": event,\n    \"ctl00$hdnDateFormat\": \"m/d/yy\",\n    \"ctl00$hdnQuickmenu\": \"\",\n    \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$txtPublicKey\": publicKey,\n    \"ctl00$body$txtempnumber\": window.empnum,\n    \"ctl00$body$hdnEmployeeNo\": args.id,\n    \"ctl00$body$HFCurrTabIndex\": isDirect ? \"\" : \"1\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00$body$grdDirectSubordinates$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdDirectSubordinates_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdDirectSubordinates$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"2\",\n    \"ctl00_body_grdDirectSubordinates_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    ...Object.fromEntries(window.checkboxNames.map(name => [name, \"on\"])),\n    \"ctl00_body_grdDirectSubordinates_ClientState\": \"\",\n    \"ctl00$body$grdInDirectSubordinates$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdInDirectSubordinates_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdInDirectSubordinates$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"3\",\n    \"ctl00_body_grdInDirectSubordinates_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdInDirectSubordinates_ClientState\": \"\",\n    \"ctl00$body$GrdempSup$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_GrdempSup_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$GrdempSup$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"10\",\n    \"ctl00_body_GrdempSup_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_GrdempSup_ClientState\": \"\"\n  }, `${reqOptions.sl}/${updateUrlData.pageUrl}&digest=${digest.digest}`);\n\n  const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(employeeResponse.publicKey, args.id);\n\n  const parser = new DOMParser();\n  const doccument = parser.parseFromString(employeeResponse.rawData, 'text/html');\n\n  const directSelector = 'input[type=\"checkbox\"][name^=\"ctl00$body$grdDirectSubordinates\"]';\n  const indirectSelector = 'input[type=\"checkbox\"][name^=\"ctl00$body$grdInDirectSubordinates\"]';\n\n  const directCheckboxes = Array.from(doccument.querySelectorAll(directSelector));\n  const indirectCheckboxes = Array.from(doccument.querySelectorAll(indirectSelector));\n\n  const checkboxNames = [\n    ...directCheckboxes.map(cb => cb.getAttribute('name')),\n    ...indirectCheckboxes.map(cb => cb.getAttribute('name'))\n  ];\n\n  const saveResponse = await BeaconBar.executeFunction('module')({\n    \"scrollLeft\": \"0\",\n    \"scrollTop\": \"0\",\n    \"__EVENTTARGET\": eventTarget,\n    \"__EVENTARGUMENT\": \"\",\n    \"__VIEWSTATE\": employeeResponse.viewState,\n    \"__VIEWSTATEGENERATOR\": employeeResponse.viewStateGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": employeeResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"m/d/yy\",\n    \"ctl00$hdnQuickmenu\": \"\",\n    \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$txtPublicKey\": publicKey,\n    \"ctl00$body$txtempnumber\": empEnc,\n    \"ctl00$body$hdnEmployeeNo\": args.id,\n    \"ctl00$body$HFCurrTabIndex\": isDirect ? \"\" : \"1\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00$body$grdDirectSubordinates$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdDirectSubordinates_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdDirectSubordinates$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": isDirect ? \"6\" : \"2\",\n    \"ctl00_body_grdDirectSubordinates_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    ...Object.fromEntries(checkboxNames.map(name => [name, \"on\"])),\n    \"ctl00_body_grdDirectSubordinates_ClientState\": \"\",\n    [isDirect ? \"ctl00$body$cmddireSave\" : \"ctl00$body$cmdIndireSave\"]: \"Save\",\n    \"ctl00$body$grdInDirectSubordinates$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdInDirectSubordinates_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdInDirectSubordinates$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": isDirect ? \"5\" : \"3\",\n    \"ctl00_body_grdInDirectSubordinates_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdInDirectSubordinates_ClientState\": \"\",\n    \"ctl00$body$GrdempSup$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_GrdempSup_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$GrdempSup$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": isDirect ? \"1\" : \"10\",\n    \"ctl00_body_GrdempSup_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_GrdempSup_ClientState\": \"\"\n  }, `${reqOptions.sl}/${updateUrlData.pageUrl}&digest=${digest.digest}`);\n\n  return \"employees are added successfully for the selected employess.\";\n});\n",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Add The Direct and Indirect Subordinates",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-04T13:03:09.958Z",
+      "updatedAt": "2025-06-04T13:03:09.958Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "createReportingHierarchyDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to give user employee id example '000001'",
+          "required": true,
+          "_id": "6840440dc004f6529545547e"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "description": "To determine the type of subordinates, there are two options: \"Indirect Subordinates\" and \"Direct Subordinates\".",
+          "required": true,
+          "_id": "6840440dc004f6529545547f"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6840440dc004f6529545547d"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Reportsto.aspx?IsShowButtons=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const viewSt = window.rh.viewState;\n  const viewstGen = window.rh.viewStateGen;\n  const event = window.rh.eventValidation;\n  const publicKey = window.rh.publicKey;\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"IsShowButtons=1\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/Reportsto.aspx?IsShowButtons=1\");\n\n  const digest = await BeaconBar.executeFunction(\"getDigest\")(\"IsShowButtons=1\");\n  const isDirect = args.type === \"Direct Subordinates\";\n  const eventTarget = isDirect ? \"GetSearchResultMultipleDirect\" : \"GetSearchResultMultipleIndirect\";\n\n  const employeeResponse = await BeaconBar.executeFunction('module')({\n    \"scrollLeft\": \"0\",\n    \"scrollTop\": \"0\",\n    \"__EVENTTARGET\": eventTarget,\n    \"__EVENTARGUMENT\": \"\",\n    \"__VIEWSTATE\": viewSt,\n    \"__VIEWSTATEGENERATOR\": viewstGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": event,\n    \"ctl00$hdnDateFormat\": \"m/d/yy\",\n    \"ctl00$hdnQuickmenu\": \"\",\n    \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$txtPublicKey\": publicKey,\n    \"ctl00$body$txtempnumber\": window.empnum,\n    \"ctl00$body$hdnEmployeeNo\": args.id,\n    \"ctl00$body$HFCurrTabIndex\": isDirect ? \"\" : \"1\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00$body$grdDirectSubordinates$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdDirectSubordinates_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdDirectSubordinates$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"2\",\n    \"ctl00_body_grdDirectSubordinates_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    ...Object.fromEntries(window.checkboxNames.map(name => [name, \"on\"])),\n    \"ctl00_body_grdDirectSubordinates_ClientState\": \"\",\n    \"ctl00$body$grdInDirectSubordinates$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdInDirectSubordinates_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdInDirectSubordinates$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"3\",\n    \"ctl00_body_grdInDirectSubordinates_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdInDirectSubordinates_ClientState\": \"\",\n    \"ctl00$body$GrdempSup$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_GrdempSup_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$GrdempSup$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"10\",\n    \"ctl00_body_GrdempSup_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_GrdempSup_ClientState\": \"\"\n  }, `${reqOptions.sl}/${updateUrlData.pageUrl}&digest=${digest.digest}`);\n\n  const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(employeeResponse.publicKey, args.id);\n\n  const parser = new DOMParser();\n  const doccument = parser.parseFromString(employeeResponse.rawData, 'text/html');\n\n  const directSelector = 'input[type=\"checkbox\"][name^=\"ctl00$body$grdDirectSubordinates\"]';\n  const indirectSelector = 'input[type=\"checkbox\"][name^=\"ctl00$body$grdInDirectSubordinates\"]';\n\n  const directCheckboxes = Array.from(doccument.querySelectorAll(directSelector));\n  const indirectCheckboxes = Array.from(doccument.querySelectorAll(indirectSelector));\n\n  const checkboxNames = [\n    ...directCheckboxes.map(cb => cb.getAttribute('name')),\n    ...indirectCheckboxes.map(cb => cb.getAttribute('name'))\n  ];\n\n  const saveResponse = await BeaconBar.executeFunction('module')({\n    \"scrollLeft\": \"0\",\n    \"scrollTop\": \"0\",\n    \"__EVENTTARGET\": eventTarget,\n    \"__EVENTARGUMENT\": \"\",\n    \"__VIEWSTATE\": employeeResponse.viewState,\n    \"__VIEWSTATEGENERATOR\": employeeResponse.viewStateGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": employeeResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"m/d/yy\",\n    \"ctl00$hdnQuickmenu\": \"\",\n    \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$txtPublicKey\": publicKey,\n    \"ctl00$body$txtempnumber\": empEnc,\n    \"ctl00$body$hdnEmployeeNo\": args.id,\n    \"ctl00$body$HFCurrTabIndex\": isDirect ? \"\" : \"1\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00$body$grdDirectSubordinates$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdDirectSubordinates_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdDirectSubordinates$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": isDirect ? \"6\" : \"2\",\n    \"ctl00_body_grdDirectSubordinates_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    ...Object.fromEntries(checkboxNames.map(name => [name, \"on\"])),\n    \"ctl00_body_grdDirectSubordinates_ClientState\": \"\",\n    [isDirect ? \"ctl00$body$cmddireSave\" : \"ctl00$body$cmdIndireSave\"]: \"Save\",\n    \"ctl00$body$grdInDirectSubordinates$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdInDirectSubordinates_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdInDirectSubordinates$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": isDirect ? \"5\" : \"3\",\n    \"ctl00_body_grdInDirectSubordinates_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdInDirectSubordinates_ClientState\": \"\",\n    \"ctl00$body$GrdempSup$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_GrdempSup_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$GrdempSup$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": isDirect ? \"1\" : \"10\",\n    \"ctl00_body_GrdempSup_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_GrdempSup_ClientState\": \"\"\n  }, `${reqOptions.sl}/${updateUrlData.pageUrl}&digest=${digest.digest}`);\n\n  return \"employees are added successfully for the selected employess.\";\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

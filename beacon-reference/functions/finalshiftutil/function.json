@@ -1,0 +1,24 @@
+{
+  "id": "690dc57d931a2d61ba0b269d",
+  "slug": "finalshiftutil",
+  "name": "finalshiftutil",
+  "status": "live",
+  "createdAt": "2025-06-16T16:47:32.914Z",
+  "updatedAt": "2025-06-16T16:47:32.914Z",
+  "contentHash": "df0d9fd925481e3e1b1e6daf0a20b0333f81c1b709cd257e6e853caea93f0c90",
+  "lastExportedAt": "2026-09-05T19:41:33.505Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57d931a2d61ba0b269d",
+    "name": "finalshiftutil",
+    "status": "live",
+    "code": "(async function (ARGS) {\n  const { emp, number, mainid, data } = ARGS;\n  BeaconBar.setSharedData(\"ARGS\", ARGS)\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"application/json, text/plain, */*\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"content-type\", \"application/json\");\n\n  const raw = JSON.stringify({\n    FilterMode: \"6\",\n    PageIndex: 1,\n    PageSize: 10,\n    LoggedEmployeeNumber: emp,\n    LoggedEmployeeUserId: number,\n    WfTypeCode: \"65004\",\n    WfMainId: mainid,\n    FromDate: \"\",\n    ToDate: \"\",\n    EmpNumber: data[0]?.empNumber || \"\"\n  });\n\n  const reqOptionsBase = await BeaconBar.executeFunction(\"reqOptions\")();\n\n  const response = await fetch(\n    `${reqOptionsBase}tnavue/service/api/WorkflowApproval/GetShiftAdjustmentApprovalGridData`,\n    {\n      method: \"POST\",\n      headers: myHeaders,\n      body: raw,\n      redirect: \"follow\"\n    }\n  );\n\n  const result = await response.json();\n  return result;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

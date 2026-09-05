@@ -1,0 +1,80 @@
+{
+  "id": "690dc56c931a2d61ba0b1b3d",
+  "slug": "selfemployeebankdetails",
+  "name": "selfEmployeeBankDetails",
+  "description": "to generate the self employee Bank details. if the user ask self, my related in the api execute only one time. do not execute more then two times.",
+  "instructions": null,
+  "taskName": "Fetching The Self Employee Bank Details",
+  "tags": [
+    "Employee Information",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "selfEmployeeBankDetails",
+  "createdAt": "2025-08-26T13:00:37.666Z",
+  "updatedAt": "2025-11-10T12:13:54.634Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "5e2eda8d44788271a745476576e513a2e1cfb9eb448163d299d77061c70f9a0c",
+  "lastExportedAt": "2026-09-05T19:39:23.344Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56c931a2d61ba0b1b3d",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selfEmployeeBankDetails",
+      "description": "to generate the self employee Bank details. if the user ask self, my related in the api execute only one time. do not execute more then two times.",
+      "rules": {
+        "ids": [
+          "690dc4b5931a2d61ba0a8085"
+        ],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selfEmployeeBankDetails",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68adaff5437e30a0eeec62a5"
+      },
+      "by": "7337",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return []\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const url = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIMV9/Bank/Bank?mvc=1&subordinate=0\")\n  const digest = await BeaconBar.executeFunction('getDigest')(url.updateParams);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${url.updateUrl}&digest=${digest.digest}&_=${Date.now()}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n  const details = await response.text();\n  const match = details.match(/var\\s+modelBank\\s*=\\s*(\\{[\\s\\S]*?\\});/);\n  const bank = JSON.parse(match[1]);\n  window.bankData = bank.EmpBankList\n  return {\n    bankDetails: bank.EmpBankList,\n    currecyList: bank.CurrencyList.map(x => ({\n      CurrencyId: x.CurrencyId,\n      CurrencyName: x.CurrencyName\n    })),\n    bankTypes: bank.BankAccTypList\n  };\n})",
+      "groupName": "",
+      "tags": [
+        "Employee Information",
+        "Headers"
+      ],
+      "taskName": "Fetching The Self Employee Bank Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-26T13:00:37.666Z",
+      "updatedAt": "2025-11-10T12:13:54.634Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selfEmployeeBankDetails",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68adaff5437e30a0eeec62a5"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return []\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const url = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIMV9/Bank/Bank?mvc=1&subordinate=0\")\n  const digest = await BeaconBar.executeFunction('getDigest')(url.updateParams);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${url.updateUrl}&digest=${digest.digest}&_=${Date.now()}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n  const details = await response.text();\n  const match = details.match(/var\\s+modelBank\\s*=\\s*(\\{[\\s\\S]*?\\});/);\n  const bank = JSON.parse(match[1]);\n  window.bankData = bank.EmpBankList\n  return {\n    bankDetails: bank.EmpBankList,\n    currecyList: bank.CurrencyList.map(x => ({\n      CurrencyId: x.CurrencyId,\n      CurrencyName: x.CurrencyName\n    })),\n    bankTypes: bank.BankAccTypList\n  };\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "690dc578931a2d61ba0b205d",
+  "slug": "pdfjobdescription",
+  "name": "PdfJobDescription",
+  "status": "live",
+  "createdAt": "2025-06-09T10:59:37.023Z",
+  "updatedAt": "2025-06-09T10:59:37.023Z",
+  "contentHash": "b9f0821a4f25bc27950c929872ccecf57de941256135e36875801cfe0e92862f",
+  "lastExportedAt": "2026-09-05T19:41:37.126Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc578931a2d61ba0b205d",
+    "name": "PdfJobDescription",
+    "status": "live",
+    "code": "(async function (args) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\",\n  };\n\nconst reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const url = new URL(`${reqOptions}recruitmentv9/Requisitions/DownloadJobDescription`);\n  url.searchParams.set(\"hieCode\", args.hieCode);\n  url.searchParams.set(\"salGrdCode\", args.salGrdCode);\n  url.searchParams.set(\"ctCode\", args.ctCode);\n  url.searchParams.set(\"dsgCode\", args.DsgCode);\n  url.searchParams.set(\"_\", Date.now());\n\n  const response = await fetch(url.toString(), requestOptions);\n\n  if (!response.ok) {\n    throw new Error(`HTTP error! status: ${response.status}`);\n  }\n\n  const text = await response.text();\n  return text;\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

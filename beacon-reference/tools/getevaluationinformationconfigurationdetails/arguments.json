@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "evaluationName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The evaluation name",
+      "advanced": false,
+      "raw": {
+        "name": "evaluationName",
+        "type": "string",
+        "description": "The evaluation name",
+        "required": true,
+        "_id": "69492a575eb411adb9ef43f6"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

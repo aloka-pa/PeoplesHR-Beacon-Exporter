@@ -1,0 +1,110 @@
+{
+  "arguments": [
+    {
+      "name": "currencyCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The unique code identifier for the currency to update (e.g., \"000008\")",
+      "advanced": false,
+      "raw": {
+        "name": "currencyCode",
+        "type": "string",
+        "description": "The unique code identifier for the currency to update (e.g., \"000008\")",
+        "required": false,
+        "_id": "6953fd6b7f596737edc57775"
+      }
+    },
+    {
+      "name": "currencyName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The current name of the currency to update (e.g., \"Euro\")\nThe user must provide ONE identification field and at least ONE update field.",
+      "advanced": false,
+      "raw": {
+        "name": "currencyName",
+        "type": "string",
+        "description": "The current name of the currency to update (e.g., \"Euro\")\nThe user must provide ONE identification field and at least ONE update field.",
+        "required": false,
+        "_id": "6953fd6b7f596737edc57776"
+      }
+    },
+    {
+      "name": "currencySymbol",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The current symbol of the currency to update (e.g., \"AUD,\" \"USD\");\nNOTE: currencySymbol is not currency symbol like \"$\"; it is a combination of letters, \"USD.\"",
+      "advanced": false,
+      "raw": {
+        "name": "currencySymbol",
+        "type": "string",
+        "description": "The current symbol of the currency to update (e.g., \"AUD,\" \"USD\");\nNOTE: currencySymbol is not currency symbol like \"$\"; it is a combination of letters, \"USD.\"",
+        "required": false,
+        "_id": "6953fd6b7f596737edc57777"
+      }
+    },
+    {
+      "name": "newCurrencyName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The new name for the currency",
+      "advanced": false,
+      "raw": {
+        "name": "newCurrencyName",
+        "type": "string",
+        "description": "The new name for the currency",
+        "required": false,
+        "_id": "6953fd6b7f596737edc57778"
+      }
+    },
+    {
+      "name": "newCurrencySymbol",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The new symbol for the currency\nNOTE: currencySymbol is not currency symbol like \"$\"; it is a combination of letters, \"USD.\"",
+      "advanced": false,
+      "raw": {
+        "name": "newCurrencySymbol",
+        "type": "string",
+        "description": "The new symbol for the currency\nNOTE: currencySymbol is not currency symbol like \"$\"; it is a combination of letters, \"USD.\"",
+        "required": false,
+        "_id": "6953fd6b7f596737edc57779"
+      }
+    },
+    {
+      "name": "isBaseCurrency",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set as base currency - accepts string \"true\" or \"false\"\nOnly 1 base currency can exist in the system.",
+      "advanced": false,
+      "raw": {
+        "name": "isBaseCurrency",
+        "type": "string",
+        "description": "Set as base currency - accepts string \"true\" or \"false\"\nOnly 1 base currency can exist in the system.",
+        "required": false,
+        "_id": "6953fd6b7f596737edc5777a"
+      }
+    },
+    {
+      "name": "exchangeRate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "New exchange rate value to update (example: \"1.12\"). If the currency is set as base, the rate will be forced to \"1\".",
+      "advanced": false,
+      "raw": {
+        "name": "exchangeRate",
+        "type": "string",
+        "description": "New exchange rate value to update (example: \"1.12\"). If the currency is set as base, the rate will be forced to \"1\".",
+        "required": false,
+        "_id": "6953fd6b7f596737edc5777b"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

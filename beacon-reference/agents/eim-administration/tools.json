@@ -1,0 +1,647 @@
+[
+  {
+    "toolId": "695217fcda1bb97137b67cea",
+    "toolName": "createCountry",
+    "path": "tools/createcountry"
+  },
+  {
+    "toolId": "6952160426cedae9de4bd1ac",
+    "toolName": "getCountry",
+    "path": "tools/getcountry"
+  },
+  {
+    "toolId": "69521688c933be4dd2b33c46",
+    "toolName": "editCountry",
+    "path": "tools/editcountry"
+  },
+  {
+    "toolId": "690dc562931a2d61ba0b1298",
+    "toolName": "setupConfiguration",
+    "path": "tools/setupconfiguration"
+  },
+  {
+    "toolId": "6958c883b035270d8526b90b",
+    "toolName": "getBenefitClearanceHeadInformation",
+    "path": "tools/getbenefitclearanceheadinformation"
+  },
+  {
+    "toolId": "698464ba03255c80cef5c0e6",
+    "toolName": "getBaseCurrencyType",
+    "path": "tools/getbasecurrencytype"
+  },
+  {
+    "toolId": "69855f0cf88a0de2d0e5ad25",
+    "toolName": "getBaseCountry",
+    "path": "tools/getbasecountry"
+  },
+  {
+    "toolId": "6958f801b2007cecd208af00",
+    "toolName": "editBenefitClearanceHeadInformation",
+    "path": "tools/editbenefitclearanceheadinformation"
+  },
+  {
+    "toolId": "695cb0dc04d83e39952b2764",
+    "toolName": "createBenefitClearanceHeadInformation",
+    "path": "tools/createbenefitclearanceheadinformation"
+  },
+  {
+    "toolId": "690dc564931a2d61ba0b1526",
+    "toolName": "updateNonCashBenefitCategoryDetails",
+    "path": "tools/updatenoncashbenefitcategorydetails"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b1636",
+    "toolName": "updateMaritalStatusDetails",
+    "path": "tools/updatemaritalstatusdetails"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b165a",
+    "toolName": "updateBloodGroupDetails",
+    "path": "tools/updatebloodgroupdetails"
+  },
+  {
+    "toolId": "695419d7a1e1ab0f84aadb5a",
+    "toolName": "editRouteInformation",
+    "path": "tools/editrouteinformation"
+  },
+  {
+    "toolId": "69576a72ca68a9f2794e81fa",
+    "toolName": "createRelationship",
+    "path": "tools/createrelationship"
+  },
+  {
+    "toolId": "6954babd58fa694a25a732a9",
+    "toolName": "getQualificationProperty",
+    "path": "tools/getqualificationproperty"
+  },
+  {
+    "toolId": "6954cec9f72a612a8c89ba69",
+    "toolName": "getSubjectDetails",
+    "path": "tools/getsubjectdetails"
+  },
+  {
+    "toolId": "69545635f72a612a8c8864ae",
+    "toolName": "createStationInformation",
+    "path": "tools/createstationinformation"
+  },
+  {
+    "toolId": "69545179ec34eb2090d6c4d8",
+    "toolName": "editStationInformation",
+    "path": "tools/editstationinformation"
+  },
+  {
+    "toolId": "695432faa3bf12e8ee6fa227",
+    "toolName": "editStatutoryItems",
+    "path": "tools/editstatutoryitems"
+  },
+  {
+    "toolId": "6954367f9f7bf02aaf034764",
+    "toolName": "createStatutoryItems",
+    "path": "tools/createstatutoryitems"
+  },
+  {
+    "toolId": "6954473e9f7bf02aaf035402",
+    "toolName": "getStationInformation",
+    "path": "tools/getstationinformation"
+  },
+  {
+    "toolId": "695439d7f72a612a8c885141",
+    "toolName": "getRelationships",
+    "path": "tools/getrelationships"
+  },
+  {
+    "toolId": "695377425c168b76aad67e05",
+    "toolName": "createDSDivision",
+    "path": "tools/createdsdivision"
+  },
+  {
+    "toolId": "69521a649efbf3c3d6761e08",
+    "toolName": "getReligion",
+    "path": "tools/getreligion"
+  },
+  {
+    "toolId": "69540adf9f7bf02aaf031895",
+    "toolName": "createCurrencyType",
+    "path": "tools/createcurrencytype"
+  },
+  {
+    "toolId": "6953fd6b7f596737edc57773",
+    "toolName": "editCurrencyType",
+    "path": "tools/editcurrencytype"
+  },
+  {
+    "toolId": "6953f7e5fc6c7e58f0961992",
+    "toolName": "getCurrencyType",
+    "path": "tools/getcurrencytype"
+  },
+  {
+    "toolId": "6953e247e62c2e2fca5eba6c",
+    "toolName": "editExtraCurricularActivityType",
+    "path": "tools/editextracurricularactivitytype"
+  },
+  {
+    "toolId": "6954ad8cadcdbcc09d2665ec",
+    "toolName": "createQualificationDetails",
+    "path": "tools/createqualificationdetails"
+  },
+  {
+    "toolId": "6952a5d6fbe9c497d06bff58",
+    "toolName": "createQualificationClassification",
+    "path": "tools/createqualificationclassification"
+  },
+  {
+    "toolId": "6954d9989f7bf02aaf04da3b",
+    "toolName": "editSubjectDetails",
+    "path": "tools/editsubjectdetails"
+  },
+  {
+    "toolId": "6954c8b90ab338868fafa8ff",
+    "toolName": "createQualificationProperty",
+    "path": "tools/createqualificationproperty"
+  },
+  {
+    "toolId": "6954c3a12248683501a4c629",
+    "toolName": "editQualificationProperty",
+    "path": "tools/editqualificationproperty"
+  },
+  {
+    "toolId": "6952b214b85447171da38e30",
+    "toolName": "editQualificationDetails",
+    "path": "tools/editqualificationdetails"
+  },
+  {
+    "toolId": "695245ac1b4be94eea2a8fcc",
+    "toolName": "editRace",
+    "path": "tools/editrace"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b16a6",
+    "toolName": "createEIMModuleList",
+    "path": "tools/createeimmodulelist"
+  },
+  {
+    "toolId": "690dc561931a2d61ba0b121b",
+    "toolName": "getUpdateSublocationDetails",
+    "path": "tools/getupdatesublocationdetails"
+  },
+  {
+    "toolId": "690dc560931a2d61ba0b112a",
+    "toolName": "getUpdateLocation",
+    "path": "tools/getupdatelocation"
+  },
+  {
+    "toolId": "690dc560931a2d61ba0b112d",
+    "toolName": "getSelectLocationDetails",
+    "path": "tools/getselectlocationdetails"
+  },
+  {
+    "toolId": "690dc564931a2d61ba0b151b",
+    "toolName": "updateNonCashBenefitDetails",
+    "path": "tools/updatenoncashbenefitdetails"
+  },
+  {
+    "toolId": "690dc564931a2d61ba0b14aa",
+    "toolName": "updateMembershipDetails",
+    "path": "tools/updatemembershipdetails"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b1628",
+    "toolName": "updateGenderDetails",
+    "path": "tools/updategenderdetails"
+  },
+  {
+    "toolId": "690dc565931a2d61ba0b15ba",
+    "toolName": "updateFunctionalRoleDetails",
+    "path": "tools/updatefunctionalroledetails"
+  },
+  {
+    "toolId": "690dc565931a2d61ba0b1604",
+    "toolName": "updateEmploymentTypeDetails",
+    "path": "tools/updateemploymenttypedetails"
+  },
+  {
+    "toolId": "690dc565931a2d61ba0b1611",
+    "toolName": "updateEmployeeTitleDetails",
+    "path": "tools/updateemployeetitledetails"
+  },
+  {
+    "toolId": "690dc564931a2d61ba0b14fa",
+    "toolName": "updateCashBenefitDetails",
+    "path": "tools/updatecashbenefitdetails"
+  },
+  {
+    "toolId": "690dc564931a2d61ba0b14fd",
+    "toolName": "updateBargainingUnit",
+    "path": "tools/updatebargainingunit"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b1679",
+    "toolName": "updateAttachmentTypeDetails",
+    "path": "tools/updateattachmenttypedetails"
+  },
+  {
+    "toolId": "690dc562931a2d61ba0b131a",
+    "toolName": "getUpdateSalaryGrade",
+    "path": "tools/getupdatesalarygrade"
+  },
+  {
+    "toolId": "690dc563931a2d61ba0b13f8",
+    "toolName": "getUpdateDesignationDetails",
+    "path": "tools/getupdatedesignationdetails"
+  },
+  {
+    "toolId": "690dc563931a2d61ba0b1393",
+    "toolName": "getUpdateCorporateTitleDetails",
+    "path": "tools/getupdatecorporatetitledetails"
+  },
+  {
+    "toolId": "690dc562931a2d61ba0b131d",
+    "toolName": "createSalaryGrade",
+    "path": "tools/createsalarygrade"
+  },
+  {
+    "toolId": "6952ab2a0ae74b035097924c",
+    "toolName": "getQualificationDetails",
+    "path": "tools/getqualificationdetails"
+  },
+  {
+    "toolId": "697e1b2b8534fce07a461058",
+    "toolName": "editQualificationType",
+    "path": "tools/editqualificationtype"
+  },
+  {
+    "toolId": "69534d615c168b76aad53bc2",
+    "toolName": "createDistrict",
+    "path": "tools/createdistrict"
+  },
+  {
+    "toolId": "695225703b764e60f75761a4",
+    "toolName": "editNationality",
+    "path": "tools/editnationality"
+  },
+  {
+    "toolId": "695228536730d25103d5fdf5",
+    "toolName": "createNationality",
+    "path": "tools/createnationality"
+  },
+  {
+    "toolId": "695399d6ae6788d5ccfc1fe3",
+    "toolName": "createGNDivision",
+    "path": "tools/creategndivision"
+  },
+  {
+    "toolId": "6953f17c9f7bf02aaf02f4c1",
+    "toolName": "createQualificationLanguage",
+    "path": "tools/createqualificationlanguage"
+  },
+  {
+    "toolId": "6953ed32adcdbcc09d259e6b",
+    "toolName": "editQualificationLanguage",
+    "path": "tools/editqualificationlanguage"
+  },
+  {
+    "toolId": "6954dfcfadcdbcc09d27a19c",
+    "toolName": "createSubjectDetails",
+    "path": "tools/createsubjectdetails"
+  },
+  {
+    "toolId": "6953ea19582bc4265d5113b8",
+    "toolName": "getQualificationLanguage",
+    "path": "tools/getqualificationlanguage"
+  },
+  {
+    "toolId": "6943c0a37300324fae1b90fa",
+    "toolName": "updateQualificationClassification",
+    "path": "tools/updatequalificationclassification"
+  },
+  {
+    "toolId": "695257475e9ac55674393d21",
+    "toolName": "editProvince",
+    "path": "tools/editprovince"
+  },
+  {
+    "toolId": "6953a843cb6166e3cc356385",
+    "toolName": "createExtraCurricularActivityCategory",
+    "path": "tools/createextracurricularactivitycategory"
+  },
+  {
+    "toolId": "6953a02a0ae74b03509a8c5b",
+    "toolName": "getExtraCurricularActivityCategory",
+    "path": "tools/getextracurricularactivitycategory"
+  },
+  {
+    "toolId": "6953e5cb862197c342b779be",
+    "toolName": "createExtraCurricularActivityType",
+    "path": "tools/createextracurricularactivitytype"
+  },
+  {
+    "toolId": "6953a41ba6b63147c8716e55",
+    "toolName": "editExtraCurricularActivityCategory",
+    "path": "tools/editextracurricularactivitycategory"
+  },
+  {
+    "toolId": "69543e06a2db81744fd183a7",
+    "toolName": "editRelationships",
+    "path": "tools/editrelationships"
+  },
+  {
+    "toolId": "69542d700eece7a2ce8dbbc3",
+    "toolName": "createDwellingType",
+    "path": "tools/createdwellingtype"
+  },
+  {
+    "toolId": "69539519c4a4daa640c04950",
+    "toolName": "editGNDivision",
+    "path": "tools/editgndivision"
+  },
+  {
+    "toolId": "695391e44e49fbb5234c1eb6",
+    "toolName": "getGNDivision",
+    "path": "tools/getgndivision"
+  },
+  {
+    "toolId": "69536e36069720b41b7e7f34",
+    "toolName": "getDSDivision",
+    "path": "tools/getdsdivision"
+  },
+  {
+    "toolId": "6953574c802e449bd3234130",
+    "toolName": "getElectorate",
+    "path": "tools/getelectorate"
+  },
+  {
+    "toolId": "69521b70523b1a6c1c532110",
+    "toolName": "createReligion",
+    "path": "tools/createreligion"
+  },
+  {
+    "toolId": "69521afaf1dea79e6a4bddd8",
+    "toolName": "editReligion",
+    "path": "tools/editreligion"
+  },
+  {
+    "toolId": "69537430fbe9c497d06dd9c0",
+    "toolName": "editDSDivision",
+    "path": "tools/editdsdivision"
+  },
+  {
+    "toolId": "69521e639d6620f7020953b4",
+    "toolName": "getNationality",
+    "path": "tools/getnationality"
+  },
+  {
+    "toolId": "695365a3c4a4daa640bee36e",
+    "toolName": "createElectorate",
+    "path": "tools/createelectorate"
+  },
+  {
+    "toolId": "6952518493aca2b06fa4f492",
+    "toolName": "createRace",
+    "path": "tools/createrace"
+  },
+  {
+    "toolId": "695240a86ae33a160b41ed36",
+    "toolName": "getRace",
+    "path": "tools/getrace"
+  },
+  {
+    "toolId": "695430ddec34eb2090d6af5d",
+    "toolName": "getStatutoryItems",
+    "path": "tools/getstatutoryitems"
+  },
+  {
+    "toolId": "695360444bee6b3103ce7500",
+    "toolName": "editElectorate",
+    "path": "tools/editelectorate"
+  },
+  {
+    "toolId": "69542af7582bc4265d51687c",
+    "toolName": "editDwellingType",
+    "path": "tools/editdwellingtype"
+  },
+  {
+    "toolId": "695424e4582bc4265d51607d",
+    "toolName": "getDwellingType",
+    "path": "tools/getdwellingtype"
+  },
+  {
+    "toolId": "695414f8a1e1ab0f84aad59e",
+    "toolName": "getRouteInformation",
+    "path": "tools/getrouteinformation"
+  },
+  {
+    "toolId": "695204a2632bdc03f92c2f31",
+    "toolName": "getQualificationClassification",
+    "path": "tools/getqualificationclassification"
+  },
+  {
+    "toolId": "690dc56a931a2d61ba0b1a49",
+    "toolName": "getEIMModuleLists",
+    "path": "tools/geteimmodulelists"
+  },
+  {
+    "toolId": "6952924cc990ad820910118d",
+    "toolName": "createProvince",
+    "path": "tools/createprovince"
+  },
+  {
+    "toolId": "6953423fe76b124cc3118f93",
+    "toolName": "getDistrict",
+    "path": "tools/getdistrict"
+  },
+  {
+    "toolId": "695346bd82c7b638e23ce275",
+    "toolName": "editDistrict",
+    "path": "tools/editdistrict"
+  },
+  {
+    "toolId": "6953af48fbe9c497d06f92b1",
+    "toolName": "getExtraCurricularActivityType",
+    "path": "tools/getextracurricularactivitytype"
+  },
+  {
+    "toolId": "690dc562931a2d61ba0b12a0",
+    "toolName": "editOrUpdateQualification",
+    "path": "tools/editorupdatequalification"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a67",
+    "toolName": "getGlobalEmployeeSearch",
+    "path": "tools/getglobalemployeesearch"
+  },
+  {
+    "toolId": "69541e980eece7a2ce8da343",
+    "toolName": "createRouteInformation",
+    "path": "tools/createrouteinformation"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b62",
+    "toolName": "updateCashBenefitAssignToSalaryGradeDetails",
+    "path": "tools/updatecashbenefitassigntosalarygradedetails"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b78",
+    "toolName": "updateNonCashBenefitAssignToSalaryGradeDetails",
+    "path": "tools/updatenoncashbenefitassigntosalarygradedetails"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a5f",
+    "toolName": "dateFormat",
+    "path": "tools/dateformat"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a62",
+    "toolName": "gradeSalaryDetails",
+    "path": "tools/gradesalarydetails"
+  },
+  {
+    "toolId": "690dc56a931a2d61ba0b1a33",
+    "toolName": "getEIMApii",
+    "path": "tools/geteimapii"
+  },
+  {
+    "toolId": "690dc56a931a2d61ba0b1a3c",
+    "toolName": "getProvinceCodeDetails",
+    "path": "tools/getprovincecodedetails"
+  },
+  {
+    "toolId": "690dc56a931a2d61ba0b1a36",
+    "toolName": "getDistrictDetails",
+    "path": "tools/getdistrictdetails"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b16a3",
+    "toolName": "getEIMAttributeList",
+    "path": "tools/geteimattributelist"
+  },
+  {
+    "toolId": "690dc565931a2d61ba0b15e4",
+    "toolName": "updateEmployeeGroupDetails",
+    "path": "tools/updateemployeegroupdetails"
+  },
+  {
+    "toolId": "690dc565931a2d61ba0b15c0",
+    "toolName": "updateClassificationsDetails",
+    "path": "tools/updateclassificationsdetails"
+  },
+  {
+    "toolId": "690dc565931a2d61ba0b15b7",
+    "toolName": "functionTypes",
+    "path": "tools/functiontypes"
+  },
+  {
+    "toolId": "690dc565931a2d61ba0b1594",
+    "toolName": "updateFunctionDetails",
+    "path": "tools/updatefunctiondetails"
+  },
+  {
+    "toolId": "690dc565931a2d61ba0b1578",
+    "toolName": "updateStatutoryClassificationDetails",
+    "path": "tools/updatestatutoryclassificationdetails"
+  },
+  {
+    "toolId": "690dc565931a2d61ba0b156c",
+    "toolName": "updateEmployeeCategoryDetails",
+    "path": "tools/updateemployeecategorydetails"
+  },
+  {
+    "toolId": "690dc564931a2d61ba0b154f",
+    "toolName": "getNonCashBenefitAssignToSalaryGradeDetails",
+    "path": "tools/getnoncashbenefitassigntosalarygradedetails"
+  },
+  {
+    "toolId": "690dc564931a2d61ba0b154b",
+    "toolName": "getCashBenefitAssignToSalaryGradeDetails",
+    "path": "tools/getcashbenefitassigntosalarygradedetails"
+  },
+  {
+    "toolId": "690dc564931a2d61ba0b1542",
+    "toolName": "ncdCategory",
+    "path": "tools/ncdcategory"
+  },
+  {
+    "toolId": "690dc564931a2d61ba0b14d0",
+    "toolName": "updateMembershipTitle",
+    "path": "tools/updatemembershiptitle"
+  },
+  {
+    "toolId": "690dc564931a2d61ba0b14b1",
+    "toolName": "memTypes",
+    "path": "tools/memtypes"
+  },
+  {
+    "toolId": "690dc564931a2d61ba0b14ad",
+    "toolName": "updateMembershipType",
+    "path": "tools/updatemembershiptype"
+  },
+  {
+    "toolId": "690dc564931a2d61ba0b1481",
+    "toolName": "getJdCategory",
+    "path": "tools/getjdcategory"
+  },
+  {
+    "toolId": "690dc564931a2d61ba0b1488",
+    "toolName": "updateJobDescriptionType",
+    "path": "tools/updatejobdescriptiontype"
+  },
+  {
+    "toolId": "690dc563931a2d61ba0b144a",
+    "toolName": "getupdateJobDescriptionCategoryDetails",
+    "path": "tools/getupdatejobdescriptioncategorydetails"
+  },
+  {
+    "toolId": "690dc563931a2d61ba0b1442",
+    "toolName": "getTitle",
+    "path": "tools/gettitle"
+  },
+  {
+    "toolId": "690dc563931a2d61ba0b13f5",
+    "toolName": "gradeDetails",
+    "path": "tools/gradedetails"
+  },
+  {
+    "toolId": "690dc563931a2d61ba0b13eb",
+    "toolName": "getUpgradeLevelandSalaryGrade",
+    "path": "tools/getupgradelevelandsalarygrade"
+  },
+  {
+    "toolId": "690dc563931a2d61ba0b1390",
+    "toolName": "getCurrencyDetails",
+    "path": "tools/getcurrencydetails"
+  },
+  {
+    "toolId": "690dc562931a2d61ba0b1324",
+    "toolName": "editOrUpdateRatingMethods",
+    "path": "tools/editorupdateratingmethods"
+  },
+  {
+    "toolId": "690dc562931a2d61ba0b129b",
+    "toolName": "getSetupConfigurationDetails",
+    "path": "tools/getsetupconfigurationdetails"
+  },
+  {
+    "toolId": "690dc562931a2d61ba0b1295",
+    "toolName": "getSelectLocations",
+    "path": "tools/getselectlocations"
+  },
+  {
+    "toolId": "690dc561931a2d61ba0b121e",
+    "toolName": "getAllQualifications",
+    "path": "tools/getallqualifications"
+  },
+  {
+    "toolId": "690dc561931a2d61ba0b1226",
+    "toolName": "getUpdateCostCentre",
+    "path": "tools/getupdatecostcentre"
+  },
+  {
+    "toolId": "690dc561931a2d61ba0b11be",
+    "toolName": "getCompanyDefinationUpdate",
+    "path": "tools/getcompanydefinationupdate"
+  },
+  {
+    "toolId": "690dc561931a2d61ba0b11bb",
+    "toolName": "getCompanyDefination",
+    "path": "tools/getcompanydefination"
+  }
+]

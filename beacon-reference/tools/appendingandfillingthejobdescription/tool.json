@@ -1,0 +1,88 @@
+{
+  "id": "690dc568931a2d61ba0b1896",
+  "slug": "appendingandfillingthejobdescription",
+  "name": "appendingandfillingthejobdescription",
+  "description": "appending the job description only generate 300 characters description, do NOT ask the user for description, Create one based on the existing details. Always display the updated description and ask for consent from user before filling.",
+  "instructions": null,
+  "taskName": "appending the job description",
+  "tags": [],
+  "status": "live",
+  "signature": "appendingthejobdescription",
+  "createdAt": "2025-05-29T12:09:41.831Z",
+  "updatedAt": "2025-11-12T14:13:52.986Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1c0e",
+      "name": "GenarateJD"
+    }
+  ],
+  "contentHash": "1afc8b54b6128119829b65145eb33f560fd9f1805f5eebc48a175e687e84965a",
+  "lastExportedAt": "2026-09-05T19:39:23.181Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b1896",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "appendingandfillingthejobdescription",
+      "description": "appending the job description only generate 300 characters description, do NOT ask the user for description, Create one based on the existing details. Always display the updated description and ask for consent from user before filling.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "appendingthejobdescription",
+        "args": [
+          {
+            "name": "description",
+            "type": "string",
+            "description": "Generate the Job description only limit is 300 characters of description. 300 chars only take",
+            "required": true,
+            "_id": "68384e850646ef6bf1544dea"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68384e850646ef6bf1544de9"
+      },
+      "by": "7829",
+      "fetcher": "(function(args){\n    return{\n        code:`(function(){\n            return {}\n        })`\n    }\n});\n\n\n",
+      "transformer": "(function (_data, args, reqOptions) {\n  const iframe = document.getElementById(\"ifrmPage\");\n\n  if (!iframe || !iframe.contentWindow || !iframe.contentDocument) {\n    alert(\"Iframe not accessible or not loaded.\");\n    return { success: false };\n  }\n\n  const iframeWin = iframe.contentWindow;\n  const iframeDoc = iframe.contentDocument || iframeWin.document;\n\n  const rawHtml = args.description.replace(/\\*\\*(.*?)\\*\\*/g, \"<b>$1</b>\").replace(/\\n/g, \"<br>\");\n  const rawText = rawHtml?.substring(0, 500) || \"\";\n\n  const $textarea = iframeWin.$('#rct-requisitions-partial-requisition-137 textarea');\n  let i = 0;\n  $textarea.val(\"\");\n\n  const typeInterval = setInterval(() => {\n    if (i < rawText.length) {\n      const currentText = rawText.slice(0, i + 1);\n      $textarea.val(currentText);\n      i++;\n    } else {\n      clearInterval(typeInterval);\n    }\n  }, 10);\n\n  return {\n    success: true,\n    description: rawText,\n    Important: \"if you need to format this, need the feedback to fill again this.\"\n  };\n})\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "appending the job description",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-29T12:09:41.831Z",
+      "updatedAt": "2025-11-12T14:13:52.986Z",
+      "__v": 2,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1c0e",
+          "name": "GenarateJD"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "appendingthejobdescription",
+      "args": [
+        {
+          "name": "description",
+          "type": "string",
+          "description": "Generate the Job description only limit is 300 characters of description. 300 chars only take",
+          "required": true,
+          "_id": "68384e850646ef6bf1544dea"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68384e850646ef6bf1544de9"
+    },
+    "fetcher": "(function(args){\n    return{\n        code:`(function(){\n            return {}\n        })`\n    }\n});\n\n\n",
+    "transformer": "(function (_data, args, reqOptions) {\n  const iframe = document.getElementById(\"ifrmPage\");\n\n  if (!iframe || !iframe.contentWindow || !iframe.contentDocument) {\n    alert(\"Iframe not accessible or not loaded.\");\n    return { success: false };\n  }\n\n  const iframeWin = iframe.contentWindow;\n  const iframeDoc = iframe.contentDocument || iframeWin.document;\n\n  const rawHtml = args.description.replace(/\\*\\*(.*?)\\*\\*/g, \"<b>$1</b>\").replace(/\\n/g, \"<br>\");\n  const rawText = rawHtml?.substring(0, 500) || \"\";\n\n  const $textarea = iframeWin.$('#rct-requisitions-partial-requisition-137 textarea');\n  let i = 0;\n  $textarea.val(\"\");\n\n  const typeInterval = setInterval(() => {\n    if (i < rawText.length) {\n      const currentText = rawText.slice(0, i + 1);\n      $textarea.val(currentText);\n      i++;\n    } else {\n      clearInterval(typeInterval);\n    }\n  }, 10);\n\n  return {\n    success: true,\n    description: rawText,\n    Important: \"if you need to format this, need the feedback to fill again this.\"\n  };\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

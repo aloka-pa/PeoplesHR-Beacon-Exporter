@@ -1,0 +1,50 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "evaluationName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name of the evaluation we want to update the parameters of",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The name of the evaluation we want to update the parameters of"
+      }
+    },
+    {
+      "name": "parameterList",
+      "type": "array",
+      "required": true,
+      "defaultValue": null,
+      "description": "List of parameters to update for the evaluation",
+      "advanced": true,
+      "raw": {
+        "type": "array",
+        "description": "List of parameters to update for the evaluation",
+        "items": {
+          "type": "object",
+          "properties": {
+            "parameterName": {
+              "type": "string",
+              "description": "The name of the parameter we want to update"
+            },
+            "parameterValue": {
+              "type": "integer",
+              "enum": [
+                0,
+                1
+              ],
+              "description": "'1' means true and '0' means false"
+            }
+          },
+          "required": [
+            "parameterName",
+            "parameterValue"
+          ]
+        }
+      }
+    }
+  ]
+}

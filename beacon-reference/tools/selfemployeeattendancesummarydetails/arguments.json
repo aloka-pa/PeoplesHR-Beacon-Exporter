@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "fromDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the fromDate Example:-\"22/01/2023\" format date DD/MM/YYYY",
+      "advanced": false,
+      "raw": {
+        "name": "fromDate",
+        "type": "string",
+        "description": "to give the fromDate Example:-\"22/01/2023\" format date DD/MM/YYYY",
+        "required": true,
+        "_id": "68a48730560b6ad2e55c58f5"
+      }
+    },
+    {
+      "name": "toDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the toDate Example:-\"25/12/2024\" format date DD/MM/YYYY",
+      "advanced": false,
+      "raw": {
+        "name": "toDate",
+        "type": "string",
+        "description": "to give the toDate Example:-\"25/12/2024\" format date DD/MM/YYYY",
+        "required": true,
+        "_id": "68a48730560b6ad2e55c58f6"
+      }
+    },
+    {
+      "name": "rosterCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "to get the user select roster corresponding id will be take roster CodeExample '000030' execute for \"rosetersDetails\" tool.",
+      "advanced": false,
+      "raw": {
+        "name": "rosterCode",
+        "type": "string",
+        "description": "to get the user select roster corresponding id will be take roster CodeExample '000030' execute for \"rosetersDetails\" tool.",
+        "required": false,
+        "_id": "68a48730560b6ad2e55c58f7"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

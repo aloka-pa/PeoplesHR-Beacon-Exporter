@@ -1,0 +1,24 @@
+{
+  "id": "690dc581931a2d61ba0b288b",
+  "slug": "getemployeelist",
+  "name": "getEmployeeList",
+  "status": "live",
+  "createdAt": "2025-05-28T12:10:15.693Z",
+  "updatedAt": "2026-07-17T12:55:54.300Z",
+  "contentHash": "eeb82a18319bd08315e4167cac41aefe530fefe478e507b8c473a45148545ab0",
+  "lastExportedAt": "2026-09-05T19:41:20.515Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc581931a2d61ba0b288b",
+    "name": "getEmployeeList",
+    "status": "live",
+    "code": "(async function () {\n  try {\n    const headers = new Headers({\n      \"Accept\": \"*/*\",\n      \"Accept-Language\": \"en-US,en;q=0.9\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\" : \"XMLHttpRequest\"\n    });\n\n    const payload = {\n      empNumber: \"MAAwADAAMAAwADIA\",\n      criteriaValues: [],\n      key: \"5faca355-fa62-4fff-9c88-e8f1554afc9d\",\n      modeId: \"2\",\n      supEmpNumber: null,\n      tblPageNo: 1,\n      tblSearchText: \"\",\n      sortColumn: \"2\",\n      sortOrder: \"asc\"\n    };\n\n    const reqOptions = await BeaconBar.executeFunction('reqOptions')();\n    const response = await fetch(`${reqOptions}CommonComponents/Search/GetSearchList/`, {\n      method: \"POST\",\n      headers,\n      body: JSON.stringify(payload),\n      redirect: \"follow\"\n    });\n\n    if (!response.ok) {\n      throw new Error(`HTTP error! Status: ${response.status}`);\n    }\n\n    const json = await response.json();\n    return json?.Object?.data || [];\n  } catch (error) {\n    return [];\n  }\n})();\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

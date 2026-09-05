@@ -1,0 +1,75 @@
+{
+  "id": "690dc564931a2d61ba0b1542",
+  "slug": "ncdcategory",
+  "name": "ncdCategory",
+  "description": "in this to generate non cash benefit category. in this tool user for creating the non cash benefit details.",
+  "instructions": null,
+  "taskName": "non cash benefit category",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "ncdCategory",
+  "createdAt": "2025-05-02T06:41:10.572Z",
+  "updatedAt": "2025-05-02T06:41:10.572Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "977f793eb566d7d951d18e17ce0f46acb8f5451b8137c5da6cbca67ba7214e65",
+  "lastExportedAt": "2026-09-05T19:39:24.304Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b1542",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "ncdCategory",
+      "description": "in this to generate non cash benefit category. in this tool user for creating the non cash benefit details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "ncdCategory",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "681469061bd8eaa46581bc5f"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/NonCashBenifit.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"NonCashBenifit\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"B.NBEN_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"8\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"NonCashBenifit\");\n\n  window.ncd = newInt;\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(newInt.rawData, \"text/html\");\n\n  const categorySelect = doc.getElementById(\"ctl00_body_dpCategory\");\n  const categories = [];\n\n  if (categorySelect) {\n    for (const option of categorySelect.options) {\n      categories.push({\n        value: option.value,\n        text: option.text.trim()\n      });\n    }\n  }\n  return categories;\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "non cash benefit category",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-02T06:41:10.572Z",
+      "updatedAt": "2025-05-02T06:41:10.572Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "ncdCategory",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "681469061bd8eaa46581bc5f"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/NonCashBenifit.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"NonCashBenifit\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"B.NBEN_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"8\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"NonCashBenifit\");\n\n  window.ncd = newInt;\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(newInt.rawData, \"text/html\");\n\n  const categorySelect = doc.getElementById(\"ctl00_body_dpCategory\");\n  const categories = [];\n\n  if (categorySelect) {\n    for (const option of categorySelect.options) {\n      categories.push({\n        value: option.value,\n        text: option.text.trim()\n      });\n    }\n  }\n  return categories;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

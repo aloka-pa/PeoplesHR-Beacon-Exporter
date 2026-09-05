@@ -1,0 +1,24 @@
+{
+  "id": "690dc581931a2d61ba0b2946",
+  "slug": "getleave",
+  "name": "getLeave",
+  "status": "live",
+  "createdAt": "2025-05-27T07:34:13.643Z",
+  "updatedAt": "2025-05-27T07:34:13.643Z",
+  "contentHash": "a01215ddcb030e99f472b9f518f275d3e3b332d42205966dc55e6f394be25f89",
+  "lastExportedAt": "2026-09-05T19:41:40.032Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc581931a2d61ba0b2946",
+    "name": "getLeave",
+    "status": "live",
+    "code": "(async function (args) {\n  //done\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('absence/ess/ViewSubbordinateLeaveDetail.aspx?subo=0');\n  let url;\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n  } else {\n    url = \"absence/ess/ViewSubbordinateLeaveDetail.aspx?subo=0\"\n  }\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n  debugger;\n\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const digest = await BeaconBar.executeFunction(\"getDigest\")(updateurl.updateParams);\n  const response = await fetch(`${reqOptions}${url}&digest=${digest.digest}`, requestOptions)\n  const data = await response.text()\n  function extractViewState(html) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(html, \"text/html\");\n\n    const SupervisorEmpNumber = doc.querySelector(\"#body_hdnSupervisorEmpNumber\")?.value || \"\";\n\n    const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n    const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const comapanydetails = doc.querySelector(\"#body_hdnIsCompanyDetail\")?.value || \"\";\n    const eventarguement = doc.querySelector(\"#__EVENTARGUMENT\")?.value || \"\";\n\n\n\n    return {\n      viewState, viewStateGenerator, eventValidation, SupervisorEmpNumber, comapanydetails, eventarguement\n\n    }\n  }\n  const datas = extractViewState(data)\n  BeaconBar.setSharedData(\"getLeave\", datas)\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

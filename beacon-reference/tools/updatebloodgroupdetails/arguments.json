@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "ctl00bodytxtName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the blood group example:-\"A +\",\"A -\",etc..",
+      "advanced": false,
+      "raw": {
+        "name": "ctl00bodytxtName",
+        "type": "string",
+        "description": "to give the blood group example:-\"A +\",\"A -\",etc..",
+        "required": true,
+        "_id": "6817a71a68ca7396dee7421a"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

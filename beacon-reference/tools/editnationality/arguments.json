@@ -1,0 +1,80 @@
+{
+  "arguments": [
+    {
+      "name": "nationalityCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Nationality code to identify the exact record to edit (e.g., \"000208\"). If this is provided, the tool edits that record directly and does not ask about duplicates.",
+      "advanced": false,
+      "raw": {
+        "name": "nationalityCode",
+        "type": "string",
+        "description": "Nationality code to identify the exact record to edit (e.g., \"000208\"). If this is provided, the tool edits that record directly and does not ask about duplicates.",
+        "required": false,
+        "_id": "695225703b764e60f75761a6"
+      }
+    },
+    {
+      "name": "nationalityName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "New nationality name to be saved.",
+      "advanced": false,
+      "raw": {
+        "name": "nationalityName",
+        "type": "string",
+        "description": "New nationality name to be saved.",
+        "required": true,
+        "_id": "695225703b764e60f75761a7"
+      }
+    },
+    {
+      "name": "searchNationalityName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Existing nationality name to identify the record when the code is not provided. If multiple records share the same name, the tool returns all matches and asks the user which code to edit.",
+      "advanced": false,
+      "raw": {
+        "name": "searchNationalityName",
+        "type": "string",
+        "description": "Existing nationality name to identify the record when the code is not provided. If multiple records share the same name, the tool returns all matches and asks the user which code to edit.",
+        "required": false,
+        "_id": "6956a26aad06de92910fa82f"
+      }
+    },
+    {
+      "name": "applyTo",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Controls what to do when multiple records match the same searchNationalityName.\nAllowed values:\n\"single\" (default) — return matches and ask the user which nationalityCode to edit\n\"all\" — update all matching records with the new nationalityName",
+      "advanced": false,
+      "raw": {
+        "name": "applyTo",
+        "type": "string",
+        "description": "Controls what to do when multiple records match the same searchNationalityName.\nAllowed values:\n\"single\" (default) — return matches and ask the user which nationalityCode to edit\n\"all\" — update all matching records with the new nationalityName",
+        "required": false,
+        "_id": "698982ca2c69c0867ca37267"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Page size to use for the results grid (must match UI behavior). Default: \"10\"",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "Page size to use for the results grid (must match UI behavior). Default: \"10\"",
+        "required": false,
+        "_id": "698982ca2c69c0867ca37268"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

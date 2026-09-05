@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "statutoryName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name of the statutory item to create (e.g., \"Provident Fund\", \"Insurance\", \"Tax Deduction\")",
+      "advanced": false,
+      "raw": {
+        "name": "statutoryName",
+        "type": "string",
+        "description": "The name of the statutory item to create (e.g., \"Provident Fund\", \"Insurance\", \"Tax Deduction\")",
+        "required": true,
+        "_id": "6954367f9f7bf02aaf034766"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

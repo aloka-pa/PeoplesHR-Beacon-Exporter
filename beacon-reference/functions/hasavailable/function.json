@@ -1,0 +1,24 @@
+{
+  "id": "690dc584931a2d61ba0b2bbd",
+  "slug": "hasavailable",
+  "name": "hasAvailable",
+  "status": "live",
+  "createdAt": "2025-08-21T12:35:11.047Z",
+  "updatedAt": "2025-08-21T12:35:11.047Z",
+  "contentHash": "4c50d91967109b68ebe863331a864aa9d232286fe6d4a54d5caa2be96114b3a9",
+  "lastExportedAt": "2026-09-05T19:41:28.202Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc584931a2d61ba0b2bbd",
+    "name": "hasAvailable",
+    "status": "live",
+    "code": "(async function (approval) {\n  let items = BeaconBar.getSharedData(\"summary\");\n  if (!items) {\n    items = await BeaconBar.executeFunction(\"summary\")();\n    BeaconBar.setSharedData(\"summary\", items);\n  }\n  return items.some(\n    obj => obj.text && obj.text.toLowerCase().includes(approval.toLowerCase())\n  );\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

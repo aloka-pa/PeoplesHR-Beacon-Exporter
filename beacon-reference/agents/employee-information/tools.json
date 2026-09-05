@@ -1,0 +1,267 @@
+[
+  {
+    "toolId": "690dc56b931a2d61ba0b1b1e",
+    "toolName": "selfEmployeeInformationDetails",
+    "path": "tools/selfemployeeinformationdetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b17bc",
+    "toolName": "getAllEmployeeInformationDetails",
+    "path": "tools/getallemployeeinformationdetails"
+  },
+  {
+    "toolId": "6a326d0f7383f8d7b107b5af",
+    "toolName": "getNewEmployeeLabelMappings",
+    "path": "tools/getnewemployeelabelmappings"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b19b2",
+    "toolName": "getEmployeeProfileDetails",
+    "path": "tools/getemployeeprofiledetails"
+  },
+  {
+    "toolId": "690dc561931a2d61ba0b11c3",
+    "toolName": "getCoveringEmployee",
+    "path": "tools/getcoveringemployee"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b1869",
+    "toolName": "getAdminInformationDetails",
+    "path": "tools/getadmininformationdetails"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1b15",
+    "toolName": "selfEmployeeProfileInformation",
+    "path": "tools/selfemployeeprofileinformation"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a67",
+    "toolName": "getGlobalEmployeeSearch",
+    "path": "tools/getglobalemployeesearch"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b1745",
+    "toolName": "getCensusInformationDetails",
+    "path": "tools/getcensusinformationdetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b1791",
+    "toolName": "getContractExtensionDetails",
+    "path": "tools/getcontractextensiondetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b1751",
+    "toolName": "getMembershipDetails",
+    "path": "tools/getmembershipdetails-2"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b40",
+    "toolName": "selfEmployeePassportAndOtherArticlesDetails",
+    "path": "tools/selfemployeepassportandotherarticlesdetails"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b182a",
+    "toolName": "updateEmployeeInformationDetails",
+    "path": "tools/updateemployeeinformationdetails"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b5f",
+    "toolName": "updateSelfEmployeeWorkExperienceDetails",
+    "path": "tools/updateselfemployeeworkexperiencedetails"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b43",
+    "toolName": "updateSelfEmployeeEducationalAndQualificationDetails",
+    "path": "tools/updateselfemployeeeducationalandqualificationdetails"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b3d",
+    "toolName": "selfEmployeeBankDetails",
+    "path": "tools/selfemployeebankdetails"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b36",
+    "toolName": "selfEmployeeWorkExperienceDetails",
+    "path": "tools/selfemployeeworkexperiencedetails"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1b1b",
+    "toolName": "selfEmployeeEducationalAndQualificationDetails",
+    "path": "tools/selfemployeeeducationalandqualificationdetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b1775",
+    "toolName": "getEmployeePassportAndOtherArticlesDetails",
+    "path": "tools/getemployeepassportandotherarticlesdetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b174d",
+    "toolName": "getWorkExperienceDetails",
+    "path": "tools/getworkexperiencedetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b1749",
+    "toolName": "getEducationalAndProfessionalQualificationsDetails",
+    "path": "tools/geteducationalandprofessionalqualificationsdetails"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b39",
+    "toolName": "selfEmployeeMembershipDetails",
+    "path": "tools/selfemployeemembershipdetails"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a5f",
+    "toolName": "dateFormat",
+    "path": "tools/dateformat"
+  },
+  {
+    "toolId": "690dc56a931a2d61ba0b1a1b",
+    "toolName": "getLabourCardDetails",
+    "path": "tools/getlabourcarddetails"
+  },
+  {
+    "toolId": "690dc56a931a2d61ba0b1a0b",
+    "toolName": "changeLanguage",
+    "path": "tools/changelanguage"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b19d3",
+    "toolName": "nextQualificationTypes",
+    "path": "tools/nextqualificationtypes"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b19ed",
+    "toolName": "updateOrChangeSupervisorDetails",
+    "path": "tools/updateorchangesupervisordetails"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b19db",
+    "toolName": "createEmployeeCoveringDetails",
+    "path": "tools/createemployeecoveringdetails"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b19e6",
+    "toolName": "subGroupLevelDetails",
+    "path": "tools/subgroupleveldetails"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b19d6",
+    "toolName": "positionTitleDetails",
+    "path": "tools/positiontitledetails"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b19bb",
+    "toolName": "personalGradeAndGroupLevelDetails",
+    "path": "tools/personalgradeandgroupleveldetails"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b19b6",
+    "toolName": "createOrAddContractExtesionDetails",
+    "path": "tools/createoraddcontractextesiondetails"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b1969",
+    "toolName": "createReportingHierarchyDetails",
+    "path": "tools/createreportinghierarchydetails"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b1965",
+    "toolName": "bulkEmployeeSelectDetails",
+    "path": "tools/bulkemployeeselectdetails"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b1961",
+    "toolName": "bulkEmployees",
+    "path": "tools/bulkemployees"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b1910",
+    "toolName": "specificAssignNonCashBenefitDetails",
+    "path": "tools/specificassignnoncashbenefitdetails"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b18f1",
+    "toolName": "specificPassportAndOtherArticlesDetails",
+    "path": "tools/specificpassportandotherarticlesdetails"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b18e8",
+    "toolName": "specificCreditCardDetails",
+    "path": "tools/specificcreditcarddetails"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b18c1",
+    "toolName": "specificBankEmployeeDetails",
+    "path": "tools/specificbankemployeedetails"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b189f",
+    "toolName": "updateMemberShipDetails",
+    "path": "tools/updatemembershipdetails-2"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b186c",
+    "toolName": "updateLanguagesDetails",
+    "path": "tools/updatelanguagesdetails"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b184f",
+    "toolName": "getReportingHierarchyDetails",
+    "path": "tools/getreportinghierarchydetails"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b1845",
+    "toolName": "workExpDetails",
+    "path": "tools/workexpdetails"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b1842",
+    "toolName": "qualificationTypesandQualification",
+    "path": "tools/qualificationtypesandqualification"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b17ef",
+    "toolName": "UpdateAssignCashBenefitToEmployeeDetails",
+    "path": "tools/updateassigncashbenefittoemployeedetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b17c0",
+    "toolName": "updateJobSpecificationDetails",
+    "path": "tools/updatejobspecificationdetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b17a1",
+    "toolName": "getChangeSupervisorDetails",
+    "path": "tools/getchangesupervisordetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b1799",
+    "toolName": "getJobSpecificationDetails",
+    "path": "tools/getjobspecificationdetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b179d",
+    "toolName": "getAssignLanguageDetails",
+    "path": "tools/getassignlanguagedetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b1795",
+    "toolName": "getCoveringDetails",
+    "path": "tools/getcoveringdetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b1779",
+    "toolName": "getAssignNonCashBenefitToEmployeeDetails",
+    "path": "tools/getassignnoncashbenefittoemployeedetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b1771",
+    "toolName": "getAssignCashBenefitToEmployeeDetails",
+    "path": "tools/getassigncashbenefittoemployeedetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b176d",
+    "toolName": "getEmployeeCreditCardDetails",
+    "path": "tools/getemployeecreditcarddetails"
+  }
+]

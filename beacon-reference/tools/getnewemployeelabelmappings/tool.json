@@ -1,0 +1,100 @@
+{
+  "id": "6a326d0f7383f8d7b107b5af",
+  "slug": "getnewemployeelabelmappings",
+  "name": "getNewEmployeeLabelMappings",
+  "description": "Fetches the current set of employee field label mappings configured in Beacon, returning each Employee API field path together with its client-configured display label (e.g. \"personalDetails.NICNumber\" → \"Tax ID No.\"). Use this when the agent needs to know what label a client uses for a given employee data field, or to resolve a label the user mentioned back to its underlying field. If the user asked field is not found in both api payload in and this mapping, return \"not found\". this is only a mapping which will help you to return the value for the user requested label if the label is not in the original payload  the 'getAllEmployeeInformationDetails' tool gets when executing. Do not display your findings, mappings and technical details to the end user. only display the accurate value or a user-friendly \"not found\" if a field can not be found in both api payload in and this mapping",
+  "instructions": null,
+  "taskName": "Mapping Employee Information Labels",
+  "tags": [
+    "EmployeeInformation",
+    "NewTool"
+  ],
+  "status": "live",
+  "signature": "getNewEmployeeLabelMappings",
+  "createdAt": "2026-06-17T09:46:55.466Z",
+  "updatedAt": "2026-07-06T05:07:32.660Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "5e6493cd68b1f271c17bc45dd6c05921ea5a2919b04a968256f699909e389ba6",
+  "lastExportedAt": "2026-09-05T19:39:22.265Z",
+  "raw": {
+    "basic": {
+      "_id": "6a326d0f7383f8d7b107b5af",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getNewEmployeeLabelMappings",
+      "description": "Fetches the current set of employee field label mappings configured in Beacon, returning each Employee API field path together with its client-configured display label (e.g. \"personalDetails.NICNumber\" → \"Tax ID No.\"). Use this when the agent needs to know what label a client uses for a given employee data field, or to resolve a label the user mentioned back to its underlying field. If the user asked field is not found in both api payload in and this mapping, return \"not found\". this is only a mapping which will help you to return the value for the user requested label if the label is not in the original payload  the 'getAllEmployeeInformationDetails' tool gets when executing. Do not display your findings, mappings and technical details to the end user. only display the accurate value or a user-friendly \"not found\" if a field can not be found in both api payload in and this mapping",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getNewEmployeeLabelMappings",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6a4b3814a10b3ec52b09cfd8"
+      },
+      "by": "27739",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    url: `https://${location.host}/hr/beacon/api/config/employee-label-map`,\n    method: \"GET\",\n    headers: {\n      \"Content-Type\": \"application/json\",\n    },\n  };\n})",
+      "transformer": "(function (data, args, reqOptions) {\n    if (!data || Object.keys(data).length === 0) {\n        return { message: \"No label mappings configured\" };\n    }\n\n    return data;\n})",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "NewTool"
+      ],
+      "taskName": "Mapping Employee Information Labels",
+      "etl": false,
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "toolType": "code",
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "status": "live",
+      "isFromKG": false,
+      "branch": {
+        "id": null,
+        "sourceId": null,
+        "sourceVersion": null,
+        "discardedByConflictResolution": false
+      },
+      "sanity": {
+        "apiResponse": []
+      },
+      "createdAt": "2026-06-17T09:46:55.466Z",
+      "updatedAt": "2026-07-06T05:07:32.660Z",
+      "__v": 10,
+      "outputExample": {},
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getNewEmployeeLabelMappings",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6a4b3814a10b3ec52b09cfd8"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    url: `https://${location.host}/hr/beacon/api/config/employee-label-map`,\n    method: \"GET\",\n    headers: {\n      \"Content-Type\": \"application/json\",\n    },\n  };\n})",
+    "transformer": "(function (data, args, reqOptions) {\n    if (!data || Object.keys(data).length === 0) {\n        return { message: \"No label mappings configured\" };\n    }\n\n    return data;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "description",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Generate the subject description and limit is 2000 characters  ",
+      "advanced": false,
+      "raw": {
+        "name": "description",
+        "type": "string",
+        "description": "Generate the subject description and limit is 2000 characters  ",
+        "required": true,
+        "_id": "68396e27e50b37370a70dabd"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,91 @@
+{
+  "id": "690dc569931a2d61ba0b19bb",
+  "slug": "personalgradeandgroupleveldetails",
+  "name": "personalGradeAndGroupLevelDetails",
+  "description": "This tool is used to generate Personal Grade and Group Level details. It first displays all available personal grade and group level options. Once the user makes a selection, the \"positionTitleDetails\" tool is then executed to fetch the corresponding position titles.",
+  "instructions": null,
+  "taskName": "Fetching The Personal Grade Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "personalGradeAndGroupLevelDetails",
+  "createdAt": "2025-06-10T05:58:38.693Z",
+  "updatedAt": "2025-06-10T05:58:38.693Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "6e08adb5d87e20261ccccd47e893e4cbcc1697697e130afbed1fd95a7ad2d298",
+  "lastExportedAt": "2026-09-05T19:39:23.611Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b19bb",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "personalGradeAndGroupLevelDetails",
+      "description": "This tool is used to generate Personal Grade and Group Level details. It first displays all available personal grade and group level options. Once the user makes a selection, the \"positionTitleDetails\" tool is then executed to fetch the corresponding position titles.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "personalGradeAndGroupLevelDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to give the employee id Example:- \"000001\" etc...",
+            "required": true,
+            "_id": "6847c98e66ff389db23036f5"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6847c98e66ff389db23036f4"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  // const digest = await BeaconBar.executeFunction('getDigest')(\"IsShowButtons=1\");\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/EIM/empCoveringDetails.aspx`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n\n  const detailsText = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(detailsText, \"text/html\");\n\n  const empNumber = doc.querySelector('input[id=\"ctl00_body_EmpSearch_txtEmpDisplayNumber\"]')?.value || \"\";\n  // window.pqn = empNumber;\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const publicKey = doc.querySelector(\"#ctl00_footers_txtPublicKey\")?.value || \"\";\n\n  await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n\n  // const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(publicKey, args.id)\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"GetSearchResult\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewStateGenerator);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", empNumber);\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded.append(\"ctl00$body$hdnDisplayMethod\", \"1\");\n  urlencoded.append(\"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  urlencoded.append(\"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdCovringDtl_ClientState\", \"\");\n  urlencoded.append(\"ctl00$footers$hdnIsDateChanged\", \"1\");\n  urlencoded.append(\"ctl00$footers$txtPublicKey\", publicKey);\n  urlencoded.append(\"ctl00$footers$txtempNo\", args.id);\n\n  const responsePost = await fetch(`${location.origin}/${reqOptions.sl}/EIM/empCoveringDetails.aspx`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  const textPost = await responsePost.text();\n  const docPost = parser.parseFromString(textPost, \"text/html\");\n\n  const viewState1 = docPost.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator1 = docPost.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation1 = docPost.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const publicKey1 = docPost.querySelector(\"#ctl00_footers_txtPublicKey\")?.value || \"\";\n\n  const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(publicKey1, args.id);\n\n  const newResponse = await BeaconBar.executeFunction(\"module\")(\n    {\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __VIEWSTATE: viewState1,\n      __VIEWSTATEGENERATOR: viewStateGenerator1,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: eventValidation1,\n      \"ctl00$hdnDateFormat\": \"m/d/yy\",\n      \"ctl00$hdnQuickmenu\": \"\",\n      \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n      \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n      \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n      \"ctl00$body$hdnDisplayMethod\": \"1\",\n      \"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"10\",\n      \"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdCovringDtl_ClientState\": \"\",\n      \"ctl00$body$butNew\": \"New\",\n      \"ctl00$footers$hdnIsDateChanged\": \"1\",\n      \"ctl00$footers$txtPublicKey\": publicKey1,\n      \"ctl00$footers$txtempNo\": empEnc\n    },\n    `${reqOptions.sl}/EIM/empCoveringDetails.aspx`\n  );\n\n  window.emp = { publicKey1, empEnc, newResponse }\n\n  const document = parser.parseFromString(newResponse.rawData, \"text/html\");\n  const selectElement = document.querySelector('#ctl00_body_drpSalaryGrade');\n  const personalGradeOptions = Array.from(selectElement.options)\n    .filter(option => option.value !== \"-1\")\n    .map(option => ({\n      key: option.value,\n      value: option.textContent.trim()\n    }));\n\n  const groupLevelSelect = document.querySelector('#ctl00_body_drpClassification');\n\n  const groupLevelOptions = Array.from(groupLevelSelect.options)\n    .filter(option => option.value !== \"\")\n    .map(option => ({\n      key: option.value,\n      value: option.textContent.trim()\n    }));\n\n  const empNum = docPost.querySelector(\"#ctl00_body_EmpSearch_txtEmpDisplayNumber\").value || \"\";\n  if (empNum === args.id) {\n    return { personalGradeOptions, groupLevelOptions }\n  } else {\n    return \"no availbel in the employee and display employee id.\"\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Fetching The Personal Grade Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-10T05:58:38.693Z",
+      "updatedAt": "2025-06-10T05:58:38.693Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "personalGradeAndGroupLevelDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to give the employee id Example:- \"000001\" etc...",
+          "required": true,
+          "_id": "6847c98e66ff389db23036f5"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6847c98e66ff389db23036f4"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  // const digest = await BeaconBar.executeFunction('getDigest')(\"IsShowButtons=1\");\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/EIM/empCoveringDetails.aspx`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n\n  const detailsText = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(detailsText, \"text/html\");\n\n  const empNumber = doc.querySelector('input[id=\"ctl00_body_EmpSearch_txtEmpDisplayNumber\"]')?.value || \"\";\n  // window.pqn = empNumber;\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const publicKey = doc.querySelector(\"#ctl00_footers_txtPublicKey\")?.value || \"\";\n\n  await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n\n  // const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(publicKey, args.id)\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"GetSearchResult\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewStateGenerator);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", empNumber);\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded.append(\"ctl00$body$hdnDisplayMethod\", \"1\");\n  urlencoded.append(\"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  urlencoded.append(\"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdCovringDtl_ClientState\", \"\");\n  urlencoded.append(\"ctl00$footers$hdnIsDateChanged\", \"1\");\n  urlencoded.append(\"ctl00$footers$txtPublicKey\", publicKey);\n  urlencoded.append(\"ctl00$footers$txtempNo\", args.id);\n\n  const responsePost = await fetch(`${location.origin}/${reqOptions.sl}/EIM/empCoveringDetails.aspx`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  const textPost = await responsePost.text();\n  const docPost = parser.parseFromString(textPost, \"text/html\");\n\n  const viewState1 = docPost.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator1 = docPost.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation1 = docPost.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const publicKey1 = docPost.querySelector(\"#ctl00_footers_txtPublicKey\")?.value || \"\";\n\n  const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(publicKey1, args.id);\n\n  const newResponse = await BeaconBar.executeFunction(\"module\")(\n    {\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __VIEWSTATE: viewState1,\n      __VIEWSTATEGENERATOR: viewStateGenerator1,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: eventValidation1,\n      \"ctl00$hdnDateFormat\": \"m/d/yy\",\n      \"ctl00$hdnQuickmenu\": \"\",\n      \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n      \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n      \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n      \"ctl00$body$hdnDisplayMethod\": \"1\",\n      \"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"10\",\n      \"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdCovringDtl_ClientState\": \"\",\n      \"ctl00$body$butNew\": \"New\",\n      \"ctl00$footers$hdnIsDateChanged\": \"1\",\n      \"ctl00$footers$txtPublicKey\": publicKey1,\n      \"ctl00$footers$txtempNo\": empEnc\n    },\n    `${reqOptions.sl}/EIM/empCoveringDetails.aspx`\n  );\n\n  window.emp = { publicKey1, empEnc, newResponse }\n\n  const document = parser.parseFromString(newResponse.rawData, \"text/html\");\n  const selectElement = document.querySelector('#ctl00_body_drpSalaryGrade');\n  const personalGradeOptions = Array.from(selectElement.options)\n    .filter(option => option.value !== \"-1\")\n    .map(option => ({\n      key: option.value,\n      value: option.textContent.trim()\n    }));\n\n  const groupLevelSelect = document.querySelector('#ctl00_body_drpClassification');\n\n  const groupLevelOptions = Array.from(groupLevelSelect.options)\n    .filter(option => option.value !== \"\")\n    .map(option => ({\n      key: option.value,\n      value: option.textContent.trim()\n    }));\n\n  const empNum = docPost.querySelector(\"#ctl00_body_EmpSearch_txtEmpDisplayNumber\").value || \"\";\n  if (empNum === args.id) {\n    return { personalGradeOptions, groupLevelOptions }\n  } else {\n    return \"no availbel in the employee and display employee id.\"\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "id": "690dc568931a2d61ba0b1816",
+  "slug": "getleavesummarydetails",
+  "name": "getLeaveSummaryDetails",
+  "description": "Before execute in the  getLeaveSummaryDetails api:\nstep1:First, execute the employeeDetails API to fetch the data.\nstep2:After that, execute the employeeLogKey API.\nThese steps must be executed in order — step 2 should only run after step 1 is successfully completed.” ",
+  "instructions": null,
+  "taskName": "Fetching the Leave Summary Details",
+  "tags": [
+    "Absence Management",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getLeaveSummaryDetails",
+  "createdAt": "2025-05-22T05:08:31.568Z",
+  "updatedAt": "2025-11-12T11:53:39.752Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be3",
+      "name": "AbsenceManagement"
+    }
+  ],
+  "contentHash": "e8fad92c7e7986941b799f972230f7618d86fbd21ee28c8c3c65b6e89ece2a6a",
+  "lastExportedAt": "2026-09-05T19:39:23.249Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b1816",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getLeaveSummaryDetails",
+      "description": "Before execute in the  getLeaveSummaryDetails api:\nstep1:First, execute the employeeDetails API to fetch the data.\nstep2:After that, execute the employeeLogKey API.\nThese steps must be executed in order — step 2 should only run after step 1 is successfully completed.” ",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getLeaveSummaryDetails",
+        "args": [
+          {
+            "name": "year",
+            "type": "string",
+            "description": "to give the year of the summary details.",
+            "required": true,
+            "_id": "682eb14fe758c1c06520c994"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "682eb14fe758c1c06520c993"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return [];\n    })`\n  };\n})\n",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.some(menu => menu.includes(\"AbsenceV9/LeaveApplication/LeaveApplication?mvc=1&isAllEmployee=1\"))) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers({\n    \"__cfafvalue\": window.csrf,\n    \"accept\": \"application/json, text/javascript, */*; q=0.01\",\n    \"accept-language\": \"en-US,en;q=0.9\",\n    \"Content-Type\": \"application/x-www-form-urlencoded\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n\n  });\n\n  const raw = new URLSearchParams({\n    EmpNumber: window.logKey,\n    LeaveYear: args.year,\n    IsReject: \"0\",\n    _search: \"false\",\n    nd: Date.now().toString(),\n    rows: \"1000\",\n    page: \"1\",\n    sidx: \"\",\n    sord: \"asc\"\n  }).toString();\n\n  const requestOptions = {\n    method: 'POST',\n    headers: myHeaders,\n    body: raw\n  };\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveHistory/GetLeaveStatusDetails`, requestOptions);\n\n  const leaveSummary = await response.json();\n\n  const summarDetails = leaveSummary.map(item => ({\n    fromDate: item.LDetail.FromDate,\n    toDate: item.LDetail.ToDate,\n    appliedDate: item.LDetail.EditDate,\n    leaveType: item.LeaveTypeName,\n    days: item.LDetail.LeaveAmountText,\n    status: item.Status.replace(/<\\/?[^>]+(>|$)/g, \"\"),\n    reasonForLeave: item.LeaveReason || item.Comment || \"\",\n    coveringEmployee: item.LeaveActingEmp\n  }));\n  return summarDetails;\n})",
+      "groupName": "",
+      "tags": [
+        "Absence Management",
+        "Headers"
+      ],
+      "taskName": "Fetching the Leave Summary Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-22T05:08:31.568Z",
+      "updatedAt": "2025-11-12T11:53:39.752Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be3",
+          "name": "AbsenceManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getLeaveSummaryDetails",
+      "args": [
+        {
+          "name": "year",
+          "type": "string",
+          "description": "to give the year of the summary details.",
+          "required": true,
+          "_id": "682eb14fe758c1c06520c994"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "682eb14fe758c1c06520c993"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return [];\n    })`\n  };\n})\n",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.some(menu => menu.includes(\"AbsenceV9/LeaveApplication/LeaveApplication?mvc=1&isAllEmployee=1\"))) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers({\n    \"__cfafvalue\": window.csrf,\n    \"accept\": \"application/json, text/javascript, */*; q=0.01\",\n    \"accept-language\": \"en-US,en;q=0.9\",\n    \"Content-Type\": \"application/x-www-form-urlencoded\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n\n  });\n\n  const raw = new URLSearchParams({\n    EmpNumber: window.logKey,\n    LeaveYear: args.year,\n    IsReject: \"0\",\n    _search: \"false\",\n    nd: Date.now().toString(),\n    rows: \"1000\",\n    page: \"1\",\n    sidx: \"\",\n    sord: \"asc\"\n  }).toString();\n\n  const requestOptions = {\n    method: 'POST',\n    headers: myHeaders,\n    body: raw\n  };\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveHistory/GetLeaveStatusDetails`, requestOptions);\n\n  const leaveSummary = await response.json();\n\n  const summarDetails = leaveSummary.map(item => ({\n    fromDate: item.LDetail.FromDate,\n    toDate: item.LDetail.ToDate,\n    appliedDate: item.LDetail.EditDate,\n    leaveType: item.LeaveTypeName,\n    days: item.LDetail.LeaveAmountText,\n    status: item.Status.replace(/<\\/?[^>]+(>|$)/g, \"\"),\n    reasonForLeave: item.LeaveReason || item.Comment || \"\",\n    coveringEmployee: item.LeaveActingEmp\n  }));\n  return summarDetails;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

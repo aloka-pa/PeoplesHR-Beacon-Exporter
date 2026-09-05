@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "genderCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the gender Code.",
+      "advanced": false,
+      "raw": {
+        "name": "genderCode",
+        "type": "string",
+        "description": "to give the gender Code.",
+        "required": true,
+        "_id": "6817960768ca7396dee73c6e"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

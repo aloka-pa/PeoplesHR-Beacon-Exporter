@@ -1,0 +1,40 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "empId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Specifies the employee ID, for example, 'A00006' or '000013'.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Specifies the employee ID, for example, 'A00006' or '000013'."
+      }
+    },
+    {
+      "name": "type",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Determines the type of query. The value is chosen based on the user's request. For instance, if the user requests 'give me the team attendance for 000003', the value selected would be 'team attendance'.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "attendance in and out",
+          "team attendance",
+          "team shift adjustment",
+          "attendance summary",
+          "shift adjustment",
+          "team attendance in and out",
+          "prior overtime application",
+          "team attendance approval",
+          "attendance approval"
+        ],
+        "description": "Determines the type of query. The value is chosen based on the user's request. For instance, if the user requests 'give me the team attendance for 000003', the value selected would be 'team attendance'."
+      }
+    }
+  ]
+}

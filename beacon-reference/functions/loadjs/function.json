@@ -1,0 +1,24 @@
+{
+  "id": "690dc585931a2d61ba0b2ced",
+  "slug": "loadjs",
+  "name": "loadJS",
+  "status": "live",
+  "createdAt": "2025-04-25T13:18:41.329Z",
+  "updatedAt": "2025-04-25T13:18:41.329Z",
+  "contentHash": "ccf66e698a7fef791d6cc42ab0da86d2520dce76eafa6b6773894f4c16f0ce1f",
+  "lastExportedAt": "2026-09-05T19:41:44.057Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc585931a2d61ba0b2ced",
+    "name": "loadJS",
+    "status": "live",
+    "code": "(function(name, url) {\n    return new Promise((resolve, reject) => {\n      const scr = document.querySelector(`#${name}`);\n      if(scr) {\n        return resolve();\n      }\n\n      const script = document.createElement('script');\n\n      script.async = true;\n      script.defer = true;\n      script.src = url;\n      script.id = name;\n\n      script.addEventListener('load', () => resolve('JS loaded.'));\n\n      script.addEventListener('error', () => reject(new Error('unable to load script')));\n      script.addEventListener('abort', () => reject(new Error('unable to load script')));\n\n      document.head.appendChild(script);\n  });\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

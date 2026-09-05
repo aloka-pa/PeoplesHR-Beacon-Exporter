@@ -1,0 +1,24 @@
+{
+  "id": "690dc581931a2d61ba0b2887",
+  "slug": "geteimlist",
+  "name": "getEIMlist",
+  "status": "live",
+  "createdAt": "2025-06-19T10:40:06.971Z",
+  "updatedAt": "2025-06-19T10:40:06.971Z",
+  "contentHash": "cc9d79e95f8d61fb3b5e9447e46acf74f4fc57b962400f8ba24322f1ab33392b",
+  "lastExportedAt": "2026-09-05T19:41:32.054Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc581931a2d61ba0b2887",
+    "name": "getEIMlist",
+    "status": "live",
+    "code": "(async function (url) {\n    //done\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n    myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n    const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n\n    const response = await fetch(`${location.origin}/${url}`, requestOptions);\n    const data = await response.text();\n\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(data, 'text/html');\n\n    const details = {\n        viewState: doc.querySelector('#__VIEWSTATE')?.value || '',\n        eventValidation: doc.querySelector('#__EVENTVALIDATION')?.value || '',\n        viewStateGen: doc.querySelector('#__VIEWSTATEGENERATOR')?.value || '',\n        rawData: data\n    }\n    return details;\n});",
+    "by": "1927",
+    "__v": 0
+  }
+}

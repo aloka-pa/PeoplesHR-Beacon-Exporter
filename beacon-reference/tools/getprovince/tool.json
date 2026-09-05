@@ -1,0 +1,184 @@
+{
+  "id": "6952532d9d93d92e5df256c7",
+  "slug": "getprovince",
+  "name": "getProvince",
+  "description": "Get provinces (search + show all with paging)\nDescription: Searches provinces by code or name (supports partial name match and returns all matching rows). Also supports listing provinces using “Show All” with pagination (returns up to 40 per call and provides the next page number when more results exist).\nUse partial match when the user gives a keyword (like “southern”, “north”, “island”)\nUse exact match only when the user gives the full province name or an exact code\nIf multiple matches are found, list them and ask the user to pick one",
+  "instructions": null,
+  "taskName": "Fetching Provinces",
+  "tags": [
+    "EIMAdmin",
+    "GeographicalLocations",
+    "phase2"
+  ],
+  "status": "live",
+  "signature": "getProvince",
+  "createdAt": "2025-12-29T10:08:45.093Z",
+  "updatedAt": "2026-02-16T14:04:20.363Z",
+  "assignedAgents": [],
+  "contentHash": "21e8ad6b0a8ce8d864d422967055e7421bc6d3f8d010aa41f80e69b899acbb63",
+  "lastExportedAt": "2026-09-05T19:39:22.771Z",
+  "raw": {
+    "basic": {
+      "_id": "6952532d9d93d92e5df256c7",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getProvince",
+      "description": "Get provinces (search + show all with paging)\nDescription: Searches provinces by code or name (supports partial name match and returns all matching rows). Also supports listing provinces using “Show All” with pagination (returns up to 40 per call and provides the next page number when more results exist).\nUse partial match when the user gives a keyword (like “southern”, “north”, “island”)\nUse exact match only when the user gives the full province name or an exact code\nIf multiple matches are found, list them and ask the user to pick one",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getProvince",
+        "args": [
+          {
+            "name": "provinceCode",
+            "type": "string",
+            "description": "Province code to search (e.g., \"000085\"). Exact match.",
+            "required": false,
+            "_id": "6952532d9d93d92e5df256c9"
+          },
+          {
+            "name": "provinceName",
+            "type": "string",
+            "description": "Province name to search (e.g., \"Sabarag\"). Partial match, case-insensitive.",
+            "required": false,
+            "_id": "6953512efbe9c497d06ccca2"
+          },
+          {
+            "name": "returnAll",
+            "type": "string",
+            "description": "If set to something like \"yes\", \"true\", \"all\", \"list\", \"available\", \"existing\", etc., the transformer will return a paginated list of provinces (40 per call).",
+            "required": false,
+            "_id": "697f7eb33c27f51defa15874"
+          },
+          {
+            "name": "pageToken",
+            "type": "string",
+            "description": "Internal paging token returned by the previous call (Option B). If provided, the transformer fetches the next page of 40 from the grid.",
+            "required": false,
+            "_id": "697f7eb33c27f51defa15875"
+          },
+          {
+            "name": "mode",
+            "type": "string",
+            "description": "\"search\" default\n\"showAll\" for pagination listing",
+            "required": false,
+            "_id": "697f8ce58534fce07a4705eb"
+          },
+          {
+            "name": "page",
+            "type": "string",
+            "description": "used only for mode=\"showAll\"",
+            "required": false,
+            "_id": "697f8ce58534fce07a4705ec"
+          },
+          {
+            "name": "pageSize",
+            "type": "string",
+            "description": "(optional, fixed internally to 40 to meet requirement)",
+            "required": false,
+            "_id": "697f8ce58534fce07a4705ed"
+          },
+          {
+            "name": "matchType",
+            "type": "string",
+            "description": "\"partial\" default for name\n\n\"exact\" for code (and optionally name if needed)",
+            "required": false,
+            "_id": "697f8ce58534fce07a4705ee"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6952532d9d93d92e5df256c8"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n    return {\n      code: `(function(){\n          return [];\n        })`\n    };\n  })\n\n",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Province.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Province screen. Please contact HR Admin.\"\n      };\n    }\n\n    const parser = new DOMParser();\n\n    /* -------------------------------------------------\n     * 2) Helpers\n     * ------------------------------------------------- */\n    const normalize = (v) => (v ?? \"\").toString().trim();\n    const lower = (v) => normalize(v).toLowerCase();\n\n    const truthy = (v) => {\n      if (typeof v === \"boolean\") return v;\n      const s = lower(v);\n      return [\"1\", \"true\", \"yes\", \"y\", \"all\", \"show all\", \"return all\", \"get all\"].some(\n        (k) => s === k || s.includes(k)\n      );\n    };\n\n    const extractHidden = (doc) => ({\n      viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n      viewStateGen: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n      eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\"\n    });\n\n    const extractRowsFromGrid = (doc) => {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const results = [];\n      for (const r of rows) {\n        const tds = r.querySelectorAll(\"td\");\n        const code = normalize(tds[0]?.textContent);\n        const name = normalize(tds[1]?.textContent);\n        if (code || name) results.push({ provinceCode: code, provinceName: name });\n      }\n      return results;\n    };\n\n    const extractPagerInfo = (doc) => {\n      const text = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\n      const m = text.match(\n        /Displaying page\\s+(\\d+)\\s+of\\s+(\\d+),\\s+items\\s+(\\d+)\\s+to\\s+(\\d+)\\s+of\\s+(\\d+)/i\n      );\n      if (!m) return null;\n      return {\n        currentPage: Number(m[1]),\n        totalPages: Number(m[2]),\n        from: Number(m[3]),\n        to: Number(m[4]),\n        totalItems: Number(m[5])\n      };\n    };\n\n    const buildBaseForm = (viewState, viewStateGen, eventValidation) => {\n      const fd = new FormData();\n      fd.append(\"scrollLeft\", \"0\");\n      fd.append(\"scrollTop\", \"0\");\n      fd.append(\"__EVENTTARGET\", \"\");\n      fd.append(\"__EVENTARGUMENT\", \"\");\n      fd.append(\"__VIEWSTATE\", viewState || \"\");\n      fd.append(\"__VIEWSTATEGENERATOR\", viewStateGen || \"\");\n      fd.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      fd.append(\"__EVENTVALIDATION\", eventValidation || \"\");\n      fd.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      fd.append(\"ctl00$hdnQuickmenu\", \"1\");\n      fd.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n      return fd;\n    };\n\n    /* -------------------------------------------------\n     * 3) URL + headers + initial state\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"Province\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Province.aspx\");\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Province.aspx`;\n\n    /* -------------------------------------------------\n     * 4) Decide mode (LIST vs SEARCH)\n     * ------------------------------------------------- */\n    const provinceCode = normalize(args?.provinceCode);\n    const provinceName = normalize(args?.provinceName);\n\n    const listMode =\n      truthy(args?.returnAll) ||\n      (Number.isFinite(Number(args?.page)) && Number(args?.page) > 0);\n\n    /* -------------------------------------------------\n     * 5) LIST mode\n     * ------------------------------------------------- */\n    if (listMode) {\n      const pageSize = Math.min(40, Math.max(1, Number(args?.pageSize) || 40));\n      const page = Math.max(1, Number(args?.page) || 1);\n\n      let fd = buildBaseForm(details.viewState, details.viewStateGen, details.eventValidation);\n\n      fd.append(\"ctl00$body$ContentSearch$cboCriteria\", \"PROVINCE_CODE\");\n      fd.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n      fd.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", String(page));\n      fd.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      fd.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      fd.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n\n      if (page === 1) {\n        fd.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n      } else {\n        fd.set(\n          \"__EVENTTARGET\",\n          \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\"\n        );\n      }\n\n      const resp = await fetch(url, { method: \"POST\", headers, body: fd });\n      const html = await resp.text();\n      const doc = parser.parseFromString(html, \"text/html\");\n\n      const pager = extractPagerInfo(doc);\n      const rows = extractRowsFromGrid(doc);\n      const pageItems = rows.slice(0, pageSize);\n\n      const hasMore = !!(pager && pager.currentPage < pager.totalPages);\n      const nextPage = hasMore ? pager.currentPage + 1 : null;\n\n      return {\n        status: \"SUCCESS\",\n        mode: \"LIST\",\n        pageSize,\n        currentPage: pager?.currentPage ?? page,\n        totalPages: pager?.totalPages ?? null,\n        totalItems: pager?.totalItems ?? null,\n        count: pageItems.length,\n        hasMore,\n        nextPage,\n        provinces: pageItems\n      };\n    }\n\n    /* -------------------------------------------------\n     * 6) SEARCH mode (fixed – no Show All)\n     * ------------------------------------------------- */\n    if (!provinceCode && !provinceName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Provide provinceCode or provinceName, or set returnAll=true to list provinces.\"\n      };\n    }\n\n    const criteria = provinceCode ? \"PROVINCE_CODE\" : \"PROVINCE_NAME\";\n    const value = provinceCode || provinceName;\n\n    const matchType = lower(args?.matchType);\n    const codeMatch = matchType === \"partial\" ? \"partial\" : \"exact\";\n    const nameMatch = matchType === \"exact\" ? \"exact\" : \"partial\";\n\n    let searchFd = buildBaseForm(details.viewState, details.viewStateGen, details.eventValidation);\n    searchFd.append(\"ctl00$body$ContentSearch$cboCriteria\", criteria);\n    searchFd.append(\"ctl00$body$ContentSearch$txtContent\", value);\n    searchFd.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n    searchFd.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    searchFd.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    searchFd.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"300\");\n    searchFd.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n\n    const searchResp = await fetch(url, { method: \"POST\", headers, body: searchFd });\n    const searchHtml = await searchResp.text();\n    const searchDoc = parser.parseFromString(searchHtml, \"text/html\");\n\n    const rows = extractRowsFromGrid(searchDoc);\n\n    let matches = [];\n    if (provinceCode) {\n      const q = lower(provinceCode);\n      matches = rows.filter((r) =>\n        codeMatch === \"partial\"\n          ? lower(r.provinceCode).includes(q)\n          : lower(r.provinceCode) === q\n      );\n    } else {\n      const q = lower(provinceName);\n      matches = rows.filter((r) =>\n        nameMatch === \"partial\"\n          ? lower(r.provinceName).includes(q)\n          : lower(r.provinceName) === q\n      );\n    }\n\n    if (!matches.length) {\n      return {\n        status: \"NOT_FOUND\",\n        mode: \"SEARCH\",\n        message: `No provinces found for ${criteria} = \"${value}\".`,\n        searchedFor: value\n      };\n    }\n\n    return {\n      status: \"SUCCESS\",\n      mode: \"SEARCH\",\n      criteria,\n      matchType: provinceCode ? codeMatch : nameMatch,\n      count: matches.length,\n      provinces: matches\n    };\n  } catch (e) {\n    return {\n      status: \"ERROR\",\n      message: e?.message || \"Unknown error\",\n      error: e?.toString?.() || String(e)\n    };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "GeographicalLocations",
+        "phase2"
+      ],
+      "taskName": "Fetching Provinces",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-29T10:08:45.093Z",
+      "updatedAt": "2026-02-16T14:04:20.363Z",
+      "__v": 19,
+      "sampleRequest": {},
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getProvince",
+      "args": [
+        {
+          "name": "provinceCode",
+          "type": "string",
+          "description": "Province code to search (e.g., \"000085\"). Exact match.",
+          "required": false,
+          "_id": "6952532d9d93d92e5df256c9"
+        },
+        {
+          "name": "provinceName",
+          "type": "string",
+          "description": "Province name to search (e.g., \"Sabarag\"). Partial match, case-insensitive.",
+          "required": false,
+          "_id": "6953512efbe9c497d06ccca2"
+        },
+        {
+          "name": "returnAll",
+          "type": "string",
+          "description": "If set to something like \"yes\", \"true\", \"all\", \"list\", \"available\", \"existing\", etc., the transformer will return a paginated list of provinces (40 per call).",
+          "required": false,
+          "_id": "697f7eb33c27f51defa15874"
+        },
+        {
+          "name": "pageToken",
+          "type": "string",
+          "description": "Internal paging token returned by the previous call (Option B). If provided, the transformer fetches the next page of 40 from the grid.",
+          "required": false,
+          "_id": "697f7eb33c27f51defa15875"
+        },
+        {
+          "name": "mode",
+          "type": "string",
+          "description": "\"search\" default\n\"showAll\" for pagination listing",
+          "required": false,
+          "_id": "697f8ce58534fce07a4705eb"
+        },
+        {
+          "name": "page",
+          "type": "string",
+          "description": "used only for mode=\"showAll\"",
+          "required": false,
+          "_id": "697f8ce58534fce07a4705ec"
+        },
+        {
+          "name": "pageSize",
+          "type": "string",
+          "description": "(optional, fixed internally to 40 to meet requirement)",
+          "required": false,
+          "_id": "697f8ce58534fce07a4705ed"
+        },
+        {
+          "name": "matchType",
+          "type": "string",
+          "description": "\"partial\" default for name\n\n\"exact\" for code (and optionally name if needed)",
+          "required": false,
+          "_id": "697f8ce58534fce07a4705ee"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6952532d9d93d92e5df256c8"
+    },
+    "fetcher": "(function (args, reqOptions) {\n    return {\n      code: `(function(){\n          return [];\n        })`\n    };\n  })\n\n",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Province.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Province screen. Please contact HR Admin.\"\n      };\n    }\n\n    const parser = new DOMParser();\n\n    /* -------------------------------------------------\n     * 2) Helpers\n     * ------------------------------------------------- */\n    const normalize = (v) => (v ?? \"\").toString().trim();\n    const lower = (v) => normalize(v).toLowerCase();\n\n    const truthy = (v) => {\n      if (typeof v === \"boolean\") return v;\n      const s = lower(v);\n      return [\"1\", \"true\", \"yes\", \"y\", \"all\", \"show all\", \"return all\", \"get all\"].some(\n        (k) => s === k || s.includes(k)\n      );\n    };\n\n    const extractHidden = (doc) => ({\n      viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n      viewStateGen: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n      eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\"\n    });\n\n    const extractRowsFromGrid = (doc) => {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const results = [];\n      for (const r of rows) {\n        const tds = r.querySelectorAll(\"td\");\n        const code = normalize(tds[0]?.textContent);\n        const name = normalize(tds[1]?.textContent);\n        if (code || name) results.push({ provinceCode: code, provinceName: name });\n      }\n      return results;\n    };\n\n    const extractPagerInfo = (doc) => {\n      const text = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\n      const m = text.match(\n        /Displaying page\\s+(\\d+)\\s+of\\s+(\\d+),\\s+items\\s+(\\d+)\\s+to\\s+(\\d+)\\s+of\\s+(\\d+)/i\n      );\n      if (!m) return null;\n      return {\n        currentPage: Number(m[1]),\n        totalPages: Number(m[2]),\n        from: Number(m[3]),\n        to: Number(m[4]),\n        totalItems: Number(m[5])\n      };\n    };\n\n    const buildBaseForm = (viewState, viewStateGen, eventValidation) => {\n      const fd = new FormData();\n      fd.append(\"scrollLeft\", \"0\");\n      fd.append(\"scrollTop\", \"0\");\n      fd.append(\"__EVENTTARGET\", \"\");\n      fd.append(\"__EVENTARGUMENT\", \"\");\n      fd.append(\"__VIEWSTATE\", viewState || \"\");\n      fd.append(\"__VIEWSTATEGENERATOR\", viewStateGen || \"\");\n      fd.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      fd.append(\"__EVENTVALIDATION\", eventValidation || \"\");\n      fd.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      fd.append(\"ctl00$hdnQuickmenu\", \"1\");\n      fd.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n      return fd;\n    };\n\n    /* -------------------------------------------------\n     * 3) URL + headers + initial state\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"Province\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Province.aspx\");\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Province.aspx`;\n\n    /* -------------------------------------------------\n     * 4) Decide mode (LIST vs SEARCH)\n     * ------------------------------------------------- */\n    const provinceCode = normalize(args?.provinceCode);\n    const provinceName = normalize(args?.provinceName);\n\n    const listMode =\n      truthy(args?.returnAll) ||\n      (Number.isFinite(Number(args?.page)) && Number(args?.page) > 0);\n\n    /* -------------------------------------------------\n     * 5) LIST mode\n     * ------------------------------------------------- */\n    if (listMode) {\n      const pageSize = Math.min(40, Math.max(1, Number(args?.pageSize) || 40));\n      const page = Math.max(1, Number(args?.page) || 1);\n\n      let fd = buildBaseForm(details.viewState, details.viewStateGen, details.eventValidation);\n\n      fd.append(\"ctl00$body$ContentSearch$cboCriteria\", \"PROVINCE_CODE\");\n      fd.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n      fd.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", String(page));\n      fd.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      fd.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      fd.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n\n      if (page === 1) {\n        fd.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n      } else {\n        fd.set(\n          \"__EVENTTARGET\",\n          \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\"\n        );\n      }\n\n      const resp = await fetch(url, { method: \"POST\", headers, body: fd });\n      const html = await resp.text();\n      const doc = parser.parseFromString(html, \"text/html\");\n\n      const pager = extractPagerInfo(doc);\n      const rows = extractRowsFromGrid(doc);\n      const pageItems = rows.slice(0, pageSize);\n\n      const hasMore = !!(pager && pager.currentPage < pager.totalPages);\n      const nextPage = hasMore ? pager.currentPage + 1 : null;\n\n      return {\n        status: \"SUCCESS\",\n        mode: \"LIST\",\n        pageSize,\n        currentPage: pager?.currentPage ?? page,\n        totalPages: pager?.totalPages ?? null,\n        totalItems: pager?.totalItems ?? null,\n        count: pageItems.length,\n        hasMore,\n        nextPage,\n        provinces: pageItems\n      };\n    }\n\n    /* -------------------------------------------------\n     * 6) SEARCH mode (fixed – no Show All)\n     * ------------------------------------------------- */\n    if (!provinceCode && !provinceName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Provide provinceCode or provinceName, or set returnAll=true to list provinces.\"\n      };\n    }\n\n    const criteria = provinceCode ? \"PROVINCE_CODE\" : \"PROVINCE_NAME\";\n    const value = provinceCode || provinceName;\n\n    const matchType = lower(args?.matchType);\n    const codeMatch = matchType === \"partial\" ? \"partial\" : \"exact\";\n    const nameMatch = matchType === \"exact\" ? \"exact\" : \"partial\";\n\n    let searchFd = buildBaseForm(details.viewState, details.viewStateGen, details.eventValidation);\n    searchFd.append(\"ctl00$body$ContentSearch$cboCriteria\", criteria);\n    searchFd.append(\"ctl00$body$ContentSearch$txtContent\", value);\n    searchFd.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n    searchFd.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    searchFd.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    searchFd.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"300\");\n    searchFd.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n\n    const searchResp = await fetch(url, { method: \"POST\", headers, body: searchFd });\n    const searchHtml = await searchResp.text();\n    const searchDoc = parser.parseFromString(searchHtml, \"text/html\");\n\n    const rows = extractRowsFromGrid(searchDoc);\n\n    let matches = [];\n    if (provinceCode) {\n      const q = lower(provinceCode);\n      matches = rows.filter((r) =>\n        codeMatch === \"partial\"\n          ? lower(r.provinceCode).includes(q)\n          : lower(r.provinceCode) === q\n      );\n    } else {\n      const q = lower(provinceName);\n      matches = rows.filter((r) =>\n        nameMatch === \"partial\"\n          ? lower(r.provinceName).includes(q)\n          : lower(r.provinceName) === q\n      );\n    }\n\n    if (!matches.length) {\n      return {\n        status: \"NOT_FOUND\",\n        mode: \"SEARCH\",\n        message: `No provinces found for ${criteria} = \"${value}\".`,\n        searchedFor: value\n      };\n    }\n\n    return {\n      status: \"SUCCESS\",\n      mode: \"SEARCH\",\n      criteria,\n      matchType: provinceCode ? codeMatch : nameMatch,\n      count: matches.length,\n      provinces: matches\n    };\n  } catch (e) {\n    return {\n      status: \"ERROR\",\n      message: e?.message || \"Unknown error\",\n      error: e?.toString?.() || String(e)\n    };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

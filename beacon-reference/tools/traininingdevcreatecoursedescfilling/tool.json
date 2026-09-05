@@ -1,0 +1,111 @@
+{
+  "id": "6956293bab9dbe6266aec3e1",
+  "slug": "traininingdevcreatecoursedescfilling",
+  "name": "traininingDevCreateCourseDescFilling",
+  "description": "The AI tool assists administrators in creating comprehensive course descriptions for training programs by gathering key information through guided questions. It collects details such as course topic, target audience, duration, learning objectives, and training mode, then generates a well-structured, number of characters < 250, professional course description. The generated description is automatically populated into the \"Description & Target Group\" field, allowing admins to review, edit if needed, and proceed with course creation.\n\nIf user asked to refine / format further, the tool must generate a new one upon request and should ask the user 'Shall I fill this description?'",
+  "instructions": null,
+  "taskName": "Generating Course Description",
+  "tags": [
+    "Training&Development",
+    "CreateCourses",
+    "WorkFlow",
+    "DescFilling",
+    "phase2"
+  ],
+  "status": "live",
+  "signature": "traininingDevCreateCourseDescFilling",
+  "createdAt": "2026-01-01T07:58:51.586Z",
+  "updatedAt": "2026-07-17T12:55:35.424Z",
+  "assignedAgents": [
+    {
+      "id": "6955261cad06de92910e10aa",
+      "name": "Training & Development | Phase 2 | Agent"
+    },
+    {
+      "id": "69562bd4e05f6cdd1594bd17",
+      "name": "Training & Development | Workflow Assist | Phase 2 | Agent"
+    }
+  ],
+  "contentHash": "49dc5169cecabd0369cb7c98547141610f1e3399746d88227f7bd7f36e219283",
+  "lastExportedAt": "2026-09-05T19:39:22.023Z",
+  "raw": {
+    "basic": {
+      "_id": "6956293bab9dbe6266aec3e1",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "traininingDevCreateCourseDescFilling",
+      "description": "The AI tool assists administrators in creating comprehensive course descriptions for training programs by gathering key information through guided questions. It collects details such as course topic, target audience, duration, learning objectives, and training mode, then generates a well-structured, number of characters < 250, professional course description. The generated description is automatically populated into the \"Description & Target Group\" field, allowing admins to review, edit if needed, and proceed with course creation.\n\nIf user asked to refine / format further, the tool must generate a new one upon request and should ask the user 'Shall I fill this description?'",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "traininingDevCreateCourseDescFilling",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"description\": {\n      \"type\": \"string\",\n      \"description\": \"The finalized, rephrased course description that will be auto-filled into the Description & Target Group field\"\n    }\n  },\n  \"required\": [\n    \"description\"\n  ]\n}",
+        "_id": "6a5a2647e1f5534f352b991a"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(function (_data, args, reqOptions) {\n  const iframe = document.querySelector(\"#ifrmPage\");\n\n  if (!iframe || !iframe.contentDocument) {\n    return { success: false, message: \"Iframe not found.\" };\n  }\n\n  const doc = iframe.contentDocument;\n  const MAX_LENGTH = 250;\n\n  const setText = (element, value) => {\n    if (element && value && value !== '\"\"' && value !== \"Not Specified\") {\n      element.value = value;\n\n      // Trigger change event to sync with Knockout.js binding\n      element.dispatchEvent(new Event('change', { bubbles: true }));\n\n      // Trigger input event as backup\n      element.dispatchEvent(new Event('input', { bubbles: true }));\n\n      // Try to update Knockout binding directly\n      try {\n        if (window.ko && typeof TndCourseAdmin !== 'undefined') {\n          const current = TndCourseAdmin.Current();\n          if (current && typeof current.CosDesc === 'function') {\n            current.CosDesc(value);\n          }\n        }\n      } catch (koError) {\n      }\n\n      return true;\n    }\n    return false;\n  };\n\n  if (args.description) {\n\n    if (args.description.length > MAX_LENGTH) {\n      return {\n        success: false,\n        message: `Description exceeds maximum length of ${MAX_LENGTH} characters. Current length: ${args.description.length}.`\n      };\n    }\n\n    const descriptionTextarea = doc.querySelector(\n      'textarea#desgrupid[name=\"tnd-e-Desc\"]'\n    );\n\n    if (descriptionTextarea) {\n      setText(descriptionTextarea, args.description);\n    } else {\n      return {\n        success: false,\n        message: \"Description textarea not found.\"\n      };\n    }\n\n  } else {\n    return {\n      success: false,\n      message: \"No description provided.\"\n    };\n  }\n\n  return {\n    success: true,\n    message: \"Successfully applied course description field update.\"\n  };\n});\n",
+      "groupName": "",
+      "tags": [
+        "Training&Development",
+        "CreateCourses",
+        "WorkFlow",
+        "DescFilling",
+        "phase2"
+      ],
+      "taskName": "Generating Course Description",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2026-01-01T07:58:51.586Z",
+      "updatedAt": "2026-07-17T12:55:35.424Z",
+      "__v": 15,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "6955261cad06de92910e10aa",
+          "name": "Training & Development | Phase 2 | Agent"
+        },
+        {
+          "_id": "69562bd4e05f6cdd1594bd17",
+          "name": "Training & Development | Workflow Assist | Phase 2 | Agent"
+        }
+      ],
+      "agentCount": 2
+    },
+    "arguments": {
+      "name": "traininingDevCreateCourseDescFilling",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"description\": {\n      \"type\": \"string\",\n      \"description\": \"The finalized, rephrased course description that will be auto-filled into the Description & Target Group field\"\n    }\n  },\n  \"required\": [\n    \"description\"\n  ]\n}",
+      "_id": "6a5a2647e1f5534f352b991a"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(function (_data, args, reqOptions) {\n  const iframe = document.querySelector(\"#ifrmPage\");\n\n  if (!iframe || !iframe.contentDocument) {\n    return { success: false, message: \"Iframe not found.\" };\n  }\n\n  const doc = iframe.contentDocument;\n  const MAX_LENGTH = 250;\n\n  const setText = (element, value) => {\n    if (element && value && value !== '\"\"' && value !== \"Not Specified\") {\n      element.value = value;\n\n      // Trigger change event to sync with Knockout.js binding\n      element.dispatchEvent(new Event('change', { bubbles: true }));\n\n      // Trigger input event as backup\n      element.dispatchEvent(new Event('input', { bubbles: true }));\n\n      // Try to update Knockout binding directly\n      try {\n        if (window.ko && typeof TndCourseAdmin !== 'undefined') {\n          const current = TndCourseAdmin.Current();\n          if (current && typeof current.CosDesc === 'function') {\n            current.CosDesc(value);\n          }\n        }\n      } catch (koError) {\n      }\n\n      return true;\n    }\n    return false;\n  };\n\n  if (args.description) {\n\n    if (args.description.length > MAX_LENGTH) {\n      return {\n        success: false,\n        message: `Description exceeds maximum length of ${MAX_LENGTH} characters. Current length: ${args.description.length}.`\n      };\n    }\n\n    const descriptionTextarea = doc.querySelector(\n      'textarea#desgrupid[name=\"tnd-e-Desc\"]'\n    );\n\n    if (descriptionTextarea) {\n      setText(descriptionTextarea, args.description);\n    } else {\n      return {\n        success: false,\n        message: \"Description textarea not found.\"\n      };\n    }\n\n  } else {\n    return {\n      success: false,\n      message: \"No description provided.\"\n    };\n  }\n\n  return {\n    success: true,\n    message: \"Successfully applied course description field update.\"\n  };\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

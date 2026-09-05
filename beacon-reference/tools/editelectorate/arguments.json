@@ -1,0 +1,80 @@
+{
+  "arguments": [
+    {
+      "name": "electorateCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Electorate code to search for\nExample: \"000002\"",
+      "advanced": false,
+      "raw": {
+        "name": "electorateCode",
+        "type": "string",
+        "description": "Electorate code to search for\nExample: \"000002\"",
+        "required": false,
+        "_id": "695360444bee6b3103ce7502"
+      }
+    },
+    {
+      "name": "electorateName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Electorate name to search for\nExample: \"Mahara\"",
+      "advanced": false,
+      "raw": {
+        "name": "electorateName",
+        "type": "string",
+        "description": "Electorate name to search for\nExample: \"Mahara\"",
+        "required": false,
+        "_id": "695360444bee6b3103ce7503"
+      }
+    },
+    {
+      "name": "newElectorateName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "New electorate name\n\nExample: \"Updated Electorate Name\"",
+      "advanced": false,
+      "raw": {
+        "name": "newElectorateName",
+        "type": "string",
+        "description": "New electorate name\n\nExample: \"Updated Electorate Name\"",
+        "required": false,
+        "_id": "695360444bee6b3103ce7504"
+      }
+    },
+    {
+      "name": "districtCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "District code directly\n\nExample: \"000122\"",
+      "advanced": false,
+      "raw": {
+        "name": "districtCode",
+        "type": "string",
+        "description": "District code directly\n\nExample: \"000122\"",
+        "required": false,
+        "_id": "695360444bee6b3103ce7505"
+      }
+    },
+    {
+      "name": "districtName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": " District name\nExample: \"Colombo\"",
+      "advanced": false,
+      "raw": {
+        "name": "districtName",
+        "type": "string",
+        "description": " District name\nExample: \"Colombo\"",
+        "required": false,
+        "_id": "695360444bee6b3103ce7506"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

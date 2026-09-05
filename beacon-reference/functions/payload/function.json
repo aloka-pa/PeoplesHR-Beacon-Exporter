@@ -1,0 +1,24 @@
+{
+  "id": "690dc586931a2d61ba0b2e1c",
+  "slug": "payload",
+  "name": "payload",
+  "status": "live",
+  "createdAt": "2025-06-04T07:24:43.710Z",
+  "updatedAt": "2026-07-17T12:55:58.953Z",
+  "contentHash": "2be38ab7b5ce01809b4511e703074a4450173b45cd7f9a968240b908dd8e5cd4",
+  "lastExportedAt": "2026-09-05T19:41:17.070Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc586931a2d61ba0b2e1c",
+    "name": "payload",
+    "status": "live",
+    "code": "(async function (pathName, htmlText, raw) {\n  //done\n  let data = {};\n\n  if (raw) {\n    // Extract viewstate-related values from raw string\n    const regexMap = {\n      viewState: /__VIEWSTATE\\|([^|]+)/,\n      viewStateGenerator: /__VIEWSTATEGENERATOR\\|([^|]+)/,\n      eventValidation: /__EVENTVALIDATION\\|([^|]+)/,\n      eventTarget: /postBackControlIDs\\|\\|([^|,\\n]+)/ // First one in list\n    };\n\n    for (const [key, regex] of Object.entries(regexMap)) {\n      const match = htmlText.match(regex);\n      if (match) {\n        data[key] = decodeURIComponent(match[1]);\n      }\n    }\n  } else {\n    // Parse DOM and extract values\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(htmlText, \"text/html\");\n\n    data.viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || null;\n    data.viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || null;\n    data.eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || null;\n\n    // Dynamically extract __EVENTTARGET from a dropdown using __doPostBack\n    const dropdown = doc.querySelector('select[onchange*=\"__doPostBack\"]');\n    if (dropdown) {\n      const onchangeAttr = dropdown.getAttribute(\"onchange\");\n      const match = /__doPostBack\\('([^']+)'/.exec(onchangeAttr);\n      if (match) data.eventTarget = match[1];\n    }\n  }\n\n  // Save if valid\n  if (data.viewState && data.viewStateGenerator) {\n    // await BeaconBar.resetSharedData(pathName);\n    // await BeaconBar.setSharedData(pathName, data);\n    localStorage.removeItem(pathName);\n    localStorage.setItem(pathName, JSON.stringify(data));\n  } else {\n  }\n})",
+    "by": "34476",
+    "__v": 1
+  }
+}

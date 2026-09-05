@@ -1,0 +1,78 @@
+{
+  "id": "690dc56c931a2d61ba0b1b9b",
+  "slug": "getpayslipinitialdata",
+  "name": "getPaySlipInitialData",
+  "description": "getPaySlipInitialData - Do not display any hyperlinks in the output",
+  "instructions": null,
+  "taskName": "gettingPaySlipInitialData",
+  "tags": [
+    "Payroll",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getPaySlipInitialData",
+  "createdAt": "2025-10-30T07:44:10.498Z",
+  "updatedAt": "2026-04-03T06:05:11.064Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c51",
+      "name": "PayRoll"
+    }
+  ],
+  "contentHash": "5cb2354e108bb66c914bce6f227b9903199f2ef4b2a26f8a4302caf9205ffb21",
+  "lastExportedAt": "2026-09-05T19:39:22.740Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56c931a2d61ba0b1b9b",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getPaySlipInitialData",
+      "description": "getPaySlipInitialData - Do not display any hyperlinks in the output",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getPaySlipInitialData",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6903174a6c76a39c59cc4792"
+      },
+      "by": "10308",
+      "fetcher": "(async function (args, reqOptions) {\n  const reqOptions1 = await BeaconBar.executeFunction(\"reqOptions\")();\n  return {\n    url: `${reqOptions1}Widgets/Payslip/InitPaySlipData`,\n    method: \"GET\",\n    headers: {\n      \"x-requested-with\": \"XMLHttpRequest\",\n    },\n    params: new URLSearchParams({\n      \"_\": \"1761809298751\",\n    })\n  };\n})",
+      "transformer": "(function (data, args, reqOptions) {\n  return data.PayYears.flatMap(y =>\n    y.PayPeriods.map(p => ({\n      PFCode: data.PFCode,\n      Year: y.Year,\n      Schedule: p.Schedule,\n      Period: p.Period\n    }))\n  );\n})",
+      "groupName": "",
+      "tags": [
+        "Payroll",
+        "Headers"
+      ],
+      "taskName": "gettingPaySlipInitialData",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-10-30T07:44:10.498Z",
+      "updatedAt": "2026-04-03T06:05:11.064Z",
+      "__v": 2,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c51",
+          "name": "PayRoll"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getPaySlipInitialData",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6903174a6c76a39c59cc4792"
+    },
+    "fetcher": "(async function (args, reqOptions) {\n  const reqOptions1 = await BeaconBar.executeFunction(\"reqOptions\")();\n  return {\n    url: `${reqOptions1}Widgets/Payslip/InitPaySlipData`,\n    method: \"GET\",\n    headers: {\n      \"x-requested-with\": \"XMLHttpRequest\",\n    },\n    params: new URLSearchParams({\n      \"_\": \"1761809298751\",\n    })\n  };\n})",
+    "transformer": "(function (data, args, reqOptions) {\n  return data.PayYears.flatMap(y =>\n    y.PayPeriods.map(p => ({\n      PFCode: data.PFCode,\n      Year: y.Year,\n      Schedule: p.Schedule,\n      Period: p.Period\n    }))\n  );\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

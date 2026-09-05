@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    {
+      "name": "employeeId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "employeeId , takes from the user if does not not give not necessary ",
+      "advanced": false,
+      "raw": {
+        "name": "employeeId",
+        "type": "string",
+        "description": "employeeId , takes from the user if does not not give not necessary ",
+        "required": true,
+        "_id": "68358a490e517193e8cb40bf"
+      }
+    },
+    {
+      "name": "fromDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Ex:- \"2025-01-01\"",
+      "advanced": false,
+      "raw": {
+        "name": "fromDate",
+        "type": "string",
+        "description": "Ex:- \"2025-01-01\"",
+        "required": true,
+        "_id": "68358a490e517193e8cb40c0"
+      }
+    },
+    {
+      "name": "toDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "toDate , Ex:-  \"2025-12-31\"",
+      "advanced": false,
+      "raw": {
+        "name": "toDate",
+        "type": "string",
+        "description": "toDate , Ex:-  \"2025-12-31\"",
+        "required": true,
+        "_id": "68358a490e517193e8cb40c1"
+      }
+    },
+    {
+      "name": "selectingEmployeeIdsOrName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "selectingEmployeeIdsOrName  if user gives  the employeeName or Ids only take or else take \"allEmployees\"",
+      "advanced": false,
+      "raw": {
+        "name": "selectingEmployeeIdsOrName",
+        "type": "string",
+        "description": "selectingEmployeeIdsOrName  if user gives  the employeeName or Ids only take or else take \"allEmployees\"",
+        "required": true,
+        "_id": "683725520646ef6bf152476e"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

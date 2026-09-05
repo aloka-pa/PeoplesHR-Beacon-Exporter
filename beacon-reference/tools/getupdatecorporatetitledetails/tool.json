@@ -1,0 +1,88 @@
+{
+  "id": "690dc563931a2d61ba0b1393",
+  "slug": "getupdatecorporatetitledetails",
+  "name": "getUpdateCorporateTitleDetails",
+  "description": "To update Corporate Title details, must and should be first execute or calling the \"getEIMAttributeList\" API. The response from this API will be used to fill any missing fields provided by the user. Additionally, the Salary Grade and Next Upgrade Level options will be displayed, allowing the user to select the appropriate name, and the corresponding value will be used for the getEIMAttributeList API. and if the user top in hierarchy is off to choice the next upgrade level else don not ask the next upgrade level . if the user update the salary grade user give the salary grade name corresponding value will be take.",
+  "instructions": null,
+  "taskName": "Update Corporate Title Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getUpdateCorporateTitleDetails",
+  "createdAt": "2025-04-29T08:15:27.981Z",
+  "updatedAt": "2026-05-15T07:03:05.127Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "c1d1021264ffb4ca207032a1925f1ee38c311b36cf754d70faddf155a71690b6",
+  "lastExportedAt": "2026-09-05T19:39:22.617Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc563931a2d61ba0b1393",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getUpdateCorporateTitleDetails",
+      "description": "To update Corporate Title details, must and should be first execute or calling the \"getEIMAttributeList\" API. The response from this API will be used to fill any missing fields provided by the user. Additionally, the Salary Grade and Next Upgrade Level options will be displayed, allowing the user to select the appropriate name, and the corresponding value will be used for the getEIMAttributeList API. and if the user top in hierarchy is off to choice the next upgrade level else don not ask the next upgrade level . if the user update the salary grade user give the salary grade name corresponding value will be take.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getUpdateCorporateTitleDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"Corporate Title Name (e.g., 'Middle Management').\"\n    },\n    \"ctl00_body_dpSalary\": {\n      \"type\": \"string\",\n      \"description\": \"Selected Salary Grade code (e.g., '000005'). All Salary Grades will be displayed for the user to select, and the corresponding value must be picked. to get corresponding value take for salary grade.\"\n    },\n    \"ctl00_body_chkTop\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Top in Hierarchy flag. If provided as 'on', 'Next Upgrade Level' must NOT be passed.\"\n    },\n    \"ctl00_body_dpNextUpgrade\": {\n      \"type\": \"string\",\n      \"description\": \"Next Upgrade Level code (e.g., '000008'). This must be provided if 'Top in Hierarchy' is not 'on'.\"\n    },\n    \"ctl00_body_nuLevel\": {\n      \"type\": \"integer\",\n      \"description\": \"Level number (e.g., 3).\"\n    },\n    \"ctl00_body_ManagePos\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\", \"off\"],\n      \"description\": \"Indicates whether it is a Managerial Position. on or off\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_dpSalary\",\n    \"ctl00_body_nuLevel\",\n    \"ctl00_body_ManagePos\"\n  ],\n  \"dependencies\": {\n    \"ctl00_body_chkTop\": {\n      \"oneOf\": [\n        {\n          \"properties\": {\n            \"ctl00_body_chkTop\": {\n              \"const\": \"on\"\n            }\n          },\n          \"not\": {\n            \"required\": [\"ctl00_body_dpNextUpgrade\"]\n          }\n        },\n        {\n          \"not\": {\n            \"required\": [\"ctl00_body_chkTop\"]\n          },\n          \"required\": [\"ctl00_body_dpNextUpgrade\"]\n        }\n      ]\n    }\n  }\n}",
+        "_id": "68108a9f1a6d5a4dc75bd22a"
+      },
+      "by": "7829",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/CorporeteTitle.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n\n  myHeaders.append(\n    \"accept\",\n    \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\"\n  );\n\n  myHeaders.append(\n    \"accept-language\",\n    \"en-US,en;q=0.9\"\n  );\n\n  myHeaders.append(\n    \"x-requested-with\",\n    \"XMLHttpRequest\"\n  );\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/CorporeteTitle.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url =\n      `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`;\n  } else {\n    url =\n      `${window.origin}/${reqOptions.sl}/EIM/CorporeteTitle.aspx`;\n  }\n\n  const urlencoded1 = new URLSearchParams();\n\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n\n  urlencoded1.append(\n    \"__VIEWSTATE\",\n    window.ct.viewState\n  );\n\n  urlencoded1.append(\n    \"__VIEWSTATEGENERATOR\",\n    window.ct.viewStateGen\n  );\n\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n\n  urlencoded1.append(\n    \"__EVENTVALIDATION\",\n    window.ct.eventValidation\n  );\n\n  urlencoded1.append(\n    \"ctl00$hdnDateFormat\",\n    \"dd/mm/yy\"\n  );\n\n  urlencoded1.append(\n    \"ctl00$hdnQuickmenu\",\n    \"\"\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$butEdit\",\n    \"Edit\"\n  );\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(\n    url,\n    requestOptions1\n  );\n\n  const html1 = await response1.text();\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    html1,\n    \"text/html\"\n  );\n\n  const viewState =\n    doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n\n  const eventValidation =\n    doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  const viewStateGen =\n    doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  const urlencoded2 = new URLSearchParams();\n\n  // urlencoded2.append(\"ctl00_body_RadScriptManager1_HiddenField\", \";;HBS:en-GB:1bf6bb2e-a9e3-48c2-8258-789b8d94ae17:64806b3a\");\n\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", \"\");\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n\n  urlencoded2.append(\n    \"__VIEWSTATE\",\n    viewState\n  );\n\n  urlencoded2.append(\n    \"__VIEWSTATEGENERATOR\",\n    viewStateGen\n  );\n\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n\n  urlencoded2.append(\n    \"__EVENTVALIDATION\",\n    eventValidation\n  );\n\n  urlencoded2.append(\n    \"ctl00$hdnDateFormat\",\n    \"dd/mm/yy\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$hdnQuickmenu\",\n    \"\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$txtName\",\n    args[\"ctl00_body_txtName\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$dpSalary\",\n    args[\"ctl00_body_dpSalary\"]\n  );\n\n  if (args[\"ctl00_body_chkTop\"] === \"on\") {\n\n    urlencoded2.append(\n      \"ctl00$body$chkTop\",\n      \"on\"\n    );\n\n  } else {\n\n    urlencoded2.append(\n      \"ctl00$body$dpNextUpgrade\",\n      args[\"ctl00_body_dpNextUpgrade\"] || \"-1\"\n    );\n\n  }\n\n  urlencoded2.append(\n    \"ctl00$body$nuLevel\",\n    args[\"ctl00_body_nuLevel\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$ManagePos\",\n    args[\"ctl00_body_ManagePos\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$butSave\",\n    \"Save\"\n  );\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\n    url,\n    requestOptions2\n  );\n\n  const html2 = await response2.text();\n\n  if (response2.status === 200) {\n    return \"sucessfully update the corporation details!!\";\n  } else {\n    return \"try again api is fail.\";\n  }\n\n})",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update Corporate Title Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-29T08:15:27.981Z",
+      "updatedAt": "2026-05-15T07:03:05.127Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getUpdateCorporateTitleDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"Corporate Title Name (e.g., 'Middle Management').\"\n    },\n    \"ctl00_body_dpSalary\": {\n      \"type\": \"string\",\n      \"description\": \"Selected Salary Grade code (e.g., '000005'). All Salary Grades will be displayed for the user to select, and the corresponding value must be picked. to get corresponding value take for salary grade.\"\n    },\n    \"ctl00_body_chkTop\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Top in Hierarchy flag. If provided as 'on', 'Next Upgrade Level' must NOT be passed.\"\n    },\n    \"ctl00_body_dpNextUpgrade\": {\n      \"type\": \"string\",\n      \"description\": \"Next Upgrade Level code (e.g., '000008'). This must be provided if 'Top in Hierarchy' is not 'on'.\"\n    },\n    \"ctl00_body_nuLevel\": {\n      \"type\": \"integer\",\n      \"description\": \"Level number (e.g., 3).\"\n    },\n    \"ctl00_body_ManagePos\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\", \"off\"],\n      \"description\": \"Indicates whether it is a Managerial Position. on or off\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_dpSalary\",\n    \"ctl00_body_nuLevel\",\n    \"ctl00_body_ManagePos\"\n  ],\n  \"dependencies\": {\n    \"ctl00_body_chkTop\": {\n      \"oneOf\": [\n        {\n          \"properties\": {\n            \"ctl00_body_chkTop\": {\n              \"const\": \"on\"\n            }\n          },\n          \"not\": {\n            \"required\": [\"ctl00_body_dpNextUpgrade\"]\n          }\n        },\n        {\n          \"not\": {\n            \"required\": [\"ctl00_body_chkTop\"]\n          },\n          \"required\": [\"ctl00_body_dpNextUpgrade\"]\n        }\n      ]\n    }\n  }\n}",
+      "_id": "68108a9f1a6d5a4dc75bd22a"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/CorporeteTitle.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n\n  myHeaders.append(\n    \"accept\",\n    \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\"\n  );\n\n  myHeaders.append(\n    \"accept-language\",\n    \"en-US,en;q=0.9\"\n  );\n\n  myHeaders.append(\n    \"x-requested-with\",\n    \"XMLHttpRequest\"\n  );\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/CorporeteTitle.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url =\n      `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`;\n  } else {\n    url =\n      `${window.origin}/${reqOptions.sl}/EIM/CorporeteTitle.aspx`;\n  }\n\n  const urlencoded1 = new URLSearchParams();\n\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n\n  urlencoded1.append(\n    \"__VIEWSTATE\",\n    window.ct.viewState\n  );\n\n  urlencoded1.append(\n    \"__VIEWSTATEGENERATOR\",\n    window.ct.viewStateGen\n  );\n\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n\n  urlencoded1.append(\n    \"__EVENTVALIDATION\",\n    window.ct.eventValidation\n  );\n\n  urlencoded1.append(\n    \"ctl00$hdnDateFormat\",\n    \"dd/mm/yy\"\n  );\n\n  urlencoded1.append(\n    \"ctl00$hdnQuickmenu\",\n    \"\"\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$butEdit\",\n    \"Edit\"\n  );\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(\n    url,\n    requestOptions1\n  );\n\n  const html1 = await response1.text();\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    html1,\n    \"text/html\"\n  );\n\n  const viewState =\n    doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n\n  const eventValidation =\n    doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  const viewStateGen =\n    doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  const urlencoded2 = new URLSearchParams();\n\n  // urlencoded2.append(\"ctl00_body_RadScriptManager1_HiddenField\", \";;HBS:en-GB:1bf6bb2e-a9e3-48c2-8258-789b8d94ae17:64806b3a\");\n\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", \"\");\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n\n  urlencoded2.append(\n    \"__VIEWSTATE\",\n    viewState\n  );\n\n  urlencoded2.append(\n    \"__VIEWSTATEGENERATOR\",\n    viewStateGen\n  );\n\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n\n  urlencoded2.append(\n    \"__EVENTVALIDATION\",\n    eventValidation\n  );\n\n  urlencoded2.append(\n    \"ctl00$hdnDateFormat\",\n    \"dd/mm/yy\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$hdnQuickmenu\",\n    \"\"\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$txtName\",\n    args[\"ctl00_body_txtName\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$dpSalary\",\n    args[\"ctl00_body_dpSalary\"]\n  );\n\n  if (args[\"ctl00_body_chkTop\"] === \"on\") {\n\n    urlencoded2.append(\n      \"ctl00$body$chkTop\",\n      \"on\"\n    );\n\n  } else {\n\n    urlencoded2.append(\n      \"ctl00$body$dpNextUpgrade\",\n      args[\"ctl00_body_dpNextUpgrade\"] || \"-1\"\n    );\n\n  }\n\n  urlencoded2.append(\n    \"ctl00$body$nuLevel\",\n    args[\"ctl00_body_nuLevel\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$ManagePos\",\n    args[\"ctl00_body_ManagePos\"]\n  );\n\n  urlencoded2.append(\n    \"ctl00$body$butSave\",\n    \"Save\"\n  );\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\n    url,\n    requestOptions2\n  );\n\n  const html2 = await response2.text();\n\n  if (response2.status === 200) {\n    return \"sucessfully update the corporation details!!\";\n  } else {\n    return \"try again api is fail.\";\n  }\n\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

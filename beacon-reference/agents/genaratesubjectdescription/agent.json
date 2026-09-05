@@ -1,0 +1,42 @@
+{
+  "id": "690dc571931a2d61ba0b1c10",
+  "slug": "genaratesubjectdescription",
+  "name": "GenarateSubjectDescription",
+  "description": "GenarateSubjectDescription",
+  "exportedAt": "2026-09-05T19:41:12.270Z",
+  "raw": {
+    "_id": "690dc571931a2d61ba0b1c10",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "GenarateSubjectDescription",
+    "description": "GenarateSubjectDescription",
+    "by": "1927",
+    "prompt": "Get the data and wait. When the user says “Shall I fill this description?”, call the tool \"fillSubjectDescription\" with the previously captured description.  first show what you filled then user confirms then fill. \n\nimp :- dont ask anything to the user just ask consent shall fill this .",
+    "notes": [],
+    "llmConfig": [],
+    "status": "live",
+    "toolIds": [
+      "690dc568931a2d61ba0b18b9"
+    ],
+    "scenarioIds": [],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      }
+    },
+    "vis": false,
+    "createdAt": "2025-05-29T12:33:41.608Z",
+    "updatedAt": "2025-05-29T12:33:41.608Z",
+    "__v": 0
+  }
+}

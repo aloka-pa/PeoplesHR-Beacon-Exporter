@@ -1,0 +1,122 @@
+{
+  "id": "6953e5cb862197c342b779be",
+  "slug": "createextracurricularactivitytype",
+  "name": "createExtraCurricularActivityType",
+  "description": "Creates a new Extra Curricular Activity Type record with a specified name and category assignment.",
+  "instructions": null,
+  "taskName": "Creating New Extra Curricular Activity Type Record",
+  "tags": [
+    "EIMAdmin",
+    "ExtraCurricularActivities"
+  ],
+  "status": "live",
+  "signature": "createExtraCurricularActivityType",
+  "createdAt": "2025-12-30T14:46:35.364Z",
+  "updatedAt": "2026-02-08T03:35:54.977Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "5e20720080aa61cccbd4074bd894094470106ceb5e970a292caced8607cc9b62",
+  "lastExportedAt": "2026-09-05T19:39:22.862Z",
+  "raw": {
+    "basic": {
+      "_id": "6953e5cb862197c342b779be",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createExtraCurricularActivityType",
+      "description": "Creates a new Extra Curricular Activity Type record with a specified name and category assignment.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createExtraCurricularActivityType",
+        "args": [
+          {
+            "name": "typeName",
+            "type": "string",
+            "description": "The name of the activity type to create (e.g., \"Theatre / Drama / Stage performances\"). Maximum 120 characters.",
+            "required": true,
+            "_id": "6953e5cb862197c342b779c0"
+          },
+          {
+            "name": "categoryCode",
+            "type": "string",
+            "description": "The code of the category to assign (e.g., \"000003\" for \"Arts / Creative\"). Either categoryCode or categoryName must be provided.",
+            "required": false,
+            "_id": "6953e5cb862197c342b779c1"
+          },
+          {
+            "name": "categoryName",
+            "type": "string",
+            "description": "The name of the category to assign (e.g., \"Arts / Creative\"). Either categoryCode or categoryName must be provided.",
+            "required": false,
+            "_id": "6953e5cb862197c342b779c2"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6953e5cb862197c342b779bf"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* Access validation */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/ExtraCulActivityType.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Extra Curricular Activity Type screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* Input validation */\n    if (!args?.typeName || args.typeName.trim() === \"\") {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: typeName is required\"\n      };\n    }\n\n    if (args.typeName.length > 120) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: typeName must be 120 characters or less\"\n      };\n    }\n\n    if (!args?.categoryCode && !args?.categoryName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: either categoryCode or categoryName is required for creating an activity type\"\n      };\n    }\n\n    /* Initial page state */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"ExtraCulActivityType\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/ExtraCulActivityType.aspx\");\n\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/ExtraCulActivityType.aspx`;\n\n    const parser = new DOMParser();\n\n    /* Step 1: Click New to get the form with category dropdown */\n    const newFormData = new FormData();\n    newFormData.append(\"scrollLeft\", \"0\");\n    newFormData.append(\"scrollTop\", \"0\");\n    newFormData.append(\"__EVENTTARGET\", \"\");\n    newFormData.append(\"__EVENTARGUMENT\", \"\");\n    newFormData.append(\"__VIEWSTATE\", details.viewState);\n    newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n    newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"EATYPE_CODE\");\n    newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n    newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n    newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n    newFormData.append(\"ctl00$body$butNew\", \"New\");\n\n    const newResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: newFormData\n    });\n\n    const newDoc = parser.parseFromString(await newResponse.text(), \"text/html\");\n\n    /* Extract ViewState after clicking New */\n    const viewState = newDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const eventValidation = newDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const viewStateGen = newDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Extract category dropdown and find matching code */\n    const categorySelect = newDoc.querySelector(\"#ctl00_body_dprating\");\n    const options = categorySelect?.querySelectorAll(\"option\");\n\n    let categoryCodeToUse = null;\n\n    // Determine category code - prioritize direct code, then lookup name\n    if (args.categoryCode !== undefined) {\n      // If category code is provided directly, use it\n      const inputCategoryCode = args.categoryCode.trim();\n      \n      // If input is already a 6-digit code, use it directly\n      if (/^\\d{6}$/.test(inputCategoryCode)) {\n        categoryCodeToUse = inputCategoryCode;\n      } else {\n        // Search for category name (case-insensitive) in case user passed name to 'categoryCode' param\n        for (const option of options) {\n          const optionText = option.textContent.trim();\n          const optionValue = option.value;\n          \n          if (optionValue !== \"\" && optionValue !== \"-1\" &&\n              optionText.toLowerCase() === inputCategoryCode.toLowerCase()) {\n            categoryCodeToUse = optionValue;\n            break;\n          }\n        }\n      }\n    } else if (args.categoryName !== undefined) {\n      // Search for category name (case-insensitive)\n      const inputCategoryName = args.categoryName.trim();\n      \n      for (const option of options) {\n        const optionText = option.textContent.trim();\n        const optionValue = option.value;\n        \n        if (optionValue !== \"\" && optionValue !== \"-1\" &&\n            optionText.toLowerCase() === inputCategoryName.toLowerCase()) {\n          categoryCodeToUse = optionValue;\n          break;\n        }\n      }\n    }\n\n    if (!categoryCodeToUse) {\n      // Collect available categories for error message\n      const availableCategories = Array.from(options)\n        .filter(opt => opt.value !== \"\" && opt.value !== \"-1\")\n        .map(opt => opt.textContent.trim());\n\n      const searchTerm = args.categoryCode || args.categoryName;\n      return {\n        status: \"INVALID_ARGS\",\n        message: `Category \"${searchTerm}\" not found in the system`,\n        suggestion: `Available categories: ${availableCategories.join(\", \")}`\n      };\n    }\n\n    /* Step 2: Save with the resolved category code */\n    const saveFormData = new FormData();\n    saveFormData.append(\"scrollLeft\", \"0\");\n    saveFormData.append(\"scrollTop\", \"0\");\n    saveFormData.append(\"__EVENTTARGET\", \"\");\n    saveFormData.append(\"__EVENTARGUMENT\", \"\");\n    saveFormData.append(\"__VIEWSTATE\", viewState);\n    saveFormData.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n    saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    saveFormData.append(\"__EVENTVALIDATION\", eventValidation);\n    saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    saveFormData.append(\"ctl00$body$txtName\", args.typeName.trim());\n    saveFormData.append(\"ctl00$body$dprating\", categoryCodeToUse);\n    saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n    const saveResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: saveFormData\n    });\n\n    const saveHtml = await saveResponse.text();\n\n    if (saveResponse.status === 200) {\n      const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n      const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n      \n      if (errorMsg) {\n        return {\n          status: \"ERROR\",\n          message: `Save failed: ${errorMsg.trim()}`\n        };\n      }\n\n      // Extract the generated activity type code from the saved record\n      const activityTypeCode = saveDoc.querySelector(\"#ctl00_body_txtCode\")?.value || \"\";\n\n      return {\n        status: \"SUCCESS\",\n        message: \"Successfully created Extra Curricular Activity Type!\",\n        typeName: args.typeName.trim(),\n        activityTypeCode: activityTypeCode,\n        category: args.categoryCode || args.categoryName,\n        categoryCode: categoryCodeToUse\n      };\n    }\n\n    return {\n      status: \"ERROR\",\n      message: \"Failed to create activity type. Please verify in the UI.\"\n    };\n\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err.message,\n      error: err.toString()\n    };\n  }\n})",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "ExtraCurricularActivities"
+      ],
+      "taskName": "Creating New Extra Curricular Activity Type Record",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-30T14:46:35.364Z",
+      "updatedAt": "2026-02-08T03:35:54.977Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "createExtraCurricularActivityType",
+      "args": [
+        {
+          "name": "typeName",
+          "type": "string",
+          "description": "The name of the activity type to create (e.g., \"Theatre / Drama / Stage performances\"). Maximum 120 characters.",
+          "required": true,
+          "_id": "6953e5cb862197c342b779c0"
+        },
+        {
+          "name": "categoryCode",
+          "type": "string",
+          "description": "The code of the category to assign (e.g., \"000003\" for \"Arts / Creative\"). Either categoryCode or categoryName must be provided.",
+          "required": false,
+          "_id": "6953e5cb862197c342b779c1"
+        },
+        {
+          "name": "categoryName",
+          "type": "string",
+          "description": "The name of the category to assign (e.g., \"Arts / Creative\"). Either categoryCode or categoryName must be provided.",
+          "required": false,
+          "_id": "6953e5cb862197c342b779c2"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6953e5cb862197c342b779bf"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* Access validation */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/ExtraCulActivityType.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Extra Curricular Activity Type screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* Input validation */\n    if (!args?.typeName || args.typeName.trim() === \"\") {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: typeName is required\"\n      };\n    }\n\n    if (args.typeName.length > 120) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: typeName must be 120 characters or less\"\n      };\n    }\n\n    if (!args?.categoryCode && !args?.categoryName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: either categoryCode or categoryName is required for creating an activity type\"\n      };\n    }\n\n    /* Initial page state */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"ExtraCulActivityType\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/ExtraCulActivityType.aspx\");\n\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/ExtraCulActivityType.aspx`;\n\n    const parser = new DOMParser();\n\n    /* Step 1: Click New to get the form with category dropdown */\n    const newFormData = new FormData();\n    newFormData.append(\"scrollLeft\", \"0\");\n    newFormData.append(\"scrollTop\", \"0\");\n    newFormData.append(\"__EVENTTARGET\", \"\");\n    newFormData.append(\"__EVENTARGUMENT\", \"\");\n    newFormData.append(\"__VIEWSTATE\", details.viewState);\n    newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n    newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"EATYPE_CODE\");\n    newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n    newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n    newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n    newFormData.append(\"ctl00$body$butNew\", \"New\");\n\n    const newResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: newFormData\n    });\n\n    const newDoc = parser.parseFromString(await newResponse.text(), \"text/html\");\n\n    /* Extract ViewState after clicking New */\n    const viewState = newDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const eventValidation = newDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const viewStateGen = newDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Extract category dropdown and find matching code */\n    const categorySelect = newDoc.querySelector(\"#ctl00_body_dprating\");\n    const options = categorySelect?.querySelectorAll(\"option\");\n\n    let categoryCodeToUse = null;\n\n    // Determine category code - prioritize direct code, then lookup name\n    if (args.categoryCode !== undefined) {\n      // If category code is provided directly, use it\n      const inputCategoryCode = args.categoryCode.trim();\n      \n      // If input is already a 6-digit code, use it directly\n      if (/^\\d{6}$/.test(inputCategoryCode)) {\n        categoryCodeToUse = inputCategoryCode;\n      } else {\n        // Search for category name (case-insensitive) in case user passed name to 'categoryCode' param\n        for (const option of options) {\n          const optionText = option.textContent.trim();\n          const optionValue = option.value;\n          \n          if (optionValue !== \"\" && optionValue !== \"-1\" &&\n              optionText.toLowerCase() === inputCategoryCode.toLowerCase()) {\n            categoryCodeToUse = optionValue;\n            break;\n          }\n        }\n      }\n    } else if (args.categoryName !== undefined) {\n      // Search for category name (case-insensitive)\n      const inputCategoryName = args.categoryName.trim();\n      \n      for (const option of options) {\n        const optionText = option.textContent.trim();\n        const optionValue = option.value;\n        \n        if (optionValue !== \"\" && optionValue !== \"-1\" &&\n            optionText.toLowerCase() === inputCategoryName.toLowerCase()) {\n          categoryCodeToUse = optionValue;\n          break;\n        }\n      }\n    }\n\n    if (!categoryCodeToUse) {\n      // Collect available categories for error message\n      const availableCategories = Array.from(options)\n        .filter(opt => opt.value !== \"\" && opt.value !== \"-1\")\n        .map(opt => opt.textContent.trim());\n\n      const searchTerm = args.categoryCode || args.categoryName;\n      return {\n        status: \"INVALID_ARGS\",\n        message: `Category \"${searchTerm}\" not found in the system`,\n        suggestion: `Available categories: ${availableCategories.join(\", \")}`\n      };\n    }\n\n    /* Step 2: Save with the resolved category code */\n    const saveFormData = new FormData();\n    saveFormData.append(\"scrollLeft\", \"0\");\n    saveFormData.append(\"scrollTop\", \"0\");\n    saveFormData.append(\"__EVENTTARGET\", \"\");\n    saveFormData.append(\"__EVENTARGUMENT\", \"\");\n    saveFormData.append(\"__VIEWSTATE\", viewState);\n    saveFormData.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n    saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    saveFormData.append(\"__EVENTVALIDATION\", eventValidation);\n    saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    saveFormData.append(\"ctl00$body$txtName\", args.typeName.trim());\n    saveFormData.append(\"ctl00$body$dprating\", categoryCodeToUse);\n    saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n    const saveResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: saveFormData\n    });\n\n    const saveHtml = await saveResponse.text();\n\n    if (saveResponse.status === 200) {\n      const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n      const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n      \n      if (errorMsg) {\n        return {\n          status: \"ERROR\",\n          message: `Save failed: ${errorMsg.trim()}`\n        };\n      }\n\n      // Extract the generated activity type code from the saved record\n      const activityTypeCode = saveDoc.querySelector(\"#ctl00_body_txtCode\")?.value || \"\";\n\n      return {\n        status: \"SUCCESS\",\n        message: \"Successfully created Extra Curricular Activity Type!\",\n        typeName: args.typeName.trim(),\n        activityTypeCode: activityTypeCode,\n        category: args.categoryCode || args.categoryName,\n        categoryCode: categoryCodeToUse\n      };\n    }\n\n    return {\n      status: \"ERROR\",\n      message: \"Failed to create activity type. Please verify in the UI.\"\n    };\n\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err.message,\n      error: err.toString()\n    };\n  }\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

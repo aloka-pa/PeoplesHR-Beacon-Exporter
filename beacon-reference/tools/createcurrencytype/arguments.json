@@ -1,0 +1,80 @@
+{
+  "arguments": [
+    {
+      "name": "currencyName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name of the new currency (e.g., \"Australian Dollar\")",
+      "advanced": false,
+      "raw": {
+        "name": "currencyName",
+        "type": "string",
+        "description": "The name of the new currency (e.g., \"Australian Dollar\")",
+        "required": true,
+        "_id": "69540adf9f7bf02aaf031897"
+      }
+    },
+    {
+      "name": "currencySymbol",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The symbol for the new currency (e.g., \"AUD\", \"USD\")\nNOTE: currencySymbol is not currency symbol like \"$\"; it is a combination of letters \"USD.\"",
+      "advanced": false,
+      "raw": {
+        "name": "currencySymbol",
+        "type": "string",
+        "description": "The symbol for the new currency (e.g., \"AUD\", \"USD\")\nNOTE: currencySymbol is not currency symbol like \"$\"; it is a combination of letters \"USD.\"",
+        "required": true,
+        "_id": "69540adf9f7bf02aaf031898"
+      }
+    },
+    {
+      "name": "isBaseCurrency",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set as base currency - accepts string \"true\" or \"false\" (default: \"false\")",
+      "advanced": false,
+      "raw": {
+        "name": "isBaseCurrency",
+        "type": "string",
+        "description": "Set as base currency - accepts string \"true\" or \"false\" (default: \"false\")",
+        "required": false,
+        "_id": "69540adf9f7bf02aaf031899"
+      }
+    },
+    {
+      "name": "exchangeRate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The exchange rate value relative to base currency (e.g., \"1.45\"). Not needed if isBaseCurrency is \"true\"",
+      "advanced": false,
+      "raw": {
+        "name": "exchangeRate",
+        "type": "string",
+        "description": "The exchange rate value relative to base currency (e.g., \"1.45\"). Not needed if isBaseCurrency is \"true\"",
+        "required": false,
+        "_id": "69540adf9f7bf02aaf03189a"
+      }
+    },
+    {
+      "name": "confirmBaseChange",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Required if isBaseCurrency is \"true\"\nMust be set to \"true\" to confirm changing the base currency",
+      "advanced": false,
+      "raw": {
+        "name": "confirmBaseChange",
+        "type": "string",
+        "description": "Required if isBaseCurrency is \"true\"\nMust be set to \"true\" to confirm changing the base currency",
+        "required": false,
+        "_id": "69540adf9f7bf02aaf03189b"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

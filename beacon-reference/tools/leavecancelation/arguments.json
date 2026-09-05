@@ -1,0 +1,80 @@
+{
+  "arguments": [
+    {
+      "name": "year",
+      "type": "integer",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the leave cancel year",
+      "advanced": false,
+      "raw": {
+        "name": "year",
+        "type": "integer",
+        "description": "to give the leave cancel year",
+        "required": true,
+        "_id": "685a84725387ec33b1f1a822"
+      }
+    },
+    {
+      "name": "leaveCancelDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the leave cancel Date using in this format date example \"06/24/2025\" format \"dd/mm/yyyy\".",
+      "advanced": false,
+      "raw": {
+        "name": "leaveCancelDate",
+        "type": "string",
+        "description": "to give the leave cancel Date using in this format date example \"06/24/2025\" format \"dd/mm/yyyy\".",
+        "required": true,
+        "_id": "685a84725387ec33b1f1a823"
+      }
+    },
+    {
+      "name": "comment",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "reason or comment for leave cancel",
+      "advanced": false,
+      "raw": {
+        "name": "comment",
+        "type": "string",
+        "description": "reason or comment for leave cancel",
+        "required": true,
+        "_id": "685a84725387ec33b1f1a824"
+      }
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the employee id",
+      "advanced": false,
+      "raw": {
+        "name": "id",
+        "type": "string",
+        "description": "to give the employee id",
+        "required": true,
+        "_id": "685ab6e50f7770e2f07c28a7"
+      }
+    },
+    {
+      "name": "leaveAppliedId",
+      "type": "integer",
+      "required": true,
+      "defaultValue": null,
+      "description": "dont user ask for leave id to get user given date or user date corresponding leave applied Id to get example \"82.0\",\"71.0\" etc..",
+      "advanced": false,
+      "raw": {
+        "name": "leaveAppliedId",
+        "type": "integer",
+        "description": "dont user ask for leave id to get user given date or user date corresponding leave applied Id to get example \"82.0\",\"71.0\" etc..",
+        "required": true,
+        "_id": "686ba5df61da08abca614ff8"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

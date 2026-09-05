@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "salaryGradeCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "user update salary grade name corresponding value will be take. before api all list provide the salary grades name corresponding value will be take example \"000012\".",
+      "advanced": false,
+      "raw": {
+        "name": "salaryGradeCode",
+        "type": "string",
+        "description": "user update salary grade name corresponding value will be take. before api all list provide the salary grades name corresponding value will be take example \"000012\".",
+        "required": true,
+        "_id": "685b8e99afa936e271247619"
+      }
+    },
+    {
+      "name": "designation",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the designation name.",
+      "advanced": false,
+      "raw": {
+        "name": "designation",
+        "type": "string",
+        "description": "to get the designation name.",
+        "required": true,
+        "_id": "685edd08b5662c5f934b788b"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

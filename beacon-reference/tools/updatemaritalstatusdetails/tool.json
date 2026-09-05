@@ -1,0 +1,113 @@
+{
+  "id": "690dc566931a2d61ba0b1636",
+  "slug": "updatemaritalstatusdetails",
+  "name": "updateMaritalStatusDetails",
+  "description": "before execute in this tool, must and should be first executing  for \"getEIMAttributeList\" API, then after execute in the tool.",
+  "instructions": null,
+  "taskName": "Update Marital Status Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateMaritalStatusDetails",
+  "createdAt": "2025-05-04T17:08:36.594Z",
+  "updatedAt": "2026-06-15T07:37:06.271Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "98da036d3a969c4e90e25291ebaa89418009e0890722e4c47ba8a6509e9d6425",
+  "lastExportedAt": "2026-09-05T19:39:22.309Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b1636",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateMaritalStatusDetails",
+      "description": "before execute in this tool, must and should be first executing  for \"getEIMAttributeList\" API, then after execute in the tool.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateMaritalStatusDetails",
+        "args": [
+          {
+            "name": "ctl00bodytxtName",
+            "type": "string",
+            "description": "to give the update Marital Status name.",
+            "required": true,
+            "_id": "68179f1468ca7396dee7403a"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68179f1468ca7396dee74039"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/MaritalStatus.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/MaritalStatus.aspx');\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n  } else {\n    url = \"MaritalStatus\"\n  }\n  const editInit = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.ms.viewState,\n    __VIEWSTATEGENERATOR: window.ms.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.ms.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butEdit\": \"Edit\"\n  }, url);\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n    \"ctl00$body$txtName\": args.ctl00bodytxtName,\n    \"ctl00$body$butSave\": \"Save\"\n  }, url);\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const maritalStatus = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const updatedetails = {\n    code,\n    maritalStatus\n  };\n  if (saveResponse === false) {\n    return \"try again api is fail.\"\n  } else {\n    return updatedetails;\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update Marital Status Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-04T17:08:36.594Z",
+      "updatedAt": "2026-06-15T07:37:06.271Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateMaritalStatusDetails",
+      "args": [
+        {
+          "name": "ctl00bodytxtName",
+          "type": "string",
+          "description": "to give the update Marital Status name.",
+          "required": true,
+          "_id": "68179f1468ca7396dee7403a"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68179f1468ca7396dee74039"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/MaritalStatus.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/MaritalStatus.aspx');\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n  } else {\n    url = \"MaritalStatus\"\n  }\n  const editInit = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.ms.viewState,\n    __VIEWSTATEGENERATOR: window.ms.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.ms.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butEdit\": \"Edit\"\n  }, url);\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n    \"ctl00$body$txtName\": args.ctl00bodytxtName,\n    \"ctl00$body$butSave\": \"Save\"\n  }, url);\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const maritalStatus = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const updatedetails = {\n    code,\n    maritalStatus\n  };\n  if (saveResponse === false) {\n    return \"try again api is fail.\"\n  } else {\n    return updatedetails;\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

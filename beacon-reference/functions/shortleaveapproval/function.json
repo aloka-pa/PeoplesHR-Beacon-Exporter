@@ -1,0 +1,24 @@
+{
+  "id": "690dc58b931a2d61ba0b329b",
+  "slug": "shortleaveapproval",
+  "name": "shortLeaveApproval",
+  "status": "live",
+  "createdAt": "2025-06-11T17:13:17.249Z",
+  "updatedAt": "2025-06-11T17:13:17.249Z",
+  "contentHash": "c905ebfa611b69a8c98402628f606b95ed9166573d7ff450a48b8cb2929844bc",
+  "lastExportedAt": "2026-09-05T19:41:36.249Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58b931a2d61ba0b329b",
+    "name": "shortLeaveApproval",
+    "status": "live",
+    "code": "(function(args , comment){\n    const myHeaders = new Headers();\nmyHeaders.append(\"__cfafvalue\", \"awK3NxrVF1O3a2X29Iv9RLyfqmf5Vnzyd6BLlM8_FLdZeoBwbWsIfIdj80BKXHfXJymLVy-0-AsE23tJfy8ZtNe5wwc1,8_whg5kJlkM3zrpHkRIiKvIjLIQhwE0DN4y9uE3k9uXjCYONufRF-7vruWkH1MayJayK2BDUHTTNXEYuc2deT4B2tg01\");\nmyHeaders.append(\"accept\", \"*/*\");\nmyHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\nmyHeaders.append(\"content-type\", \"application/json\");\n\nconst raw = JSON.stringify({\n  \"LDetail\": {\n    \"WFMainID\": \"MAAwADAAMAAwADAAMAA2ADcAMwA%3D\",\n    \"ApprovalEmpNumber\": \"NkpRR0hacGgzaHpTUFIzNlc0dEZMbVNpL3FEblNqeXFQZVpwSTU1dTBSSTRnTnlmeXNxbHdZNDMva2VPVFVYMk9Bd1ZDaFl0bGRrOHpvWmtjOWhPVkh4MUNpWmxTU0ZwTWdBNDVhMmNvRGdrbEk1Y2MxbXVFUXNNQ3poRDJkUFh0RHFmRmJYQWcrNGNQWkR3cGRzR2tPOWlvRFh1M0xpMnRISGFiUmpOcjFZeEdaVS9Idkt0SGZVMkFWN3JvbktaRDRQZDVvSGFHNTRqdWdFQzAyZEtPVjg5TmlZWS9pSFVyNFBTais5RDNSMFdqYnJ6TnA5ZDV2elQ2Rko2aFVQdEVLMEU3WGd5NnVJcWhUQkpOU3g4aHRWTXJjS053RlVCMTN4YkxoK1ZyTFc1KzVkRzJTa1B6SnkxQ3dpSHdDOWpIUUVDcXIxaVNJYXIzeURFM3AxMmoxRUVKN0JXVmcrSm9ZRHZlSFBTRVJOS3FKMUp3aTNIbFFqaW4rSmFlVXlvNXFiMHdRaWVWZFROa3lrN1NBckV0b0lkcW5tdzBwTGduR3JGRjh1aERDUG9lT2oycUY0UWF4UHJhN2lRTENVVUNkSUNVaWNtb2xRNWdzWjRBM2wyK0plQS9obkxhbFBUa0l1d0licHNnUFE3dFFROUh0ZWdHUU1Uc2hkc3YyYm1pZmVvZWJ1aHRvc1hVVDRXcnR5cExFczZzeDZPY0U1R252V1FMTGRGbDhiVTNBMGpwc2V4Yk50ZnBTNmRhYmo1elJ3RGtVOHhDWFluVE5wek43dGF6dC9taXB5MzVnQzdIT0hBaHBQSWpsTmJJeTE0QTNNL2NobjFFZncxa0kvS3JhalI4bEhWSEh3eGhMU1RRQVRSU0E9PQ==\",\n    \"Comment\": \"approved by testing\",\n    \"EmpNumber\": \"c3RiUldhd0NNVjkxd1JHSkd0QXR2M0Q5elJGc2tMUWgzUXV1VU5UZHZFZVVkNkVJZ29HZk51aTVBekFHL3V5YStTQ0RxaC8rK3p5VW9FRGhzRlMxMFZaQXhROUxQcmQyd0h2bzRIcG1jQ2ovdjRDcDRaT0p0UlNXZHVUOEc2L3EwcEh4bWR5dG9HUzhlcTFQVVpEU1lWbnVVejVGK003Sm9Hb004bUFpNG1CdHNyUjhHQTViQXlSQ3RlRjZtUVc4akl4eERVTmozY1VDT3JiMUczQXZJSE5OcVNZMFBEZ0VlT1JnWE1rNUhHdEJOTlJRRGdHU3ZMY1U0bEdmZTNxU21wczdrRUVOcTcwdDBKTko5OUNvZFJQQmNsMEtrc29rMDZkRWFFUDJqTWZUU29FTmpPVktoYWpjVjF4aWF5d09zZWpSMlNzeksybE1rTklmNHcwbnNyd1B5bEZPcTVXUDdXRnlxRTI0R3kvUkFzVkY2Z1EzODNiYko3R1JZcVpRYzUveWVaRnNiVDkrY3NrVGlrUEZDa3pxdmxqeFFBUjRMMytmc0NmeWNGTlhhY3NhUElNcWlCMjA5dnAvbEM5VmpaeXArMlkzcmR0clZjaXdXcFVYa0JhMzBSVUFXOXRJeE9uYXE0U3p4THBTMnNDR2dNZnloNVJOVjdwdDBXUjZ1M3hKUFRsVFFNb2hvWUJSUlRQWk9Wc3ZXQ1VRbGtWazRXZ25saEdndExmYjd6dzBaNmVoRlRpYW5mbTFiT01EZG9EeURJc0VVOFd3bjdzaThCZ1dQRmYrVlFpUWwvNnNHekw1RVVHMmo2SVN0ei95cXdGZ2N0L2tyck91T2JNOC9HRm13WVIxUU55bmxhMXd2WXNUaVE9PQ==\"\n  },\n  \"LeaveCategory\": 0\n});\n\nconst requestOptions = {\n  method: \"POST\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\nconst reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\nconst response = await fetch(`${reqOptions}AbsenceV9/api/LeaveApproval/SubmitLeaveApplicationApproval/`, requestOptions)\nconst data = await  response.text()\n  return data ;\n    })",
+    "by": "1927",
+    "__v": 0
+  }
+}

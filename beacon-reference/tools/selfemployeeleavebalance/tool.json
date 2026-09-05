@@ -1,0 +1,108 @@
+{
+  "id": "690dc56b931a2d61ba0b1abd",
+  "slug": "selfemployeeleavebalance",
+  "name": "selfEmployeeLeaveBalance",
+  "description": "in this api return for only self employee leave balance. before execute \"selfEmployeeLeaveBalance\" tool,\n first check below flow steps.\n1. if the user self or myself, self related query execute the \"getAdminInformationDetails\" api to get the employee id \n2. else other employee related query mention employee name or id provide execute \"getGlobalEmployeeSearch\" too. to get the employee id.",
+  "instructions": null,
+  "taskName": "Fetching The Self Employee Leave Balances",
+  "tags": [
+    "Absent Management",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "selfEmployeeLeaveBalance",
+  "createdAt": "2025-08-18T07:46:00.516Z",
+  "updatedAt": "2025-12-12T07:34:25.199Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c72",
+      "name": "AbsenceManagementEmployee"
+    }
+  ],
+  "contentHash": "e722788e6708a0d64171a54daeca8c34ab77b2fc459a31d44675f27d2823b395",
+  "lastExportedAt": "2026-09-05T19:39:23.174Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1abd",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selfEmployeeLeaveBalance",
+      "description": "in this api return for only self employee leave balance. before execute \"selfEmployeeLeaveBalance\" tool,\n first check below flow steps.\n1. if the user self or myself, self related query execute the \"getAdminInformationDetails\" api to get the employee id \n2. else other employee related query mention employee name or id provide execute \"getGlobalEmployeeSearch\" too. to get the employee id.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selfEmployeeLeaveBalance",
+        "args": [
+          {
+            "name": "year",
+            "type": "string",
+            "description": "user to give the year, if the user not given ai current year will be take.",
+            "required": true,
+            "_id": "68a31fe100336f2188784b06"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to get the employee id.must be execute the 'getAdminInformationDetails' to get the self employee id. must be required field. example id \"1234\"",
+            "required": true,
+            "_id": "68b0490683e3e8378fc8f38b"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68a2da3828722f48ed6e5380"
+      },
+      "by": "7854",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n      return []\n    })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.some(menu => menu.includes(\"AbsenceV9/LeaveHistory/LeaveHistory?mvc=1\"))) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  if (!args.id) {\n    return \"must be calling 'getAdminInformationDetails' tool execute to get the employee number, do ask employee id directly self employee id will be take\"\n  }\n\n  if (args.id !== BeaconBar.user.metaData.empNo) {\n    return \"It seems you don't have access. Please check with the HR Admin\"\n  }\n\n  const empKey = await BeaconBar.executeFunction(\"employeeLeaveApplication\")();\n\n  // const yearResponse = await fetch(\n  //   `${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/GetEntitledLeaveYears/`,\n  //   {\n  //     method: \"POST\",\n  //     headers: {\n  //       \"__cfafvalue\": window.csrf,\n  //       accept: \"*/*\",\n  //       \"accept-language\": \"en-US,en;q=0.9\",\n  //       \"content-type\": \"application/json\",\n  //     },\n  //     body: JSON.stringify({ EmpNumber: empKey }),\n  //     redirect: \"follow\",\n  //   }\n  // );\n\n  // const year = await yearResponse.json();\n  // const yearCode = year[0].YearCode;\n\n  const leaveTypesResponse = await fetch(\n    `${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/GetEntitledLeaveTypes/`,\n    {\n      method: \"POST\",\n      headers: {\n        \"Content-Type\": \"application/json\",\n        accept: \"*/*\",\n        \"accept-language\": \"en-US,en;q=0.9\",\n        \"x-requested-with\": \"XMLHttpRequest\",\n        \"__cfafvalue\": window.csrf,\n      },\n      body: JSON.stringify({\n        EmpNumber: empKey,\n        LeaveYear: args.year,\n        ApplicationPage: 1,\n      }),\n      redirect: \"follow\",\n    }\n  );\n\n  const leaveTypes = await leaveTypesResponse.json();\n\n  const leaveBalanceDetails = leaveTypes.map((leave) => ({\n    leaveTypeName: leave.TypeName,\n    leaveTypeCode: leave.TypeCode,\n    yearCode: leave.YearCode,\n    leaveGroupCode: leave.LGCode,\n    calendarCode: leave.CalendarCode,\n    entitlement: leave.Entitlement.EntitlementDV,\n    utilized: leave.Entitlement.UtilizedDV,\n    balance: leave.Entitlement.BalanceDV,\n    pendingApproval: leave.Entitlement.PendingDV,\n  }));\n\n  return leaveBalanceDetails;\n});\n",
+      "groupName": "",
+      "tags": [
+        "Absent Management",
+        "Headers"
+      ],
+      "taskName": "Fetching The Self Employee Leave Balances",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-18T07:46:00.516Z",
+      "updatedAt": "2025-12-12T07:34:25.199Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c72",
+          "name": "AbsenceManagementEmployee"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selfEmployeeLeaveBalance",
+      "args": [
+        {
+          "name": "year",
+          "type": "string",
+          "description": "user to give the year, if the user not given ai current year will be take.",
+          "required": true,
+          "_id": "68a31fe100336f2188784b06"
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to get the employee id.must be execute the 'getAdminInformationDetails' to get the self employee id. must be required field. example id \"1234\"",
+          "required": true,
+          "_id": "68b0490683e3e8378fc8f38b"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68a2da3828722f48ed6e5380"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n      return []\n    })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.some(menu => menu.includes(\"AbsenceV9/LeaveHistory/LeaveHistory?mvc=1\"))) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  if (!args.id) {\n    return \"must be calling 'getAdminInformationDetails' tool execute to get the employee number, do ask employee id directly self employee id will be take\"\n  }\n\n  if (args.id !== BeaconBar.user.metaData.empNo) {\n    return \"It seems you don't have access. Please check with the HR Admin\"\n  }\n\n  const empKey = await BeaconBar.executeFunction(\"employeeLeaveApplication\")();\n\n  // const yearResponse = await fetch(\n  //   `${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/GetEntitledLeaveYears/`,\n  //   {\n  //     method: \"POST\",\n  //     headers: {\n  //       \"__cfafvalue\": window.csrf,\n  //       accept: \"*/*\",\n  //       \"accept-language\": \"en-US,en;q=0.9\",\n  //       \"content-type\": \"application/json\",\n  //     },\n  //     body: JSON.stringify({ EmpNumber: empKey }),\n  //     redirect: \"follow\",\n  //   }\n  // );\n\n  // const year = await yearResponse.json();\n  // const yearCode = year[0].YearCode;\n\n  const leaveTypesResponse = await fetch(\n    `${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/GetEntitledLeaveTypes/`,\n    {\n      method: \"POST\",\n      headers: {\n        \"Content-Type\": \"application/json\",\n        accept: \"*/*\",\n        \"accept-language\": \"en-US,en;q=0.9\",\n        \"x-requested-with\": \"XMLHttpRequest\",\n        \"__cfafvalue\": window.csrf,\n      },\n      body: JSON.stringify({\n        EmpNumber: empKey,\n        LeaveYear: args.year,\n        ApplicationPage: 1,\n      }),\n      redirect: \"follow\",\n    }\n  );\n\n  const leaveTypes = await leaveTypesResponse.json();\n\n  const leaveBalanceDetails = leaveTypes.map((leave) => ({\n    leaveTypeName: leave.TypeName,\n    leaveTypeCode: leave.TypeCode,\n    yearCode: leave.YearCode,\n    leaveGroupCode: leave.LGCode,\n    calendarCode: leave.CalendarCode,\n    entitlement: leave.Entitlement.EntitlementDV,\n    utilized: leave.Entitlement.UtilizedDV,\n    balance: leave.Entitlement.BalanceDV,\n    pendingApproval: leave.Entitlement.PendingDV,\n  }));\n\n  return leaveBalanceDetails;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

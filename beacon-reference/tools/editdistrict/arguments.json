@@ -1,0 +1,140 @@
+{
+  "arguments": [
+    {
+      "name": "districtCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "District code to locate the record (exact match). Recommended.",
+      "advanced": false,
+      "raw": {
+        "name": "districtCode",
+        "type": "string",
+        "description": "District code to locate the record (exact match). Recommended.",
+        "required": false,
+        "_id": "695346bd82c7b638e23ce277"
+      }
+    },
+    {
+      "name": "districtName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "District name to locate the record (partial match). Used if code not provided.",
+      "advanced": false,
+      "raw": {
+        "name": "districtName",
+        "type": "string",
+        "description": "District name to locate the record (partial match). Used if code not provided.",
+        "required": false,
+        "_id": "695346bd82c7b638e23ce278"
+      }
+    },
+    {
+      "name": "newDistrictName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "user-provided new district name",
+      "advanced": false,
+      "raw": {
+        "name": "newDistrictName",
+        "type": "string",
+        "description": "user-provided new district name",
+        "required": false,
+        "_id": "695346bd82c7b638e23ce279"
+      }
+    },
+    {
+      "name": "provinceCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "user-provided province code (e.g.: 000002)",
+      "advanced": false,
+      "raw": {
+        "name": "provinceCode",
+        "type": "string",
+        "description": "user-provided province code (e.g.: 000002)",
+        "required": false,
+        "_id": "695346bd82c7b638e23ce27a"
+      }
+    },
+    {
+      "name": "provinceName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Province name to narrow down the search (partial match). Optional.\nIf both provinceCode and provinceName are provided, provinceCode takes priority",
+      "advanced": false,
+      "raw": {
+        "name": "provinceName",
+        "type": "string",
+        "description": "Province name to narrow down the search (partial match). Optional.\nIf both provinceCode and provinceName are provided, provinceCode takes priority",
+        "required": false,
+        "_id": "695346bd82c7b638e23ce27b"
+      }
+    },
+    {
+      "name": "newDistrictName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "New district name to set in ctl00$body$txtName.",
+      "advanced": false,
+      "raw": {
+        "name": "newDistrictName",
+        "type": "string",
+        "description": "New district name to set in ctl00$body$txtName.",
+        "required": false,
+        "_id": "697f9a9f3c27f51defa181da"
+      }
+    },
+    {
+      "name": "newProvinceCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "New province code to select in ctl00$body$dpcountry (preferred for reliability). Example: \"000001\".",
+      "advanced": false,
+      "raw": {
+        "name": "newProvinceCode",
+        "type": "string",
+        "description": "New province code to select in ctl00$body$dpcountry (preferred for reliability). Example: \"000001\".",
+        "required": false,
+        "_id": "697f9a9f3c27f51defa181db"
+      }
+    },
+    {
+      "name": "newProvinceName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Province name to select (tool will find matching <option> by text, case-insensitive). Use if you don’t know the code.",
+      "advanced": false,
+      "raw": {
+        "name": "newProvinceName",
+        "type": "string",
+        "description": "Province name to select (tool will find matching <option> by text, case-insensitive). Use if you don’t know the code.",
+        "required": false,
+        "_id": "697f9a9f3c27f51defa181dc"
+      }
+    },
+    {
+      "name": "maxPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Safety limit while scanning pages to find the record (default: 75).",
+      "advanced": false,
+      "raw": {
+        "name": "maxPages",
+        "type": "string",
+        "description": "Safety limit while scanning pages to find the record (default: 75).",
+        "required": false,
+        "_id": "697f9a9f3c27f51defa181dd"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

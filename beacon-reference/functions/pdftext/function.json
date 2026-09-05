@@ -1,0 +1,24 @@
+{
+  "id": "690dc586931a2d61ba0b2e65",
+  "slug": "pdftext",
+  "name": "pdftext",
+  "status": "live",
+  "createdAt": "2025-06-09T11:56:12.503Z",
+  "updatedAt": "2026-07-17T12:55:59.255Z",
+  "contentHash": "007510956c37a5ba29b680b05b1fb6bb34bc91aca7b0b3e66cd90a82661d793a",
+  "lastExportedAt": "2026-09-05T19:41:16.778Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc586931a2d61ba0b2e65",
+    "name": "pdftext",
+    "status": "live",
+    "code": "(async function (rawPdfString) {\n  try {\n    if (!window.pdfjsLib || typeof window.pdfjsLib.getDocument !== 'function') {\n      await new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';\n        script.onload = resolve;\n        script.onerror = () => reject(new Error('Failed to load PDF.js'));\n        document.head.appendChild(script);\n      });\n    }\n\n    const pdfjsLib = window.pdfjsLib;\n\n    const uint8Array = new TextEncoder().encode(rawPdfString);\n\n    const pdf = await pdfjsLib.getDocument({ data: uint8Array }).promise;\n\n    let fullText = '';\n\n    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {\n      const page = await pdf.getPage(pageNum);\n      const textContent = await page.getTextContent();\n\n      const pageText = textContent.items.map(item => item.str).join(' ');\n      fullText += `\\n\\nPage ${pageNum}:\\n${pageText}`;\n    }\n\n    return fullText.trim();\n  } catch (error) {\n    return '';\n  }\n})",
+    "by": "34476",
+    "__v": 1
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "membershipType",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to create give the membership Type name.",
+      "advanced": false,
+      "raw": {
+        "name": "membershipType",
+        "type": "string",
+        "description": "to create give the membership Type name.",
+        "required": true,
+        "_id": "6811d4a66a612deb206f5bd9"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

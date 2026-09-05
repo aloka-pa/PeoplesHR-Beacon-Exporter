@@ -1,0 +1,24 @@
+{
+  "id": "690dc584931a2d61ba0b2bbb",
+  "slug": "getmodule",
+  "name": "getmodule",
+  "status": "live",
+  "createdAt": "2025-05-05T09:55:06.757Z",
+  "updatedAt": "2025-05-05T09:55:06.757Z",
+  "contentHash": "d4342683671a981a25222c049c380951496494bd6c7e996108ed0773465d6d26",
+  "lastExportedAt": "2026-09-05T19:41:43.768Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc584931a2d61ba0b2bbb",
+    "name": "getmodule",
+    "status": "live",
+    "code": "(async function (url) {\n    //done\n    const sl = await BeaconBar.getSharedData(\"sl\");\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n    myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n    const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n\n    let finalUrl = url.includes(\".aspx\") ? `${location.origin}/${sl}/${url}` : `${location.origin}/${url}.aspx`;\n\n    const response = await fetch(finalUrl, requestOptions);\n    const data = await response.text();\n\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(data, 'text/html');\n\n    const details = {\n        viewState: doc.querySelector('#__VIEWSTATE')?.value || '',\n        eventValidation: doc.querySelector('#__EVENTVALIDATION')?.value || '',\n        viewStateGen: doc.querySelector('#__VIEWSTATEGENERATOR')?.value || '',\n        rawData: data\n    }\n    return details;\n});",
+    "by": "1927",
+    "__v": 0
+  }
+}

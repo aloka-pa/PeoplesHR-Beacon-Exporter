@@ -1,0 +1,24 @@
+{
+  "id": "690dc583931a2d61ba0b2ac0",
+  "slug": "getemployeelist-2",
+  "name": "getemployeelist",
+  "status": "live",
+  "createdAt": "2025-05-28T13:08:54.511Z",
+  "updatedAt": "2026-07-17T12:55:54.169Z",
+  "contentHash": "ff376d48e4b746e640d924176d3cf254183e5d6da891e3407dcce63361604ab6",
+  "lastExportedAt": "2026-09-05T19:41:20.661Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc583931a2d61ba0b2ac0",
+    "name": "getemployeelist",
+    "status": "live",
+    "code": "(async function () {\n  //done\n  try {\n    const myHeaders = new Headers({\n      \"Accept\": \"*/*\",\n      \"Accept-Language\": \"en-US,en;q=0.9\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    });\n\n    const data = await BeaconBar.executeFunction('getemployeeUtils')();\n    const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n\n    const fetchPage = async (pageNo) => {\n      const payload = {\n        empNumber: data.EmpNumber,\n        criteriaValues: [],\n        key: data.KeyValue,\n        modeId: \"2\",\n        supEmpNumber: null,\n        tblPageNo: pageNo,\n        tblSearchText: \"\",\n        sortColumn: \"2\",\n        sortOrder: \"asc\"\n      };\n\n      const requestOptions = {\n        method: \"POST\",\n        headers: myHeaders,\n        body: JSON.stringify(payload),\n        redirect: \"follow\"\n      };\n\n      const response = await fetch(`${reqOptions}CommonComponents/Search/GetSearchList/`, requestOptions);\n\n      if (!response.ok) {\n        throw new Error(`HTTP error! Status: ${response.status}`);\n      }\n\n      const result = await response.json();\n      const simplified = result.Object.data.map(item => ({\n        empCode: item.Col1,\n        empName: item.Col2,\n        dob: item.Col3\n      }));\n\n      return {\n        data: simplified,\n        totalPages: result._pageData.TotalPages\n      };\n    };\n\n    const firstPage = await fetchPage(1);\n    let allResults = [...firstPage.data];\n    if (firstPage.totalPages > 1) {\n      for (let page = 2; page <= firstPage.totalPages; page++) {\n        const nextPage = await fetchPage(page);\n        allResults = allResults.concat(nextPage.data);\n      }\n    }\n    BeaconBar.setSharedData(\"utils\", data);\n    return allResults;\n\n  } catch (error) {\n    return null;\n  }\n})();\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

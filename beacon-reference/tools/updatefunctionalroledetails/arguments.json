@@ -1,0 +1,29 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "ctl00_body_dpcountry",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Selected functional role ID or country code. If the user updates this field, first display all available functional role options and use the corresponding value from the selection.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Selected functional role ID or country code. If the user updates this field, first display all available functional role options and use the corresponding value from the selection."
+      }
+    },
+    {
+      "name": "ctl00_body_txtName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name or label for the functional role.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The name or label for the functional role."
+      }
+    }
+  ]
+}

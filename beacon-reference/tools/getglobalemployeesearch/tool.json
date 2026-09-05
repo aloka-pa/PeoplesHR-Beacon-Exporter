@@ -1,0 +1,150 @@
+{
+  "id": "690dc56b931a2d61ba0b1a67",
+  "slug": "getglobalemployeesearch",
+  "name": "getGlobalEmployeeSearch",
+  "description": "in the api to return the user search input for name or code corresponding employee details name and code return.",
+  "instructions": null,
+  "taskName": "Fetching The Global Employee Details",
+  "tags": [
+    "Global Employee Search",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getGlobalEmployeeSearch",
+  "createdAt": "2025-07-24T13:13:13.687Z",
+  "updatedAt": "2026-01-22T09:11:32.903Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    },
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    },
+    {
+      "id": "690dc571931a2d61ba0b1be3",
+      "name": "AbsenceManagement"
+    },
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    },
+    {
+      "id": "690dc572931a2d61ba0b1c72",
+      "name": "AbsenceManagementEmployee"
+    },
+    {
+      "id": "690dc572931a2d61ba0b1c51",
+      "name": "PayRoll"
+    },
+    {
+      "id": "690dc571931a2d61ba0b1be9",
+      "name": "BenefitManagement"
+    },
+    {
+      "id": "690dc572931a2d61ba0b1c34",
+      "name": "WorkfLows"
+    }
+  ],
+  "contentHash": "ac13ec5c25d3a7d353ffb5f23840862dd56e6eda8613b24949f5f016b3bcf237",
+  "lastExportedAt": "2026-09-05T19:39:23.089Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1a67",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getGlobalEmployeeSearch",
+      "description": "in the api to return the user search input for name or code corresponding employee details name and code return.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getGlobalEmployeeSearch",
+        "args": [
+          {
+            "name": "empSearch",
+            "type": "string",
+            "description": "user to search for employee or code.",
+            "required": true,
+            "_id": "688231696b731b90e62bc554"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "688231696b731b90e62bc553"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    url: `${window.origin}/${reqOptions.sl}/Widgets/EmployeeDirectory/GetEmployeeDetails`,\n    method: 'GET',\n    headers: {\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n\n    },\n    params: {\n      \"searchText\": args.empSearch\n    }\n  };\n})",
+      "transformer": "(function(data, args, reqOptions) {\n  const details = data.map(x=>({\n    employeeName : x.EmployeeDisplayName,\n    employeeId : x.EmployeeDisplayNumber\n  }))\n  return details;\n})",
+      "groupName": "",
+      "tags": [
+        "Global Employee Search",
+        "Headers"
+      ],
+      "taskName": "Fetching The Global Employee Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-07-24T13:13:13.687Z",
+      "updatedAt": "2026-01-22T09:11:32.903Z",
+      "__v": 2,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        },
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        },
+        {
+          "_id": "690dc571931a2d61ba0b1be3",
+          "name": "AbsenceManagement"
+        },
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        },
+        {
+          "_id": "690dc572931a2d61ba0b1c72",
+          "name": "AbsenceManagementEmployee"
+        },
+        {
+          "_id": "690dc572931a2d61ba0b1c51",
+          "name": "PayRoll"
+        },
+        {
+          "_id": "690dc571931a2d61ba0b1be9",
+          "name": "BenefitManagement"
+        },
+        {
+          "_id": "690dc572931a2d61ba0b1c34",
+          "name": "WorkfLows"
+        }
+      ],
+      "agentCount": 8
+    },
+    "arguments": {
+      "name": "getGlobalEmployeeSearch",
+      "args": [
+        {
+          "name": "empSearch",
+          "type": "string",
+          "description": "user to search for employee or code.",
+          "required": true,
+          "_id": "688231696b731b90e62bc554"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "688231696b731b90e62bc553"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    url: `${window.origin}/${reqOptions.sl}/Widgets/EmployeeDirectory/GetEmployeeDetails`,\n    method: 'GET',\n    headers: {\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n\n    },\n    params: {\n      \"searchText\": args.empSearch\n    }\n  };\n})",
+    "transformer": "(function(data, args, reqOptions) {\n  const details = data.map(x=>({\n    employeeName : x.EmployeeDisplayName,\n    employeeId : x.EmployeeDisplayNumber\n  }))\n  return details;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

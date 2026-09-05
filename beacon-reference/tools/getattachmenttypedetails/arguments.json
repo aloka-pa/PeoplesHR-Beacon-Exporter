@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "attachmentTypeCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the attachmentTypeCode.",
+      "advanced": false,
+      "raw": {
+        "name": "attachmentTypeCode",
+        "type": "string",
+        "description": "to give the attachmentTypeCode.",
+        "required": true,
+        "_id": "681850baea5a48ef0a51e212"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

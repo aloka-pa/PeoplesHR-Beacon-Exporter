@@ -1,0 +1,199 @@
+{
+  "id": "690dc566931a2d61ba0b16ed",
+  "slug": "employeeleaveapplication",
+  "name": "employeeLeaveApplication",
+  "description": "To generate the leave approver's details, follow this exact sequence. First, execute EmployeeDetails to retrieve basic employee information. Then execute EmployeeLogKey to obtain the employee's login key. Next, execute GetEmployeeLeaveBalance to fetch available leave balances.\nWhen the user selects a leave type (e.g., \"Annual Leave\"), internally retrieve the corresponding leaveTypeCode and leaveGroupCode — never ask the user to input or view any codes. Then execute this tool to fetch the approver's details.\nAfter identifying the leave type, check IsCommentMandatory from the selected leave type response: if 1, a comment is required and submission must not proceed without it; if 0, don't mention as comment required. This rule may vary by client and leave type, so never hardcode it.\nIf the user specifies a covering employee, allow search by name or code and use getEmpDetails to resolve the coveringEmployeeCode.\nNever display group codes, leave type codes, or employee keys to the user.",
+  "instructions": null,
+  "taskName": "Save Leave Application",
+  "tags": [
+    "Absence Management",
+    "Headers",
+    "BugFix"
+  ],
+  "status": "live",
+  "signature": "employeeLeaveApplication",
+  "createdAt": "2025-05-12T09:56:56.783Z",
+  "updatedAt": "2026-07-06T05:04:05.918Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be3",
+      "name": "AbsenceManagement"
+    }
+  ],
+  "contentHash": "3e85312e4d41d4192958c9f032cbcd21f168a8402faa2e1c2c62c4c84b1b5377",
+  "lastExportedAt": "2026-09-05T19:39:22.294Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b16ed",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "employeeLeaveApplication",
+      "description": "To generate the leave approver's details, follow this exact sequence. First, execute EmployeeDetails to retrieve basic employee information. Then execute EmployeeLogKey to obtain the employee's login key. Next, execute GetEmployeeLeaveBalance to fetch available leave balances.\nWhen the user selects a leave type (e.g., \"Annual Leave\"), internally retrieve the corresponding leaveTypeCode and leaveGroupCode — never ask the user to input or view any codes. Then execute this tool to fetch the approver's details.\nAfter identifying the leave type, check IsCommentMandatory from the selected leave type response: if 1, a comment is required and submission must not proceed without it; if 0, don't mention as comment required. This rule may vary by client and leave type, so never hardcode it.\nIf the user specifies a covering employee, allow search by name or code and use getEmpDetails to resolve the coveringEmployeeCode.\nNever display group codes, leave type codes, or employee keys to the user.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "employeeLeaveApplication",
+        "args": [
+          {
+            "name": "leaveTypeCode",
+            "type": "string",
+            "description": "to get the leave type is \"getEmployeeLeaveBalance\" api. user give leave type name corresponding leave Type Code will be Example:\"000001\", do not ask the user for leave type code.",
+            "required": true,
+            "_id": "6821c5e84b214f908c839a3c"
+          },
+          {
+            "name": "leaveGroupCode",
+            "type": "string",
+            "description": "to get the leave group code is getEmployeeLeaveBalance api. Example:\"00001\",do not ask the user for group code.",
+            "required": true,
+            "_id": "6821c5e84b214f908c839a3d"
+          },
+          {
+            "name": "fromDate",
+            "type": "string",
+            "description": "user to give the leave from date. Example:\"09/04/24\" - must should take in this date format \"dd/mm/yy\"",
+            "required": true,
+            "_id": "6821d3f5ca79bb97b9dad4b2"
+          },
+          {
+            "name": "toDate",
+            "type": "string",
+            "description": "user to give the leave to date. Example:\"09/04/24\"- must should take in this date format \"dd/mm/yy\"",
+            "required": true,
+            "_id": "6821d3f5ca79bb97b9dad4b3"
+          },
+          {
+            "name": "coveringEmployeeCode",
+            "type": "string",
+            "description": "in this argument is optional field but if the user added the covering employee to search employee name or code if the user search name corresponding id take Ex:\"000002\" for execute api is getCoveringEmployee Api.",
+            "required": false,
+            "_id": "6821db4cf10f8920b4048384"
+          },
+          {
+            "name": "year",
+            "type": "string",
+            "description": "user provide the year example 2025,2024 etc.",
+            "required": true,
+            "_id": "68344703bf350844f68b9dd2"
+          },
+          {
+            "name": "dayMode",
+            "type": "integer",
+            "description": "if the user to ask leave mode like Whole Day means 1 ,First Half means 0.5, Second Half means 0.5 and Off Day means 0.0 user selected leave mode name corresponding value will be take, and display the names, no display the values.",
+            "required": true,
+            "_id": "68d14109559d82dfd8adae43"
+          }
+        ],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"leaveTypeCode\": {\n      \"type\": \"string\",\n      \"description\": \"To get the leave type code, use 'getEmployeeLeaveBalance' API. User provides leave type name and corresponding leave type code will be retrieved. Example: '000001'. Do not ask the user for leave type code directly.\"\n    },\n    \"leaveGroupCode\": {\n      \"type\": \"string\",\n      \"description\": \"To get the leave group code, use 'getEmployeeLeaveBalance' API. Example: '000001'. Do not ask the user for group code directly.\"\n    },\n    \"fromDate\": {\n      \"type\": \"string\",\n      \"description\": \"must be calling dateFormat api response format using,User provides the leave start date. Example: '08-10-2025'.\"\n    },\n    \"toDate\": {\n      \"type\": \"string\",\n      \"description\": \"must be calling dateFormat api response format using,User provides the leave end date. Example: '12-10-2025'.\"\n    },\n    \"comment\": {\n      \"type\": \"string\",\n      \"description\": \"Do not ask for comment upfront.Submit first.If SaveLeaveApplication API returns 'Please specify the Comment',then ask the user for comment and retry.\"\n    },\n    \"coveringEmployeeCode\": {\n      \"type\": \"string\",\n      \"description\": \"Optional field, call 'getEmpDetails' tool to get the empNumber. Do not take the employeeDisplayNumber. Important only take the empNumber.\" \n    },\n    \"year\": {\n      \"type\": \"integer\",\n      \"description\": \"User provides the year. Example: 2025, 2024, etc.\"\n    },\n    \"attachment\": {\n  \"type\": \"object\",\n  \"description\": \"Required for leave types where attachment is mandatory. The AI should prompt the user to upload a file before submitting. Contains the uploaded file's base64 data and filename.\",\n  \"properties\": {\n    \"fileName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the attachment file. Example: 'medical_certificate.pdf'\"\n    },\n    \"base64Data\": {\n      \"type\": \"string\",\n      \"description\": \"Base64-encoded content of the file to be uploaded.\"\n    }\n  },\n  \"required\": [\"fileName\", \"base64Data\"]\n},\n\"isAttachmentMandatory\": {\n  \"type\": \"boolean\",\n  \"description\": \"Set to true when the leave type requires a mandatory attachment (e.g., medical leave). When true, prompt the user to upload a file before proceeding. Do not submit without attachment if this is true.\"\n},\n    \"dayModes\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"date\": {\n            \"type\": \"string\",\n            \"pattern\": \"^\\\\d{4}-\\\\d{2}-\\\\d{2}T\\\\d{2}:\\\\d{2}:\\\\d{2}$\",\n            \"description\": \"Individual leave date within the from and to date range. Example: '2025-09-23T00:00:00' - must be in ISO date format 'YYYY-MM-DDTHH:mm:ss'.\"\n          },\n          \"dayMode\": {\n            \"type\": \"number\",\n            \"enum\": [\n              0,\n              1,\n              2,\n              7\n            ],\n            \"description\": \"user ask available day modes front disply name corresponding values selected corresponding day mode ids will be take other then no need default values will be take ask user evry day day modes,Day mode based on user's leave mode selection: 'Whole Day' = 2, 'First Half' = 1, 'Second Half' = 0, 'Off Day' = 7. User selects leave mode name and corresponding numeric value will be used. Display the mode names to user, not the numeric values.\"\n          },\n          \"dayValue\": {\n            \"type\": \"number\",\n            \"enum\": [\n              1,\n              0.5,\n              0\n            ],\n            \"description\": \"user ask available day modes front disply name corresponding values selected corresponding day mode value will be take other then no need default values will be take ask user evry day day modes,Day mode based on user's leave mode selection: 'Whole Day' = 1, 'First Half' = 0.5, 'Second Half' = 0.5, 'Off Day' = 0. User selects leave mode name and corresponding numeric value will be used. Display the mode names to user, not the numeric values.\"\n          }\n        },\n        \"required\": [\n          \"date\",\n          \"dayMode\",\n          \"dayValue\"\n        ]\n      },\n      \"description\": \"Array containing each individual leave date and its corresponding day mode. Based on the from and to date range, the system will generate all dates in between and ask the user to specify the day mode for each date. For example, if user applies for 3-day leave, there will be 3 items in this array - each with a specific date and its day mode selection.\"\n    }\n  },\n  \"required\": [\n    \"leaveTypeCode\",\n    \"leaveGroupCode\",\n    \"fromDate\",\n    \"toDate\",\n    \"year\",\n    \"dayModes\"\n  ]\n}",
+        "_id": "6a4b374552c1fb077692b208"
+      },
+      "by": "27739",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"__cfafvalue\", window.csrf);\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"Content-Type\", \"application/json\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const approverResponse = await fetch(\n    `${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/GetApprovalPerson/`,\n    {\n      method: \"POST\",\n      headers: myHeaders,\n      body: JSON.stringify({\n        EmpNumber: window.empLog,\n        LeaveGroup: args.leaveGroupCode,\n        LeaveYear: args.year,\n        LeaveType: args.leaveTypeCode,\n        ApplicationPage: 1\n      }),\n      redirect: \"follow\"\n    }\n  );\n\n  const approverData = await approverResponse.json();\n  const approverNumber = approverData.EmpNumber || \"\";\n\n  const calculateResponse = await fetch(\n    `${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/CalculateLeaveDays/`,\n    {\n      method: \"POST\",\n      headers: myHeaders,\n      body: JSON.stringify({\n        EmpNumber: window.empLog,\n        LeaveGroup: args.leaveGroupCode,\n        LeaveYear: args.year,\n        LeaveType: args.leaveType,\n        FromDateText: args.fromDate,\n        ToDateText: args.toDate,\n        IsAllDaysEditable: true,\n        BreakdownList: [],\n        EarnedLeaveList: [],\n        NotificationList: [],\n        MedicalIssueDateText: \"\",\n        Attachment: { AttachmentName: \"-1\" },\n        Attachments: null,\n        Date_1_Text: \"\",\n        Date_2_Text: \"\",\n        Date_3_Text: \"\",\n        Date_4_Text: \"\",\n        Date_5_Text: \"\",\n        ApprovalEmpNumber: approverNumber,\n        LoginEmpNumber: window.logKey,\n        ApplicationPage: 1,\n        ExtraMaternityDays: 0\n      }),\n      redirect: \"follow\"\n    }\n  );\n\n  let calculateDetails = await calculateResponse.json();\n\n  if (calculateDetails.Status === false) {\n    return calculateDetails;\n  }\n\n  const leaveComment = (args.comment || args.Comment || \"\").trim();\n\n  calculateDetails.BreakdownList.forEach(x => {\n    args.dayModes.forEach(y => {\n      if (x.LeaveDate === y.date) {\n        x.DayValue = y.dayValue;\n        x.DayMode = y.dayMode;\n      }\n    });\n  });\n\n  const sum = args.dayModes.reduce((total, x) => total + x.dayValue, 0);\n\n  if (calculateDetails.Status) {\n\n    // ── Resolve attachment: args.attachment (base64) takes priority, ──\n    // ── then fall back to BeaconBar uploaded files.                  ──\n    let file1 = null;\n\n    if (args.attachment?.base64Data && args.attachment?.fileName) {\n      const byteChars = atob(args.attachment.base64Data);\n      const byteArr = new Uint8Array(byteChars.length);\n      for (let i = 0; i < byteChars.length; i++) {\n        byteArr[i] = byteChars.charCodeAt(i);\n      }\n      const blob = new Blob([byteArr]);\n      file1 = new File([blob], args.attachment.fileName);\n    } else {\n      const baoFiles = BeaconBar.getUploadedBaoFiles();\n      file1 = baoFiles[0] || null;\n    }\n\n    // ── Guard: block submission if attachment is mandatory but missing ──\n    if (args.isAttachmentMandatory && !file1) {\n      return {\n        Status: false,\n        Message: \"This leave type requires a mandatory attachment. Please upload a file and try again.\"\n      };\n    }\n\n    let attachmentResult;\n\n    if (file1) {\n      const formData = new FormData();\n      formData.append(file1.name, file1, file1.name);\n\n      const response = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/UploadLeaveAttachmentData/`, {\n        method: \"POST\",\n        headers: {\n          \"Accept\": \"application/json, text/javascript, */*; q=0.01\",\n          \"Accept-Language\": \"en-US,en;q=0.9\",\n          \"Cache-Control\": \"no-cache\",\n          \"Pragma\": \"no-cache\",\n          \"X-Requested-With\": \"XMLHttpRequest\"\n        },\n        body: formData,\n        credentials: \"include\",\n        redirect: \"follow\"\n      });\n\n      attachmentResult = await response.json();\n    } else {\n      const saveResponse = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/SaveLeaveApplication/`, {\n        method: \"POST\",\n        headers: myHeaders,\n        body: JSON.stringify({\n          EmpNumber: window.logKey,\n          ApprovalEmpNumber: approverNumber,\n          LeaveGroup: args.leaveGroupCode,\n          LeaveYear: args.year,\n          LeaveType: args.leaveTypeCode,\n          FromDateText: args.fromDate,\n          ToDateText: args.toDate,\n          Comment: leaveComment,\n          IsAllDaysEditable: true,\n          LeaveAmount: sum,\n          LeaveAmountToVldt: sum,\n          BreakdownList: calculateDetails.BreakdownList,\n          EarnedLeaveList: [],\n          NotificationList: [],\n          IsMedicalLeave: false,\n          MedicalIssueDateText: \"\",\n          Attachment: { AttachmentName: \"-1\" },\n          Attachments: null,\n          Date_1_Text: \"\",\n          Date_2_Text: \"\",\n          Date_3_Text: \"\",\n          Date_4_Text: \"\",\n          Date_5_Text: \"\",\n          CoveringEmpNumber: args.coveringEmployeeCode,\n          LoginEmpNumber: window.logKey,\n          ApplicationPage: 1,\n          ExtraMaternityDays: 0\n        }),\n        redirect: \"follow\"\n      });\n\n      return await saveResponse.json();\n    }\n\n    if (attachmentResult.Status === true) {\n      const saveResponse = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/SaveLeaveApplication/`, {\n        method: \"POST\",\n        headers: myHeaders,\n        body: JSON.stringify({\n          EmpNumber: window.logKey,\n          ApprovalEmpNumber: approverNumber,\n          LeaveGroup: args.leaveGroupCode,\n          LeaveYear: args.year,\n          LeaveType: args.leaveTypeCode,\n          FromDateText: args.fromDate,\n          ToDateText: args.toDate,\n          Comment: leaveComment,\n          IsAllDaysEditable: true,\n          LeaveAmount: sum,\n          LeaveAmountToVldt: sum,\n          BreakdownList: calculateDetails.BreakdownList,\n          EarnedLeaveList: [],\n          NotificationList: [],\n          IsMedicalLeave: false,\n          MedicalIssueDateText: \"\",\n          Attachment: { AttachmentName: file1.name },\n          Attachments: null,\n          Date_1_Text: \"\",\n          Date_2_Text: \"\",\n          Date_3_Text: \"\",\n          Date_4_Text: \"\",\n          Date_5_Text: \"\",\n          CoveringEmpNumber: args.coveringEmployeeCode,\n          LoginEmpNumber: window.logKey,\n          ApplicationPage: 1,\n          ExtraMaternityDays: 0\n        }),\n        redirect: \"follow\"\n      });\n\n      return await saveResponse.json();\n    } else {\n      return attachmentResult;\n    }\n  } else {\n    return calculateDetails;\n  }\n});",
+      "groupName": "",
+      "tags": [
+        "Absence Management",
+        "Headers",
+        "BugFix"
+      ],
+      "taskName": "Save Leave Application",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-12T09:56:56.783Z",
+      "updatedAt": "2026-07-06T05:04:05.918Z",
+      "__v": 18,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "toolType": "code",
+      "etl": false,
+      "outputExample": {},
+      "isFromKG": false,
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "sanity": {
+        "apiResponse": []
+      },
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be3",
+          "name": "AbsenceManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "employeeLeaveApplication",
+      "args": [
+        {
+          "name": "leaveTypeCode",
+          "type": "string",
+          "description": "to get the leave type is \"getEmployeeLeaveBalance\" api. user give leave type name corresponding leave Type Code will be Example:\"000001\", do not ask the user for leave type code.",
+          "required": true,
+          "_id": "6821c5e84b214f908c839a3c"
+        },
+        {
+          "name": "leaveGroupCode",
+          "type": "string",
+          "description": "to get the leave group code is getEmployeeLeaveBalance api. Example:\"00001\",do not ask the user for group code.",
+          "required": true,
+          "_id": "6821c5e84b214f908c839a3d"
+        },
+        {
+          "name": "fromDate",
+          "type": "string",
+          "description": "user to give the leave from date. Example:\"09/04/24\" - must should take in this date format \"dd/mm/yy\"",
+          "required": true,
+          "_id": "6821d3f5ca79bb97b9dad4b2"
+        },
+        {
+          "name": "toDate",
+          "type": "string",
+          "description": "user to give the leave to date. Example:\"09/04/24\"- must should take in this date format \"dd/mm/yy\"",
+          "required": true,
+          "_id": "6821d3f5ca79bb97b9dad4b3"
+        },
+        {
+          "name": "coveringEmployeeCode",
+          "type": "string",
+          "description": "in this argument is optional field but if the user added the covering employee to search employee name or code if the user search name corresponding id take Ex:\"000002\" for execute api is getCoveringEmployee Api.",
+          "required": false,
+          "_id": "6821db4cf10f8920b4048384"
+        },
+        {
+          "name": "year",
+          "type": "string",
+          "description": "user provide the year example 2025,2024 etc.",
+          "required": true,
+          "_id": "68344703bf350844f68b9dd2"
+        },
+        {
+          "name": "dayMode",
+          "type": "integer",
+          "description": "if the user to ask leave mode like Whole Day means 1 ,First Half means 0.5, Second Half means 0.5 and Off Day means 0.0 user selected leave mode name corresponding value will be take, and display the names, no display the values.",
+          "required": true,
+          "_id": "68d14109559d82dfd8adae43"
+        }
+      ],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"leaveTypeCode\": {\n      \"type\": \"string\",\n      \"description\": \"To get the leave type code, use 'getEmployeeLeaveBalance' API. User provides leave type name and corresponding leave type code will be retrieved. Example: '000001'. Do not ask the user for leave type code directly.\"\n    },\n    \"leaveGroupCode\": {\n      \"type\": \"string\",\n      \"description\": \"To get the leave group code, use 'getEmployeeLeaveBalance' API. Example: '000001'. Do not ask the user for group code directly.\"\n    },\n    \"fromDate\": {\n      \"type\": \"string\",\n      \"description\": \"must be calling dateFormat api response format using,User provides the leave start date. Example: '08-10-2025'.\"\n    },\n    \"toDate\": {\n      \"type\": \"string\",\n      \"description\": \"must be calling dateFormat api response format using,User provides the leave end date. Example: '12-10-2025'.\"\n    },\n    \"comment\": {\n      \"type\": \"string\",\n      \"description\": \"Do not ask for comment upfront.Submit first.If SaveLeaveApplication API returns 'Please specify the Comment',then ask the user for comment and retry.\"\n    },\n    \"coveringEmployeeCode\": {\n      \"type\": \"string\",\n      \"description\": \"Optional field, call 'getEmpDetails' tool to get the empNumber. Do not take the employeeDisplayNumber. Important only take the empNumber.\" \n    },\n    \"year\": {\n      \"type\": \"integer\",\n      \"description\": \"User provides the year. Example: 2025, 2024, etc.\"\n    },\n    \"attachment\": {\n  \"type\": \"object\",\n  \"description\": \"Required for leave types where attachment is mandatory. The AI should prompt the user to upload a file before submitting. Contains the uploaded file's base64 data and filename.\",\n  \"properties\": {\n    \"fileName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the attachment file. Example: 'medical_certificate.pdf'\"\n    },\n    \"base64Data\": {\n      \"type\": \"string\",\n      \"description\": \"Base64-encoded content of the file to be uploaded.\"\n    }\n  },\n  \"required\": [\"fileName\", \"base64Data\"]\n},\n\"isAttachmentMandatory\": {\n  \"type\": \"boolean\",\n  \"description\": \"Set to true when the leave type requires a mandatory attachment (e.g., medical leave). When true, prompt the user to upload a file before proceeding. Do not submit without attachment if this is true.\"\n},\n    \"dayModes\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"date\": {\n            \"type\": \"string\",\n            \"pattern\": \"^\\\\d{4}-\\\\d{2}-\\\\d{2}T\\\\d{2}:\\\\d{2}:\\\\d{2}$\",\n            \"description\": \"Individual leave date within the from and to date range. Example: '2025-09-23T00:00:00' - must be in ISO date format 'YYYY-MM-DDTHH:mm:ss'.\"\n          },\n          \"dayMode\": {\n            \"type\": \"number\",\n            \"enum\": [\n              0,\n              1,\n              2,\n              7\n            ],\n            \"description\": \"user ask available day modes front disply name corresponding values selected corresponding day mode ids will be take other then no need default values will be take ask user evry day day modes,Day mode based on user's leave mode selection: 'Whole Day' = 2, 'First Half' = 1, 'Second Half' = 0, 'Off Day' = 7. User selects leave mode name and corresponding numeric value will be used. Display the mode names to user, not the numeric values.\"\n          },\n          \"dayValue\": {\n            \"type\": \"number\",\n            \"enum\": [\n              1,\n              0.5,\n              0\n            ],\n            \"description\": \"user ask available day modes front disply name corresponding values selected corresponding day mode value will be take other then no need default values will be take ask user evry day day modes,Day mode based on user's leave mode selection: 'Whole Day' = 1, 'First Half' = 0.5, 'Second Half' = 0.5, 'Off Day' = 0. User selects leave mode name and corresponding numeric value will be used. Display the mode names to user, not the numeric values.\"\n          }\n        },\n        \"required\": [\n          \"date\",\n          \"dayMode\",\n          \"dayValue\"\n        ]\n      },\n      \"description\": \"Array containing each individual leave date and its corresponding day mode. Based on the from and to date range, the system will generate all dates in between and ask the user to specify the day mode for each date. For example, if user applies for 3-day leave, there will be 3 items in this array - each with a specific date and its day mode selection.\"\n    }\n  },\n  \"required\": [\n    \"leaveTypeCode\",\n    \"leaveGroupCode\",\n    \"fromDate\",\n    \"toDate\",\n    \"year\",\n    \"dayModes\"\n  ]\n}",
+      "_id": "6a4b374552c1fb077692b208"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"__cfafvalue\", window.csrf);\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"Content-Type\", \"application/json\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const approverResponse = await fetch(\n    `${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/GetApprovalPerson/`,\n    {\n      method: \"POST\",\n      headers: myHeaders,\n      body: JSON.stringify({\n        EmpNumber: window.empLog,\n        LeaveGroup: args.leaveGroupCode,\n        LeaveYear: args.year,\n        LeaveType: args.leaveTypeCode,\n        ApplicationPage: 1\n      }),\n      redirect: \"follow\"\n    }\n  );\n\n  const approverData = await approverResponse.json();\n  const approverNumber = approverData.EmpNumber || \"\";\n\n  const calculateResponse = await fetch(\n    `${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/CalculateLeaveDays/`,\n    {\n      method: \"POST\",\n      headers: myHeaders,\n      body: JSON.stringify({\n        EmpNumber: window.empLog,\n        LeaveGroup: args.leaveGroupCode,\n        LeaveYear: args.year,\n        LeaveType: args.leaveType,\n        FromDateText: args.fromDate,\n        ToDateText: args.toDate,\n        IsAllDaysEditable: true,\n        BreakdownList: [],\n        EarnedLeaveList: [],\n        NotificationList: [],\n        MedicalIssueDateText: \"\",\n        Attachment: { AttachmentName: \"-1\" },\n        Attachments: null,\n        Date_1_Text: \"\",\n        Date_2_Text: \"\",\n        Date_3_Text: \"\",\n        Date_4_Text: \"\",\n        Date_5_Text: \"\",\n        ApprovalEmpNumber: approverNumber,\n        LoginEmpNumber: window.logKey,\n        ApplicationPage: 1,\n        ExtraMaternityDays: 0\n      }),\n      redirect: \"follow\"\n    }\n  );\n\n  let calculateDetails = await calculateResponse.json();\n\n  if (calculateDetails.Status === false) {\n    return calculateDetails;\n  }\n\n  const leaveComment = (args.comment || args.Comment || \"\").trim();\n\n  calculateDetails.BreakdownList.forEach(x => {\n    args.dayModes.forEach(y => {\n      if (x.LeaveDate === y.date) {\n        x.DayValue = y.dayValue;\n        x.DayMode = y.dayMode;\n      }\n    });\n  });\n\n  const sum = args.dayModes.reduce((total, x) => total + x.dayValue, 0);\n\n  if (calculateDetails.Status) {\n\n    // ── Resolve attachment: args.attachment (base64) takes priority, ──\n    // ── then fall back to BeaconBar uploaded files.                  ──\n    let file1 = null;\n\n    if (args.attachment?.base64Data && args.attachment?.fileName) {\n      const byteChars = atob(args.attachment.base64Data);\n      const byteArr = new Uint8Array(byteChars.length);\n      for (let i = 0; i < byteChars.length; i++) {\n        byteArr[i] = byteChars.charCodeAt(i);\n      }\n      const blob = new Blob([byteArr]);\n      file1 = new File([blob], args.attachment.fileName);\n    } else {\n      const baoFiles = BeaconBar.getUploadedBaoFiles();\n      file1 = baoFiles[0] || null;\n    }\n\n    // ── Guard: block submission if attachment is mandatory but missing ──\n    if (args.isAttachmentMandatory && !file1) {\n      return {\n        Status: false,\n        Message: \"This leave type requires a mandatory attachment. Please upload a file and try again.\"\n      };\n    }\n\n    let attachmentResult;\n\n    if (file1) {\n      const formData = new FormData();\n      formData.append(file1.name, file1, file1.name);\n\n      const response = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/UploadLeaveAttachmentData/`, {\n        method: \"POST\",\n        headers: {\n          \"Accept\": \"application/json, text/javascript, */*; q=0.01\",\n          \"Accept-Language\": \"en-US,en;q=0.9\",\n          \"Cache-Control\": \"no-cache\",\n          \"Pragma\": \"no-cache\",\n          \"X-Requested-With\": \"XMLHttpRequest\"\n        },\n        body: formData,\n        credentials: \"include\",\n        redirect: \"follow\"\n      });\n\n      attachmentResult = await response.json();\n    } else {\n      const saveResponse = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/SaveLeaveApplication/`, {\n        method: \"POST\",\n        headers: myHeaders,\n        body: JSON.stringify({\n          EmpNumber: window.logKey,\n          ApprovalEmpNumber: approverNumber,\n          LeaveGroup: args.leaveGroupCode,\n          LeaveYear: args.year,\n          LeaveType: args.leaveTypeCode,\n          FromDateText: args.fromDate,\n          ToDateText: args.toDate,\n          Comment: leaveComment,\n          IsAllDaysEditable: true,\n          LeaveAmount: sum,\n          LeaveAmountToVldt: sum,\n          BreakdownList: calculateDetails.BreakdownList,\n          EarnedLeaveList: [],\n          NotificationList: [],\n          IsMedicalLeave: false,\n          MedicalIssueDateText: \"\",\n          Attachment: { AttachmentName: \"-1\" },\n          Attachments: null,\n          Date_1_Text: \"\",\n          Date_2_Text: \"\",\n          Date_3_Text: \"\",\n          Date_4_Text: \"\",\n          Date_5_Text: \"\",\n          CoveringEmpNumber: args.coveringEmployeeCode,\n          LoginEmpNumber: window.logKey,\n          ApplicationPage: 1,\n          ExtraMaternityDays: 0\n        }),\n        redirect: \"follow\"\n      });\n\n      return await saveResponse.json();\n    }\n\n    if (attachmentResult.Status === true) {\n      const saveResponse = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/SaveLeaveApplication/`, {\n        method: \"POST\",\n        headers: myHeaders,\n        body: JSON.stringify({\n          EmpNumber: window.logKey,\n          ApprovalEmpNumber: approverNumber,\n          LeaveGroup: args.leaveGroupCode,\n          LeaveYear: args.year,\n          LeaveType: args.leaveTypeCode,\n          FromDateText: args.fromDate,\n          ToDateText: args.toDate,\n          Comment: leaveComment,\n          IsAllDaysEditable: true,\n          LeaveAmount: sum,\n          LeaveAmountToVldt: sum,\n          BreakdownList: calculateDetails.BreakdownList,\n          EarnedLeaveList: [],\n          NotificationList: [],\n          IsMedicalLeave: false,\n          MedicalIssueDateText: \"\",\n          Attachment: { AttachmentName: file1.name },\n          Attachments: null,\n          Date_1_Text: \"\",\n          Date_2_Text: \"\",\n          Date_3_Text: \"\",\n          Date_4_Text: \"\",\n          Date_5_Text: \"\",\n          CoveringEmpNumber: args.coveringEmployeeCode,\n          LoginEmpNumber: window.logKey,\n          ApplicationPage: 1,\n          ExtraMaternityDays: 0\n        }),\n        redirect: \"follow\"\n      });\n\n      return await saveResponse.json();\n    } else {\n      return attachmentResult;\n    }\n  } else {\n    return calculateDetails;\n  }\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

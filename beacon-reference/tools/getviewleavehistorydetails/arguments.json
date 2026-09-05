@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "year",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "user give which year leave year details get to give the year Example:\"2025\"",
+      "advanced": false,
+      "raw": {
+        "name": "year",
+        "type": "string",
+        "description": "user give which year leave year details get to give the year Example:\"2025\"",
+        "required": true,
+        "_id": "6821afd37e6c70866d0ee7c4"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

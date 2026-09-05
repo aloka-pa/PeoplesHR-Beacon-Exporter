@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "dsDivisionName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name of the DS Division to create.",
+      "advanced": false,
+      "raw": {
+        "name": "dsDivisionName",
+        "type": "string",
+        "description": "The name of the DS Division to create.",
+        "required": true,
+        "_id": "695377425c168b76aad67e07"
+      }
+    },
+    {
+      "name": "district",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The district code or name to assign to the DS Division. Can be either a 6-digit code (e.g., \"001690\") or a district name (e.g., \"Kandy\"). Either district or districtName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "district",
+        "type": "string",
+        "description": "The district code or name to assign to the DS Division. Can be either a 6-digit code (e.g., \"001690\") or a district name (e.g., \"Kandy\"). Either district or districtName must be provided.",
+        "required": true,
+        "_id": "695377425c168b76aad67e08"
+      }
+    },
+    {
+      "name": "districtName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The district name to assign to the DS Division. The system will look up the corresponding code from the dropdown (case-insensitive exact match). Either district or districtName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "districtName",
+        "type": "string",
+        "description": "The district name to assign to the DS Division. The system will look up the corresponding code from the dropdown (case-insensitive exact match). Either district or districtName must be provided.",
+        "required": false,
+        "_id": "695377425c168b76aad67e09"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "ctl00$body$txtName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the create Marital Status name.",
+      "advanced": false,
+      "raw": {
+        "name": "ctl00$body$txtName",
+        "type": "string",
+        "description": "to give the create Marital Status name.",
+        "required": true,
+        "_id": "6817a134fc879b0ec383c3df"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

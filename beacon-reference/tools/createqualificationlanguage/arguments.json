@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "languageName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name of the language to create (e.g., \"Spanish\", \"French\", \"Mandarin\"). ",
+      "advanced": false,
+      "raw": {
+        "name": "languageName",
+        "type": "string",
+        "description": "The name of the language to create (e.g., \"Spanish\", \"French\", \"Mandarin\"). ",
+        "required": true,
+        "_id": "6953f17c9f7bf02aaf02f4c3"
+      }
+    },
+    {
+      "name": "ratingCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The code of the rating method to assign (e.g., \"000001\" for \"Rating_01\"). Either ratingCode or ratingName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "ratingCode",
+        "type": "string",
+        "description": "The code of the rating method to assign (e.g., \"000001\" for \"Rating_01\"). Either ratingCode or ratingName must be provided.",
+        "required": false,
+        "_id": "6953f17c9f7bf02aaf02f4c4"
+      }
+    },
+    {
+      "name": "ratingName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The name of the rating method to assign (e.g., \"Rating_01\"). Either ratingCode or ratingName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "ratingName",
+        "type": "string",
+        "description": "The name of the rating method to assign (e.g., \"Rating_01\"). Either ratingCode or ratingName must be provided.",
+        "required": false,
+        "_id": "6953f17c9f7bf02aaf02f4c5"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

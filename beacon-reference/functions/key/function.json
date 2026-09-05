@@ -1,0 +1,24 @@
+{
+  "id": "690dc584931a2d61ba0b2bf0",
+  "slug": "key",
+  "name": "key",
+  "status": "unlive",
+  "createdAt": "2025-05-22T07:56:12.898Z",
+  "updatedAt": "2026-07-17T12:55:57.309Z",
+  "contentHash": "5718b903ed81a517026900e549d608261da869ee5f170b98a7c64ce3ef550315",
+  "lastExportedAt": "2026-09-05T19:41:18.252Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc584931a2d61ba0b2bf0",
+    "name": "key",
+    "status": "unlive",
+    "code": "(async function () {\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const url = `${reqOptions}eimv9/employee/employee?mvc=1&digest=8vXxCtVwzShA2jkCUfCLbQ&_=1747900205905`;\n\n  const headers = new Headers({\n    \"accept\": \"*/*\",\n    \"accept-language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n  });\n\n  const options = {\n    method: \"GET\",\n    headers,\n    redirect: \"follow\"\n  };\n\n  try {\n    const response = await fetch(url, options);\n    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);\n\n    const data = await response.text();\n    const modelMatch = data.match(/var\\s+model\\s*=\\s*({[\\s\\S]*?});/);\n    const jsonString = modelMatch ? modelMatch[1] : null;\n    const parsed = JSON.parse(jsonString);\n\n    return parsed;\n\n  } catch (error) {\n    return null;\n  }\n})\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

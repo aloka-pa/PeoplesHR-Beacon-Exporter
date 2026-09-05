@@ -1,0 +1,91 @@
+{
+  "id": "690dc569931a2d61ba0b193e",
+  "slug": "getworkflowtypedetails",
+  "name": "getWorkFlowTypeDetails",
+  "description": "getWorkFlowTypeDetails , before calling this api you need to call \"getWorkFlowTypes\"",
+  "instructions": null,
+  "taskName": "Fetching WorkFlowTypeDetails",
+  "tags": [
+    "workFlow",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getWorkFlowTypeDetails",
+  "createdAt": "2025-06-03T18:37:01.872Z",
+  "updatedAt": "2025-06-03T18:37:01.872Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c34",
+      "name": "WorkfLows"
+    }
+  ],
+  "contentHash": "a254d9b7a506560a7b465a0ad4af54ddf28976ab6d2eca64a99c7ca6266d89e9",
+  "lastExportedAt": "2026-09-05T19:39:23.712Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b193e",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getWorkFlowTypeDetails",
+      "description": "getWorkFlowTypeDetails , before calling this api you need to call \"getWorkFlowTypes\"",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getWorkFlowTypeDetails",
+        "args": [
+          {
+            "name": "WorkflowType",
+            "type": "string",
+            "description": "WorkflowType , Ex: - \"Workforce Plan - Approval\"",
+            "required": true,
+            "_id": "683f40cd821cb330fd629c7e"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "683f40cd821cb330fd629c7d"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const allResultsgroups = BeaconBar.getSharedData(\"allWorkflowTypesWithViewState\");\n\n  if (!BeaconBar.user.metaData.menus.includes(\"WorkFlow_v6/DefineWorkflowType.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const matchedItem = allResultsgroups.find(\n    item => item.WorkflowType === args.WorkflowType\n  );\n\n  if (!matchedItem) {\n    throw new Error(`Description not found: ${args.description}`);\n  }\n  const result = await BeaconBar.executeFunction(\"workflowTypesDetails\")(matchedItem.EventKey, matchedItem.ViewState);\n  function extractWorkflowDetailsFromHTML(htmlString) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(htmlString, 'text/html');\n\n    const getValue = (selector) => doc.querySelector(selector)?.value?.trim() || '';\n    const getText = (selector) => doc.querySelector(selector)?.textContent?.trim() || '';\n    const getSelectedText = (selector) => {\n      const el = doc.querySelector(selector);\n      return el ? el.options[el.selectedIndex]?.text?.trim() : '';\n    };\n    const getCheckbox = (selector) => doc.querySelector(selector)?.hasAttribute('checked') || false;\n\n    return {\n      Module: getSelectedText('#ctl00_body_ddlModule'),\n      WorkflowTypeCode: getValue('#ctl00_body_txtCode'),\n      Description: getText('#ctl00_body_txtDescription'),\n      Table: getValue('#ctl00_body_txtTbl'),\n      View: getValue('#ctl00_body_txtView'),\n      UpdateField: getSelectedText('#ctl00_body_ddlUpdCol'),\n      ApproveMainField: getSelectedText('#ctl00_body_ddlAppMain'),\n      CancelMainField: getSelectedText('#ctl00_body_ddlCancelMain'),\n      CancelStatusField: getSelectedText('#ctl00_body_ddlCnclStatus'),\n      HistoryView: getValue('#ctl00_body_txtWFHistoryView'),\n      PendingView: getValue('#ctl00_body_txtWFPendingView'),\n      RedirectURL: getValue('#ctl00_body_txtRedirectURL'),\n      Assembly: getValue('#ctl00_body_txtAssembly'),\n      AssemblyClass: getValue('#ctl00_body_txtAssemblyClass'),\n      BulkApproval: getCheckbox('#ctl00_body_chkBulkApproval'),\n      OwnApproval: getCheckbox('#ctl00_body_chkOwnApproval'),\n      DirectReject: getCheckbox('#ctl00_body_chkDirectReject'),\n      RejectToPreStep: getCheckbox('#ctl00_body_chkRejectToPreStep'),\n    };\n  }\n\n  const workflowDetails = extractWorkflowDetailsFromHTML(result);\n  return workflowDetails;\n})",
+      "groupName": "",
+      "tags": [
+        "workFlow",
+        "Headers"
+      ],
+      "taskName": "Fetching WorkFlowTypeDetails",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-03T18:37:01.872Z",
+      "updatedAt": "2025-06-03T18:37:01.872Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c34",
+          "name": "WorkfLows"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getWorkFlowTypeDetails",
+      "args": [
+        {
+          "name": "WorkflowType",
+          "type": "string",
+          "description": "WorkflowType , Ex: - \"Workforce Plan - Approval\"",
+          "required": true,
+          "_id": "683f40cd821cb330fd629c7e"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "683f40cd821cb330fd629c7d"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const allResultsgroups = BeaconBar.getSharedData(\"allWorkflowTypesWithViewState\");\n\n  if (!BeaconBar.user.metaData.menus.includes(\"WorkFlow_v6/DefineWorkflowType.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const matchedItem = allResultsgroups.find(\n    item => item.WorkflowType === args.WorkflowType\n  );\n\n  if (!matchedItem) {\n    throw new Error(`Description not found: ${args.description}`);\n  }\n  const result = await BeaconBar.executeFunction(\"workflowTypesDetails\")(matchedItem.EventKey, matchedItem.ViewState);\n  function extractWorkflowDetailsFromHTML(htmlString) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(htmlString, 'text/html');\n\n    const getValue = (selector) => doc.querySelector(selector)?.value?.trim() || '';\n    const getText = (selector) => doc.querySelector(selector)?.textContent?.trim() || '';\n    const getSelectedText = (selector) => {\n      const el = doc.querySelector(selector);\n      return el ? el.options[el.selectedIndex]?.text?.trim() : '';\n    };\n    const getCheckbox = (selector) => doc.querySelector(selector)?.hasAttribute('checked') || false;\n\n    return {\n      Module: getSelectedText('#ctl00_body_ddlModule'),\n      WorkflowTypeCode: getValue('#ctl00_body_txtCode'),\n      Description: getText('#ctl00_body_txtDescription'),\n      Table: getValue('#ctl00_body_txtTbl'),\n      View: getValue('#ctl00_body_txtView'),\n      UpdateField: getSelectedText('#ctl00_body_ddlUpdCol'),\n      ApproveMainField: getSelectedText('#ctl00_body_ddlAppMain'),\n      CancelMainField: getSelectedText('#ctl00_body_ddlCancelMain'),\n      CancelStatusField: getSelectedText('#ctl00_body_ddlCnclStatus'),\n      HistoryView: getValue('#ctl00_body_txtWFHistoryView'),\n      PendingView: getValue('#ctl00_body_txtWFPendingView'),\n      RedirectURL: getValue('#ctl00_body_txtRedirectURL'),\n      Assembly: getValue('#ctl00_body_txtAssembly'),\n      AssemblyClass: getValue('#ctl00_body_txtAssemblyClass'),\n      BulkApproval: getCheckbox('#ctl00_body_chkBulkApproval'),\n      OwnApproval: getCheckbox('#ctl00_body_chkOwnApproval'),\n      DirectReject: getCheckbox('#ctl00_body_chkDirectReject'),\n      RejectToPreStep: getCheckbox('#ctl00_body_chkRejectToPreStep'),\n    };\n  }\n\n  const workflowDetails = extractWorkflowDetailsFromHTML(result);\n  return workflowDetails;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

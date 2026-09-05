@@ -1,0 +1,140 @@
+{
+  "arguments": [
+    {
+      "name": "classificationCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Use the provided classification code to search and return the corresponding qualification classification details.",
+      "advanced": false,
+      "raw": {
+        "name": "classificationCode",
+        "type": "string",
+        "description": "Use the provided classification code to search and return the corresponding qualification classification details.",
+        "required": false,
+        "_id": "695204a2632bdc03f92c2f33"
+      }
+    },
+    {
+      "name": "classificationName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Use the provided classification name to search and return the corresponding qualification classification details.",
+      "advanced": false,
+      "raw": {
+        "name": "classificationName",
+        "type": "string",
+        "description": "Use the provided classification name to search and return the corresponding qualification classification details.",
+        "required": false,
+        "_id": "6963ff94cae462cb939d0882"
+      }
+    },
+    {
+      "name": "includeDetails",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "If true, fetches detailed info for each match. Default: false",
+      "advanced": false,
+      "raw": {
+        "name": "includeDetails",
+        "type": "string",
+        "description": "If true, fetches detailed info for each match. Default: false",
+        "required": false,
+        "_id": "696400ce5f98759a5e149e87"
+      }
+    },
+    {
+      "name": "fetchMode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Returns all qualification classifications instead of searching by code or name. Use values like \"ALL\", \"AVAILABLE\", \"EXISTING\", or \"LIST\" when the user asks for all or available qualifications. If set, code/name filters are ignored.",
+      "advanced": false,
+      "raw": {
+        "name": "fetchMode",
+        "type": "string",
+        "description": "Returns all qualification classifications instead of searching by code or name. Use values like \"ALL\", \"AVAILABLE\", \"EXISTING\", or \"LIST\" when the user asks for all or available qualifications. If set, code/name filters are ignored.",
+        "required": false,
+        "_id": "697e0b9ca6ea5550b4cbcf05"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Returns all qualification classifications instead of searching by code or name. Use values like \"ALL\", \"AVAILABLE\", \"EXISTING\", or \"LIST\" when the user asks for all or available qualifications. If set, code/name filters are ignored.",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "Returns all qualification classifications instead of searching by code or name. Use values like \"ALL\", \"AVAILABLE\", \"EXISTING\", or \"LIST\" when the user asks for all or available qualifications. If set, code/name filters are ignored.",
+        "required": false,
+        "_id": "69808b24ab0bd3ea43d02672"
+      }
+    },
+    {
+      "name": "pageNumber",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "when not auto-fetching all, fetch a specific page (default 1)",
+      "advanced": false,
+      "raw": {
+        "name": "pageNumber",
+        "type": "string",
+        "description": "when not auto-fetching all, fetch a specific page (default 1)",
+        "required": false,
+        "_id": "69808b24ab0bd3ea43d02673"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "requested size (default 100)",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "requested size (default 100)",
+        "required": false,
+        "_id": "69808b24ab0bd3ea43d02674"
+      }
+    },
+    {
+      "name": "autoFetchAllPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "truthy → fetch all pages (default true when all-mode)",
+      "advanced": false,
+      "raw": {
+        "name": "autoFetchAllPages",
+        "type": "string",
+        "description": "truthy → fetch all pages (default true when all-mode)",
+        "required": false,
+        "_id": "69808b24ab0bd3ea43d02675"
+      }
+    },
+    {
+      "name": "maxPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "safety limit (default 50)",
+      "advanced": false,
+      "raw": {
+        "name": "maxPages",
+        "type": "string",
+        "description": "safety limit (default 50)",
+        "required": false,
+        "_id": "69808b24ab0bd3ea43d02676"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "employee specific id",
+      "advanced": false,
+      "raw": {
+        "name": "id",
+        "type": "string",
+        "description": "employee specific id",
+        "required": true,
+        "_id": "683d9e9c3aa841848b5d5721"
+      }
+    },
+    {
+      "name": "editId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get edit id for \"getAssignNonCashBenefitToEmployeeDetails\" tool user selected passport and other articles  edit id get.",
+      "advanced": false,
+      "raw": {
+        "name": "editId",
+        "type": "string",
+        "description": "to get edit id for \"getAssignNonCashBenefitToEmployeeDetails\" tool user selected passport and other articles  edit id get.",
+        "required": true,
+        "_id": "683d9e9c3aa841848b5d5722"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

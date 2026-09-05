@@ -1,0 +1,24 @@
+{
+  "id": "690dc58c931a2d61ba0b340b",
+  "slug": "workflowtype",
+  "name": "workflowType",
+  "status": "live",
+  "createdAt": "2025-05-19T13:53:01.374Z",
+  "updatedAt": "2026-07-17T12:56:04.781Z",
+  "contentHash": "a8936a4dcf0f3acb10ab85928096b16de92ed92fbcd4488a58b17b9f144a2161",
+  "lastExportedAt": "2026-09-05T19:41:13.295Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58c931a2d61ba0b340b",
+    "name": "workflowType",
+    "status": "live",
+    "code": "(async function(req) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  try {\n    const response = await fetch(`${req}WorkFlow_v6/DefineWorkflowType.aspx`, requestOptions);\n    const data = await response.text(); \n    return data;\n  } catch (error) {\n    return null;\n  }\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "id": "690dc569931a2d61ba0b1910",
+  "slug": "specificassignnoncashbenefitdetails",
+  "name": "specificAssignNonCashBenefitDetails",
+  "description": "Before executing in the API, first execute  the \"getAssignNonCashBenefitToEmployeeDetails\" tool to fetch the user's NonCashBenefit options. Use the selected NonCashBenefit editId from that response as a payload argument for this API to then after execute in this tool generate the specific credit card details. The response from this API should then be passed to the \"updateEmployeeInformationDetails\" tool, which should be executed last to complete the update process.",
+  "instructions": null,
+  "taskName": "Fetching The Assign Non Cash Benefit Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "specificAssignNonCashBenefitDetails",
+  "createdAt": "2025-06-02T12:52:44.279Z",
+  "updatedAt": "2025-06-02T12:52:44.279Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "2da18a03296799886211d16e6f19a73de37e806b6610c311c70dee09eff3c28a",
+  "lastExportedAt": "2026-09-05T19:39:23.747Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b1910",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "specificAssignNonCashBenefitDetails",
+      "description": "Before executing in the API, first execute  the \"getAssignNonCashBenefitToEmployeeDetails\" tool to fetch the user's NonCashBenefit options. Use the selected NonCashBenefit editId from that response as a payload argument for this API to then after execute in this tool generate the specific credit card details. The response from this API should then be passed to the \"updateEmployeeInformationDetails\" tool, which should be executed last to complete the update process.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "specificAssignNonCashBenefitDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "employee specific id",
+            "required": true,
+            "_id": "683d9e9c3aa841848b5d5721"
+          },
+          {
+            "name": "editId",
+            "type": "string",
+            "description": "to get edit id for \"getAssignNonCashBenefitToEmployeeDetails\" tool user selected passport and other articles  edit id get.",
+            "required": true,
+            "_id": "683d9e9c3aa841848b5d5722"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "683d9e9c3aa841848b5d5720"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignNonCashBenifitEmployee.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param : \"IsShowButtons=1\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/AssignNonCashBenifitEmployee.aspx\");\n\n  const editResponse = await BeaconBar.executeFunction(\"module\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.editId,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.assigned.viewState3,\n    __VIEWSTATEGENERATOR: window.assigned.viewStateGen3,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.assigned.eventValidation3,\n    \"ctl00$hdnDateFormat\": \"m/d/yy\",\n    \"ctl00$hdnQuickmenu\": \"\",\n    \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00_body_grdavailable_ClientState\": \"\",\n    \"ctl00$body$hdnDateFormate\": \"m/d/yyyy\",\n    \"ctl00$body$txtPublicKey\": window.assigned.publicKey3,\n    \"ctl00$body$txtempnumber\": window.assigned.empEnc\n  }, `${reqOptions.sl}/${updateUrlData.pageUrl}`);\n\n  window.ancb = editResponse;\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(editResponse.rawData, \"text/html\");\n\n  const getValue = (selector) =>\n    document.querySelector(selector)?.value.trim() || \"\";\n\n  const isChecked = (selector) =>\n    document.querySelector(selector)?.checked || false;\n\n  const getSelectedOption = (selector) => {\n    const select = document.querySelector(selector);\n    const selected = select?.options[select.selectedIndex];\n    return {\n      value: selected?.value || \"\",\n      name: selected?.textContent.trim() || \"\"\n    };\n  };\n\n  const selectElement = document.getElementById(\"ctl00_body_cboBenHead\");\n\n  const benefitClearanceHeadPositionNames = Array.from(selectElement.options).map(option => ({\n    name: option.text,\n    value: option.value\n  }));\n\n  const assignedNonCashBenefit = {\n    \"Date of Issue\": getValue(\"#ctl00_body_txtIssDate\"),\n    \"Quantity\": getValue(\"#ctl00_body_nuQuantity\"),\n    \"Item Returnable\": isChecked(\"#ctl00_body_chkretBle\"),\n    \"Returnable Date\": getValue(\"#ctl00_body_txtRepDate\"),\n    \"Item Returned\": isChecked(\"#ctl00_body_chkret\"),\n    \"Returned Date\": getValue(\"#ctl00_body_txtReturnedDate\"),\n    \"Serial Number\": getValue(\"#ctl00_body_txtSerialNo\"),\n    \"Model\": getValue(\"#ctl00_body_txtModel\"),\n    \"Condition\": getValue(\"#ctl00_body_txtCondition\"),\n    \"Remarks\": getValue(\"#ctl00_body_txtRemarks\"),\n    \"Benefit Clearance Head Position Name\": getSelectedOption(\"#ctl00_body_cboBenHead\")\n  };\n  return { assignedNonCashBenefit, benefitClearanceHeadPositionNames };\n});\n",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Fetching The Assign Non Cash Benefit Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-02T12:52:44.279Z",
+      "updatedAt": "2025-06-02T12:52:44.279Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "specificAssignNonCashBenefitDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "employee specific id",
+          "required": true,
+          "_id": "683d9e9c3aa841848b5d5721"
+        },
+        {
+          "name": "editId",
+          "type": "string",
+          "description": "to get edit id for \"getAssignNonCashBenefitToEmployeeDetails\" tool user selected passport and other articles  edit id get.",
+          "required": true,
+          "_id": "683d9e9c3aa841848b5d5722"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "683d9e9c3aa841848b5d5720"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignNonCashBenifitEmployee.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param : \"IsShowButtons=1\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/AssignNonCashBenifitEmployee.aspx\");\n\n  const editResponse = await BeaconBar.executeFunction(\"module\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.editId,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.assigned.viewState3,\n    __VIEWSTATEGENERATOR: window.assigned.viewStateGen3,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.assigned.eventValidation3,\n    \"ctl00$hdnDateFormat\": \"m/d/yy\",\n    \"ctl00$hdnQuickmenu\": \"\",\n    \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00_body_grdavailable_ClientState\": \"\",\n    \"ctl00$body$hdnDateFormate\": \"m/d/yyyy\",\n    \"ctl00$body$txtPublicKey\": window.assigned.publicKey3,\n    \"ctl00$body$txtempnumber\": window.assigned.empEnc\n  }, `${reqOptions.sl}/${updateUrlData.pageUrl}`);\n\n  window.ancb = editResponse;\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(editResponse.rawData, \"text/html\");\n\n  const getValue = (selector) =>\n    document.querySelector(selector)?.value.trim() || \"\";\n\n  const isChecked = (selector) =>\n    document.querySelector(selector)?.checked || false;\n\n  const getSelectedOption = (selector) => {\n    const select = document.querySelector(selector);\n    const selected = select?.options[select.selectedIndex];\n    return {\n      value: selected?.value || \"\",\n      name: selected?.textContent.trim() || \"\"\n    };\n  };\n\n  const selectElement = document.getElementById(\"ctl00_body_cboBenHead\");\n\n  const benefitClearanceHeadPositionNames = Array.from(selectElement.options).map(option => ({\n    name: option.text,\n    value: option.value\n  }));\n\n  const assignedNonCashBenefit = {\n    \"Date of Issue\": getValue(\"#ctl00_body_txtIssDate\"),\n    \"Quantity\": getValue(\"#ctl00_body_nuQuantity\"),\n    \"Item Returnable\": isChecked(\"#ctl00_body_chkretBle\"),\n    \"Returnable Date\": getValue(\"#ctl00_body_txtRepDate\"),\n    \"Item Returned\": isChecked(\"#ctl00_body_chkret\"),\n    \"Returned Date\": getValue(\"#ctl00_body_txtReturnedDate\"),\n    \"Serial Number\": getValue(\"#ctl00_body_txtSerialNo\"),\n    \"Model\": getValue(\"#ctl00_body_txtModel\"),\n    \"Condition\": getValue(\"#ctl00_body_txtCondition\"),\n    \"Remarks\": getValue(\"#ctl00_body_txtRemarks\"),\n    \"Benefit Clearance Head Position Name\": getSelectedOption(\"#ctl00_body_cboBenHead\")\n  };\n  return { assignedNonCashBenefit, benefitClearanceHeadPositionNames };\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

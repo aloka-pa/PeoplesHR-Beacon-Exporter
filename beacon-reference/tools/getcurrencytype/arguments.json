@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    {
+      "name": "currencyCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The unique code identifier for the currency (e.g., \"000008\")",
+      "advanced": false,
+      "raw": {
+        "name": "currencyCode",
+        "type": "string",
+        "description": "The unique code identifier for the currency (e.g., \"000008\")",
+        "required": false,
+        "_id": "6953f7e5fc6c7e58f0961994"
+      }
+    },
+    {
+      "name": "currencyName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": " The full or partial name of the currency to search for (e.g., \"Dollar\", \"Euro\")",
+      "advanced": false,
+      "raw": {
+        "name": "currencyName",
+        "type": "string",
+        "description": " The full or partial name of the currency to search for (e.g., \"Dollar\", \"Euro\")",
+        "required": false,
+        "_id": "6953f7e5fc6c7e58f0961995"
+      }
+    },
+    {
+      "name": "currencySymbol",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The currency symbol to search for (e.g., \"AUD,\" \"USD\"); \nNOTE: currencySymbol is not currency symbol like \"$\"; it is a combination of letters \"USD.\"",
+      "advanced": false,
+      "raw": {
+        "name": "currencySymbol",
+        "type": "string",
+        "description": "The currency symbol to search for (e.g., \"AUD,\" \"USD\"); \nNOTE: currencySymbol is not currency symbol like \"$\"; it is a combination of letters \"USD.\"",
+        "required": false,
+        "_id": "6953f7e5fc6c7e58f0961996"
+      }
+    },
+    {
+      "name": "mode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Defines how currency types are retrieved. Case-insensitive. Values like “show all”, “all”, “list of all”, “all existing”, “existing”, or “available” return all records across all pages. “Search” (default) filters results using code, name, or symbol.",
+      "advanced": false,
+      "raw": {
+        "name": "mode",
+        "type": "string",
+        "description": "Defines how currency types are retrieved. Case-insensitive. Values like “show all”, “all”, “list of all”, “all existing”, “existing”, or “available” return all records across all pages. “Search” (default) filters results using code, name, or symbol.",
+        "required": false,
+        "_id": "69842a5c86762303195e9bcc"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

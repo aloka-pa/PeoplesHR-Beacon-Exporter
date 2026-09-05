@@ -1,0 +1,91 @@
+{
+  "id": "690dc569931a2d61ba0b193a",
+  "slug": "getworkflowgroupdetails",
+  "name": "getWorkFlowGroupDetails",
+  "description": "getWorkFlowGroupDetails , before calling this api you need to call \"getWorkFlowGroup\"",
+  "instructions": null,
+  "taskName": "fetchingWorkFlowGroupDetails",
+  "tags": [
+    "workFlow",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getWorkFlowGroupDetails",
+  "createdAt": "2025-06-03T17:44:14.919Z",
+  "updatedAt": "2025-06-03T17:44:14.919Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c34",
+      "name": "WorkfLows"
+    }
+  ],
+  "contentHash": "27e50d2f5f75c5fda021c47b8f233787dfc2c74e8ba3978825bde2aa6fcbe714",
+  "lastExportedAt": "2026-09-05T19:39:23.719Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b193a",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getWorkFlowGroupDetails",
+      "description": "getWorkFlowGroupDetails , before calling this api you need to call \"getWorkFlowGroup\"",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getWorkFlowGroupDetails",
+        "args": [
+          {
+            "name": "description",
+            "type": "string",
+            "description": "description , Ex:- \"sampathBank\"",
+            "required": true,
+            "_id": "683f346e0b31dbd99b04bc7d"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "683f346e0b31dbd99b04bc7c"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function(data, args, reqOptions) {\n  const allResultsgroups = BeaconBar.getSharedData(\"allResultsgroups\");\n\n  const matchedItem = allResultsgroups.find(\n    item => item.Description === args.description\n  );\n  if (!matchedItem) {\n    throw new Error(`Description not found: ${args.description}`);\n  }\n  const result = await BeaconBar.executeFunction(\"getWorkFlowGroups\")(matchedItem.EventKey);\n  return result;\n\n})",
+      "groupName": "",
+      "tags": [
+        "workFlow",
+        "Headers"
+      ],
+      "taskName": "fetchingWorkFlowGroupDetails",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-03T17:44:14.919Z",
+      "updatedAt": "2025-06-03T17:44:14.919Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c34",
+          "name": "WorkfLows"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getWorkFlowGroupDetails",
+      "args": [
+        {
+          "name": "description",
+          "type": "string",
+          "description": "description , Ex:- \"sampathBank\"",
+          "required": true,
+          "_id": "683f346e0b31dbd99b04bc7d"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "683f346e0b31dbd99b04bc7c"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function(data, args, reqOptions) {\n  const allResultsgroups = BeaconBar.getSharedData(\"allResultsgroups\");\n\n  const matchedItem = allResultsgroups.find(\n    item => item.Description === args.description\n  );\n  if (!matchedItem) {\n    throw new Error(`Description not found: ${args.description}`);\n  }\n  const result = await BeaconBar.executeFunction(\"getWorkFlowGroups\")(matchedItem.EventKey);\n  return result;\n\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

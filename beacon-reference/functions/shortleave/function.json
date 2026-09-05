@@ -1,0 +1,24 @@
+{
+  "id": "690dc58b931a2d61ba0b329f",
+  "slug": "shortleave",
+  "name": "shortleave",
+  "status": "live",
+  "createdAt": "2025-05-27T11:36:11.208Z",
+  "updatedAt": "2026-07-17T12:56:02.216Z",
+  "contentHash": "88a59fb9e6918eeeeb8584e5b4d48352b1e6c43126194b207c71bef383caa2b5",
+  "lastExportedAt": "2026-09-05T19:41:14.974Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58b931a2d61ba0b329f",
+    "name": "shortleave",
+    "status": "live",
+    "code": "(async function applyShortLeave(args) {\n  //done\n  const token = BeaconBar.getSharedData(\"token\");\n  const empNumber = BeaconBar.getSharedData(\"EmpNumber\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"content-type\", \"application/json\");\n  myHeaders.append(\"__cfafvalue\", token);\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const parseTime = (timeStr) => {\n    const [h, m] = timeStr.split('.').map(Number);\n    return { hour: h, minute: m };\n  };\n\n  function parseLeaveDate(dateStr) {\n    // Input format: \"22-07-2024\"\n    const [dd, mm, yyyy] = dateStr.split('-');\n    return new Date(`${yyyy}-${mm}-${dd}`);\n  }\n\n  function getISOTime(dateObj, timeStr) {\n    const { hour, minute } = parseTime(timeStr);\n    dateObj.setHours(hour);\n    dateObj.setMinutes(minute);\n    dateObj.setSeconds(0);\n    return dateObj.toISOString();\n  }\n\n  function formatTime(timeStr) {\n    const { hour, minute } = parseTime(timeStr);\n    return `${String(hour).padStart(2, '0')}.${String(minute).padStart(2, '0')}`;\n  }\n\n  function formatLeaveDateText(dateObj) {\n    const dd = String(dateObj.getDate()).padStart(2, '0');\n    const mm = String(dateObj.getMonth() + 1).padStart(2, '0');\n    const yy = String(dateObj.getFullYear()).slice(-2);\n    return `${dd}/${mm}/${yy}`;  // Example: \"22/07/24\"\n  }\n\n  const leaveDateObj = parseLeaveDate(args.leaveDate);\n  const startISO = getISOTime(new Date(leaveDateObj), args.startTime);\n  const endISO = getISOTime(new Date(leaveDateObj), args.endTime);\n  const minutesDiff = (new Date(endISO) - new Date(startISO)) / (1000 * 60);  // in minutes\n\n  const utils = await BeaconBar.executeFunction(\"getleaveGroup\")(args.Year);\n\n  const raw = JSON.stringify({\n    EmpNumber: empNumber,\n    LeaveYear: args.Year,\n    LeaveGroup: utils.LGCode,\n    TBTCode: utils.typecode,\n    ApprovalEmpNumber: args.approverNumber,\n    LeaveDate: new Date(leaveDateObj.setHours(0, 0, 0, 0)).toISOString(),\n    LeaveDateText: formatLeaveDateText(leaveDateObj),\n    DtStartTime: startISO,\n    DtEndTime: endISO,\n    StartTime: formatTime(args.startTime),\n    EndTime: formatTime(args.endTime),\n    NumberOfHours: minutesDiff,\n    ReasonCode: args.reason,\n    Comment: args.comment || \"\",\n    PreviousAppIdText: null,\n    IsImpersonate: -1,\n    ShortLeaveDefinedTimeMode: \"-1\"\n  });\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw,\n    redirect: \"follow\"\n  };\n\n  try {\n    const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n    const response = await fetch(\n      `${reqOptions}AbsenceV9/api/ShortLeaveApplication/SaveShortLeaveApplication/`,\n      requestOptions\n    );\n    const result = await response.text();\n    return result;\n  } catch (error) {\n    return { error: \"Request failed\", details: error };\n  }\n})\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

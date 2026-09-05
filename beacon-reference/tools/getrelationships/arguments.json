@@ -1,0 +1,95 @@
+{
+  "arguments": [
+    {
+      "name": "relationshipCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "When the user provides a relationship code, this is used for an exact match search.\nTriggers the Search action with criteria = REL_ID and returns the matching grid record(s). (e.g., \"000008\"). ",
+      "advanced": false,
+      "raw": {
+        "name": "relationshipCode",
+        "type": "string",
+        "description": "When the user provides a relationship code, this is used for an exact match search.\nTriggers the Search action with criteria = REL_ID and returns the matching grid record(s). (e.g., \"000008\"). ",
+        "required": false,
+        "_id": "695439d7f72a612a8c885143"
+      }
+    },
+    {
+      "name": "relationshipName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "When the user provides a relationship name (full or partial), this performs a case-insensitive partial match search.\nTriggers the Search action with criteria = REL_NAME and returns all matching grid rows. (e.g., \"Brother\", \"Sister\", \"Spouse\").",
+      "advanced": false,
+      "raw": {
+        "name": "relationshipName",
+        "type": "string",
+        "description": "When the user provides a relationship name (full or partial), this performs a case-insensitive partial match search.\nTriggers the Search action with criteria = REL_NAME and returns all matching grid rows. (e.g., \"Brother\", \"Sister\", \"Spouse\").",
+        "required": false,
+        "_id": "695439d7f72a612a8c885144"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "When user asks to return all/available/existing relationships, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\"\nTriggers Show All and returns every grid row.",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "When user asks to return all/available/existing relationships, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\"\nTriggers Show All and returns every grid row.",
+        "required": false,
+        "_id": "697e496242b57a258adca1db"
+      }
+    },
+    {
+      "name": "showAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Alias of returnAll.",
+      "advanced": false,
+      "raw": {
+        "name": "showAll",
+        "type": "string",
+        "description": "Alias of returnAll.",
+        "required": false,
+        "_id": "6980c01342fec8359d128fc7"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Page size value sent to the grid pager (server may cap it). Default \"100\".",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "Page size value sent to the grid pager (server may cap it). Default \"100\".",
+        "required": false,
+        "_id": "6980c01342fec8359d128fc8"
+      }
+    },
+    {
+      "name": "maxPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Safety cap to avoid infinite paging loops. Default \"50\".",
+      "advanced": false,
+      "raw": {
+        "name": "maxPages",
+        "type": "string",
+        "description": "Safety cap to avoid infinite paging loops. Default \"50\".",
+        "required": false,
+        "_id": "6980c01342fec8359d128fc9"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

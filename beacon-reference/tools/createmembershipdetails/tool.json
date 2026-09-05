@@ -1,0 +1,72 @@
+{
+  "id": "690dc564931a2d61ba0b14d8",
+  "slug": "createmembershipdetails",
+  "name": "createMembershipDetails",
+  "description": "in this tool create the Membership.first execute the getEIMApii Api. display the all membership type then select one corresponding value will be take. and ask user membership name aslo.",
+  "instructions": null,
+  "taskName": "Create Membership",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createMembershipDetails",
+  "createdAt": "2025-04-30T10:31:39.950Z",
+  "updatedAt": "2026-05-15T06:58:57.261Z",
+  "assignedAgents": [],
+  "contentHash": "90256e3abc8c6385fdd8f2aab455cbacd8170d5d75bb35d662f4a488b67878d0",
+  "lastExportedAt": "2026-09-05T19:39:22.653Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b14d8",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createMembershipDetails",
+      "description": "in this tool create the Membership.first execute the getEIMApii Api. display the all membership type then select one corresponding value will be take. and ask user membership name aslo.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createMembershipDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"The name of the membership name.\"\n    },\n    \"ctl00_body_dpcountry\": {\n      \"type\": \"string\",\n      \"description\": \"The code corresponding to the selected membership type. if the user not update to get corresponsding data for getEIMApii api. and corresponding value wiil be take Example:-'000001'\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_dpcountry\"\n  ]\n}",
+        "_id": "6811fc0b8f0c9af526c525e6"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  const create =\n    await BeaconBar.executeFunction(\"getEIMApii\")(\n      {\n        scrollLeft: \"0\",\n        scrollTop: \"0\",\n        __EVENTTARGET: \"\",\n        __EVENTARGUMENT: \"\",\n\n        __VIEWSTATE: window.cm.viewState,\n        __VIEWSTATEGENERATOR: window.cm.viewStateGen,\n        __VIEWSTATEENCRYPTED: \"\",\n        __EVENTVALIDATION: window.cm.eventValidation,\n\n        \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n        \"ctl00$body$txtName\":\n          args[\"ctl00_body_txtName\"],\n\n        \"ctl00$body$dpcountry\":\n          args[\"ctl00_body_dpcountry\"],\n\n        \"ctl00$body$butSave\": \"Save\"\n\n      },\n      \"Membership\"\n    );\n\n  const html = create.rawData || \"\";\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    html,\n    \"text/html\"\n  );\n\n  const getElementValue = (id) =>\n    doc.getElementById(id)?.value?.trim() || \"\";\n\n  const getSelectedOption = (id) => {\n    const select = doc.getElementById(id);\n\n    const selected =\n      select?.selectedOptions?.[0];\n\n    return selected\n      ? {\n          value: selected.value,\n          text: selected.text.trim()\n        }\n      : {\n          value: \"\",\n          text: \"\"\n        };\n  };\n\n  const createMembershipDetails = {\n    code:\n      getElementValue(\"ctl00_body_txtCode\"),\n\n    membership:\n      getElementValue(\"ctl00_body_txtName\"),\n\n    selectedMembershipType:\n      getSelectedOption(\"ctl00_body_dpcountry\")\n  };\n\n  return createMembershipDetails;\n\n})",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create Membership",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-30T10:31:39.950Z",
+      "updatedAt": "2026-05-15T06:58:57.261Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createMembershipDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"The name of the membership name.\"\n    },\n    \"ctl00_body_dpcountry\": {\n      \"type\": \"string\",\n      \"description\": \"The code corresponding to the selected membership type. if the user not update to get corresponsding data for getEIMApii api. and corresponding value wiil be take Example:-'000001'\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_dpcountry\"\n  ]\n}",
+      "_id": "6811fc0b8f0c9af526c525e6"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  const create =\n    await BeaconBar.executeFunction(\"getEIMApii\")(\n      {\n        scrollLeft: \"0\",\n        scrollTop: \"0\",\n        __EVENTTARGET: \"\",\n        __EVENTARGUMENT: \"\",\n\n        __VIEWSTATE: window.cm.viewState,\n        __VIEWSTATEGENERATOR: window.cm.viewStateGen,\n        __VIEWSTATEENCRYPTED: \"\",\n        __EVENTVALIDATION: window.cm.eventValidation,\n\n        \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n        \"ctl00$body$txtName\":\n          args[\"ctl00_body_txtName\"],\n\n        \"ctl00$body$dpcountry\":\n          args[\"ctl00_body_dpcountry\"],\n\n        \"ctl00$body$butSave\": \"Save\"\n\n      },\n      \"Membership\"\n    );\n\n  const html = create.rawData || \"\";\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    html,\n    \"text/html\"\n  );\n\n  const getElementValue = (id) =>\n    doc.getElementById(id)?.value?.trim() || \"\";\n\n  const getSelectedOption = (id) => {\n    const select = doc.getElementById(id);\n\n    const selected =\n      select?.selectedOptions?.[0];\n\n    return selected\n      ? {\n          value: selected.value,\n          text: selected.text.trim()\n        }\n      : {\n          value: \"\",\n          text: \"\"\n        };\n  };\n\n  const createMembershipDetails = {\n    code:\n      getElementValue(\"ctl00_body_txtCode\"),\n\n    membership:\n      getElementValue(\"ctl00_body_txtName\"),\n\n    selectedMembershipType:\n      getSelectedOption(\"ctl00_body_dpcountry\")\n  };\n\n  return createMembershipDetails;\n\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

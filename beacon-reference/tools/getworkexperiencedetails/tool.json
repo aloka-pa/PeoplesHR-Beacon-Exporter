@@ -1,0 +1,96 @@
+{
+  "id": "690dc567931a2d61ba0b174d",
+  "slug": "getworkexperiencedetails",
+  "name": "getWorkExperienceDetails",
+  "description": "in this tool generate the Work Experience Details . if the user ask self or admin related query first execute for \"admin information\" api then get the self employee id.",
+  "instructions": null,
+  "taskName": "Fetching Work Experience Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getWorkExperienceDetails",
+  "createdAt": "2025-05-16T09:39:41.232Z",
+  "updatedAt": "2025-11-10T12:09:25.134Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "93509eefd2c9ea16acc46a0b8e9a0740ea21bcdb66152e460e295e44e364fbd6",
+  "lastExportedAt": "2026-09-05T19:39:23.386Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc567931a2d61ba0b174d",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getWorkExperienceDetails",
+      "description": "in this tool generate the Work Experience Details . if the user ask self or admin related query first execute for \"admin information\" api then get the self employee id.",
+      "rules": {
+        "ids": [
+          "690dc4b5931a2d61ba0a807f"
+        ],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getWorkExperienceDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to give the employee id Example:- \"000001\" etc...",
+            "required": true,
+            "_id": "682707dda3cc710b2dd047a9"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "682707dda3cc710b2dd047a8"
+      },
+      "by": "7337",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/WorkExperience.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        // param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/WorkExperience.aspx\");\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n\n  const detailsText = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(detailsText, \"text/html\");\n\n  const empNumber = doc.querySelector('input[id=\"ctl00_body_EmpSearch_txtEmpDisplayNumber\"]')?.value || \"\";\n  window.pqn = empNumber;\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const publicKey = doc.querySelector(\"#ctl00_body_txtPublicKey\")?.value || \"\";\n\n  await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"GetSearchResult\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewStateGenerator);\n  // urlencoded.append(\"__SCROLLPOSITIONX\", \"0\");\n  // urlencoded.append(\"__SCROLLPOSITIONY\", \"0\");\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded.append(\"ctl00$hdnQuickmenu\", \"\");\n  urlencoded.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", empNumber);\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded.append(\"ctl00$body$txtPublicKey\", publicKey);\n  urlencoded.append(\"ctl00$body$txtempNo\", empNumber);\n  urlencoded.append(\"ctl00$body$txtperemail\", \"\");\n  urlencoded.append(\"ctl00$body$hdncompname\", \"PeoplesHR\");\n  urlencoded.append(\"ctl00$body$grdGrade1$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdGrade1_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdGrade1$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdGrade1_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdGrade1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$hdnDateFormate\", \"m/d/yyyy\");\n\n  const responsePost = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  const textPost = await responsePost.text();\n  const first = await BeaconBar.executeFunction('getDomExtract')(textPost);\n\n  const doc3 = parser.parseFromString(textPost, \"text/html\");\n\n  const empEncId = await BeaconBar.executeFunction(\"employeeEncryptId\")(first.publicKey, args.id);\n\n  const editResponse = await BeaconBar.executeFunction('module')({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: first.viewState,\n    __VIEWSTATEGENERATOR: first.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: first.eventValidation,\n    \"ctl00$hdnDateFormat\": \"m/d/yy\",\n    \"ctl00$hdnQuickmenu\": \"\",\n    \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00$body$txtPublicKey\": first.publicKey,\n    \"ctl00$body$txtempNo\": empEncId,\n    \"ctl00$body$txtperemail\": \"\",\n    \"ctl00$body$hdncompname\": \"PeoplesHR\",\n    \"ctl00$body$grdGrade1$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdGrade1_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdGrade1$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdGrade1_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdGrade1_ClientState\": \"\",\n    \"ctl00$body$butEdit\": \"Edit\",\n    \"ctl00$body$hdnDateFormate\": \"m/d/yyyy\"\n  }, `${reqOptions.sl}/${updateUrlData.pageUrl}`);\n\n  window.view = { editResponse, empEncId };\n\n  const docPost = parser.parseFromString(editResponse.rawData, \"text/html\");\n\n  const category = docPost.querySelector(\".GroupHeader_Default p\")?.textContent.trim().replace(\"Category :\", \"\").trim() || \"\";\n  const rows = docPost.querySelectorAll(\".GridRow_Default\");\n  const workExperience = Array.from(rows).map(row => {\n    const cells = row.querySelectorAll(\"td\");\n    const columns = row.querySelectorAll(\"td\");\n    const editAnchor = columns[7]?.querySelector(\"a[href*='__doPostBack']\");\n    const postbackMatch = editAnchor?.getAttribute(\"href\")?.match(/__doPostBack\\('([^']+)'/);\n    const postbackId = postbackMatch ? postbackMatch[1] : \"\";\n    return {\n      fromDate: cells[1]?.textContent.trim() || \"\",\n      toDate: cells[2]?.textContent.trim() || \"\",\n      companyName: cells[3]?.textContent.trim() || \"\",\n      functionalTitle: cells[4]?.textContent.trim() || \"\",\n      noOfYears: cells[5]?.textContent.trim() || \"\",\n      noOfMonths: cells[6]?.textContent.trim() || \"\",\n      editId: postbackId,\n      category: category\n    };\n  });\n\n  const empNum = doc3.querySelector(\"#ctl00_body_EmpSearch_txtEmpDisplayNumber\").value || \"\";\n  if (empNum === args.id) {\n    return workExperience;\n  } else {\n    return \"no existing the employee user given employee id or name.\"\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Fetching Work Experience Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-16T09:39:41.232Z",
+      "updatedAt": "2025-11-10T12:09:25.134Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getWorkExperienceDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to give the employee id Example:- \"000001\" etc...",
+          "required": true,
+          "_id": "682707dda3cc710b2dd047a9"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "682707dda3cc710b2dd047a8"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/WorkExperience.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        // param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/WorkExperience.aspx\");\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n\n  const detailsText = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(detailsText, \"text/html\");\n\n  const empNumber = doc.querySelector('input[id=\"ctl00_body_EmpSearch_txtEmpDisplayNumber\"]')?.value || \"\";\n  window.pqn = empNumber;\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const publicKey = doc.querySelector(\"#ctl00_body_txtPublicKey\")?.value || \"\";\n\n  await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"GetSearchResult\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewStateGenerator);\n  // urlencoded.append(\"__SCROLLPOSITIONX\", \"0\");\n  // urlencoded.append(\"__SCROLLPOSITIONY\", \"0\");\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded.append(\"ctl00$hdnQuickmenu\", \"\");\n  urlencoded.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", empNumber);\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded.append(\"ctl00$body$txtPublicKey\", publicKey);\n  urlencoded.append(\"ctl00$body$txtempNo\", empNumber);\n  urlencoded.append(\"ctl00$body$txtperemail\", \"\");\n  urlencoded.append(\"ctl00$body$hdncompname\", \"PeoplesHR\");\n  urlencoded.append(\"ctl00$body$grdGrade1$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdGrade1_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdGrade1$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdGrade1_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdGrade1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$hdnDateFormate\", \"m/d/yyyy\");\n\n  const responsePost = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  const textPost = await responsePost.text();\n  const first = await BeaconBar.executeFunction('getDomExtract')(textPost);\n\n  const doc3 = parser.parseFromString(textPost, \"text/html\");\n\n  const empEncId = await BeaconBar.executeFunction(\"employeeEncryptId\")(first.publicKey, args.id);\n\n  const editResponse = await BeaconBar.executeFunction('module')({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: first.viewState,\n    __VIEWSTATEGENERATOR: first.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: first.eventValidation,\n    \"ctl00$hdnDateFormat\": \"m/d/yy\",\n    \"ctl00$hdnQuickmenu\": \"\",\n    \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00$body$txtPublicKey\": first.publicKey,\n    \"ctl00$body$txtempNo\": empEncId,\n    \"ctl00$body$txtperemail\": \"\",\n    \"ctl00$body$hdncompname\": \"PeoplesHR\",\n    \"ctl00$body$grdGrade1$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdGrade1_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdGrade1$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdGrade1_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdGrade1_ClientState\": \"\",\n    \"ctl00$body$butEdit\": \"Edit\",\n    \"ctl00$body$hdnDateFormate\": \"m/d/yyyy\"\n  }, `${reqOptions.sl}/${updateUrlData.pageUrl}`);\n\n  window.view = { editResponse, empEncId };\n\n  const docPost = parser.parseFromString(editResponse.rawData, \"text/html\");\n\n  const category = docPost.querySelector(\".GroupHeader_Default p\")?.textContent.trim().replace(\"Category :\", \"\").trim() || \"\";\n  const rows = docPost.querySelectorAll(\".GridRow_Default\");\n  const workExperience = Array.from(rows).map(row => {\n    const cells = row.querySelectorAll(\"td\");\n    const columns = row.querySelectorAll(\"td\");\n    const editAnchor = columns[7]?.querySelector(\"a[href*='__doPostBack']\");\n    const postbackMatch = editAnchor?.getAttribute(\"href\")?.match(/__doPostBack\\('([^']+)'/);\n    const postbackId = postbackMatch ? postbackMatch[1] : \"\";\n    return {\n      fromDate: cells[1]?.textContent.trim() || \"\",\n      toDate: cells[2]?.textContent.trim() || \"\",\n      companyName: cells[3]?.textContent.trim() || \"\",\n      functionalTitle: cells[4]?.textContent.trim() || \"\",\n      noOfYears: cells[5]?.textContent.trim() || \"\",\n      noOfMonths: cells[6]?.textContent.trim() || \"\",\n      editId: postbackId,\n      category: category\n    };\n  });\n\n  const empNum = doc3.querySelector(\"#ctl00_body_EmpSearch_txtEmpDisplayNumber\").value || \"\";\n  if (empNum === args.id) {\n    return workExperience;\n  } else {\n    return \"no existing the employee user given employee id or name.\"\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

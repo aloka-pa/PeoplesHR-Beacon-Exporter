@@ -1,0 +1,173 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "leaveTypeCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "To get the leave type code, use 'getEmployeeLeaveBalance' API. User provides leave type name and corresponding leave type code will be retrieved. Example: '000001'. Do not ask the user for leave type code directly.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "To get the leave type code, use 'getEmployeeLeaveBalance' API. User provides leave type name and corresponding leave type code will be retrieved. Example: '000001'. Do not ask the user for leave type code directly."
+      }
+    },
+    {
+      "name": "leaveGroupCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "To get the leave group code, use 'getEmployeeLeaveBalance' API. Example: '000001'. Do not ask the user for group code directly.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "To get the leave group code, use 'getEmployeeLeaveBalance' API. Example: '000001'. Do not ask the user for group code directly."
+      }
+    },
+    {
+      "name": "fromDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "must be calling dateFormat api response format using,User provides the leave start date. Example: '08-10-2025'.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "must be calling dateFormat api response format using,User provides the leave start date. Example: '08-10-2025'."
+      }
+    },
+    {
+      "name": "toDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "must be calling dateFormat api response format using,User provides the leave end date. Example: '12-10-2025'.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "must be calling dateFormat api response format using,User provides the leave end date. Example: '12-10-2025'."
+      }
+    },
+    {
+      "name": "comment",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Do not ask for comment upfront.Submit first.If SaveLeaveApplication API returns 'Please specify the Comment',then ask the user for comment and retry.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Do not ask for comment upfront.Submit first.If SaveLeaveApplication API returns 'Please specify the Comment',then ask the user for comment and retry."
+      }
+    },
+    {
+      "name": "coveringEmployeeCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional field, call 'getEmpDetails' tool to get the empNumber. Do not take the employeeDisplayNumber. Important only take the empNumber.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Optional field, call 'getEmpDetails' tool to get the empNumber. Do not take the employeeDisplayNumber. Important only take the empNumber."
+      }
+    },
+    {
+      "name": "year",
+      "type": "integer",
+      "required": true,
+      "defaultValue": null,
+      "description": "User provides the year. Example: 2025, 2024, etc.",
+      "advanced": true,
+      "raw": {
+        "type": "integer",
+        "description": "User provides the year. Example: 2025, 2024, etc."
+      }
+    },
+    {
+      "name": "attachment",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Required for leave types where attachment is mandatory. The AI should prompt the user to upload a file before submitting. Contains the uploaded file's base64 data and filename.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Required for leave types where attachment is mandatory. The AI should prompt the user to upload a file before submitting. Contains the uploaded file's base64 data and filename.",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "description": "Name of the attachment file. Example: 'medical_certificate.pdf'"
+          },
+          "base64Data": {
+            "type": "string",
+            "description": "Base64-encoded content of the file to be uploaded."
+          }
+        },
+        "required": [
+          "fileName",
+          "base64Data"
+        ]
+      }
+    },
+    {
+      "name": "isAttachmentMandatory",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set to true when the leave type requires a mandatory attachment (e.g., medical leave). When true, prompt the user to upload a file before proceeding. Do not submit without attachment if this is true.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Set to true when the leave type requires a mandatory attachment (e.g., medical leave). When true, prompt the user to upload a file before proceeding. Do not submit without attachment if this is true."
+      }
+    },
+    {
+      "name": "dayModes",
+      "type": "array",
+      "required": true,
+      "defaultValue": null,
+      "description": "Array containing each individual leave date and its corresponding day mode. Based on the from and to date range, the system will generate all dates in between and ask the user to specify the day mode for each date. For example, if user applies for 3-day leave, there will be 3 items in this array - each with a specific date and its day mode selection.",
+      "advanced": true,
+      "raw": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+              "description": "Individual leave date within the from and to date range. Example: '2025-09-23T00:00:00' - must be in ISO date format 'YYYY-MM-DDTHH:mm:ss'."
+            },
+            "dayMode": {
+              "type": "number",
+              "enum": [
+                0,
+                1,
+                2,
+                7
+              ],
+              "description": "user ask available day modes front disply name corresponding values selected corresponding day mode ids will be take other then no need default values will be take ask user evry day day modes,Day mode based on user's leave mode selection: 'Whole Day' = 2, 'First Half' = 1, 'Second Half' = 0, 'Off Day' = 7. User selects leave mode name and corresponding numeric value will be used. Display the mode names to user, not the numeric values."
+            },
+            "dayValue": {
+              "type": "number",
+              "enum": [
+                1,
+                0.5,
+                0
+              ],
+              "description": "user ask available day modes front disply name corresponding values selected corresponding day mode value will be take other then no need default values will be take ask user evry day day modes,Day mode based on user's leave mode selection: 'Whole Day' = 1, 'First Half' = 0.5, 'Second Half' = 0.5, 'Off Day' = 0. User selects leave mode name and corresponding numeric value will be used. Display the mode names to user, not the numeric values."
+            }
+          },
+          "required": [
+            "date",
+            "dayMode",
+            "dayValue"
+          ]
+        },
+        "description": "Array containing each individual leave date and its corresponding day mode. Based on the from and to date range, the system will generate all dates in between and ask the user to specify the day mode for each date. For example, if user applies for 3-day leave, there will be 3 items in this array - each with a specific date and its day mode selection."
+      }
+    }
+  ]
+}

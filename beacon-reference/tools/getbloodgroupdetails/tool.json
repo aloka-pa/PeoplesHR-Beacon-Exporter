@@ -1,0 +1,75 @@
+{
+  "id": "690dc566931a2d61ba0b1652",
+  "slug": "getbloodgroupdetails",
+  "name": "getBloodGroupDetails",
+  "description": "in this tool generate the Blood group details.",
+  "instructions": null,
+  "taskName": "Blood Group Details",
+  "tags": [],
+  "status": "unlive",
+  "signature": "getBloodGroupDetails",
+  "createdAt": "2025-05-04T17:35:45.905Z",
+  "updatedAt": "2025-05-04T17:35:45.905Z",
+  "assignedAgents": [],
+  "contentHash": "6439d1edbdb58e246453de4a916406f401b8ba20ac7b4145a0f4e9daeb09ed02",
+  "lastExportedAt": "2026-09-05T19:39:24.132Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b1652",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getBloodGroupDetails",
+      "description": "in this tool generate the Blood group details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getBloodGroupDetails",
+        "args": [
+          {
+            "name": "bloodgroupCode",
+            "type": "string",
+            "description": "to give the blood group Code.",
+            "required": true,
+            "_id": "6817a5710c8b721f97e4887e"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6817a5710c8b721f97e4887d"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"BloodGroup\");\n\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"BLGRP_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": args.bloodgroupCode,\n    \"ctl00$body$ContentSearch$butSearch\": \"Search\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"9\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"BloodGroup\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(searchResponse.rawData, \"text/html\");\n\n  const link = doc.querySelector(\"tr.GridRow_Default a[href^='javascript:__doPostBack']\");\n  const href = link?.getAttribute(\"href\") || \"\";\n  const match = href.match(/__doPostBack\\('([^']+)'/);\n\n  const postBackId = match ? match[1] : \"\";\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: postBackId,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: searchResponse.viewState,\n    __VIEWSTATEGENERATOR: searchResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: searchResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"BLGRP_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": args.bloodgroupCode,\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"BloodGroup\");\n\n  window.bg = postBackResponse;\n\n  const document = parser.parseFromString(postBackResponse.rawData, \"text/html\");\n\n  const code = document.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const bloodgroup = document.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const result = {\n    code,\n    bloodgroup\n  };\n\n  return result;\n});\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Blood Group Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-04T17:35:45.905Z",
+      "updatedAt": "2025-05-04T17:35:45.905Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getBloodGroupDetails",
+      "args": [
+        {
+          "name": "bloodgroupCode",
+          "type": "string",
+          "description": "to give the blood group Code.",
+          "required": true,
+          "_id": "6817a5710c8b721f97e4887e"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6817a5710c8b721f97e4887d"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"BloodGroup\");\n\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"BLGRP_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": args.bloodgroupCode,\n    \"ctl00$body$ContentSearch$butSearch\": \"Search\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"9\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"BloodGroup\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(searchResponse.rawData, \"text/html\");\n\n  const link = doc.querySelector(\"tr.GridRow_Default a[href^='javascript:__doPostBack']\");\n  const href = link?.getAttribute(\"href\") || \"\";\n  const match = href.match(/__doPostBack\\('([^']+)'/);\n\n  const postBackId = match ? match[1] : \"\";\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: postBackId,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: searchResponse.viewState,\n    __VIEWSTATEGENERATOR: searchResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: searchResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"BLGRP_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": args.bloodgroupCode,\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"BloodGroup\");\n\n  window.bg = postBackResponse;\n\n  const document = parser.parseFromString(postBackResponse.rawData, \"text/html\");\n\n  const code = document.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const bloodgroup = document.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const result = {\n    code,\n    bloodgroup\n  };\n\n  return result;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

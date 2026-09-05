@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "WorkflowType",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "WorkflowType , Ex: - \"Workforce Plan - Approval\"",
+      "advanced": false,
+      "raw": {
+        "name": "WorkflowType",
+        "type": "string",
+        "description": "WorkflowType , Ex: - \"Workforce Plan - Approval\"",
+        "required": true,
+        "_id": "683f40cd821cb330fd629c7e"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

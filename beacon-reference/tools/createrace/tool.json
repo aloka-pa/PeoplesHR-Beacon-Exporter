@@ -1,0 +1,108 @@
+{
+  "id": "6952518493aca2b06fa4f492",
+  "slug": "createrace",
+  "name": "createRace",
+  "description": "create a new race record",
+  "instructions": null,
+  "taskName": "Creating New Race Record",
+  "tags": [
+    "EIMAdmin",
+    "Nationality&ReligionInformation"
+  ],
+  "status": "live",
+  "signature": "createRace",
+  "createdAt": "2025-12-29T10:01:40.998Z",
+  "updatedAt": "2026-02-02T15:30:13.521Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "d7c9347662d182ed894473cf68c40ceaf370adf9dbcf1bcb4f8df0cd9a6d67dd",
+  "lastExportedAt": "2026-09-05T19:39:22.965Z",
+  "raw": {
+    "basic": {
+      "_id": "6952518493aca2b06fa4f492",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createRace",
+      "description": "create a new race record",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createRace",
+        "args": [
+          {
+            "name": "raceName",
+            "type": "string",
+            "description": "The name of the race to create",
+            "required": true,
+            "_id": "6952518493aca2b06fa4f494"
+          },
+          {
+            "name": "raceDescription",
+            "type": "string",
+            "description": "Description of the race (defaults to empty string if not provided)",
+            "required": false,
+            "_id": "6952518493aca2b06fa4f495"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6952518493aca2b06fa4f493"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  /* -------------------------------------------------\n   * 1. Access validation\n   * ------------------------------------------------- */\n  if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Race.aspx\")) {\n    return {\n      status: \"NO_ACCESS\",\n      message: \"You do not have access to Race screen. Please contact HR Admin.\"\n    };\n  }\n\n  /* -------------------------------------------------\n   * 2. Input validation\n   * ------------------------------------------------- */\n  if (!args?.raceName || args.raceName.trim() === \"\") {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"Error: raceName is required\"\n    };\n  }\n\n  /* -------------------------------------------------\n   * 3. Initial page state\n   * ------------------------------------------------- */\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Race\");\n\n  const headers = new Headers();\n  headers.append(\n    \"Accept\",\n    \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\"\n  );\n  headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\n    \"EIM/Race.aspx\"\n  );\n\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/Race.aspx`;\n\n  const parser = new DOMParser();\n\n  /* -------------------------------------------------\n   * 4. POST #1 – Click New\n   * ------------------------------------------------- */\n  const newFormData = new FormData();\n  newFormData.append(\"scrollLeft\", \"0\");\n  newFormData.append(\"scrollTop\", \"0\");\n  newFormData.append(\"__EVENTTARGET\", \"\");\n  newFormData.append(\"__EVENTARGUMENT\", \"\");\n  newFormData.append(\"__VIEWSTATE\", details.viewState);\n  newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n  newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  \n  // Add the search-related fields (from your network trace)\n  newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"RAC_CODE\");\n  newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  newFormData.append(\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\",\n    \"1\"\n  );\n  newFormData.append(\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\",\n    \"\"\n  );\n  newFormData.append(\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\",\n    \"5\"\n  );\n  newFormData.append(\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\",\n    \"\"\n  );\n  newFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  \n  newFormData.append(\"ctl00$body$butNew\", \"New\");\n\n  const newResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: newFormData\n  });\n\n  const newDoc = parser.parseFromString(\n    await newResponse.text(),\n    \"text/html\"\n  );\n\n  /* -------------------------------------------------\n   * 5. Extract state after New\n   * ------------------------------------------------- */\n  const viewState =\n    newDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const eventValidation =\n    newDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const viewStateGen =\n    newDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  /* -------------------------------------------------\n   * 6. POST #2 – Enter name, description & Save\n   * ------------------------------------------------- */\n  const saveFormData = new FormData();\n  saveFormData.append(\"scrollLeft\", \"0\");\n  saveFormData.append(\"scrollTop\", \"0\");\n  saveFormData.append(\"__EVENTTARGET\", \"\");\n  saveFormData.append(\"__EVENTARGUMENT\", \"\");\n  saveFormData.append(\"__VIEWSTATE\", viewState);\n  saveFormData.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n  saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  saveFormData.append(\"__EVENTVALIDATION\", eventValidation);\n  saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  \n  // Enter the race name and optional description\n  saveFormData.append(\"ctl00$body$txtrecName\", args.raceName.trim());\n  saveFormData.append(\"ctl00$body$txtrecDesc\", args.raceDescription?.trim() || \"\");\n  \n  saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n  const saveResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: saveFormData\n  });\n\n  await saveResponse.text();\n\n  if (saveResponse.status === 200) {\n    return {\n      status: \"SUCCESS\",\n      message: \"Successfully created race record!\",\n      raceName: args.raceName,\n      raceDescription: args.raceDescription || null\n    };\n  }\n\n  return {\n    status: \"ERROR\",\n    message: \"Failed to create race. Please verify in the UI.\"\n  };\n});",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "Nationality&ReligionInformation"
+      ],
+      "taskName": "Creating New Race Record",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-29T10:01:40.998Z",
+      "updatedAt": "2026-02-02T15:30:13.521Z",
+      "__v": 2,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "createRace",
+      "args": [
+        {
+          "name": "raceName",
+          "type": "string",
+          "description": "The name of the race to create",
+          "required": true,
+          "_id": "6952518493aca2b06fa4f494"
+        },
+        {
+          "name": "raceDescription",
+          "type": "string",
+          "description": "Description of the race (defaults to empty string if not provided)",
+          "required": false,
+          "_id": "6952518493aca2b06fa4f495"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6952518493aca2b06fa4f493"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  /* -------------------------------------------------\n   * 1. Access validation\n   * ------------------------------------------------- */\n  if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Race.aspx\")) {\n    return {\n      status: \"NO_ACCESS\",\n      message: \"You do not have access to Race screen. Please contact HR Admin.\"\n    };\n  }\n\n  /* -------------------------------------------------\n   * 2. Input validation\n   * ------------------------------------------------- */\n  if (!args?.raceName || args.raceName.trim() === \"\") {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"Error: raceName is required\"\n    };\n  }\n\n  /* -------------------------------------------------\n   * 3. Initial page state\n   * ------------------------------------------------- */\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Race\");\n\n  const headers = new Headers();\n  headers.append(\n    \"Accept\",\n    \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\"\n  );\n  headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\n    \"EIM/Race.aspx\"\n  );\n\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/Race.aspx`;\n\n  const parser = new DOMParser();\n\n  /* -------------------------------------------------\n   * 4. POST #1 – Click New\n   * ------------------------------------------------- */\n  const newFormData = new FormData();\n  newFormData.append(\"scrollLeft\", \"0\");\n  newFormData.append(\"scrollTop\", \"0\");\n  newFormData.append(\"__EVENTTARGET\", \"\");\n  newFormData.append(\"__EVENTARGUMENT\", \"\");\n  newFormData.append(\"__VIEWSTATE\", details.viewState);\n  newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n  newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  \n  // Add the search-related fields (from your network trace)\n  newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"RAC_CODE\");\n  newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  newFormData.append(\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\",\n    \"1\"\n  );\n  newFormData.append(\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\",\n    \"\"\n  );\n  newFormData.append(\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\",\n    \"5\"\n  );\n  newFormData.append(\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\",\n    \"\"\n  );\n  newFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  \n  newFormData.append(\"ctl00$body$butNew\", \"New\");\n\n  const newResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: newFormData\n  });\n\n  const newDoc = parser.parseFromString(\n    await newResponse.text(),\n    \"text/html\"\n  );\n\n  /* -------------------------------------------------\n   * 5. Extract state after New\n   * ------------------------------------------------- */\n  const viewState =\n    newDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const eventValidation =\n    newDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const viewStateGen =\n    newDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  /* -------------------------------------------------\n   * 6. POST #2 – Enter name, description & Save\n   * ------------------------------------------------- */\n  const saveFormData = new FormData();\n  saveFormData.append(\"scrollLeft\", \"0\");\n  saveFormData.append(\"scrollTop\", \"0\");\n  saveFormData.append(\"__EVENTTARGET\", \"\");\n  saveFormData.append(\"__EVENTARGUMENT\", \"\");\n  saveFormData.append(\"__VIEWSTATE\", viewState);\n  saveFormData.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n  saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  saveFormData.append(\"__EVENTVALIDATION\", eventValidation);\n  saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  \n  // Enter the race name and optional description\n  saveFormData.append(\"ctl00$body$txtrecName\", args.raceName.trim());\n  saveFormData.append(\"ctl00$body$txtrecDesc\", args.raceDescription?.trim() || \"\");\n  \n  saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n  const saveResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: saveFormData\n  });\n\n  await saveResponse.text();\n\n  if (saveResponse.status === 200) {\n    return {\n      status: \"SUCCESS\",\n      message: \"Successfully created race record!\",\n      raceName: args.raceName,\n      raceDescription: args.raceDescription || null\n    };\n  }\n\n  return {\n    status: \"ERROR\",\n    message: \"Failed to create race. Please verify in the UI.\"\n  };\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

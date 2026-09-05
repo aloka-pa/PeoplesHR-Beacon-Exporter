@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "membershipCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to search for membershipCode",
+      "advanced": false,
+      "raw": {
+        "name": "membershipCode",
+        "type": "string",
+        "description": "to search for membershipCode",
+        "required": true,
+        "_id": "6811db535b9fb869c57a3c80"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,164 @@
+{
+  "id": "695240a86ae33a160b41ed36",
+  "slug": "getrace",
+  "name": "getRace",
+  "description": "This tool retrieves Race master data from the EIM Race screen. It supports searching by race code (exact match) or race name (partial, case-insensitive match), and it can return all race records when requested. When “returnAll” is used, the tool automatically navigates through every RadGrid page using the Go-to-page postback and aggregates all rows so the response contains all records instead of only the first page.",
+  "instructions": null,
+  "taskName": "Fetching Races",
+  "tags": [
+    "EIMAdmin",
+    "Nationality&ReligionInformation"
+  ],
+  "status": "live",
+  "signature": "getRace",
+  "createdAt": "2025-12-29T08:49:44.946Z",
+  "updatedAt": "2026-02-02T15:28:25.712Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "f5bb834d67d344cd894a1e9e1b185679b5050d77df5953deb4faff962fb486c5",
+  "lastExportedAt": "2026-09-05T19:39:22.973Z",
+  "raw": {
+    "basic": {
+      "_id": "695240a86ae33a160b41ed36",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getRace",
+      "description": "This tool retrieves Race master data from the EIM Race screen. It supports searching by race code (exact match) or race name (partial, case-insensitive match), and it can return all race records when requested. When “returnAll” is used, the tool automatically navigates through every RadGrid page using the Go-to-page postback and aggregates all rows so the response contains all records instead of only the first page.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getRace",
+        "args": [
+          {
+            "name": "raceCode",
+            "type": "string",
+            "description": "Race code to search (exact match).\nUses search criteria RAC_CODE and returns the record whose Code matches exactly.",
+            "required": false,
+            "_id": "695240a86ae33a160b41ed38"
+          },
+          {
+            "name": "searchRaceName",
+            "type": "string",
+            "description": "Race name (or partial text) to search.\nUses search criteria RAC_NAME and returns all rows whose Race Name contains the given text (case-insensitive).",
+            "required": false,
+            "_id": "695240a86ae33a160b41ed39"
+          },
+          {
+            "name": "returnAll",
+            "type": "string",
+            "description": "When user asks to return all/available/existing races, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\".\nTriggers Show All (ctl00$body$ContentSearch$butAll) and returns every grid row.",
+            "required": false,
+            "_id": "697e5870e0162eac02679f3d"
+          },
+          {
+            "name": "showAll",
+            "type": "string",
+            "description": "Alias of returnAll.",
+            "required": false,
+            "_id": "6980c299fb8ef3a07947acb8"
+          },
+          {
+            "name": "pageSize",
+            "type": "string",
+            "description": "Page size value sent to the grid pager (server may cap). Default is \"100\".",
+            "required": false,
+            "_id": "6980c299fb8ef3a07947acb9"
+          },
+          {
+            "name": "maxPages",
+            "type": "string",
+            "description": "Safety cap for the maximum number of pages to iterate (prevents infinite loops). Default is \"50\".",
+            "required": false,
+            "_id": "6980c299fb8ef3a07947acba"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "695240a86ae33a160b41ed37"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* ---------------------------------------------\n     * 0) Helpers\n     * --------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const lower = (v) => okText(v).toLowerCase();\n\n    const isTruthy = (v) => {\n      const t = lower(v);\n      return [\n        \"true\", \"1\", \"yes\", \"y\",\n        \"all\", \"available\", \"existing\", \"list\",\n        \"showall\", \"show all\", \"returnall\"\n      ].includes(t);\n    };\n\n    const safeInt = (v, def = 1) => {\n      const n = Number(okText(v));\n      return Number.isFinite(n) && n > 0 ? Math.floor(n) : def;\n    };\n\n    const extractHidden = (doc, selector) => doc.querySelector(selector)?.value || \"\";\n\n    const parsePager = (doc) => {\n      const pagerText =\n        doc.querySelector(\".PagerRight_Default\")?.textContent ||\n        doc.querySelector(\"tr.GridPager_Default\")?.textContent ||\n        \"\";\n      const m = pagerText.match(/Displaying\\s+page\\s+(\\d+)\\s+of\\s+(\\d+)/i);\n      if (!m) return { current: 1, total: 1 };\n      return { current: safeInt(m[1], 1), total: safeInt(m[2], 1) };\n    };\n\n    const extractRows = (doc) => {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const out = [];\n      for (const r of rows) {\n        const cells = r.querySelectorAll(\"td\");\n        const code = okText(cells[0]?.textContent);\n        const name = okText(cells[1]?.textContent);\n        if (!code && !name) continue;\n        out.push({ raceCode: code, raceName: name });\n      }\n      return out;\n    };\n\n    const parseHtmlState = (html) => {\n      const parser = new DOMParser();\n      const doc = parser.parseFromString(html, \"text/html\");\n      return {\n        doc,\n        viewState: extractHidden(doc, \"#__VIEWSTATE\"),\n        eventValidation: extractHidden(doc, \"#__EVENTVALIDATION\"),\n        viewStateGenerator: extractHidden(doc, \"#__VIEWSTATEGENERATOR\"),\n        viewStateEncrypted: extractHidden(doc, \"#__VIEWSTATEENCRYPTED\") || \"\"\n      };\n    };\n\n    /* ---------------------------------------------\n     * 1) Access control\n     * --------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Race.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Race. Please contact HR Admin.\"\n      };\n    }\n\n    /* ---------------------------------------------\n     * 2) Args (strings only)\n     * --------------------------------------------- */\n    const raceCode = okText(args?.raceCode);\n    const searchRaceName = okText(args?.searchRaceName);\n\n    const returnAll = isTruthy(args?.returnAll || args?.showAll);\n\n    // Optional safety controls\n    const pageSize = safeInt(args?.pageSize, 100);   // server may cap\n    const maxPages = safeInt(args?.maxPages, 50);    // loop safety cap\n\n    if (!returnAll && !raceCode && !searchRaceName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message:\n          \"Please provide either raceCode or searchRaceName. To return all records, pass returnAll as 'true' or 'all'.\",\n        examples: {\n          searchByCode: { raceCode: \"000001\" },\n          searchByName: { searchRaceName: \"asian\" },\n          returnAll: { returnAll: \"all\" }\n        }\n      };\n    }\n\n    /* ---------------------------------------------\n     * 3) Build URL\n     * --------------------------------------------- */\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Race.aspx\");\n    const url = updateurl?.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Race.aspx`;\n\n    const headersCommon = {\n      \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\",\n      \"Accept-Language\": \"en-US,en;q=0.9\",\n      \"Cache-Control\": \"max-age=0\"\n    };\n\n    /* ---------------------------------------------\n     * 4) GET tokens (ViewState etc.)\n     * --------------------------------------------- */\n    const getRes = await fetch(url, { method: \"GET\", headers: headersCommon });\n    const getHtml = await getRes.text();\n    let state = parseHtmlState(getHtml);\n\n    if (!state.viewState || !state.eventValidation || !state.viewStateGenerator) {\n      return {\n        status: \"ERROR\",\n        message: \"Failed to load Race page tokens (VIEWSTATE/EVENTVALIDATION missing).\"\n      };\n    }\n\n    /* ---------------------------------------------\n     * 5) Determine search criteria\n     * --------------------------------------------- */\n    const isSearchByCode = !!raceCode;\n    const searchCriteria = returnAll\n      ? \"RAC_CODE\" // can be any valid criteria\n      : (isSearchByCode ? \"RAC_CODE\" : \"RAC_NAME\");\n\n    const searchValue = returnAll ? \"\" : (isSearchByCode ? raceCode : searchRaceName);\n\n    const goToBtnTarget = \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\";\n\n    /* ---------------------------------------------\n     * 6) POST helper\n     *    - First call: eventTarget=\"\" and include Search/ShowAll button\n     *    - Next pages: eventTarget=GoToPageLinkButton, set GoToPageTextBox\n     * --------------------------------------------- */\n    const postPage = async (eventTarget, gotoPage) => {\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n\n      formData.append(\"__EVENTTARGET\", eventTarget || \"\");\n      formData.append(\"__EVENTARGUMENT\", \"\");\n\n      formData.append(\"__VIEWSTATE\", state.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", state.viewStateGenerator);\n      formData.append(\"__VIEWSTATEENCRYPTED\", state.viewStateEncrypted);\n      formData.append(\"__EVENTVALIDATION\", state.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      // Only on the FIRST request (no eventTarget) we click a button\n      if (!eventTarget) {\n        if (returnAll) formData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n        else formData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n      }\n\n      const pageToSet = gotoPage ? String(gotoPage) : \"1\";\n\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", pageToSet);\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const postRes = await fetch(url, {\n        method: \"POST\",\n        headers: { ...headersCommon, \"x-requested-with\": \"XMLHttpRequest\" },\n        body: formData\n      });\n\n      const html = await postRes.text();\n      state = parseHtmlState(html);\n\n      if (!state.viewState || !state.eventValidation || !state.viewStateGenerator) {\n        throw new Error(\"Postback returned missing VIEWSTATE/EVENTVALIDATION.\");\n      }\n\n      return state.doc;\n    };\n\n    /* ---------------------------------------------\n     * 7) First POST (page 1)\n     * --------------------------------------------- */\n    const doc1 = await postPage(\"\", 1);\n    const rows1 = extractRows(doc1);\n\n    if (!rows1 || rows1.length === 0) {\n      return {\n        status: \"NOT_FOUND\",\n        message: returnAll ? \"No Race records found.\" : `No races found matching \"${searchValue}\"`,\n        searchBy: returnAll ? \"all\" : (isSearchByCode ? \"code\" : \"name\"),\n        searchValue: returnAll ? \"\" : searchValue\n      };\n    }\n\n    /* ---------------------------------------------\n     * 8) If NOT returnAll -> filter page 1 results and return\n     * --------------------------------------------- */\n    if (!returnAll) {\n      const nameLower = lower(searchRaceName);\n      const filtered = rows1.filter((r) => {\n        if (isSearchByCode) return r.raceCode === raceCode;\n        return lower(r.raceName).includes(nameLower);\n      });\n\n      if (filtered.length === 0) {\n        return {\n          status: \"NOT_FOUND\",\n          message: `No races found matching \"${searchValue}\"`,\n          searchBy: isSearchByCode ? \"code\" : \"name\",\n          searchValue\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: `Found ${filtered.length} matching Race record(s)`,\n        searchBy: isSearchByCode ? \"code\" : \"name\",\n        searchValue,\n        count: filtered.length,\n        races: filtered\n      };\n    }\n\n    /* ---------------------------------------------\n     * 9) returnAll -> loop pages 2..N and aggregate\n     * --------------------------------------------- */\n    const { total } = parsePager(doc1);\n    const totalToFetch = Math.min(total, maxPages);\n\n    const map = new Map();\n    const add = (arr) => {\n      for (const it of arr) {\n        if (!map.has(it.raceCode)) map.set(it.raceCode, it);\n      }\n    };\n\n    add(rows1);\n\n    for (let p = 2; p <= totalToFetch; p++) {\n      const docP = await postPage(goToBtnTarget, p);\n      add(extractRows(docP));\n    }\n\n    const all = Array.from(map.values());\n\n    return {\n      status: \"SUCCESS\",\n      message: `Returned ${all.length} Race record(s) across ${totalToFetch} page(s).`,\n      searchBy: \"all\",\n      searchValue: \"\",\n      totalPages: String(total),\n      fetchedPages: String(totalToFetch),\n      count: all.length,\n      races: all\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unexpected error\",\n      error: err?.toString?.() || String(err)\n    };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "Nationality&ReligionInformation"
+      ],
+      "taskName": "Fetching Races",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-29T08:49:44.946Z",
+      "updatedAt": "2026-02-02T15:28:25.712Z",
+      "__v": 8,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getRace",
+      "args": [
+        {
+          "name": "raceCode",
+          "type": "string",
+          "description": "Race code to search (exact match).\nUses search criteria RAC_CODE and returns the record whose Code matches exactly.",
+          "required": false,
+          "_id": "695240a86ae33a160b41ed38"
+        },
+        {
+          "name": "searchRaceName",
+          "type": "string",
+          "description": "Race name (or partial text) to search.\nUses search criteria RAC_NAME and returns all rows whose Race Name contains the given text (case-insensitive).",
+          "required": false,
+          "_id": "695240a86ae33a160b41ed39"
+        },
+        {
+          "name": "returnAll",
+          "type": "string",
+          "description": "When user asks to return all/available/existing races, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\".\nTriggers Show All (ctl00$body$ContentSearch$butAll) and returns every grid row.",
+          "required": false,
+          "_id": "697e5870e0162eac02679f3d"
+        },
+        {
+          "name": "showAll",
+          "type": "string",
+          "description": "Alias of returnAll.",
+          "required": false,
+          "_id": "6980c299fb8ef3a07947acb8"
+        },
+        {
+          "name": "pageSize",
+          "type": "string",
+          "description": "Page size value sent to the grid pager (server may cap). Default is \"100\".",
+          "required": false,
+          "_id": "6980c299fb8ef3a07947acb9"
+        },
+        {
+          "name": "maxPages",
+          "type": "string",
+          "description": "Safety cap for the maximum number of pages to iterate (prevents infinite loops). Default is \"50\".",
+          "required": false,
+          "_id": "6980c299fb8ef3a07947acba"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "695240a86ae33a160b41ed37"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* ---------------------------------------------\n     * 0) Helpers\n     * --------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const lower = (v) => okText(v).toLowerCase();\n\n    const isTruthy = (v) => {\n      const t = lower(v);\n      return [\n        \"true\", \"1\", \"yes\", \"y\",\n        \"all\", \"available\", \"existing\", \"list\",\n        \"showall\", \"show all\", \"returnall\"\n      ].includes(t);\n    };\n\n    const safeInt = (v, def = 1) => {\n      const n = Number(okText(v));\n      return Number.isFinite(n) && n > 0 ? Math.floor(n) : def;\n    };\n\n    const extractHidden = (doc, selector) => doc.querySelector(selector)?.value || \"\";\n\n    const parsePager = (doc) => {\n      const pagerText =\n        doc.querySelector(\".PagerRight_Default\")?.textContent ||\n        doc.querySelector(\"tr.GridPager_Default\")?.textContent ||\n        \"\";\n      const m = pagerText.match(/Displaying\\s+page\\s+(\\d+)\\s+of\\s+(\\d+)/i);\n      if (!m) return { current: 1, total: 1 };\n      return { current: safeInt(m[1], 1), total: safeInt(m[2], 1) };\n    };\n\n    const extractRows = (doc) => {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const out = [];\n      for (const r of rows) {\n        const cells = r.querySelectorAll(\"td\");\n        const code = okText(cells[0]?.textContent);\n        const name = okText(cells[1]?.textContent);\n        if (!code && !name) continue;\n        out.push({ raceCode: code, raceName: name });\n      }\n      return out;\n    };\n\n    const parseHtmlState = (html) => {\n      const parser = new DOMParser();\n      const doc = parser.parseFromString(html, \"text/html\");\n      return {\n        doc,\n        viewState: extractHidden(doc, \"#__VIEWSTATE\"),\n        eventValidation: extractHidden(doc, \"#__EVENTVALIDATION\"),\n        viewStateGenerator: extractHidden(doc, \"#__VIEWSTATEGENERATOR\"),\n        viewStateEncrypted: extractHidden(doc, \"#__VIEWSTATEENCRYPTED\") || \"\"\n      };\n    };\n\n    /* ---------------------------------------------\n     * 1) Access control\n     * --------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Race.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Race. Please contact HR Admin.\"\n      };\n    }\n\n    /* ---------------------------------------------\n     * 2) Args (strings only)\n     * --------------------------------------------- */\n    const raceCode = okText(args?.raceCode);\n    const searchRaceName = okText(args?.searchRaceName);\n\n    const returnAll = isTruthy(args?.returnAll || args?.showAll);\n\n    // Optional safety controls\n    const pageSize = safeInt(args?.pageSize, 100);   // server may cap\n    const maxPages = safeInt(args?.maxPages, 50);    // loop safety cap\n\n    if (!returnAll && !raceCode && !searchRaceName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message:\n          \"Please provide either raceCode or searchRaceName. To return all records, pass returnAll as 'true' or 'all'.\",\n        examples: {\n          searchByCode: { raceCode: \"000001\" },\n          searchByName: { searchRaceName: \"asian\" },\n          returnAll: { returnAll: \"all\" }\n        }\n      };\n    }\n\n    /* ---------------------------------------------\n     * 3) Build URL\n     * --------------------------------------------- */\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Race.aspx\");\n    const url = updateurl?.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Race.aspx`;\n\n    const headersCommon = {\n      \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\",\n      \"Accept-Language\": \"en-US,en;q=0.9\",\n      \"Cache-Control\": \"max-age=0\"\n    };\n\n    /* ---------------------------------------------\n     * 4) GET tokens (ViewState etc.)\n     * --------------------------------------------- */\n    const getRes = await fetch(url, { method: \"GET\", headers: headersCommon });\n    const getHtml = await getRes.text();\n    let state = parseHtmlState(getHtml);\n\n    if (!state.viewState || !state.eventValidation || !state.viewStateGenerator) {\n      return {\n        status: \"ERROR\",\n        message: \"Failed to load Race page tokens (VIEWSTATE/EVENTVALIDATION missing).\"\n      };\n    }\n\n    /* ---------------------------------------------\n     * 5) Determine search criteria\n     * --------------------------------------------- */\n    const isSearchByCode = !!raceCode;\n    const searchCriteria = returnAll\n      ? \"RAC_CODE\" // can be any valid criteria\n      : (isSearchByCode ? \"RAC_CODE\" : \"RAC_NAME\");\n\n    const searchValue = returnAll ? \"\" : (isSearchByCode ? raceCode : searchRaceName);\n\n    const goToBtnTarget = \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\";\n\n    /* ---------------------------------------------\n     * 6) POST helper\n     *    - First call: eventTarget=\"\" and include Search/ShowAll button\n     *    - Next pages: eventTarget=GoToPageLinkButton, set GoToPageTextBox\n     * --------------------------------------------- */\n    const postPage = async (eventTarget, gotoPage) => {\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n\n      formData.append(\"__EVENTTARGET\", eventTarget || \"\");\n      formData.append(\"__EVENTARGUMENT\", \"\");\n\n      formData.append(\"__VIEWSTATE\", state.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", state.viewStateGenerator);\n      formData.append(\"__VIEWSTATEENCRYPTED\", state.viewStateEncrypted);\n      formData.append(\"__EVENTVALIDATION\", state.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      // Only on the FIRST request (no eventTarget) we click a button\n      if (!eventTarget) {\n        if (returnAll) formData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n        else formData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n      }\n\n      const pageToSet = gotoPage ? String(gotoPage) : \"1\";\n\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", pageToSet);\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const postRes = await fetch(url, {\n        method: \"POST\",\n        headers: { ...headersCommon, \"x-requested-with\": \"XMLHttpRequest\" },\n        body: formData\n      });\n\n      const html = await postRes.text();\n      state = parseHtmlState(html);\n\n      if (!state.viewState || !state.eventValidation || !state.viewStateGenerator) {\n        throw new Error(\"Postback returned missing VIEWSTATE/EVENTVALIDATION.\");\n      }\n\n      return state.doc;\n    };\n\n    /* ---------------------------------------------\n     * 7) First POST (page 1)\n     * --------------------------------------------- */\n    const doc1 = await postPage(\"\", 1);\n    const rows1 = extractRows(doc1);\n\n    if (!rows1 || rows1.length === 0) {\n      return {\n        status: \"NOT_FOUND\",\n        message: returnAll ? \"No Race records found.\" : `No races found matching \"${searchValue}\"`,\n        searchBy: returnAll ? \"all\" : (isSearchByCode ? \"code\" : \"name\"),\n        searchValue: returnAll ? \"\" : searchValue\n      };\n    }\n\n    /* ---------------------------------------------\n     * 8) If NOT returnAll -> filter page 1 results and return\n     * --------------------------------------------- */\n    if (!returnAll) {\n      const nameLower = lower(searchRaceName);\n      const filtered = rows1.filter((r) => {\n        if (isSearchByCode) return r.raceCode === raceCode;\n        return lower(r.raceName).includes(nameLower);\n      });\n\n      if (filtered.length === 0) {\n        return {\n          status: \"NOT_FOUND\",\n          message: `No races found matching \"${searchValue}\"`,\n          searchBy: isSearchByCode ? \"code\" : \"name\",\n          searchValue\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: `Found ${filtered.length} matching Race record(s)`,\n        searchBy: isSearchByCode ? \"code\" : \"name\",\n        searchValue,\n        count: filtered.length,\n        races: filtered\n      };\n    }\n\n    /* ---------------------------------------------\n     * 9) returnAll -> loop pages 2..N and aggregate\n     * --------------------------------------------- */\n    const { total } = parsePager(doc1);\n    const totalToFetch = Math.min(total, maxPages);\n\n    const map = new Map();\n    const add = (arr) => {\n      for (const it of arr) {\n        if (!map.has(it.raceCode)) map.set(it.raceCode, it);\n      }\n    };\n\n    add(rows1);\n\n    for (let p = 2; p <= totalToFetch; p++) {\n      const docP = await postPage(goToBtnTarget, p);\n      add(extractRows(docP));\n    }\n\n    const all = Array.from(map.values());\n\n    return {\n      status: \"SUCCESS\",\n      message: `Returned ${all.length} Race record(s) across ${totalToFetch} page(s).`,\n      searchBy: \"all\",\n      searchValue: \"\",\n      totalPages: String(total),\n      fetchedPages: String(totalToFetch),\n      count: all.length,\n      races: all\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unexpected error\",\n      error: err?.toString?.() || String(err)\n    };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

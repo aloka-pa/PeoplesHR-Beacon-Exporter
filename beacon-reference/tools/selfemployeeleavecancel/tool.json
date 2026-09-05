@@ -1,0 +1,157 @@
+{
+  "id": "690dc56c931a2d61ba0b1b71",
+  "slug": "selfemployeeleavecancel",
+  "name": "selfEmployeeLeaveCancel",
+  "description": "Before calling the selfEmployeeLeaveCancel API, first execute the selfEmployeeLeaveHistory API to retrieve the applied leave dates. Use only the leaveAppliedDate to filter records (do not check fromDate or toDate). If the user’s given date exists in the history:\nIf one record matches, return its leaveAppliedId directly.\nIf multiple records match, display them and prompt the user to select one, then return the selected record’s leaveAppliedId.\nIf no records match, inform the user that no leave application exists for that date.\nDo not ask the user for a leaveAppliedId; only ask for the leave applied date, and fetch the corresponding ID automatically\nonce find the applied date then final execute \"selfEmployeeLeaveCancel\" api.",
+  "instructions": null,
+  "taskName": "Self Employee Leave Cancel",
+  "tags": [
+    "Absent Management",
+    "Headers",
+    "BugFix"
+  ],
+  "status": "live",
+  "signature": "selfEmployeeLeaveCancel",
+  "createdAt": "2025-08-28T18:19:22.425Z",
+  "updatedAt": "2026-07-06T05:04:35.685Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c72",
+      "name": "AbsenceManagementEmployee"
+    }
+  ],
+  "contentHash": "635e4bfc79e66b30649c8157a0f68f0ab460a013c745f548e21ef6003d2eb319",
+  "lastExportedAt": "2026-09-05T19:39:22.288Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56c931a2d61ba0b1b71",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selfEmployeeLeaveCancel",
+      "description": "Before calling the selfEmployeeLeaveCancel API, first execute the selfEmployeeLeaveHistory API to retrieve the applied leave dates. Use only the leaveAppliedDate to filter records (do not check fromDate or toDate). If the user’s given date exists in the history:\nIf one record matches, return its leaveAppliedId directly.\nIf multiple records match, display them and prompt the user to select one, then return the selected record’s leaveAppliedId.\nIf no records match, inform the user that no leave application exists for that date.\nDo not ask the user for a leaveAppliedId; only ask for the leave applied date, and fetch the corresponding ID automatically\nonce find the applied date then final execute \"selfEmployeeLeaveCancel\" api.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selfEmployeeLeaveCancel",
+        "args": [
+          {
+            "name": "leaveCancelDate",
+            "type": "string",
+            "description": "to give the leave cancel Date using in this format date example \"06/24/2025\" format \"dd/mm/yyyy\".",
+            "required": true,
+            "_id": "68b09daa69d8ad5401b743a3"
+          },
+          {
+            "name": "comment",
+            "type": "string",
+            "description": "reason or comment for leave cancel",
+            "required": true,
+            "_id": "68b09daa69d8ad5401b743a4"
+          },
+          {
+            "name": "leaveAppliedId",
+            "type": "string",
+            "description": "dont user ask for leave id to get user given date or user date corresponding leave applied Id to get example \"82.0\",\"71.0\" etc..",
+            "required": true,
+            "_id": "68b09daa69d8ad5401b743a5"
+          },
+          {
+            "name": "year",
+            "type": "string",
+            "description": "to give the leave cancel year",
+            "required": true,
+            "_id": "68b09fc652b4ae33b90a2823"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6a4b376390a75550099a0969"
+      },
+      "by": "27739",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (\n    !BeaconBar.user.metaData.menus.some(menu =>\n      menu.includes(\"AbsenceV9/LeaveApplication/LeaveApplication?mvc=1&isAllEmployee=1\")\n    ) &&\n    !BeaconBar.user.metaData.menus.some(menu =>\n      menu.includes(\"AbsenceV9/LeaveHistory/LeaveHistory?mvc=1\")\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"__cfafvalue\", window.csrf);\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"content-type\", \"application/json\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const firstMatch = window.leaveHistort12.find(item => String(item.LeaveAppliedId) === String(args.leaveAppliedId));\n  const encypt = firstMatch?.LeaveAppIDEncrypted || \"\";\n\n  if (encypt) {\n    myHeaders.set(\"content-type\", \"application/json\");\n\n    const raw2 = JSON.stringify({\n      \"EmpNumber\": window.empnumm\n    });\n\n    const requestOptions2 = {\n      method: \"POST\",\n      headers: myHeaders,\n      body: raw2,\n      redirect: \"follow\"\n    };\n    const response2 = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/ShortLeaveApplication/GetEmployeeData/`, requestOptions2);\n    const text2 = await response2.json();\n\n    const cancilEmpnum = text2.EmpNumber;\n\n    const raw1 = JSON.stringify({\n      \"EncryptedAppID\": encypt,\n      \"Comment\": args.comment,\n      \"EmpNumber\": cancilEmpnum,\n      \"LeaveYear\": args.year\n    });\n\n    const requestOptions3 = {\n      method: \"POST\",\n      headers: myHeaders,\n      body: raw1,\n      redirect: \"follow\"\n    };\n\n    const response3 = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveHistory/LeaveCancellation/`, requestOptions3);\n    const text3 = await response3.json();\n\n    return text3;\n  } else {\n    return \"not in leave application date\"\n  }\n})\n",
+      "groupName": "",
+      "tags": [
+        "Absent Management",
+        "Headers",
+        "BugFix"
+      ],
+      "taskName": "Self Employee Leave Cancel",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-28T18:19:22.425Z",
+      "updatedAt": "2026-07-06T05:04:35.685Z",
+      "__v": 6,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "sanity": {
+        "apiResponse": []
+      },
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c72",
+          "name": "AbsenceManagementEmployee"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selfEmployeeLeaveCancel",
+      "args": [
+        {
+          "name": "leaveCancelDate",
+          "type": "string",
+          "description": "to give the leave cancel Date using in this format date example \"06/24/2025\" format \"dd/mm/yyyy\".",
+          "required": true,
+          "_id": "68b09daa69d8ad5401b743a3"
+        },
+        {
+          "name": "comment",
+          "type": "string",
+          "description": "reason or comment for leave cancel",
+          "required": true,
+          "_id": "68b09daa69d8ad5401b743a4"
+        },
+        {
+          "name": "leaveAppliedId",
+          "type": "string",
+          "description": "dont user ask for leave id to get user given date or user date corresponding leave applied Id to get example \"82.0\",\"71.0\" etc..",
+          "required": true,
+          "_id": "68b09daa69d8ad5401b743a5"
+        },
+        {
+          "name": "year",
+          "type": "string",
+          "description": "to give the leave cancel year",
+          "required": true,
+          "_id": "68b09fc652b4ae33b90a2823"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6a4b376390a75550099a0969"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (\n    !BeaconBar.user.metaData.menus.some(menu =>\n      menu.includes(\"AbsenceV9/LeaveApplication/LeaveApplication?mvc=1&isAllEmployee=1\")\n    ) &&\n    !BeaconBar.user.metaData.menus.some(menu =>\n      menu.includes(\"AbsenceV9/LeaveHistory/LeaveHistory?mvc=1\")\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"__cfafvalue\", window.csrf);\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"content-type\", \"application/json\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const firstMatch = window.leaveHistort12.find(item => String(item.LeaveAppliedId) === String(args.leaveAppliedId));\n  const encypt = firstMatch?.LeaveAppIDEncrypted || \"\";\n\n  if (encypt) {\n    myHeaders.set(\"content-type\", \"application/json\");\n\n    const raw2 = JSON.stringify({\n      \"EmpNumber\": window.empnumm\n    });\n\n    const requestOptions2 = {\n      method: \"POST\",\n      headers: myHeaders,\n      body: raw2,\n      redirect: \"follow\"\n    };\n    const response2 = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/ShortLeaveApplication/GetEmployeeData/`, requestOptions2);\n    const text2 = await response2.json();\n\n    const cancilEmpnum = text2.EmpNumber;\n\n    const raw1 = JSON.stringify({\n      \"EncryptedAppID\": encypt,\n      \"Comment\": args.comment,\n      \"EmpNumber\": cancilEmpnum,\n      \"LeaveYear\": args.year\n    });\n\n    const requestOptions3 = {\n      method: \"POST\",\n      headers: myHeaders,\n      body: raw1,\n      redirect: \"follow\"\n    };\n\n    const response3 = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveHistory/LeaveCancellation/`, requestOptions3);\n    const text3 = await response3.json();\n\n    return text3;\n  } else {\n    return \"not in leave application date\"\n  }\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

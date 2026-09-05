@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the employee id for \"getPaginatedTypeaheadList\" api. Example:-\"000006\" or \"00001\" etc...",
+      "advanced": false,
+      "raw": {
+        "name": "id",
+        "type": "string",
+        "description": "to get the employee id for \"getPaginatedTypeaheadList\" api. Example:-\"000006\" or \"00001\" etc...",
+        "required": true,
+        "_id": "682b0db0b1cab61da6123ee7"
+      }
+    },
+    {
+      "name": "fromDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the fromDate Example:-\"02/1/2023\" format date DD/MM/YYYY",
+      "advanced": false,
+      "raw": {
+        "name": "fromDate",
+        "type": "string",
+        "description": "to give the fromDate Example:-\"02/1/2023\" format date DD/MM/YYYY",
+        "required": true,
+        "_id": "682b0db0b1cab61da6123ee8"
+      }
+    },
+    {
+      "name": "toDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the toDate Example:-\"02/1/2024\" format date DD/MM/YYYY",
+      "advanced": false,
+      "raw": {
+        "name": "toDate",
+        "type": "string",
+        "description": "to give the toDate Example:-\"02/1/2024\" format date DD/MM/YYYY",
+        "required": true,
+        "_id": "682b0db0b1cab61da6123ee9"
+      }
+    },
+    {
+      "name": "filterMode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Analyze the user's query, and if it includes any reference to subordinates, return the data under the \"Subordinates\" key. and in this key field is user query related required or not to anayze to get filter mode.",
+      "advanced": false,
+      "raw": {
+        "name": "filterMode",
+        "type": "string",
+        "description": "Analyze the user's query, and if it includes any reference to subordinates, return the data under the \"Subordinates\" key. and in this key field is user query related required or not to anayze to get filter mode.",
+        "required": true,
+        "_id": "6841eeb049a79c114d15e3f5"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

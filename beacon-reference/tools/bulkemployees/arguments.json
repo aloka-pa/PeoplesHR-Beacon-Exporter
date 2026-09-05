@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "type",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "To determine the type of subordinates, there are two options: \"Indirect Subordinates\" and \"Direct Subordinates\".",
+      "advanced": false,
+      "raw": {
+        "name": "type",
+        "type": "string",
+        "description": "To determine the type of subordinates, there are two options: \"Indirect Subordinates\" and \"Direct Subordinates\".",
+        "required": true,
+        "_id": "684021e9a1ee05e4fa8e854d"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

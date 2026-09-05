@@ -1,0 +1,75 @@
+{
+  "id": "690dc563931a2d61ba0b1390",
+  "slug": "getcurrencydetails",
+  "name": "getCurrencyDetails",
+  "description": "in this tool generate the currency details",
+  "instructions": null,
+  "taskName": "Currency Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getCurrencyDetails",
+  "createdAt": "2025-04-29T05:33:18.959Z",
+  "updatedAt": "2025-04-29T05:33:18.959Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "a4d5c2a28eb85f7f4f42f0d6ce135f631539e323f04b074e31100f0c34cdf52a",
+  "lastExportedAt": "2026-09-05T19:39:24.467Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc563931a2d61ba0b1390",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getCurrencyDetails",
+      "description": "in this tool generate the currency details",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getCurrencyDetails",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6810649e9031d6e4b3dd70db"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})\n\n",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/SalaryGradeInfo.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"SalaryGradeInfo\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"SAGRD.SAL_GRD_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary1$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdsummary1_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary1$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"33\");\n  urlencoded1.append(\"ctl00_body_grdsummary1_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary1_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$butNew\", \"New\")\n  urlencoded1.append(\"ctl00$body$hdnDecimalFormat\", \"2\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/${reqOptions.sl}/EIM/SalaryGradeInfo.aspx`, requestOptions1);\n  const html1 = await response1.text();\n  const viewDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html1);\n  window.sg = viewDetails;\n  const parser1 = new DOMParser();\n  const doc1 = parser1.parseFromString(html1, 'text/html');\n\n  const select = doc1.getElementById('ctl00_body_cboCurrType');\n  const currencies = select ? Array.from(select.options)\n    .filter(option => option.value !== \"-1\")\n    .map(option => ({\n      value: option.value,\n      text: option.text.trim()\n    })) : [];\n\n  return currencies;\n})\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Currency Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-29T05:33:18.959Z",
+      "updatedAt": "2025-04-29T05:33:18.959Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getCurrencyDetails",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6810649e9031d6e4b3dd70db"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})\n\n",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/SalaryGradeInfo.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"SalaryGradeInfo\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"SAGRD.SAL_GRD_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary1$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdsummary1_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary1$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"33\");\n  urlencoded1.append(\"ctl00_body_grdsummary1_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary1_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$butNew\", \"New\")\n  urlencoded1.append(\"ctl00$body$hdnDecimalFormat\", \"2\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/${reqOptions.sl}/EIM/SalaryGradeInfo.aspx`, requestOptions1);\n  const html1 = await response1.text();\n  const viewDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html1);\n  window.sg = viewDetails;\n  const parser1 = new DOMParser();\n  const doc1 = parser1.parseFromString(html1, 'text/html');\n\n  const select = doc1.getElementById('ctl00_body_cboCurrType');\n  const currencies = select ? Array.from(select.options)\n    .filter(option => option.value !== \"-1\")\n    .map(option => ({\n      value: option.value,\n      text: option.text.trim()\n    })) : [];\n\n  return currencies;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

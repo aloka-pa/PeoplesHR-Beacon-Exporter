@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "classificationName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the classification Name or description.",
+      "advanced": false,
+      "raw": {
+        "name": "classificationName",
+        "type": "string",
+        "description": "to give the classification Name or description.",
+        "required": true,
+        "_id": "6815f2967b792c31fa8ee667"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

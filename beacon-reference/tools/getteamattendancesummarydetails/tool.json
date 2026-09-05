@@ -1,0 +1,133 @@
+{
+  "id": "690dc567931a2d61ba0b1723",
+  "slug": "getteamattendancesummarydetails",
+  "name": "getTeamAttendanceSummaryDetails",
+  "description": "To generate the employee team Attendance summary Details using this tool, it is crucial to first cross-check the provided employee ID by executing the \"getPaginatedTypeaheadList\" API. If the search returns multiple employee records, display the corresponding employee names for the user to accurately select the intended employee. Only the selected employee’s ID will be used for further processing. Once the correct employee ID is verified, proceed to the next step by using this ID to execute the relevant API calls within the tool, following the specified workflow. This step-by-step approach ensures accurate and reliable retrieval of the employee's benefit history. and give response is table format. Analyze the user's query, and if it includes any reference or filter to subordinates, return the data under the \"Subordinates\" key. if the user subordinates related query dont ask for employee id or name only ask for date range. execute date format api to get format.  return data table format.",
+  "instructions": null,
+  "taskName": "Team Attendance Summary Details",
+  "tags": [
+    "Attendance",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getTeamAttendanceSummaryDetails",
+  "createdAt": "2025-05-14T09:59:50.641Z",
+  "updatedAt": "2025-05-14T09:59:50.641Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "32892b0fe170da8ab6095b5a9667dafe081e54ee3670dc00e21a5ed130e48a0e",
+  "lastExportedAt": "2026-09-05T19:39:24.006Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc567931a2d61ba0b1723",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getTeamAttendanceSummaryDetails",
+      "description": "To generate the employee team Attendance summary Details using this tool, it is crucial to first cross-check the provided employee ID by executing the \"getPaginatedTypeaheadList\" API. If the search returns multiple employee records, display the corresponding employee names for the user to accurately select the intended employee. Only the selected employee’s ID will be used for further processing. Once the correct employee ID is verified, proceed to the next step by using this ID to execute the relevant API calls within the tool, following the specified workflow. This step-by-step approach ensures accurate and reliable retrieval of the employee's benefit history. and give response is table format. Analyze the user's query, and if it includes any reference or filter to subordinates, return the data under the \"Subordinates\" key. if the user subordinates related query dont ask for employee id or name only ask for date range. execute date format api to get format.  return data table format.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getTeamAttendanceSummaryDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to get the employee id for \"getPaginatedTypeaheadList\" api. Example:-\"000006\" or \"00001\" etc...",
+            "required": true,
+            "_id": "6824699617ed6dd750bc488a"
+          },
+          {
+            "name": "fromDate",
+            "type": "string",
+            "description": "to give the fromDate Example:-\"02/1/2023\" format date DD/MM/YYYY",
+            "required": true,
+            "_id": "6824699617ed6dd750bc488b"
+          },
+          {
+            "name": "toDate",
+            "type": "string",
+            "description": "to give the toDate Example:-\"02/1/2024\" format date DD/MM/YYYY",
+            "required": true,
+            "_id": "6824699617ed6dd750bc488c"
+          },
+          {
+            "name": "filterMode",
+            "type": "string",
+            "description": "Analyze the user's query, and if it includes any reference to subordinates, return the data under the \"Subordinates\" key. and in this key field is user query related required or not to anayze to get filter mode.",
+            "required": false,
+            "_id": "6841e82c8c063b4c721ac10c"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6824699617ed6dd750bc4889"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  \n  if (!BeaconBar.user.metaData.menus.includes(\"TNAV9/AttendanceSummary/AttendanceSummary/1?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  let rawPayload;\n\n  if (args.filterMode) {\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: false,\n      FilterMode: \"3\",\n      RosterCode: \"\",\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 1\n    };\n  } else {\n    const requestOptions = {\n      method: \"GET\",\n      headers: myHeaders,\n      redirect: \"follow\"\n    };\n\n    const response1 = await fetch(`${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`,\n      requestOptions\n    );\n\n    const details = await response1.json();\n    const empNumber = details?.Message || \"\";\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: false,\n      FilterMode: \"1\",\n      EmpNumber: empNumber,\n      RosterCode: \"\",\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 1\n    };\n  }\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      \"accept\": \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(`${location.origin}/${reqOptions.sl}/tnav9/api/AttendanceSummary/GetGridDataByCriteria/`, requestOptions1);\n\n  const details1 = await response2.json();\n  const teamAttendanceSummary = details1.AttendanceSummaryDetailList.map((entry) => {\n    return {\n      Date: entry.DatInDateString.split(\" \")[0],\n      Shift: entry.ShiftAbbreviation || \"OFF\",\n      InDate: entry.InDateText || \"-\",\n      InTime: entry.InTimeText || \"-\",\n      OutDate: entry.OutDateText || \"-\",\n      OutTime: entry.OutTimeText || \"-\",\n      Breaks: entry.BreakCount || 0,\n      Overtime: formatTime(entry.TotalOvertime),\n      EarlyMin: formatTime(entry.StartLate),\n      LateMin: formatTime(entry.EndLate),\n      WorkHours: formatTime(entry.WorkHours),\n      Nopay: entry.NopayDays ? entry.NopayDays.toFixed(2) : \"0.00\",\n      Leave: entry.LeaveDaysLabelString || \"\",\n      Notifications: entry.Message || \"\"\n    };\n  });\n\n  function formatTime(value) {\n    if (!value || value === 0) return \"00:00\";\n    const hours = Math.floor(value);\n    const minutes = Math.round((value - hours) * 60);\n    return `${String(hours).padStart(2, \"0\")}:${String(minutes).padStart(2, \"0\")}`;\n  }\n  if(teamAttendanceSummary.length>=10){\n    await BeaconBar.executeFunction(\"downloadcsv\")(teamAttendanceSummary);\n    return teamAttendanceSummary.slice(0,10);\n  }\n\n  return teamAttendanceSummary;\n});\n",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "Headers"
+      ],
+      "taskName": "Team Attendance Summary Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-14T09:59:50.641Z",
+      "updatedAt": "2025-05-14T09:59:50.641Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getTeamAttendanceSummaryDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to get the employee id for \"getPaginatedTypeaheadList\" api. Example:-\"000006\" or \"00001\" etc...",
+          "required": true,
+          "_id": "6824699617ed6dd750bc488a"
+        },
+        {
+          "name": "fromDate",
+          "type": "string",
+          "description": "to give the fromDate Example:-\"02/1/2023\" format date DD/MM/YYYY",
+          "required": true,
+          "_id": "6824699617ed6dd750bc488b"
+        },
+        {
+          "name": "toDate",
+          "type": "string",
+          "description": "to give the toDate Example:-\"02/1/2024\" format date DD/MM/YYYY",
+          "required": true,
+          "_id": "6824699617ed6dd750bc488c"
+        },
+        {
+          "name": "filterMode",
+          "type": "string",
+          "description": "Analyze the user's query, and if it includes any reference to subordinates, return the data under the \"Subordinates\" key. and in this key field is user query related required or not to anayze to get filter mode.",
+          "required": false,
+          "_id": "6841e82c8c063b4c721ac10c"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6824699617ed6dd750bc4889"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  \n  if (!BeaconBar.user.metaData.menus.includes(\"TNAV9/AttendanceSummary/AttendanceSummary/1?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  let rawPayload;\n\n  if (args.filterMode) {\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: false,\n      FilterMode: \"3\",\n      RosterCode: \"\",\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 1\n    };\n  } else {\n    const requestOptions = {\n      method: \"GET\",\n      headers: myHeaders,\n      redirect: \"follow\"\n    };\n\n    const response1 = await fetch(`${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`,\n      requestOptions\n    );\n\n    const details = await response1.json();\n    const empNumber = details?.Message || \"\";\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: false,\n      FilterMode: \"1\",\n      EmpNumber: empNumber,\n      RosterCode: \"\",\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 1\n    };\n  }\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      \"accept\": \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(`${location.origin}/${reqOptions.sl}/tnav9/api/AttendanceSummary/GetGridDataByCriteria/`, requestOptions1);\n\n  const details1 = await response2.json();\n  const teamAttendanceSummary = details1.AttendanceSummaryDetailList.map((entry) => {\n    return {\n      Date: entry.DatInDateString.split(\" \")[0],\n      Shift: entry.ShiftAbbreviation || \"OFF\",\n      InDate: entry.InDateText || \"-\",\n      InTime: entry.InTimeText || \"-\",\n      OutDate: entry.OutDateText || \"-\",\n      OutTime: entry.OutTimeText || \"-\",\n      Breaks: entry.BreakCount || 0,\n      Overtime: formatTime(entry.TotalOvertime),\n      EarlyMin: formatTime(entry.StartLate),\n      LateMin: formatTime(entry.EndLate),\n      WorkHours: formatTime(entry.WorkHours),\n      Nopay: entry.NopayDays ? entry.NopayDays.toFixed(2) : \"0.00\",\n      Leave: entry.LeaveDaysLabelString || \"\",\n      Notifications: entry.Message || \"\"\n    };\n  });\n\n  function formatTime(value) {\n    if (!value || value === 0) return \"00:00\";\n    const hours = Math.floor(value);\n    const minutes = Math.round((value - hours) * 60);\n    return `${String(hours).padStart(2, \"0\")}:${String(minutes).padStart(2, \"0\")}`;\n  }\n  if(teamAttendanceSummary.length>=10){\n    await BeaconBar.executeFunction(\"downloadcsv\")(teamAttendanceSummary);\n    return teamAttendanceSummary.slice(0,10);\n  }\n\n  return teamAttendanceSummary;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "690dc578931a2d61ba0b20af",
+  "slug": "processvacancy",
+  "name": "Processvacancy",
+  "status": "live",
+  "createdAt": "2025-05-26T11:01:51.582Z",
+  "updatedAt": "2025-05-26T11:01:51.582Z",
+  "contentHash": "fc4be2ad4a677dc81f163fd57992aae8970e7f902b659af1726765b5bb658e87",
+  "lastExportedAt": "2026-09-05T19:41:40.762Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc578931a2d61ba0b20af",
+    "name": "Processvacancy",
+    "status": "live",
+    "code": "async function loadRequisitionDetails(vac, e) {\n    try {\n        const unmapped = ko.mapping.toJS(vac);\n        $('#hdnRequistionDet').val(JSON.stringify(unmapped));\n\n        vac.IsLoadingDetailedView(true);\n\n        const reqId = vac.Id;\n        const url = RctUrl(\"HiringManagerProcess/ProcessView\") + `?reqId=${encodeURIComponent(reqId)}`;\n\n        const response = await fetch(url, {\n            method: 'GET'\n        });\n\n        if (!response.ok) {\n            throw new Error(`HTTP error! Status: ${response.status}`);\n        }\n\n        const data = await response.text(); \n\n        RctHiringMngrSum.ProFormData = data;\n        $('#rct-sumPage').hide();\n        $('#rct-mainPage').html(data).show();\n\n    } catch (error) {\n        RctShowError(null, \"Request Failed\", error.message);\n    } finally {\n        vac.IsLoadingDetailedView(false);\n    }\n}\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

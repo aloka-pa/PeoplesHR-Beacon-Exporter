@@ -1,0 +1,75 @@
+{
+  "id": "690dc565931a2d61ba0b159c",
+  "slug": "createfunction",
+  "name": "createFunction",
+  "description": "in this tool create the function.",
+  "instructions": null,
+  "taskName": "Create Function",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createFunction",
+  "createdAt": "2025-05-02T12:44:46.290Z",
+  "updatedAt": "2025-05-02T12:44:46.290Z",
+  "assignedAgents": [],
+  "contentHash": "080ca5c53b705d1e366506f07c36e202f9a4c16028b4af276cb6b328c0f526c3",
+  "lastExportedAt": "2026-09-05T19:39:24.223Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc565931a2d61ba0b159c",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createFunction",
+      "description": "in this tool create the function.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createFunction",
+        "args": [
+          {
+            "name": "functionName",
+            "type": "string",
+            "description": "to give the function name or description.",
+            "required": true,
+            "_id": "6814be3ee36e4e167f6ae9f5"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6814be3ee36e4e167f6ae9f4"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Function\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"Function\");\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: newInt.viewState,\n    __VIEWSTATEGENERATOR: newInt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: newInt.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtName\": args.functionName || \"\",\n    \"ctl00$body$butSave\": \"Save\"\n  }, \"Function\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const functionDetails = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const result = {\n    code,\n    functionDetails\n  };\n  return result;\n})\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create Function",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-02T12:44:46.290Z",
+      "updatedAt": "2025-05-02T12:44:46.290Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createFunction",
+      "args": [
+        {
+          "name": "functionName",
+          "type": "string",
+          "description": "to give the function name or description.",
+          "required": true,
+          "_id": "6814be3ee36e4e167f6ae9f5"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6814be3ee36e4e167f6ae9f4"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Function\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"Function\");\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: newInt.viewState,\n    __VIEWSTATEGENERATOR: newInt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: newInt.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtName\": args.functionName || \"\",\n    \"ctl00$body$butSave\": \"Save\"\n  }, \"Function\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const functionDetails = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const result = {\n    code,\n    functionDetails\n  };\n  return result;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

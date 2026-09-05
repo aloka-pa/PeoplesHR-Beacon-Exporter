@@ -1,0 +1,89 @@
+{
+  "id": "690dc56b931a2d61ba0b1a9e",
+  "slug": "loadgoals",
+  "name": "loadGoals",
+  "description": "loadGoals , before calling this api you need to call the tool \"getEvalutions\"",
+  "instructions": null,
+  "taskName": "loadGoals",
+  "tags": [
+    "Goals"
+  ],
+  "status": "live",
+  "signature": "loadGoals",
+  "createdAt": "2025-08-05T04:24:59.681Z",
+  "updatedAt": "2025-08-05T04:24:59.681Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c5a",
+      "name": "GoalPanning(API)"
+    }
+  ],
+  "contentHash": "c50c4dbddcf5a563925d13be82db1d53dae78502c16f091428ae109c0208d794",
+  "lastExportedAt": "2026-09-05T19:39:23.485Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1a9e",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "loadGoals",
+      "description": "loadGoals , before calling this api you need to call the tool \"getEvalutions\"",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "loadGoals",
+        "args": [
+          {
+            "name": "Eval_id",
+            "type": "string",
+            "description": "Eval_id , Ex:- 5 ",
+            "required": true,
+            "_id": "68918bc80497b640ed26954e"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6891879b000e15020b4e8b1e"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function(data, args, reqOptions) {\n  const dats = await BeaconBar.executeFunction(\"getallSelectedGoals\")(args);\n\n  const count = dats.map(x => x.GOALS);\n  const totalGoals = count.reduce((sum, group) => sum + group.length, 0);\n  BeaconBar.setSharedData(\"totalGoals\", totalGoals);\n\n  return dats.map(x => ({\n    GGRP_GOAL_TOTAL_WEIGHTAGE: x.GGRP_GOAL_TOTAL_WEIGHTAGE,\n    GGRP_ID: x.GGRP_ID,\n    GGRP_MAX: x.GGRP_MAX,\n    GGRP_MIN: x.GGRP_MIN,\n    GGRP_NAME: x.GGRP_NAME,\n    GGRP_WEIGHTAGE: x.GGRP_WEIGHTAGE\n  }));\n})\n",
+      "groupName": "",
+      "tags": [
+        "Goals"
+      ],
+      "taskName": "loadGoals",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-05T04:24:59.681Z",
+      "updatedAt": "2025-08-05T04:24:59.681Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c5a",
+          "name": "GoalPanning(API)"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "loadGoals",
+      "args": [
+        {
+          "name": "Eval_id",
+          "type": "string",
+          "description": "Eval_id , Ex:- 5 ",
+          "required": true,
+          "_id": "68918bc80497b640ed26954e"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6891879b000e15020b4e8b1e"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function(data, args, reqOptions) {\n  const dats = await BeaconBar.executeFunction(\"getallSelectedGoals\")(args);\n\n  const count = dats.map(x => x.GOALS);\n  const totalGoals = count.reduce((sum, group) => sum + group.length, 0);\n  BeaconBar.setSharedData(\"totalGoals\", totalGoals);\n\n  return dats.map(x => ({\n    GGRP_GOAL_TOTAL_WEIGHTAGE: x.GGRP_GOAL_TOTAL_WEIGHTAGE,\n    GGRP_ID: x.GGRP_ID,\n    GGRP_MAX: x.GGRP_MAX,\n    GGRP_MIN: x.GGRP_MIN,\n    GGRP_NAME: x.GGRP_NAME,\n    GGRP_WEIGHTAGE: x.GGRP_WEIGHTAGE\n  }));\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

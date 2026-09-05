@@ -1,0 +1,24 @@
+{
+  "id": "690dc588931a2d61ba0b2fc8",
+  "slug": "searchtoken",
+  "name": "searchToken",
+  "status": "live",
+  "createdAt": "2025-05-22T06:02:17.666Z",
+  "updatedAt": "2026-07-17T12:56:00.401Z",
+  "contentHash": "00f7656fc63497e112d00c5ad1f7c73b39bab37140d82057a81d68b0164d7dda",
+  "lastExportedAt": "2026-09-05T19:41:15.716Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc588931a2d61ba0b2fc8",
+    "name": "searchToken",
+    "status": "live",
+    "code": "(async function () {\n  async function fetche() {\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"*/*\");\n    myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n    myHeaders.append(\"content-type\", \"application/json\");\n\n    const requestOptions = {\n      method: \"GET\",\n      headers: myHeaders,\n      redirect: \"follow\"\n    };\n    const reqOptions = BeaconBar.executeFunction('reqOptions')();\n\n    const url = `${reqOptions}EIMV9/api/CommonAPI/GetEncryptedSearchTokenWithFuction?callback=EmployeeVMSearchCallback&_=${Date.now()}`;\n\n    try {\n      const response = await fetch(url, requestOptions);\n      const data = await response.json(); \n      return data;\n    } catch (error) {\n    }\n  }\n\n  const result = await fetche();\n  return result;\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

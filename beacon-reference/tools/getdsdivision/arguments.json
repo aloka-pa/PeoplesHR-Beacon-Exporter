@@ -1,0 +1,95 @@
+{
+  "arguments": [
+    {
+      "name": "dsDivisionCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "DS Division code to search for (exact match) (optional)",
+      "advanced": false,
+      "raw": {
+        "name": "dsDivisionCode",
+        "type": "string",
+        "description": "DS Division code to search for (exact match) (optional)",
+        "required": true,
+        "_id": "69536f42069720b41b7e8af2"
+      }
+    },
+    {
+      "name": "dsDivisionName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "DS Division name to search for (partial match, case-insensitive) (optional)",
+      "advanced": false,
+      "raw": {
+        "name": "dsDivisionName",
+        "type": "string",
+        "description": "DS Division name to search for (partial match, case-insensitive) (optional)",
+        "required": true,
+        "_id": "69536f42069720b41b7e8af3"
+      }
+    },
+    {
+      "name": "fetchDetails",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Whether to fetch detailed information (including district code) when a single DS Division is found. Accepts \"yes\" or \"no\". Defaults to \"yes\". Set to \"no\" to skip the detail fetch and return only grid data. (optional)",
+      "advanced": false,
+      "raw": {
+        "name": "fetchDetails",
+        "type": "string",
+        "description": "Whether to fetch detailed information (including district code) when a single DS Division is found. Accepts \"yes\" or \"no\". Defaults to \"yes\". Set to \"no\" to skip the detail fetch and return only grid data. (optional)",
+        "required": false,
+        "_id": "69536f42069720b41b7e8af4"
+      }
+    },
+    {
+      "name": "districtName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "District name (partial match, case-insensitive). Uses criteria value D.DISTRICT_NAME. (optional)",
+      "advanced": false,
+      "raw": {
+        "name": "districtName",
+        "type": "string",
+        "description": "District name (partial match, case-insensitive). Uses criteria value D.DISTRICT_NAME. (optional)",
+        "required": false,
+        "_id": "697f6f40e910e831c0e8f414"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "\"yes\" to return all DS Divisions (clicks Show All).\nAlso auto-triggers if any search value is one of: \"all\", \"available\", \"existing\", \"list\", \"show all\".",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "\"yes\" to return all DS Divisions (clicks Show All).\nAlso auto-triggers if any search value is one of: \"all\", \"available\", \"existing\", \"list\", \"show all\".",
+        "required": false,
+        "_id": "697f6f40e910e831c0e8f415"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "If you want to set the initial page size for the first search request. The tool will still adapt to the UI page size after the first response.",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "If you want to set the initial page size for the first search request. The tool will still adapt to the UI page size after the first response.",
+        "required": false,
+        "_id": "69817db3bc0437ac659551c8"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

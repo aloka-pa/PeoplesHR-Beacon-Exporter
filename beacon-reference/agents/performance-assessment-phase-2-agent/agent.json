@@ -1,0 +1,93 @@
+{
+  "id": "696baf3fc2b2c4c21130c789",
+  "slug": "performance-assessment-phase-2-agent",
+  "name": "Performance Assessment | Phase 2 | Agent",
+  "description": "This agent handles all the implementations in performance assessment module in phase 2",
+  "exportedAt": "2026-09-05T19:41:12.226Z",
+  "raw": {
+    "_id": "696baf3fc2b2c4c21130c789",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "Performance Assessment | Phase 2 | Agent",
+    "description": "This agent handles all the implementations in performance assessment module in phase 2",
+    "by": "10308",
+    "prompt": "",
+    "notes": [],
+    "llmConfig": [],
+    "maxTokens": "[REDACTED]",
+    "status": "live",
+    "toolIds": [
+      "6945281ea9f8deb448400bf9"
+    ],
+    "scenarioIds": [],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "cache": {
+      "enabled": false
+    },
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "callKnowledgeBase",
+        "args": [
+          {
+            "name": "query",
+            "type": "string",
+            "description": "The query to be executed by the agent",
+            "required": true,
+            "_id": "696baf3fc2b2c4c21130c78b"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n       \"type\":  \"object\",\n       \"properties\": {},\n       \"required\": []\n       }",
+        "_id": "696bb38a57a31f280e87d7ef"
+      },
+      "target": {
+        "entityValue": "",
+        "shardKey1": "",
+        "shardKey2": "",
+        "shardKey3": ""
+      }
+    },
+    "vis": false,
+    "piiConfig": {
+      "piiEnabled": false,
+      "predefinedEntities": [
+        {
+          "name": "PERSON",
+          "enabled": false
+        },
+        {
+          "name": "LOCATION",
+          "enabled": false
+        },
+        {
+          "name": "DATE_TIME",
+          "enabled": false
+        },
+        {
+          "name": "EMAIL_ADDRESS",
+          "enabled": false
+        },
+        {
+          "name": "PHONE_NUMBER",
+          "enabled": false
+        }
+      ],
+      "customEntities": []
+    },
+    "createdAt": "2026-01-17T15:48:15.864Z",
+    "updatedAt": "2026-01-17T16:06:34.356Z",
+    "__v": 3
+  }
+}

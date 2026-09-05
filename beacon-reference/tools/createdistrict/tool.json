@@ -1,0 +1,150 @@
+{
+  "id": "69534d615c168b76aad53bc2",
+  "slug": "createdistrict",
+  "name": "createDistrict",
+  "description": "Creates a new District record in EIM → District. The tool opens the “New” form, fills mandatory fields (District Name and Province), and saves the record.\nReturn all matching provinces and ask which province user would assign to the new district record.",
+  "instructions": null,
+  "taskName": "Creating New District Record",
+  "tags": [
+    "EIMAdmin",
+    "GeographicalLocations"
+  ],
+  "status": "live",
+  "signature": "createDistrict",
+  "createdAt": "2025-12-30T03:56:17.405Z",
+  "updatedAt": "2026-02-10T06:05:52.913Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "c53fe24f9e083532436cf3c1b06d1e4dca96c5aa377b555d5681b583e11b8198",
+  "lastExportedAt": "2026-09-05T19:39:22.777Z",
+  "raw": {
+    "basic": {
+      "_id": "69534d615c168b76aad53bc2",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createDistrict",
+      "description": "Creates a new District record in EIM → District. The tool opens the “New” form, fills mandatory fields (District Name and Province), and saves the record.\nReturn all matching provinces and ask which province user would assign to the new district record.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createDistrict",
+        "args": [
+          {
+            "name": "districtName",
+            "type": "string",
+            "description": "name of the district to create",
+            "required": true,
+            "_id": "69534d615c168b76aad53bc4"
+          },
+          {
+            "name": "provinceCode",
+            "type": "string",
+            "description": "Province code to select (recommended). Maps to ctl00$body$dpcountry. Example: \"000087\".",
+            "required": false,
+            "_id": "69534d615c168b76aad53bc5"
+          },
+          {
+            "name": "provinceName",
+            "type": "string",
+            "description": "Province name to select (fallback if code not provided). Tool matches option text (case-insensitive, contains).",
+            "required": false,
+            "_id": "697f9fb632be68838ce454b7"
+          },
+          {
+            "name": "openFromSearch",
+            "type": "string",
+            "description": "\"true\" / \"false\" (default \"false\"). If \"true\", loads a Search context first, then clicks New.",
+            "required": false,
+            "_id": "697f9fb632be68838ce454b8"
+          },
+          {
+            "name": "searchDistrictName",
+            "type": "string",
+            "description": "Used only when openFromSearch=\"true\" to prefill search text.",
+            "required": false,
+            "_id": "697f9fb632be68838ce454b9"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "69534d615c168b76aad53bc3"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 0) Helpers (string-only args)\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const isEmpty = (v) => okText(v) === \"\";\n    const toLower = (v) => okText(v).toLowerCase();\n\n    const parseBool = (v, def = false) => {\n      const t = toLower(v);\n      if (t === \"true\" || t === \"1\" || t === \"yes\") return true;\n      if (t === \"false\" || t === \"0\" || t === \"no\") return false;\n      return def;\n    };\n\n    function getHidden(doc, sel) {\n      return doc.querySelector(sel)?.value || \"\";\n    }\n\n    async function postAndParse(url, headers, formData) {\n      const resp = await fetch(url, { method: \"POST\", headers, body: formData, redirect: \"follow\" });\n      const html = await resp.text();\n      const parser = new DOMParser();\n      return parser.parseFromString(html, \"text/html\");\n    }\n\n    function buildBaseForm({ viewState, viewStateGen, eventValidation }) {\n      const fd = new FormData();\n      fd.append(\"scrollLeft\", \"0\");\n      fd.append(\"scrollTop\", \"0\");\n      fd.append(\"__EVENTTARGET\", \"\");\n      fd.append(\"__EVENTARGUMENT\", \"\");\n      fd.append(\"__VIEWSTATE\", viewState);\n      fd.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n      fd.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      fd.append(\"__EVENTVALIDATION\", eventValidation);\n      fd.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      fd.append(\"ctl00$hdnQuickmenu\", \"1\");\n      return fd;\n    }\n\n    function resolveProvince(detailDoc, { provinceCode, provinceName }) {\n      const select = detailDoc.querySelector(\"#ctl00_body_dpcountry\");\n      if (!select) return { ok: false, message: \"Province dropdown not found.\" };\n\n      // Prefer code\n      if (!isEmpty(provinceCode)) {\n        const opt = Array.from(select.options).find((o) => okText(o.value) === okText(provinceCode));\n        if (!opt) return { ok: false, message: \"No matching province option for provinceCode.\" };\n        if (okText(opt.value) === \"-1\") return { ok: false, message: \"Invalid province selection (-1).\" };\n        return { ok: true, value: opt.value, text: opt.textContent?.trim() || \"\" };\n      }\n\n      // Fallback: name contains match (case-insensitive)\n      const needle = toLower(provinceName);\n      const opt = Array.from(select.options).find((o) => toLower(o.textContent).includes(needle));\n      if (!opt) return { ok: false, message: \"No matching province option for provinceName.\" };\n      if (okText(opt.value) === \"-1\") return { ok: false, message: \"Invalid province selection (-1).\" };\n      return { ok: true, value: opt.value, text: opt.textContent?.trim() || \"\" };\n    }\n\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/District.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"It seems you don't have access. Please check with the HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Args (ALL STRING)\n     * ------------------------------------------------- */\n    const districtName = okText(args?.districtName);\n    const provinceCode = okText(args?.provinceCode);\n    const provinceName = okText(args?.provinceName);\n\n    const openFromSearch = parseBool(args?.openFromSearch, false);\n    const searchDistrictName = okText(args?.searchDistrictName);\n\n    if (isEmpty(districtName)) {\n      return { status: \"INVALID_ARGS\", message: \"districtName is required.\" };\n    }\n\n    if (isEmpty(provinceCode) && isEmpty(provinceName)) {\n      return { status: \"INVALID_ARGS\", message: \"Please provide either provinceCode or provinceName.\" };\n    }\n\n    /* -------------------------------------------------\n     * 3) Build URL + Headers\n     * ------------------------------------------------- */\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/District.aspx\");\n    const url = updateurl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/District.aspx`;\n\n    const headers = new Headers();\n    headers.append(\n      \"Accept\",\n      \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\"\n    );\n    headers.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    /* -------------------------------------------------\n     * 4) Initial hidden fields\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"District\");\n\n    /* -------------------------------------------------\n     * 5) Load a page render to obtain current VIEWSTATE\n     *    Optionally do Search first (like your network capture)\n     * ------------------------------------------------- */\n    let docBeforeNew;\n\n    if (openFromSearch) {\n      const searchFD = new FormData();\n      searchFD.append(\"scrollLeft\", \"0\");\n      searchFD.append(\"scrollTop\", \"0\");\n      searchFD.append(\"__EVENTTARGET\", \"\");\n      searchFD.append(\"__EVENTARGUMENT\", \"\");\n      searchFD.append(\"__VIEWSTATE\", details.viewState);\n      searchFD.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n      searchFD.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      searchFD.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n      searchFD.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      searchFD.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      searchFD.append(\"ctl00$body$ContentSearch$cboCriteria\", \"D.DISTRICT_NAME\");\n      searchFD.append(\"ctl00$body$ContentSearch$txtContent\", searchDistrictName || \"\");\n      searchFD.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n\n      searchFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      searchFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      searchFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n      searchFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      searchFD.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      docBeforeNew = await postAndParse(url, headers, searchFD);\n    } else {\n      const landingFD = new FormData();\n      landingFD.append(\"scrollLeft\", \"0\");\n      landingFD.append(\"scrollTop\", \"0\");\n      landingFD.append(\"__EVENTTARGET\", \"\");\n      landingFD.append(\"__EVENTARGUMENT\", \"\");\n      landingFD.append(\"__VIEWSTATE\", details.viewState);\n      landingFD.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n      landingFD.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      landingFD.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n      landingFD.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      landingFD.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      landingFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      landingFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      landingFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n      landingFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      landingFD.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      docBeforeNew = await postAndParse(url, headers, landingFD);\n    }\n\n    let vs = getHidden(docBeforeNew, \"#__VIEWSTATE\");\n    let ev = getHidden(docBeforeNew, \"#__EVENTVALIDATION\");\n    let vsg = getHidden(docBeforeNew, \"#__VIEWSTATEGENERATOR\");\n\n    if (!vs || !ev || !vsg) {\n      return { status: \"ERROR\", message: \"Failed to load District page state (missing ASP.NET hidden fields).\" };\n    }\n\n    /* -------------------------------------------------\n     * 6) Click New\n     * ------------------------------------------------- */\n    const newFD = buildBaseForm({ viewState: vs, viewStateGen: vsg, eventValidation: ev });\n\n    if (openFromSearch) {\n      newFD.append(\"ctl00$body$ContentSearch$cboCriteria\", \"D.DISTRICT_NAME\");\n      newFD.append(\"ctl00$body$ContentSearch$txtContent\", searchDistrictName || \"\");\n      newFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      newFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      newFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n      newFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      newFD.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n    }\n\n    newFD.append(\"ctl00$body$butNew\", \"New\");\n\n    const newDoc = await postAndParse(url, headers, newFD);\n\n    let nvs = getHidden(newDoc, \"#__VIEWSTATE\");\n    let nev = getHidden(newDoc, \"#__EVENTVALIDATION\");\n    let nvsg = getHidden(newDoc, \"#__VIEWSTATEGENERATOR\");\n\n    if (!nvs || !nev || !nvsg) {\n      return { status: \"ERROR\", message: \"Failed to open New District form (missing hidden fields).\" };\n    }\n\n    /* -------------------------------------------------\n     * 7) Resolve province option from New form\n     * ------------------------------------------------- */\n    const provinceResolved = resolveProvince(newDoc, { provinceCode, provinceName });\n    if (!provinceResolved.ok) {\n      return { status: \"INVALID_ARGS\", message: provinceResolved.message };\n    }\n\n    /* -------------------------------------------------\n     * 8) Save new record\n     * ------------------------------------------------- */\n    const saveFD = buildBaseForm({ viewState: nvs, viewStateGen: nvsg, eventValidation: nev });\n    saveFD.append(\"ctl00$body$txtName\", districtName);\n    saveFD.append(\"ctl00$body$dpcountry\", provinceResolved.value);\n    saveFD.append(\"ctl00$body$butSave\", \"Save\");\n\n    const afterSaveDoc = await postAndParse(url, headers, saveFD);\n\n    const pageMsg =\n      afterSaveDoc.querySelector(\"#ctl00_body_lblMessage\")?.textContent?.trim() ||\n      afterSaveDoc.querySelector(\".alert\")?.textContent?.trim() ||\n      \"\";\n\n    const savedName = afterSaveDoc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || districtName;\n\n    const savedProvinceSelect = afterSaveDoc.querySelector(\"#ctl00_body_dpcountry\");\n    const savedProvinceCode = savedProvinceSelect?.value?.trim() || provinceResolved.value;\n    const savedProvinceName = savedProvinceSelect?.selectedOptions?.[0]?.textContent?.trim() || provinceResolved.text;\n\n    const savedDistrictCode =\n      afterSaveDoc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() ||\n      afterSaveDoc.querySelector(\"#ctl00_body_txtDistrict\")?.value?.trim() ||\n      null;\n\n    return {\n      status: \"SUCCESS\",\n      message: pageMsg || \"District created successfully.\",\n      created: {\n        districtCode: savedDistrictCode,\n        districtName: savedName,\n        provinceCode: savedProvinceCode,\n        provinceName: savedProvinceName\n      }\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unknown error\",\n      error: err?.toString?.() || String(err)\n    };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "GeographicalLocations"
+      ],
+      "taskName": "Creating New District Record",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-30T03:56:17.405Z",
+      "updatedAt": "2026-02-10T06:05:52.913Z",
+      "__v": 3,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "createDistrict",
+      "args": [
+        {
+          "name": "districtName",
+          "type": "string",
+          "description": "name of the district to create",
+          "required": true,
+          "_id": "69534d615c168b76aad53bc4"
+        },
+        {
+          "name": "provinceCode",
+          "type": "string",
+          "description": "Province code to select (recommended). Maps to ctl00$body$dpcountry. Example: \"000087\".",
+          "required": false,
+          "_id": "69534d615c168b76aad53bc5"
+        },
+        {
+          "name": "provinceName",
+          "type": "string",
+          "description": "Province name to select (fallback if code not provided). Tool matches option text (case-insensitive, contains).",
+          "required": false,
+          "_id": "697f9fb632be68838ce454b7"
+        },
+        {
+          "name": "openFromSearch",
+          "type": "string",
+          "description": "\"true\" / \"false\" (default \"false\"). If \"true\", loads a Search context first, then clicks New.",
+          "required": false,
+          "_id": "697f9fb632be68838ce454b8"
+        },
+        {
+          "name": "searchDistrictName",
+          "type": "string",
+          "description": "Used only when openFromSearch=\"true\" to prefill search text.",
+          "required": false,
+          "_id": "697f9fb632be68838ce454b9"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "69534d615c168b76aad53bc3"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 0) Helpers (string-only args)\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const isEmpty = (v) => okText(v) === \"\";\n    const toLower = (v) => okText(v).toLowerCase();\n\n    const parseBool = (v, def = false) => {\n      const t = toLower(v);\n      if (t === \"true\" || t === \"1\" || t === \"yes\") return true;\n      if (t === \"false\" || t === \"0\" || t === \"no\") return false;\n      return def;\n    };\n\n    function getHidden(doc, sel) {\n      return doc.querySelector(sel)?.value || \"\";\n    }\n\n    async function postAndParse(url, headers, formData) {\n      const resp = await fetch(url, { method: \"POST\", headers, body: formData, redirect: \"follow\" });\n      const html = await resp.text();\n      const parser = new DOMParser();\n      return parser.parseFromString(html, \"text/html\");\n    }\n\n    function buildBaseForm({ viewState, viewStateGen, eventValidation }) {\n      const fd = new FormData();\n      fd.append(\"scrollLeft\", \"0\");\n      fd.append(\"scrollTop\", \"0\");\n      fd.append(\"__EVENTTARGET\", \"\");\n      fd.append(\"__EVENTARGUMENT\", \"\");\n      fd.append(\"__VIEWSTATE\", viewState);\n      fd.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n      fd.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      fd.append(\"__EVENTVALIDATION\", eventValidation);\n      fd.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      fd.append(\"ctl00$hdnQuickmenu\", \"1\");\n      return fd;\n    }\n\n    function resolveProvince(detailDoc, { provinceCode, provinceName }) {\n      const select = detailDoc.querySelector(\"#ctl00_body_dpcountry\");\n      if (!select) return { ok: false, message: \"Province dropdown not found.\" };\n\n      // Prefer code\n      if (!isEmpty(provinceCode)) {\n        const opt = Array.from(select.options).find((o) => okText(o.value) === okText(provinceCode));\n        if (!opt) return { ok: false, message: \"No matching province option for provinceCode.\" };\n        if (okText(opt.value) === \"-1\") return { ok: false, message: \"Invalid province selection (-1).\" };\n        return { ok: true, value: opt.value, text: opt.textContent?.trim() || \"\" };\n      }\n\n      // Fallback: name contains match (case-insensitive)\n      const needle = toLower(provinceName);\n      const opt = Array.from(select.options).find((o) => toLower(o.textContent).includes(needle));\n      if (!opt) return { ok: false, message: \"No matching province option for provinceName.\" };\n      if (okText(opt.value) === \"-1\") return { ok: false, message: \"Invalid province selection (-1).\" };\n      return { ok: true, value: opt.value, text: opt.textContent?.trim() || \"\" };\n    }\n\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/District.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"It seems you don't have access. Please check with the HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Args (ALL STRING)\n     * ------------------------------------------------- */\n    const districtName = okText(args?.districtName);\n    const provinceCode = okText(args?.provinceCode);\n    const provinceName = okText(args?.provinceName);\n\n    const openFromSearch = parseBool(args?.openFromSearch, false);\n    const searchDistrictName = okText(args?.searchDistrictName);\n\n    if (isEmpty(districtName)) {\n      return { status: \"INVALID_ARGS\", message: \"districtName is required.\" };\n    }\n\n    if (isEmpty(provinceCode) && isEmpty(provinceName)) {\n      return { status: \"INVALID_ARGS\", message: \"Please provide either provinceCode or provinceName.\" };\n    }\n\n    /* -------------------------------------------------\n     * 3) Build URL + Headers\n     * ------------------------------------------------- */\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/District.aspx\");\n    const url = updateurl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/District.aspx`;\n\n    const headers = new Headers();\n    headers.append(\n      \"Accept\",\n      \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\"\n    );\n    headers.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    /* -------------------------------------------------\n     * 4) Initial hidden fields\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"District\");\n\n    /* -------------------------------------------------\n     * 5) Load a page render to obtain current VIEWSTATE\n     *    Optionally do Search first (like your network capture)\n     * ------------------------------------------------- */\n    let docBeforeNew;\n\n    if (openFromSearch) {\n      const searchFD = new FormData();\n      searchFD.append(\"scrollLeft\", \"0\");\n      searchFD.append(\"scrollTop\", \"0\");\n      searchFD.append(\"__EVENTTARGET\", \"\");\n      searchFD.append(\"__EVENTARGUMENT\", \"\");\n      searchFD.append(\"__VIEWSTATE\", details.viewState);\n      searchFD.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n      searchFD.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      searchFD.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n      searchFD.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      searchFD.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      searchFD.append(\"ctl00$body$ContentSearch$cboCriteria\", \"D.DISTRICT_NAME\");\n      searchFD.append(\"ctl00$body$ContentSearch$txtContent\", searchDistrictName || \"\");\n      searchFD.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n\n      searchFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      searchFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      searchFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n      searchFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      searchFD.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      docBeforeNew = await postAndParse(url, headers, searchFD);\n    } else {\n      const landingFD = new FormData();\n      landingFD.append(\"scrollLeft\", \"0\");\n      landingFD.append(\"scrollTop\", \"0\");\n      landingFD.append(\"__EVENTTARGET\", \"\");\n      landingFD.append(\"__EVENTARGUMENT\", \"\");\n      landingFD.append(\"__VIEWSTATE\", details.viewState);\n      landingFD.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n      landingFD.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      landingFD.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n      landingFD.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      landingFD.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      landingFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      landingFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      landingFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n      landingFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      landingFD.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      docBeforeNew = await postAndParse(url, headers, landingFD);\n    }\n\n    let vs = getHidden(docBeforeNew, \"#__VIEWSTATE\");\n    let ev = getHidden(docBeforeNew, \"#__EVENTVALIDATION\");\n    let vsg = getHidden(docBeforeNew, \"#__VIEWSTATEGENERATOR\");\n\n    if (!vs || !ev || !vsg) {\n      return { status: \"ERROR\", message: \"Failed to load District page state (missing ASP.NET hidden fields).\" };\n    }\n\n    /* -------------------------------------------------\n     * 6) Click New\n     * ------------------------------------------------- */\n    const newFD = buildBaseForm({ viewState: vs, viewStateGen: vsg, eventValidation: ev });\n\n    if (openFromSearch) {\n      newFD.append(\"ctl00$body$ContentSearch$cboCriteria\", \"D.DISTRICT_NAME\");\n      newFD.append(\"ctl00$body$ContentSearch$txtContent\", searchDistrictName || \"\");\n      newFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      newFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      newFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n      newFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      newFD.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n    }\n\n    newFD.append(\"ctl00$body$butNew\", \"New\");\n\n    const newDoc = await postAndParse(url, headers, newFD);\n\n    let nvs = getHidden(newDoc, \"#__VIEWSTATE\");\n    let nev = getHidden(newDoc, \"#__EVENTVALIDATION\");\n    let nvsg = getHidden(newDoc, \"#__VIEWSTATEGENERATOR\");\n\n    if (!nvs || !nev || !nvsg) {\n      return { status: \"ERROR\", message: \"Failed to open New District form (missing hidden fields).\" };\n    }\n\n    /* -------------------------------------------------\n     * 7) Resolve province option from New form\n     * ------------------------------------------------- */\n    const provinceResolved = resolveProvince(newDoc, { provinceCode, provinceName });\n    if (!provinceResolved.ok) {\n      return { status: \"INVALID_ARGS\", message: provinceResolved.message };\n    }\n\n    /* -------------------------------------------------\n     * 8) Save new record\n     * ------------------------------------------------- */\n    const saveFD = buildBaseForm({ viewState: nvs, viewStateGen: nvsg, eventValidation: nev });\n    saveFD.append(\"ctl00$body$txtName\", districtName);\n    saveFD.append(\"ctl00$body$dpcountry\", provinceResolved.value);\n    saveFD.append(\"ctl00$body$butSave\", \"Save\");\n\n    const afterSaveDoc = await postAndParse(url, headers, saveFD);\n\n    const pageMsg =\n      afterSaveDoc.querySelector(\"#ctl00_body_lblMessage\")?.textContent?.trim() ||\n      afterSaveDoc.querySelector(\".alert\")?.textContent?.trim() ||\n      \"\";\n\n    const savedName = afterSaveDoc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || districtName;\n\n    const savedProvinceSelect = afterSaveDoc.querySelector(\"#ctl00_body_dpcountry\");\n    const savedProvinceCode = savedProvinceSelect?.value?.trim() || provinceResolved.value;\n    const savedProvinceName = savedProvinceSelect?.selectedOptions?.[0]?.textContent?.trim() || provinceResolved.text;\n\n    const savedDistrictCode =\n      afterSaveDoc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() ||\n      afterSaveDoc.querySelector(\"#ctl00_body_txtDistrict\")?.value?.trim() ||\n      null;\n\n    return {\n      status: \"SUCCESS\",\n      message: pageMsg || \"District created successfully.\",\n      created: {\n        districtCode: savedDistrictCode,\n        districtName: savedName,\n        provinceCode: savedProvinceCode,\n        provinceName: savedProvinceName\n      }\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unknown error\",\n      error: err?.toString?.() || String(err)\n    };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

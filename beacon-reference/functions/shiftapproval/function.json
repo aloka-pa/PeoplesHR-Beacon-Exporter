@@ -1,0 +1,24 @@
+{
+  "id": "690dc58b931a2d61ba0b321a",
+  "slug": "shiftapproval",
+  "name": "shiftApproval",
+  "status": "live",
+  "createdAt": "2025-06-18T06:49:10.114Z",
+  "updatedAt": "2026-07-17T12:56:01.739Z",
+  "contentHash": "d12fbb4b714c979795eec7d72b795626213b245db375ff321ea0d0cb01a2fc42",
+  "lastExportedAt": "2026-09-05T19:41:15.426Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58b931a2d61ba0b321a",
+    "name": "shiftApproval",
+    "status": "live",
+    "code": "(async function (ApprovalComment) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"Accept\", \"application/json, text/plain, */*\");\n  myHeaders.append(\"Accept-Language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"Content-Type\", \"application/json\");\n\n  const approved = BeaconBar.getSharedData(\"approved\");\n  const ShiftAdjustmentApprovalDataList = BeaconBar.getSharedData(\"ShiftAdjustmentApprovalDataList\");\n\n  if (!ShiftAdjustmentApprovalDataList?.length) {\n    return;\n  }\n\n  const updatedList = ShiftAdjustmentApprovalDataList.map((entry, index) => {\n    const updated = { ...entry };\n\n    if (index === 0) {\n      updated.IsSelected = true;\n    } \n    return updated;\n  });\n\n  const payload = {\n    ShiftAdjustmentApprovalDataList: updatedList,\n    LoggedEmployeeNumber: approved?.LoggedEmpNumber,\n    LoggedEmployeeUserId: approved?.LoggedUserId,\n    ApprovalComment\n  };\n\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const response = await fetch(`${reqOptions}tnavue/service/api/WorkflowApproval/ApproveShiftAdjustmentData`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: JSON.stringify(payload),\n    redirect: \"follow\"\n  });\n\n  const result = await response.text();\n  return result;\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

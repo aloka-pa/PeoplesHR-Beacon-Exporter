@@ -1,0 +1,100 @@
+{
+  "id": "690dc567931a2d61ba0b1775",
+  "slug": "getemployeepassportandotherarticlesdetails",
+  "name": "getEmployeePassportAndOtherArticlesDetails",
+  "description": "This tool generates Employee Passport and Other Articles Details. If no matching employee is found during the search, return a response indicating that no employee is available. When the user requests passport or other article-related information, fetch and match only the relevant data based on the query. Return only the specific answer related to the user’s request—do not include any additional or unrelated information. other details not give the user.",
+  "instructions": null,
+  "taskName": "Fetching Employee Passport And Other Articles Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getEmployeePassportAndOtherArticlesDetails",
+  "createdAt": "2025-05-16T11:18:21.419Z",
+  "updatedAt": "2025-11-10T12:10:03.073Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "b625b60689682e7dc75642f3ad948747d497caac325cdaa5dc42c554b143a93a",
+  "lastExportedAt": "2026-09-05T19:39:23.378Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc567931a2d61ba0b1775",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getEmployeePassportAndOtherArticlesDetails",
+      "description": "This tool generates Employee Passport and Other Articles Details. If no matching employee is found during the search, return a response indicating that no employee is available. When the user requests passport or other article-related information, fetch and match only the relevant data based on the query. Return only the specific answer related to the user’s request—do not include any additional or unrelated information. other details not give the user.",
+      "rules": {
+        "ids": [
+          "690dc4b5931a2d61ba0a807f"
+        ],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getEmployeePassportAndOtherArticlesDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to give the employee id Example:- \"000001\" etc...",
+            "required": true,
+            "_id": "68271efda8c9d78d932c4f7c"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68271efda8c9d78d932c4f7b"
+      },
+      "by": "7337",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignPassport.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/AssignPassport.aspx\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n\n  const detailsText = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(detailsText, \"text/html\");\n\n  const empNumber = doc.querySelector('input[id=\"ctl00_body_EmpSearch_txtEmpDisplayNumber\"]')?.value || \"\";\n  window.pqn = empNumber;\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"\");\n  urlencoded.append(\"scrollTop\", \"\");\n  urlencoded.append(\"__EVENTTARGET\", \"GetSearchResult\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewStateGenerator);\n  urlencoded.append(\"__SCROLLPOSITIONX\", \"0\");\n  urlencoded.append(\"__SCROLLPOSITIONY\", \"0\");\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", empNumber);\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded.append(\"ctl00$body$grdPassport$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdPassport_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdPassport$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  urlencoded.append(\"ctl00_body_grdPassport_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdPassport_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$txtpassport\", \"\");\n  urlencoded.append(\"ctl00$body$txtempnumber\", empNumber);\n\n  const responsePost = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  const textPost = await responsePost.text();\n  const docPost = parser.parseFromString(textPost, \"text/html\");\n\n  const viewState1 = docPost.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator1 = docPost.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation1 = docPost.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const publicKey = docPost.querySelector(\"#ctl00_body_txtPublicKey\")?.value || \"\";\n\n  const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(publicKey, args.id);\n\n  const edit = await BeaconBar.executeFunction(\"module\")(\n    {\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __VIEWSTATE: viewState1,\n      __VIEWSTATEGENERATOR: viewStateGenerator1,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: eventValidation1,\n      \"ctl00$hdnDateFormat\": \"m/d/yy\",\n      \"ctl00$hdnQuickmenu\": \"\",\n      \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n      \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n      \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n      \"ctl00$body$grdCC$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdCC_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdCC$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"3\",\n      \"ctl00_body_grdCC_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdCC_ClientState\": \"\",\n      \"ctl00$body$cmdEdit\": \"Edit\",\n      \"ctl00$body$txtPublicKey\": publicKey,\n      \"ctl00$body$txtpassport\": \"\",\n      \"ctl00$body$txtempnumber\": empEnc\n    },\n    `${reqOptions.sl}/${updateUrlData.pageUrl}`\n  );\n\n  window.pad = edit;\n\n  const docPost1 = parser.parseFromString(edit.rawData, \"text/html\");\n\n  const articleCategoryOptions = Array.from(\n    docPost1.querySelectorAll('#ctl00_body_DropDownListIdentity option')\n  )\n    .filter(opt => opt.value !== \"-1\" && opt.textContent.trim() !== \"\")\n    .map(opt => ({\n      name: opt.textContent.trim(),\n      value: opt.value\n    }));\n\n  const countryOptions = Array.from(\n    docPost1.querySelectorAll('#ctl00_body_cboPassCountry option')\n  )\n    .filter(opt => opt.value !== \"-1\" && opt.textContent.trim() !== \"\")\n    .map(opt => ({\n      name: opt.textContent.trim(),\n      value: opt.value\n    }));\n\n  const articles = [];\n  const groupHeaders = docPost1.querySelectorAll(\".GroupHeader_Default\");\n\n  groupHeaders.forEach(header => {\n    const categoryText = header.querySelector(\"p\")?.textContent.trim().replace(\"Article Category:\", \"\").trim() || \"\";\n    let nextRow = header.nextElementSibling;\n\n    while (nextRow && (nextRow.classList.contains(\"GridRow_Default\") || nextRow.classList.contains(\"GridAltRow_Default\"))) {\n      const cells = nextRow.querySelectorAll(\"td\");\n      const rawHref = cells[6]?.querySelector(\"a\")?.getAttribute(\"href\") || \"\";\n      const decodedHref = rawHref.replace(/&#39;/g, \"'\");\n      const match = decodedHref.match(/__doPostBack\\('([^']+)'/);\n      const editId = match ? match[1] : \"\";\n\n      articles.push({\n        articleCategory: categoryText,\n        documentNo: cells[2]?.textContent.trim() || \"\",\n        countryOfOrigin: cells[3]?.textContent.trim() || \"\",\n        dateOfIssue: cells[4]?.textContent.trim() || \"\",\n        dateOfExpiry: cells[5]?.textContent.trim() || \"\",\n        editId: editId\n      });\n\n      nextRow = nextRow.nextElementSibling;\n      if (nextRow && nextRow.classList.contains(\"GroupHeader_Default\")) break;\n    }\n  });\n  return { articles, articleCategoryOptions, countryOptions };\n});\n",
+      "sampleRequest": {
+        "id": "000002"
+      },
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Fetching Employee Passport And Other Articles Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-16T11:18:21.419Z",
+      "updatedAt": "2025-11-10T12:10:03.073Z",
+      "__v": 1,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getEmployeePassportAndOtherArticlesDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to give the employee id Example:- \"000001\" etc...",
+          "required": true,
+          "_id": "68271efda8c9d78d932c4f7c"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68271efda8c9d78d932c4f7b"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignPassport.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/AssignPassport.aspx\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n\n  const detailsText = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(detailsText, \"text/html\");\n\n  const empNumber = doc.querySelector('input[id=\"ctl00_body_EmpSearch_txtEmpDisplayNumber\"]')?.value || \"\";\n  window.pqn = empNumber;\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"\");\n  urlencoded.append(\"scrollTop\", \"\");\n  urlencoded.append(\"__EVENTTARGET\", \"GetSearchResult\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewStateGenerator);\n  urlencoded.append(\"__SCROLLPOSITIONX\", \"0\");\n  urlencoded.append(\"__SCROLLPOSITIONY\", \"0\");\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", empNumber);\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded.append(\"ctl00$body$grdPassport$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdPassport_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdPassport$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  urlencoded.append(\"ctl00_body_grdPassport_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdPassport_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$txtpassport\", \"\");\n  urlencoded.append(\"ctl00$body$txtempnumber\", empNumber);\n\n  const responsePost = await fetch(`${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  const textPost = await responsePost.text();\n  const docPost = parser.parseFromString(textPost, \"text/html\");\n\n  const viewState1 = docPost.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator1 = docPost.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation1 = docPost.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const publicKey = docPost.querySelector(\"#ctl00_body_txtPublicKey\")?.value || \"\";\n\n  const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(publicKey, args.id);\n\n  const edit = await BeaconBar.executeFunction(\"module\")(\n    {\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __VIEWSTATE: viewState1,\n      __VIEWSTATEGENERATOR: viewStateGenerator1,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: eventValidation1,\n      \"ctl00$hdnDateFormat\": \"m/d/yy\",\n      \"ctl00$hdnQuickmenu\": \"\",\n      \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n      \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n      \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n      \"ctl00$body$grdCC$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdCC_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdCC$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"3\",\n      \"ctl00_body_grdCC_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdCC_ClientState\": \"\",\n      \"ctl00$body$cmdEdit\": \"Edit\",\n      \"ctl00$body$txtPublicKey\": publicKey,\n      \"ctl00$body$txtpassport\": \"\",\n      \"ctl00$body$txtempnumber\": empEnc\n    },\n    `${reqOptions.sl}/${updateUrlData.pageUrl}`\n  );\n\n  window.pad = edit;\n\n  const docPost1 = parser.parseFromString(edit.rawData, \"text/html\");\n\n  const articleCategoryOptions = Array.from(\n    docPost1.querySelectorAll('#ctl00_body_DropDownListIdentity option')\n  )\n    .filter(opt => opt.value !== \"-1\" && opt.textContent.trim() !== \"\")\n    .map(opt => ({\n      name: opt.textContent.trim(),\n      value: opt.value\n    }));\n\n  const countryOptions = Array.from(\n    docPost1.querySelectorAll('#ctl00_body_cboPassCountry option')\n  )\n    .filter(opt => opt.value !== \"-1\" && opt.textContent.trim() !== \"\")\n    .map(opt => ({\n      name: opt.textContent.trim(),\n      value: opt.value\n    }));\n\n  const articles = [];\n  const groupHeaders = docPost1.querySelectorAll(\".GroupHeader_Default\");\n\n  groupHeaders.forEach(header => {\n    const categoryText = header.querySelector(\"p\")?.textContent.trim().replace(\"Article Category:\", \"\").trim() || \"\";\n    let nextRow = header.nextElementSibling;\n\n    while (nextRow && (nextRow.classList.contains(\"GridRow_Default\") || nextRow.classList.contains(\"GridAltRow_Default\"))) {\n      const cells = nextRow.querySelectorAll(\"td\");\n      const rawHref = cells[6]?.querySelector(\"a\")?.getAttribute(\"href\") || \"\";\n      const decodedHref = rawHref.replace(/&#39;/g, \"'\");\n      const match = decodedHref.match(/__doPostBack\\('([^']+)'/);\n      const editId = match ? match[1] : \"\";\n\n      articles.push({\n        articleCategory: categoryText,\n        documentNo: cells[2]?.textContent.trim() || \"\",\n        countryOfOrigin: cells[3]?.textContent.trim() || \"\",\n        dateOfIssue: cells[4]?.textContent.trim() || \"\",\n        dateOfExpiry: cells[5]?.textContent.trim() || \"\",\n        editId: editId\n      });\n\n      nextRow = nextRow.nextElementSibling;\n      if (nextRow && nextRow.classList.contains(\"GroupHeader_Default\")) break;\n    }\n  });\n  return { articles, articleCategoryOptions, countryOptions };\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {
+        "id": "000002"
+      }
+    }
+  }
+}

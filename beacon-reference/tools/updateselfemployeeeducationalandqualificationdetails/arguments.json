@@ -1,0 +1,80 @@
+{
+  "arguments": [
+    {
+      "name": "schoolOrInstitute",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "If the user updates the School/Institute field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.",
+      "advanced": false,
+      "raw": {
+        "name": "schoolOrInstitute",
+        "type": "string",
+        "description": "If the user updates the School/Institute field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.",
+        "required": true,
+        "_id": "68affca3488e9eb71439083a"
+      }
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "If the user updates the status field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. Ex: Pass, Fail etc.. will be before status data only QualStatusDescription.",
+      "advanced": false,
+      "raw": {
+        "name": "status",
+        "type": "string",
+        "description": "If the user updates the status field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. Ex: Pass, Fail etc.. will be before status data only QualStatusDescription.",
+        "required": true,
+        "_id": "68affca3488e9eb71439083b"
+      }
+    },
+    {
+      "name": "yearOfQualification",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "If the user updates the Year Of Qualification field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.",
+      "advanced": false,
+      "raw": {
+        "name": "yearOfQualification",
+        "type": "string",
+        "description": "If the user updates the Year Of Qualification field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained.",
+        "required": true,
+        "_id": "68affca3488e9eb71439083c"
+      }
+    },
+    {
+      "name": "remarks",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "If the user updates the Remarks field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. in the optional field",
+      "advanced": false,
+      "raw": {
+        "name": "remarks",
+        "type": "string",
+        "description": "If the user updates the Remarks field, the updated value will be used. If the user does not update it, the value from the previous API response will be retained. in the optional field",
+        "required": true,
+        "_id": "68affca3488e9eb71439083d"
+      }
+    },
+    {
+      "name": "qualificationName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The Qualification Name field is not being updated. Which record will be updated in this case—will it use the Reference field as the required field for identifying the record Ex:-\"Project Management Professional\".",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationName",
+        "type": "string",
+        "description": "The Qualification Name field is not being updated. Which record will be updated in this case—will it use the Reference field as the required field for identifying the record Ex:-\"Project Management Professional\".",
+        "required": true,
+        "_id": "68affca3488e9eb71439083e"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

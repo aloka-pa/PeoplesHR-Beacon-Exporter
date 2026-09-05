@@ -1,0 +1,91 @@
+{
+  "id": "690dc56b931a2d61ba0b1afa",
+  "slug": "selfemployeebenefithistory",
+  "name": "selfEmployeeBenefitHistory",
+  "description": "in the api return self employee Benefit History other employee do not return.",
+  "instructions": null,
+  "taskName": "Fetching The Self Employee Benefit History",
+  "tags": [
+    "BenefitManagement",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "selfEmployeeBenefitHistory",
+  "createdAt": "2025-08-21T10:37:16.711Z",
+  "updatedAt": "2025-08-21T10:37:16.711Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be9",
+      "name": "BenefitManagement"
+    }
+  ],
+  "contentHash": "c3154e3eaa382cab7334a25c8be7fab34dfea42540a3f766bc992c3b9fcb5028",
+  "lastExportedAt": "2026-09-05T19:39:23.446Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1afa",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selfEmployeeBenefitHistory",
+      "description": "in the api return self employee Benefit History other employee do not return.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selfEmployeeBenefitHistory",
+        "args": [
+          {
+            "name": "year",
+            "type": "string",
+            "description": "user give the year, if the user not given current year will be take.Example \"2025\"",
+            "required": true,
+            "_id": "68a6f6dc4c5ed0fe36bfb816"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68a6f6dc4c5ed0fe36bfb815"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.some(x => x.includes(\"Benefitv9/History/BenefitHistory/?mvc=1\"))) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const details = await BeaconBar.executeFunction(\"selfBenefitHistoryApplication\")();\n\n  const params = JSON.stringify({ \"EmpNumber\": details, \"filterMode\": 1, \"filterValue1\": args.year, \"filterValue2\": \"\" })\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: {\n      \"content-type\": \"application/json; charset=UTF-8\",\n      \"x-requested-with\" : \"XMLHttpRequest\"\n    },\n    body: params,\n    redirect: \"follow\"\n  };\n\n  const response3 = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/HistoryApi/GetHistoryWithFilteration`, requestOptions2);\n  const details2 = await response3.json();\n\n  return details2.HistoryDataTableVm.DataTableRowVms;\n})",
+      "groupName": "",
+      "tags": [
+        "BenefitManagement",
+        "Headers"
+      ],
+      "taskName": "Fetching The Self Employee Benefit History",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-21T10:37:16.711Z",
+      "updatedAt": "2025-08-21T10:37:16.711Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be9",
+          "name": "BenefitManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selfEmployeeBenefitHistory",
+      "args": [
+        {
+          "name": "year",
+          "type": "string",
+          "description": "user give the year, if the user not given current year will be take.Example \"2025\"",
+          "required": true,
+          "_id": "68a6f6dc4c5ed0fe36bfb816"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68a6f6dc4c5ed0fe36bfb815"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.some(x => x.includes(\"Benefitv9/History/BenefitHistory/?mvc=1\"))) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const details = await BeaconBar.executeFunction(\"selfBenefitHistoryApplication\")();\n\n  const params = JSON.stringify({ \"EmpNumber\": details, \"filterMode\": 1, \"filterValue1\": args.year, \"filterValue2\": \"\" })\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: {\n      \"content-type\": \"application/json; charset=UTF-8\",\n      \"x-requested-with\" : \"XMLHttpRequest\"\n    },\n    body: params,\n    redirect: \"follow\"\n  };\n\n  const response3 = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/HistoryApi/GetHistoryWithFilteration`, requestOptions2);\n  const details2 = await response3.json();\n\n  return details2.HistoryDataTableVm.DataTableRowVms;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

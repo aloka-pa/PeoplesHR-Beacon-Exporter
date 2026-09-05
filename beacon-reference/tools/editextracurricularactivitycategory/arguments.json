@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "categoryCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The unique code identifier for the category to update (e.g., \"000001\")",
+      "advanced": false,
+      "raw": {
+        "name": "categoryCode",
+        "type": "string",
+        "description": "The unique code identifier for the category to update (e.g., \"000001\")",
+        "required": false,
+        "_id": "6953a41ba6b63147c8716e57"
+      }
+    },
+    {
+      "name": "categoryName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The current name of the category to update (e.g., \"Arts / Creative\"); optional",
+      "advanced": false,
+      "raw": {
+        "name": "categoryName",
+        "type": "string",
+        "description": "The current name of the category to update (e.g., \"Arts / Creative\"); optional",
+        "required": false,
+        "_id": "6953a41ba6b63147c8716e58"
+      }
+    },
+    {
+      "name": "newCategoryName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The new name for the category (e.g., \"Arts / Creative update\")",
+      "advanced": false,
+      "raw": {
+        "name": "newCategoryName",
+        "type": "string",
+        "description": "The new name for the category (e.g., \"Arts / Creative update\")",
+        "required": true,
+        "_id": "6953a41ba6b63147c8716e59"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

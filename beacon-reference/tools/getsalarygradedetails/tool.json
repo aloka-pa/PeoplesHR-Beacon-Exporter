@@ -1,0 +1,95 @@
+{
+  "id": "690dc562931a2d61ba0b132b",
+  "slug": "getsalarygradedetails",
+  "name": "getSalaryGradeDetails",
+  "description": "in this tool generate the Salary grade details.",
+  "instructions": null,
+  "taskName": "Salary Grade",
+  "tags": [],
+  "status": "unlive",
+  "signature": "getSalaryGrade",
+  "createdAt": "2025-04-28T11:50:09.011Z",
+  "updatedAt": "2026-07-17T12:54:07.192Z",
+  "assignedAgents": [],
+  "contentHash": "ba2d6e9850a4b0349de640edd6a86759659de70cf668220693a9e0e09c08c905",
+  "lastExportedAt": "2026-09-05T19:39:22.082Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc562931a2d61ba0b132b",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getSalaryGradeDetails",
+      "description": "in this tool generate the Salary grade details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getSalaryGrade",
+        "args": [
+          {
+            "name": "gradeCode",
+            "type": "string",
+            "description": "to search the for salary grade.Ex:-\"000001\"",
+            "required": true,
+            "_id": "680f6b71f6ef15e61646dbf5"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a25ef5ae1eca4be80dcdc"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"SalaryGradeInfo\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"SAGRD.SAL_GRD_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", args.gradeCode);\n  urlencoded1.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  urlencoded1.append(\"ctl00$body$grdsummary1$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdsummary1_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary1$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"33\");\n  urlencoded1.append(\"ctl00_body_grdsummary1_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary1_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$hdnDecimalFormat\", \"2\");\n\n  const requestOptions1 = { method: \"POST\", headers: myHeaders, body: urlencoded1, redirect: \"follow\" };\n  const response1 = await fetch(`${location.origin}/hr/EIM/SalaryGradeInfo.aspx`, requestOptions1);\n  const html1 = await response1.text();\n  const parser1 = new DOMParser();\n  const doc1 = parser1.parseFromString(html1, 'text/html');\n\n  const viewState = doc1.querySelector('#__VIEWSTATE')?.value || '';\n  const eventValidation = doc1.querySelector('#__EVENTVALIDATION')?.value || '';\n  const viewStateGen = doc1.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n\n  const anchor = doc1.querySelector('tr[id^=\"ctl00_body_grdsummary1_ctl00__\"] a[href^=\"javascript:__doPostBack\"]');\n  const href = anchor?.getAttribute('href') || \"\";\n  const match = href.match(/__doPostBack\\('([^']+)'/);\n  const postBackCode = match ? match[1] : \"\";\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", postBackCode);\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$cboCriteria\", \"SAGRD.SAL_GRD_CODE\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$txtContent\", args.gradeCode);\n  urlencoded2.append(\"ctl00$body$grdsummary1$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary1_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$grdsummary1$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary1_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00_body_grdsummary1_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$hdnDecimalFormat\", \"2\");\n\n  const requestOptions2 = { method: \"POST\", headers: myHeaders, body: urlencoded2, redirect: \"follow\" };\n  const response2 = await fetch(`${location.origin}/hr/EIM/SalaryGradeInfo.aspx`, requestOptions2);\n  const html2 = await response2.text();\n\n  const viewDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html2);\n  window.sg = viewDetails;\n  const parser2 = new DOMParser();\n  const doc2 = parser2.parseFromString(html2, 'text/html');\n\n  const salaryGradeData = {\n    code: doc2.getElementById('ctl00_body_txtsalcode')?.value.trim() || \"\",\n    salaryGradeName: doc2.getElementById('ctl00_body_txtsalname')?.value.trim() || \"\",\n    currency: {\n      value: doc2.getElementById('ctl00_body_cboCurrType')?.value || \"\",\n      text: doc2.getElementById('ctl00_body_cboCurrType')?.options[doc2.getElementById('ctl00_body_cboCurrType')?.selectedIndex]?.text.trim() || \"\"\n    },\n    salaryType: (() => {\n      const rangeRadio = doc2.getElementById('ctl00_body_optsalary_0');\n      const slotRadio = doc2.getElementById('ctl00_body_optsalary_1');\n      if (rangeRadio?.checked) return \"Range\";\n      if (slotRadio?.checked) return \"Slot\";\n      return \"\";\n    })(),\n    minPoint: doc2.getElementById('ctl00_body_txtMin')?.value.trim() || \"\",\n    midPoint: doc2.getElementById('ctl00_body_txtMid')?.value.trim() || \"\",\n    maxPoint: doc2.getElementById('ctl00_body_txtMax')?.value.trim() || \"\"\n  };\n\n  const select = doc2.getElementById('ctl00_body_cboCurrType');\n  const currencies = select ? Array.from(select.options)\n    .filter(option => option.value !== \"-1\")\n    .map(option => ({\n      value: option.value,\n      text: option.text.trim()\n    })) : [];\n\n\n  return { salaryGradeData, currencies };\n})\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Salary Grade",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-28T11:50:09.011Z",
+      "updatedAt": "2026-07-17T12:54:07.192Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getSalaryGrade",
+      "args": [
+        {
+          "name": "gradeCode",
+          "type": "string",
+          "description": "to search the for salary grade.Ex:-\"000001\"",
+          "required": true,
+          "_id": "680f6b71f6ef15e61646dbf5"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a25ef5ae1eca4be80dcdc"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"SalaryGradeInfo\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"SAGRD.SAL_GRD_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", args.gradeCode);\n  urlencoded1.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  urlencoded1.append(\"ctl00$body$grdsummary1$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdsummary1_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary1$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"33\");\n  urlencoded1.append(\"ctl00_body_grdsummary1_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary1_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$hdnDecimalFormat\", \"2\");\n\n  const requestOptions1 = { method: \"POST\", headers: myHeaders, body: urlencoded1, redirect: \"follow\" };\n  const response1 = await fetch(`${location.origin}/hr/EIM/SalaryGradeInfo.aspx`, requestOptions1);\n  const html1 = await response1.text();\n  const parser1 = new DOMParser();\n  const doc1 = parser1.parseFromString(html1, 'text/html');\n\n  const viewState = doc1.querySelector('#__VIEWSTATE')?.value || '';\n  const eventValidation = doc1.querySelector('#__EVENTVALIDATION')?.value || '';\n  const viewStateGen = doc1.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n\n  const anchor = doc1.querySelector('tr[id^=\"ctl00_body_grdsummary1_ctl00__\"] a[href^=\"javascript:__doPostBack\"]');\n  const href = anchor?.getAttribute('href') || \"\";\n  const match = href.match(/__doPostBack\\('([^']+)'/);\n  const postBackCode = match ? match[1] : \"\";\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", postBackCode);\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$cboCriteria\", \"SAGRD.SAL_GRD_CODE\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$txtContent\", args.gradeCode);\n  urlencoded2.append(\"ctl00$body$grdsummary1$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary1_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$grdsummary1$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary1_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00_body_grdsummary1_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$hdnDecimalFormat\", \"2\");\n\n  const requestOptions2 = { method: \"POST\", headers: myHeaders, body: urlencoded2, redirect: \"follow\" };\n  const response2 = await fetch(`${location.origin}/hr/EIM/SalaryGradeInfo.aspx`, requestOptions2);\n  const html2 = await response2.text();\n\n  const viewDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html2);\n  window.sg = viewDetails;\n  const parser2 = new DOMParser();\n  const doc2 = parser2.parseFromString(html2, 'text/html');\n\n  const salaryGradeData = {\n    code: doc2.getElementById('ctl00_body_txtsalcode')?.value.trim() || \"\",\n    salaryGradeName: doc2.getElementById('ctl00_body_txtsalname')?.value.trim() || \"\",\n    currency: {\n      value: doc2.getElementById('ctl00_body_cboCurrType')?.value || \"\",\n      text: doc2.getElementById('ctl00_body_cboCurrType')?.options[doc2.getElementById('ctl00_body_cboCurrType')?.selectedIndex]?.text.trim() || \"\"\n    },\n    salaryType: (() => {\n      const rangeRadio = doc2.getElementById('ctl00_body_optsalary_0');\n      const slotRadio = doc2.getElementById('ctl00_body_optsalary_1');\n      if (rangeRadio?.checked) return \"Range\";\n      if (slotRadio?.checked) return \"Slot\";\n      return \"\";\n    })(),\n    minPoint: doc2.getElementById('ctl00_body_txtMin')?.value.trim() || \"\",\n    midPoint: doc2.getElementById('ctl00_body_txtMid')?.value.trim() || \"\",\n    maxPoint: doc2.getElementById('ctl00_body_txtMax')?.value.trim() || \"\"\n  };\n\n  const select = doc2.getElementById('ctl00_body_cboCurrType');\n  const currencies = select ? Array.from(select.options)\n    .filter(option => option.value !== \"-1\")\n    .map(option => ({\n      value: option.value,\n      text: option.text.trim()\n    })) : [];\n\n\n  return { salaryGradeData, currencies };\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

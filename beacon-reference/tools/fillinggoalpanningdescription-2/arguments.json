@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "GoalPlaningDescription",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "GoalPlaningDescription , already generated context takes here ",
+      "advanced": false,
+      "raw": {
+        "name": "GoalPlaningDescription",
+        "type": "string",
+        "description": "GoalPlaningDescription , already generated context takes here ",
+        "required": true,
+        "_id": "6889b90deeba7ba5f997c1fe"
+      }
+    },
+    {
+      "name": "GoalTitle",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "GoalTitle , tkes here already generated context takes here ",
+      "advanced": false,
+      "raw": {
+        "name": "GoalTitle",
+        "type": "string",
+        "description": "GoalTitle , tkes here already generated context takes here ",
+        "required": true,
+        "_id": "6889b90deeba7ba5f997c1ff"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

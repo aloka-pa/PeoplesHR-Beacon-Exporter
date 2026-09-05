@@ -1,0 +1,24 @@
+{
+  "id": "690dc57a931a2d61ba0b228c",
+  "slug": "candidatesubmit",
+  "name": "candidatesubmit",
+  "status": "live",
+  "createdAt": "2025-06-03T12:51:11.031Z",
+  "updatedAt": "2025-06-03T12:51:11.031Z",
+  "contentHash": "8de5a826e9eced8a5179fca7002656da8a851fbb1874bff348176e135fb0f503",
+  "lastExportedAt": "2026-09-05T19:41:38.354Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57a931a2d61ba0b228c",
+    "name": "candidatesubmit",
+    "status": "live",
+    "code": "(async function (args) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"cache-control\", \"max-age=0\");\n  myHeaders.append(\"content-type\", \"application/x-www-form-urlencoded\");\n\n  // Shared data\n  const rawEmployees = BeaconBar.getSharedData(\"employeesname\"); // array of employees\n  const viewStates = BeaconBar.getSharedData(\"finaloutputViewState\");\n\n\nconst employeesNameId = rawEmployees.map((emp, i) => ({\n  ...emp,\n  rowIndex: i // ✅ starts at 0\n}));\n\n  // Parse selected indexes (string like \"0,1\" → [\"0\",\"1\"])\n  const selectedIndexes = args?.selectedIndexes\n    ? args.selectedIndexes.split(\",\").map(num => num.trim())\n    : employeesNameId.map(e => String(e.rowIndex)); // fallback → all employees\n\n  const urlencoded = new URLSearchParams();\n\n  // Add viewstate + form basics\n  urlencoded.append(\"__EVENTTARGET\", \"\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__LASTFOCUS\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewStates.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewStates.viewStateGenerator);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", viewStates.eventValidation);\n  urlencoded.append(\"RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"TalentEmployeeSearch$ctl05$RadioButtonGroup1\", viewStates.totalSubmit);\n  urlencoded.append(\"TalentEmployeeSearch$ctl05$ctl14\", \"0\");\n  urlencoded.append(\"TalentEmployeeSearch$ctl05$ctl16\", \"\");\n  urlencoded.append(\"TalentEmployeeSearch$ctl05$ctl21\", \"\");\n  urlencoded.append(\"TalentEmployeeSearch$ctl05$ctl38\", \"Submit\");\n\n  // ✅ Dynamically add checkboxes using rowIndex\n  selectedIndexes.forEach(idx => {\n    const emp = employeesNameId.find(e => String(e.rowIndex) === idx);\n    if (emp?.checkbox?.name) {\n      urlencoded.append(emp.checkbox.name, \"on\");\n    }\n  });\n\n  // Client state for Telerik\n  const clientState = {\n    selectedIndexes: selectedIndexes,\n    reorderedColumns: [],\n    expandedItems: [],\n    expandedGroupItems: [],\n    expandedFilterItems: [],\n    deletedItems: [],\n    popUpLocations: {},\n    draggedItemsIndexes: []\n  };\n\n  urlencoded.append(\"TalentEmployeeSearch_ctl06_ClientState\", JSON.stringify(clientState));\n\n  // Request config\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  // Digest + Eligibility\n  const eligibility = BeaconBar.getSharedData(\"eligibility\");\n  const digest = await BeaconBar.executeFunction(\"getDigest\")(eligibility);\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n\n  // Send request\n  const response = await fetch(\n    `${reqOptions}Talent/SearchDialog.aspx?${eligibility}&digest=${digest.digest}`,\n    requestOptions\n  );\n\n  const data = await response.text();\n\n  function extractViewState(html) {\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html, \"text/html\");\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const comapanydetails = doc.querySelector(\"#body_hdnIsCompanyDetail\")?.value || \"\";\n  const eventarguement = doc.querySelector(\"#__EVENTARGUMENT\")?.value || \"\";\n\n  // Get the first script containing \"Talent\" in its src\n  const talentScript = Array.from(doc.querySelectorAll(\"script[src]\"))\n    .map(s => s.getAttribute(\"src\"))\n    .find(src => src.includes(\"/Talent/\") && src.includes(\"Telerik\"));\n\n  return {\n    viewState,\n    viewStateGenerator,\n    eventValidation,\n    comapanydetails,\n    eventarguement,\n    talentScript\n  };\n}\nconst utils = extractViewState(data);\nBeaconBar.setSharedData(\"utils\", utils)\n  return data;\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

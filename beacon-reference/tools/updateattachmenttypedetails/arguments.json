@@ -1,0 +1,32 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "ctl00_body_txtDesc",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Description or name of the attachment type (e.g., 'Attachment from Template Designer Module').",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Description or name of the attachment type (e.g., 'Attachment from Template Designer Module')."
+      }
+    },
+    {
+      "name": "ctl00_body_ChkisExpire",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Checkbox indicating if the attachment has an expiration (value is 'on' when checked).",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on"
+        ],
+        "description": "Checkbox indicating if the attachment has an expiration (value is 'on' when checked)."
+      }
+    }
+  ]
+}

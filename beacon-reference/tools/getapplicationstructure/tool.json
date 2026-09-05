@@ -1,0 +1,123 @@
+{
+  "id": "690dc568931a2d61ba0b17f2",
+  "slug": "getapplicationstructure",
+  "name": "getApplicationStructure",
+  "description": "This tool generates the employee benefit application structure. Before generating the structure, it first executes the \"getBenefitApplicationTypesDetails\" tool to retrieve all available benefit application types. These type names are displayed to the user, and upon selection, the corresponding name is used as the benCode argument for the next step.",
+  "instructions": null,
+  "taskName": "",
+  "tags": [
+    "BenefitManagement"
+  ],
+  "status": "unlive",
+  "signature": "getApplicationStructure",
+  "createdAt": "2025-05-21T07:56:15.638Z",
+  "updatedAt": "2026-07-17T12:51:36.786Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be9",
+      "name": "BenefitManagement"
+    }
+  ],
+  "contentHash": "5c08987741c6a6cf795416b150a58ef242c186948bef17eef10a83ba07639508",
+  "lastExportedAt": "2026-09-05T19:39:22.187Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b17f2",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getApplicationStructure",
+      "description": "This tool generates the employee benefit application structure. Before generating the structure, it first executes the \"getBenefitApplicationTypesDetails\" tool to retrieve all available benefit application types. These type names are displayed to the user, and upon selection, the corresponding name is used as the benCode argument for the next step.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getApplicationStructure",
+        "args": [
+          {
+            "name": "benCode",
+            "type": "string",
+            "description": "The argument will be used to fetch the benefit type name corresponding to the benCode from the getBenefitApplicationTypesDetails API.",
+            "required": true,
+            "_id": "682d871f2819f52d85633578"
+          },
+          {
+            "name": "benefitName",
+            "type": "string",
+            "description": "The argument will be used to fetch the benefit type name from the getBenefitApplicationTypesDetails API.",
+            "required": true,
+            "_id": "682dbc24b36076aec685c6b7"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a25585aa8b43ec1a8136c"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getBenefitApplicationStructure\")(args.benCode);\n  window.benCode ={\n    benCode:args.benCode,\n    benName : args.benefitName\n  } \n  return details;\n})\n",
+      "groupName": "",
+      "tags": [
+        "BenefitManagement"
+      ],
+      "taskName": "",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-21T07:56:15.638Z",
+      "updatedAt": "2026-07-17T12:51:36.786Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be9",
+          "name": "BenefitManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getApplicationStructure",
+      "args": [
+        {
+          "name": "benCode",
+          "type": "string",
+          "description": "The argument will be used to fetch the benefit type name corresponding to the benCode from the getBenefitApplicationTypesDetails API.",
+          "required": true,
+          "_id": "682d871f2819f52d85633578"
+        },
+        {
+          "name": "benefitName",
+          "type": "string",
+          "description": "The argument will be used to fetch the benefit type name from the getBenefitApplicationTypesDetails API.",
+          "required": true,
+          "_id": "682dbc24b36076aec685c6b7"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a25585aa8b43ec1a8136c"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getBenefitApplicationStructure\")(args.benCode);\n  window.benCode ={\n    benCode:args.benCode,\n    benName : args.benefitName\n  } \n  return details;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

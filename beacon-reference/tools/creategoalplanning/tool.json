@@ -1,0 +1,145 @@
+{
+  "id": "690dc56b931a2d61ba0b1a92",
+  "slug": "creategoalplanning",
+  "name": "createGoalPlanning",
+  "description": "createGoalPlanning , before calling this api you need to call the tool \"loadGoals\".",
+  "instructions": null,
+  "taskName": "createGoalPlanning",
+  "tags": [
+    "Goals"
+  ],
+  "status": "live",
+  "signature": "createGoalPlanning",
+  "createdAt": "2025-08-05T04:11:08.091Z",
+  "updatedAt": "2025-08-05T04:11:08.091Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c5a",
+      "name": "GoalPanning(API)"
+    }
+  ],
+  "contentHash": "e946d8eb8027f2e78d0827b7bf284022fdb619f02fb003dcfe799f31c3628245",
+  "lastExportedAt": "2026-09-05T19:39:23.500Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1a92",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createGoalPlanning",
+      "description": "createGoalPlanning , before calling this api you need to call the tool \"loadGoals\".",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createGoalPlanning",
+        "args": [
+          {
+            "name": "goalDesc",
+            "type": "string",
+            "description": "goalDesc , Ex:- ",
+            "required": true,
+            "_id": "6891900a80da037b25e7170b"
+          },
+          {
+            "name": "goalTitle",
+            "type": "string",
+            "description": "goalTitle",
+            "required": true,
+            "_id": "6891900a80da037b25e7170c"
+          },
+          {
+            "name": "targetDate",
+            "type": "string",
+            "description": "targetDate, Ex:- format date is this \"2025-08-04T00:00:00\",\n",
+            "required": true,
+            "_id": "6891918160d8b2f05e760baf"
+          },
+          {
+            "name": "GGRP_ID",
+            "type": "string",
+            "description": "GGRP_ID . Ex:- 1  select which goal group is selected ",
+            "required": true,
+            "_id": "689194bc0497b640ed26bac4"
+          },
+          {
+            "name": "EVAL_ID",
+            "type": "string",
+            "description": "EVAL_ID , takes from the selected EVAL_ID",
+            "required": true,
+            "_id": "6891a98a6c9516b8d414d09f"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6891845c6d78021a64d052e5"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function(data, args, reqOptions) {\n  const createGoal = await BeaconBar.executeFunction(\"savegoal\")(args);\n\n  setTimeout(() => {\n    BeaconBar.executeFunction(\"executeCommand\")(\"../PerfV8/GoalPlanning/IndividualGoalPlanningSelect\");\n  }, 4000);\n\n  return { message: \"Successfully created. Refreshing the page in 4 secs\" };\n})\n",
+      "groupName": "",
+      "tags": [
+        "Goals"
+      ],
+      "taskName": "createGoalPlanning",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-05T04:11:08.091Z",
+      "updatedAt": "2025-08-05T04:11:08.091Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c5a",
+          "name": "GoalPanning(API)"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "createGoalPlanning",
+      "args": [
+        {
+          "name": "goalDesc",
+          "type": "string",
+          "description": "goalDesc , Ex:- ",
+          "required": true,
+          "_id": "6891900a80da037b25e7170b"
+        },
+        {
+          "name": "goalTitle",
+          "type": "string",
+          "description": "goalTitle",
+          "required": true,
+          "_id": "6891900a80da037b25e7170c"
+        },
+        {
+          "name": "targetDate",
+          "type": "string",
+          "description": "targetDate, Ex:- format date is this \"2025-08-04T00:00:00\",\n",
+          "required": true,
+          "_id": "6891918160d8b2f05e760baf"
+        },
+        {
+          "name": "GGRP_ID",
+          "type": "string",
+          "description": "GGRP_ID . Ex:- 1  select which goal group is selected ",
+          "required": true,
+          "_id": "689194bc0497b640ed26bac4"
+        },
+        {
+          "name": "EVAL_ID",
+          "type": "string",
+          "description": "EVAL_ID , takes from the selected EVAL_ID",
+          "required": true,
+          "_id": "6891a98a6c9516b8d414d09f"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6891845c6d78021a64d052e5"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function(data, args, reqOptions) {\n  const createGoal = await BeaconBar.executeFunction(\"savegoal\")(args);\n\n  setTimeout(() => {\n    BeaconBar.executeFunction(\"executeCommand\")(\"../PerfV8/GoalPlanning/IndividualGoalPlanningSelect\");\n  }, 4000);\n\n  return { message: \"Successfully created. Refreshing the page in 4 secs\" };\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

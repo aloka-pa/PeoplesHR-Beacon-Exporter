@@ -1,0 +1,24 @@
+{
+  "id": "690dc585931a2d61ba0b2d33",
+  "slug": "mobileswipeapprovalorreject",
+  "name": "mobileSwipeApprovalOrReject",
+  "status": "live",
+  "createdAt": "2025-06-14T11:59:22.915Z",
+  "updatedAt": "2026-07-17T12:55:58.311Z",
+  "contentHash": "44cd417b8d681e2493ce9cdf34b41857ca3af303423f4f3cd5a47ae3249d5b5a",
+  "lastExportedAt": "2026-09-05T19:41:17.548Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc585931a2d61ba0b2d33",
+    "name": "mobileSwipeApprovalOrReject",
+    "status": "live",
+    "code": "(async function (comment, args) {\n  const dta = BeaconBar.getSharedData(\"util\");\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const url = `${reqOptions}TNA/MobileSwipeApproval.aspx?WFMainID=${dta.args.WorkflowMainId}&Allowedit=0&CATID=0&digest=${dta.digest.digest}`;\n\n  const headers = {\n    \"Accept\": \"*/*\",\n    \"Accept-Language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n    \"Cache-Control\": \"no-cache\",\n    \"Content-Type\": \"application/x-www-form-urlencoded; charset=UTF-8\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n  };\n\n  const formData = new URLSearchParams();\n  formData.append(\"ctl00$main$RadScriptManager\", \"ctl00$body$UpdatePanel4|ctl00$body$btnSubmit\");\n  formData.append(\"ctl00_main_RadScriptManager_HiddenField\", \"\");\n  formData.append(\"__EVENTTARGET\", \"\");\n  formData.append(\"__EVENTARGUMENT\", \"\");\n   formData.append(\"ctl00_main_RadWindowManager1_ClientState\", \"\");\n  formData.append(\"__VIEWSTATE\", dta.payload.viewState);\n  formData.append(\"__VIEWSTATEGENERATOR\", dta.payload.viewStateGen);\n\n  // ✅ use raw key names\n  formData.append(\"ctl00$body$grdEmployees$ctl00$ctl04$txtComments\", comment);\n  formData.append(\"__VIEWSTATEENCRYPTED\",\"\")\n  formData.append(\"__EVENTVALIDATION\",dta.payload.eventValidation )\n  formData.append(\"ctl00$body$hdnLat\", dta.payload.latitude);\n  formData.append(\"ctl00$body$hdnLongi\", dta.payload.longitude);\n  formData.append(\"ctl00$body$hdnJSON_DataHolder\", dta.payload.JSON_DataHolder);\n  formData.append(\"ctl00$body$HdnGeoUrl\", dta.payload.HdnGeoUrl);\n  formData.append(\"ctl00$body$Hdngeo\", dta.payload.ctl00_body_Hdngeo);\n  formData.append(\"ctl00$hdnDisableModuleQuickMenuIcon\", \"\");\n  formData.append(\"ctl00$hdnCulturDateFormat\", dta.payload.DateFormat);\n\n  formData.append(\"__ASYNCPOST\", \"true\");\n  formData.append(\"ctl00$body$btnSubmit\", args);\n\n  try {\n    const response = await fetch(url, {\n      method: \"POST\",\n      headers: headers,\n      body: formData,\n      redirect: \"follow\"\n    });\n\n    if (!response.ok) {\n      throw new Error(`HTTP error! Status: ${response.status}`);\n    }\n\n    const result = await response.text();\n  } catch (error) {\n  }\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

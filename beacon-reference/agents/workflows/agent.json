@@ -1,0 +1,79 @@
+{
+  "id": "690dc572931a2d61ba0b1c34",
+  "slug": "workflows",
+  "name": "WorkfLows",
+  "description": "WorkfLows",
+  "exportedAt": "2026-09-05T19:41:12.239Z",
+  "raw": {
+    "_id": "690dc572931a2d61ba0b1c34",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "WorkfLows",
+    "description": "WorkfLows",
+    "by": "7337",
+    "prompt": "Scenario: If the user provides any date, first execute the \"dateFormat\" API to apply the appropriate date formatting. Then, use the formatted date in the subsequent API payload.\n\n\nScenario:- In this scenario, whenever the user input involves any date-related query, the system must first execute the \"dateFormat\" tool to retrieve the appropriate date format and example. This ensures consistency in how dates are processed. The resulting format should then be used to convert any user-provided date into the correct format before passing it to the next API or tool that depends on date input.\n\n",
+    "notes": [
+      {
+        "prompt": "690dc55e931a2d61ba0b104d",
+        "rules": {
+          "ids": [],
+          "condition": "and"
+        },
+        "_id": "6911e0ec5160a328a65214d8"
+      }
+    ],
+    "llmConfig": [],
+    "status": "live",
+    "toolIds": [
+      "690dc568931a2d61ba0b18e2",
+      "690dc568931a2d61ba0b18e5",
+      "690dc569931a2d61ba0b193a",
+      "690dc569931a2d61ba0b193e",
+      "690dc56b931a2d61ba0b1a5f",
+      "690dc56b931a2d61ba0b1a67"
+    ],
+    "scenarioIds": [
+      "690dc56c931a2d61ba0b1bac"
+    ],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "callKnowledgeBase",
+        "args": [
+          {
+            "name": "query",
+            "type": "string",
+            "description": "The query to be executed by the agent",
+            "required": true,
+            "_id": "68b15065b68c6aa8a7496d54"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n       \"type\":  \"object\",\n       \"properties\": {},\n       \"required\": []\n       }",
+        "_id": "6911e0ec5160a328a65214d9"
+      },
+      "target": {
+        "entityValue": "",
+        "shardKey1": "",
+        "shardKey2": "",
+        "shardKey3": ""
+      }
+    },
+    "vis": false,
+    "createdAt": "2025-06-02T03:56:32.697Z",
+    "updatedAt": "2025-11-10T12:56:12.978Z",
+    "__v": 1
+  }
+}

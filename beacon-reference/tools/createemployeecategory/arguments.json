@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "employeeCategory",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to update the employee category description.",
+      "advanced": false,
+      "raw": {
+        "name": "employeeCategory",
+        "type": "string",
+        "description": "to update the employee category description.",
+        "required": true,
+        "_id": "6814a78d8f0c9af526c81619"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "empGroupCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the employee Group Code.",
+      "advanced": false,
+      "raw": {
+        "name": "empGroupCode",
+        "type": "string",
+        "description": "to give the employee Group Code.",
+        "required": true,
+        "_id": "6815f48a6a612deb207411ba"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

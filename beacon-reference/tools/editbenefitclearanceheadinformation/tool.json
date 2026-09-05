@@ -1,0 +1,155 @@
+{
+  "id": "6958f801b2007cecd208af00",
+  "slug": "editbenefitclearanceheadinformation",
+  "name": "editBenefitClearanceHeadInformation",
+  "description": "Edit a Benefit Clearance Head position by changing the position name, assigning a new employee by their ID, or enabling/disabling workflow approval. The transformer handles employee search and assignment automatically.",
+  "instructions": null,
+  "taskName": "Editing Benefit Clearance Head Position Details",
+  "tags": [
+    "EIMAdmin",
+    "BenefitsInformation",
+    "phase2"
+  ],
+  "status": "live",
+  "signature": "editBenefitClearanceHeadInformation",
+  "createdAt": "2026-01-03T11:05:37.966Z",
+  "updatedAt": "2026-07-17T12:50:36.484Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "faf40ae0e7dd4fe0b22004be02de4013629d4c4450b012f41808e7461fc2cd9a",
+  "lastExportedAt": "2026-09-05T19:39:22.228Z",
+  "raw": {
+    "basic": {
+      "_id": "6958f801b2007cecd208af00",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "editBenefitClearanceHeadInformation",
+      "description": "Edit a Benefit Clearance Head position by changing the position name, assigning a new employee by their ID, or enabling/disabling workflow approval. The transformer handles employee search and assignment automatically.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "editBenefitClearanceHeadInformation",
+        "args": [
+          {
+            "name": "positionName",
+            "type": "string",
+            "description": "The name of the Benefit Clearance Head position to edit (e.g., 'Admin Officer', 'Finance Head'). If not provided, the transformer will list all available positions for the user to choose from.",
+            "required": false,
+            "_id": "695c97dd276885022de6eb4b"
+          },
+          {
+            "name": "employeeId",
+            "type": "string",
+            "description": "The employee ID to assign to this position (e.g., '000001', '000010'). The system will search for this employee ID and validate if the employee exists and is active.",
+            "required": false,
+            "_id": "695c97dd276885022de6eb4c"
+          },
+          {
+            "name": "newPositionName",
+            "type": "string",
+            "description": "The new name for the position if you want to rename it. If not provided, the position name stays the same.",
+            "required": false,
+            "_id": "695c97dd276885022de6eb4d"
+          },
+          {
+            "name": "createWorkflowApproval",
+            "type": "string",
+            "description": "Whether to enable workflow approval for this position. Use 'true' to enable or 'false' to disable. If not provided, the checkbox remains unchanged.",
+            "required": false,
+            "_id": "695c97dd276885022de6eb4e"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a251c5aa8b43ec1a7fa61"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  \n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/BenefitClearingHead.aspx\")) {\n    return {\n      status: \"NO_ACCESS\",\n      message: \"You do not have access to Benefit Clearance Head screen. Please contact HR Admin.\"\n    };\n  }\n\n  const headers = new Headers();\n  headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n  headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/BenefitClearingHead.aspx\");\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/BenefitClearingHead.aspx`;\n\n  const parser = new DOMParser();\n\n  // STEP 1: Get initial page and list all benefit heads\n  const initialResponse = await fetch(url, { method: \"GET\", headers });\n  const initialDoc = parser.parseFromString(await initialResponse.text(), \"text/html\");\n\n  const rows = initialDoc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n  const allPositions = [];\n  \n  rows.forEach(r => {\n    const cells = r.querySelectorAll(\"td\");\n    const posName = cells[0]?.textContent.trim();\n    const empName = cells[1]?.textContent.trim();\n    const editKey = r.querySelector(\"a\")?.getAttribute(\"href\")?.match(/__doPostBack\\('([^']+)'/)?.[1];\n    \n    if (posName && editKey) {\n      allPositions.push({\n        positionName: posName,\n        currentEmployee: empName,\n        editKey: editKey\n      });\n    }\n  });\n\n\n  // If no specific position provided, return the list\n  if (!args.positionName) {\n    return {\n      status: \"NEEDS_POSITION\",\n      message: \"Please specify which Benefit Clearance Head position you want to edit:\",\n      availablePositions: allPositions\n    };\n  }\n\n  // Find the matching position\n  const targetPosition = allPositions.find(p => \n    p.positionName.toLowerCase() === args.positionName.toLowerCase()\n  );\n\n  if (!targetPosition) {\n    return {\n      status: \"NOT_FOUND\",\n      message: `Position \"${args.positionName}\" not found. Available positions are: ${allPositions.map(p => p.positionName).join(', ')}`,\n      availablePositions: allPositions\n    };\n  }\n\n  const vs1 = initialDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const ev1 = initialDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const vsg1 = initialDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // STEP 2: Click on row to open detail view\n  const rowClickForm = new URLSearchParams();\n  rowClickForm.append(\"scrollLeft\", \"0\");\n  rowClickForm.append(\"scrollTop\", \"0\");\n  rowClickForm.append(\"__EVENTTARGET\", targetPosition.editKey);\n  rowClickForm.append(\"__EVENTARGUMENT\", \"\");\n  rowClickForm.append(\"__VIEWSTATE\", vs1);\n  rowClickForm.append(\"__VIEWSTATEGENERATOR\", vsg1);\n  rowClickForm.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  rowClickForm.append(\"__EVENTVALIDATION\", ev1);\n  rowClickForm.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  rowClickForm.append(\"ctl00$hdnQuickmenu\", \"1\");\n  rowClickForm.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  rowClickForm.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  rowClickForm.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  rowClickForm.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"5\");\n  rowClickForm.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  rowClickForm.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const detailResponse = await fetch(url, { method: \"POST\", headers, body: rowClickForm });\n  const detailDoc = parser.parseFromString(await detailResponse.text(), \"text/html\");\n\n  const currentPositionName = detailDoc.querySelector(\"#ctl00_body_txtBenHeadName\")?.value || \"\";\n  const currentEmployeeDisplay = detailDoc.querySelector(\"#ctl00_body_txtEmpDisplayNo\")?.value || \"\";\n\n\n  const vs2 = detailDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const ev2 = detailDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const vsg2 = detailDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // STEP 3: Click Edit button\n  const editForm = new URLSearchParams();\n  editForm.append(\"scrollLeft\", \"0\");\n  editForm.append(\"scrollTop\", \"0\");\n  editForm.append(\"__EVENTTARGET\", \"\");\n  editForm.append(\"__EVENTARGUMENT\", \"\");\n  editForm.append(\"__VIEWSTATE\", vs2);\n  editForm.append(\"__VIEWSTATEGENERATOR\", vsg2);\n  editForm.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  editForm.append(\"__EVENTVALIDATION\", ev2);\n  editForm.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  editForm.append(\"ctl00$hdnQuickmenu\", \"1\");\n  editForm.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  editForm.append(\"ctl00$body$hdnDisplayMethod\", \"\");\n  editForm.append(\"ctl00$body$butEdit\", \"Edit\");\n\n  const editModeResponse = await fetch(url, { method: \"POST\", headers, body: editForm });\n  const editModeDoc = parser.parseFromString(await editModeResponse.text(), \"text/html\");\n\n  let vs3 = editModeDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  let ev3 = editModeDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  let vsg3 = editModeDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const currentCheckbox = editModeDoc.querySelector(\"#ctl00_body_chkAssignWorkFlow\")?.checked || false;\n\n  let updatedPositionName = args.newPositionName || currentPositionName;\n  let updatedEmployeeName = currentEmployeeDisplay;\n  let employeeChanged = false;\n\n  // EMPLOYEE SEARCH FLOW - Using GetSearchResult (same as work experience)\n  if (args.employeeId) {\n    \n    // Call censusInformation to register employee selection\n    await BeaconBar.executeFunction(\"censusInformation\")(args.employeeId);\n\n    // Trigger GetSearchResult callback\n    const searchForm = new URLSearchParams();\n    searchForm.append(\"scrollLeft\", \"0\");\n    searchForm.append(\"scrollTop\", \"0\");\n    searchForm.append(\"__EVENTTARGET\", \"GetSearchResult\");\n    searchForm.append(\"__EVENTARGUMENT\", \"\");\n    searchForm.append(\"__VIEWSTATE\", vs3);\n    searchForm.append(\"__VIEWSTATEGENERATOR\", vsg3);\n    searchForm.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    searchForm.append(\"__EVENTVALIDATION\", ev3);\n    searchForm.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    searchForm.append(\"ctl00$hdnQuickmenu\", \"1\");\n    searchForm.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n    searchForm.append(\"ctl00$body$txtBenHeadName\", updatedPositionName);\n    searchForm.append(\"ctl00$body$hdnDisplayMethod\", \"\");\n    searchForm.append(\"ctl00$body$txtEmpDisplayNo\", currentEmployeeDisplay);\n\n    const searchResponse = await fetch(url, { method: \"POST\", headers, body: searchForm });\n    const searchDoc = parser.parseFromString(await searchResponse.text(), \"text/html\");\n\n    // Get updated employee name after GetSearchResult\n    updatedEmployeeName = searchDoc.querySelector(\"#ctl00_body_txtEmpDisplayNo\")?.value || \"\";\n    \n    // Check if employee was found\n    if (!updatedEmployeeName || updatedEmployeeName === currentEmployeeDisplay) {\n      return {\n        status: \"EMPLOYEE_NOT_FOUND\",\n        message: `Employee with ID \"${args.employeeId}\" not found or is not active.`\n      };\n    }\n\n    employeeChanged = true;\n\n    // Update viewstate\n    vs3 = searchDoc.querySelector(\"#__VIEWSTATE\")?.value || vs3;\n    ev3 = searchDoc.querySelector(\"#__EVENTVALIDATION\")?.value || ev3;\n    vsg3 = searchDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || vsg3;\n  }\n\n  // Handle checkbox\n  let checkboxChecked = currentCheckbox;\n  if (args.createWorkflowApproval !== undefined) {\n    checkboxChecked = args.createWorkflowApproval === \"true\" || args.createWorkflowApproval === true;\n  }\n\n    position: updatedPositionName,\n    employee: updatedEmployeeName,\n    workflow: checkboxChecked\n  });\n\n  // STEP 6: Save\n  const saveForm = new URLSearchParams();\n  saveForm.append(\"scrollLeft\", \"0\");\n  saveForm.append(\"scrollTop\", \"0\");\n  saveForm.append(\"__EVENTTARGET\", \"\");\n  saveForm.append(\"__EVENTARGUMENT\", \"\");\n  saveForm.append(\"__VIEWSTATE\", vs3);\n  saveForm.append(\"__VIEWSTATEGENERATOR\", vsg3);\n  saveForm.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  saveForm.append(\"__EVENTVALIDATION\", ev3);\n  saveForm.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  saveForm.append(\"ctl00$hdnQuickmenu\", \"1\");\n  saveForm.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  saveForm.append(\"ctl00$body$txtBenHeadName\", updatedPositionName);\n  saveForm.append(\"ctl00$body$hdnDisplayMethod\", \"\");\n  saveForm.append(\"ctl00$body$txtEmpDisplayNo\", updatedEmployeeName);\n  \n  if (checkboxChecked) {\n    saveForm.append(\"ctl00$body$chkAssignWorkFlow\", \"on\");\n  }\n  \n  saveForm.append(\"ctl00$body$butSave\", \"Save\");\n\n  const finalResponse = await fetch(url, { method: \"POST\", headers, body: saveForm });\n  const saveHtml = await finalResponse.text();\n\n  if (finalResponse.status === 200) {\n    const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n    const errorMsg = saveDoc.querySelector(\".alert-danger, .error, #ctl00_body_lblMessage\")?.textContent;\n    \n    if (errorMsg && errorMsg.trim() !== \"\") {\n      return { status: \"ERROR\", message: `Save failed: ${errorMsg.trim()}` };\n    }\n\n    \n    const changes = [];\n    if (args.newPositionName) changes.push(`position name to \"${updatedPositionName}\"`);\n    if (employeeChanged) changes.push(`assigned employee to ${updatedEmployeeName} (ID: ${args.employeeId})`);\n    if (args.createWorkflowApproval !== undefined) {\n      changes.push(`workflow approval ${checkboxChecked ? 'enabled' : 'disabled'}`);\n    }\n    \n    return {\n      status: \"SUCCESS\",\n      message: `Successfully updated ${args.positionName}. Changed: ${changes.join(', ')}.`,\n      positionName: updatedPositionName,\n      assignedEmployee: updatedEmployeeName,\n      employeeId: args.employeeId,\n      workflowApprovalEnabled: checkboxChecked,\n      previousEmployee: currentEmployeeDisplay\n    };\n  }\n\n  return {\n    status: \"ERROR\",\n    message: \"Failed to update. Please verify in the UI.\"\n  };\n});",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "BenefitsInformation",
+        "phase2"
+      ],
+      "taskName": "Editing Benefit Clearance Head Position Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2026-01-03T11:05:37.966Z",
+      "updatedAt": "2026-07-17T12:50:36.484Z",
+      "__v": 20,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "editBenefitClearanceHeadInformation",
+      "args": [
+        {
+          "name": "positionName",
+          "type": "string",
+          "description": "The name of the Benefit Clearance Head position to edit (e.g., 'Admin Officer', 'Finance Head'). If not provided, the transformer will list all available positions for the user to choose from.",
+          "required": false,
+          "_id": "695c97dd276885022de6eb4b"
+        },
+        {
+          "name": "employeeId",
+          "type": "string",
+          "description": "The employee ID to assign to this position (e.g., '000001', '000010'). The system will search for this employee ID and validate if the employee exists and is active.",
+          "required": false,
+          "_id": "695c97dd276885022de6eb4c"
+        },
+        {
+          "name": "newPositionName",
+          "type": "string",
+          "description": "The new name for the position if you want to rename it. If not provided, the position name stays the same.",
+          "required": false,
+          "_id": "695c97dd276885022de6eb4d"
+        },
+        {
+          "name": "createWorkflowApproval",
+          "type": "string",
+          "description": "Whether to enable workflow approval for this position. Use 'true' to enable or 'false' to disable. If not provided, the checkbox remains unchanged.",
+          "required": false,
+          "_id": "695c97dd276885022de6eb4e"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a251c5aa8b43ec1a7fa61"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  \n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/BenefitClearingHead.aspx\")) {\n    return {\n      status: \"NO_ACCESS\",\n      message: \"You do not have access to Benefit Clearance Head screen. Please contact HR Admin.\"\n    };\n  }\n\n  const headers = new Headers();\n  headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n  headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/BenefitClearingHead.aspx\");\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/BenefitClearingHead.aspx`;\n\n  const parser = new DOMParser();\n\n  // STEP 1: Get initial page and list all benefit heads\n  const initialResponse = await fetch(url, { method: \"GET\", headers });\n  const initialDoc = parser.parseFromString(await initialResponse.text(), \"text/html\");\n\n  const rows = initialDoc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n  const allPositions = [];\n  \n  rows.forEach(r => {\n    const cells = r.querySelectorAll(\"td\");\n    const posName = cells[0]?.textContent.trim();\n    const empName = cells[1]?.textContent.trim();\n    const editKey = r.querySelector(\"a\")?.getAttribute(\"href\")?.match(/__doPostBack\\('([^']+)'/)?.[1];\n    \n    if (posName && editKey) {\n      allPositions.push({\n        positionName: posName,\n        currentEmployee: empName,\n        editKey: editKey\n      });\n    }\n  });\n\n\n  // If no specific position provided, return the list\n  if (!args.positionName) {\n    return {\n      status: \"NEEDS_POSITION\",\n      message: \"Please specify which Benefit Clearance Head position you want to edit:\",\n      availablePositions: allPositions\n    };\n  }\n\n  // Find the matching position\n  const targetPosition = allPositions.find(p => \n    p.positionName.toLowerCase() === args.positionName.toLowerCase()\n  );\n\n  if (!targetPosition) {\n    return {\n      status: \"NOT_FOUND\",\n      message: `Position \"${args.positionName}\" not found. Available positions are: ${allPositions.map(p => p.positionName).join(', ')}`,\n      availablePositions: allPositions\n    };\n  }\n\n  const vs1 = initialDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const ev1 = initialDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const vsg1 = initialDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // STEP 2: Click on row to open detail view\n  const rowClickForm = new URLSearchParams();\n  rowClickForm.append(\"scrollLeft\", \"0\");\n  rowClickForm.append(\"scrollTop\", \"0\");\n  rowClickForm.append(\"__EVENTTARGET\", targetPosition.editKey);\n  rowClickForm.append(\"__EVENTARGUMENT\", \"\");\n  rowClickForm.append(\"__VIEWSTATE\", vs1);\n  rowClickForm.append(\"__VIEWSTATEGENERATOR\", vsg1);\n  rowClickForm.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  rowClickForm.append(\"__EVENTVALIDATION\", ev1);\n  rowClickForm.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  rowClickForm.append(\"ctl00$hdnQuickmenu\", \"1\");\n  rowClickForm.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  rowClickForm.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  rowClickForm.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  rowClickForm.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"5\");\n  rowClickForm.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  rowClickForm.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const detailResponse = await fetch(url, { method: \"POST\", headers, body: rowClickForm });\n  const detailDoc = parser.parseFromString(await detailResponse.text(), \"text/html\");\n\n  const currentPositionName = detailDoc.querySelector(\"#ctl00_body_txtBenHeadName\")?.value || \"\";\n  const currentEmployeeDisplay = detailDoc.querySelector(\"#ctl00_body_txtEmpDisplayNo\")?.value || \"\";\n\n\n  const vs2 = detailDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const ev2 = detailDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const vsg2 = detailDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // STEP 3: Click Edit button\n  const editForm = new URLSearchParams();\n  editForm.append(\"scrollLeft\", \"0\");\n  editForm.append(\"scrollTop\", \"0\");\n  editForm.append(\"__EVENTTARGET\", \"\");\n  editForm.append(\"__EVENTARGUMENT\", \"\");\n  editForm.append(\"__VIEWSTATE\", vs2);\n  editForm.append(\"__VIEWSTATEGENERATOR\", vsg2);\n  editForm.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  editForm.append(\"__EVENTVALIDATION\", ev2);\n  editForm.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  editForm.append(\"ctl00$hdnQuickmenu\", \"1\");\n  editForm.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  editForm.append(\"ctl00$body$hdnDisplayMethod\", \"\");\n  editForm.append(\"ctl00$body$butEdit\", \"Edit\");\n\n  const editModeResponse = await fetch(url, { method: \"POST\", headers, body: editForm });\n  const editModeDoc = parser.parseFromString(await editModeResponse.text(), \"text/html\");\n\n  let vs3 = editModeDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  let ev3 = editModeDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  let vsg3 = editModeDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const currentCheckbox = editModeDoc.querySelector(\"#ctl00_body_chkAssignWorkFlow\")?.checked || false;\n\n  let updatedPositionName = args.newPositionName || currentPositionName;\n  let updatedEmployeeName = currentEmployeeDisplay;\n  let employeeChanged = false;\n\n  // EMPLOYEE SEARCH FLOW - Using GetSearchResult (same as work experience)\n  if (args.employeeId) {\n    \n    // Call censusInformation to register employee selection\n    await BeaconBar.executeFunction(\"censusInformation\")(args.employeeId);\n\n    // Trigger GetSearchResult callback\n    const searchForm = new URLSearchParams();\n    searchForm.append(\"scrollLeft\", \"0\");\n    searchForm.append(\"scrollTop\", \"0\");\n    searchForm.append(\"__EVENTTARGET\", \"GetSearchResult\");\n    searchForm.append(\"__EVENTARGUMENT\", \"\");\n    searchForm.append(\"__VIEWSTATE\", vs3);\n    searchForm.append(\"__VIEWSTATEGENERATOR\", vsg3);\n    searchForm.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    searchForm.append(\"__EVENTVALIDATION\", ev3);\n    searchForm.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    searchForm.append(\"ctl00$hdnQuickmenu\", \"1\");\n    searchForm.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n    searchForm.append(\"ctl00$body$txtBenHeadName\", updatedPositionName);\n    searchForm.append(\"ctl00$body$hdnDisplayMethod\", \"\");\n    searchForm.append(\"ctl00$body$txtEmpDisplayNo\", currentEmployeeDisplay);\n\n    const searchResponse = await fetch(url, { method: \"POST\", headers, body: searchForm });\n    const searchDoc = parser.parseFromString(await searchResponse.text(), \"text/html\");\n\n    // Get updated employee name after GetSearchResult\n    updatedEmployeeName = searchDoc.querySelector(\"#ctl00_body_txtEmpDisplayNo\")?.value || \"\";\n    \n    // Check if employee was found\n    if (!updatedEmployeeName || updatedEmployeeName === currentEmployeeDisplay) {\n      return {\n        status: \"EMPLOYEE_NOT_FOUND\",\n        message: `Employee with ID \"${args.employeeId}\" not found or is not active.`\n      };\n    }\n\n    employeeChanged = true;\n\n    // Update viewstate\n    vs3 = searchDoc.querySelector(\"#__VIEWSTATE\")?.value || vs3;\n    ev3 = searchDoc.querySelector(\"#__EVENTVALIDATION\")?.value || ev3;\n    vsg3 = searchDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || vsg3;\n  }\n\n  // Handle checkbox\n  let checkboxChecked = currentCheckbox;\n  if (args.createWorkflowApproval !== undefined) {\n    checkboxChecked = args.createWorkflowApproval === \"true\" || args.createWorkflowApproval === true;\n  }\n\n    position: updatedPositionName,\n    employee: updatedEmployeeName,\n    workflow: checkboxChecked\n  });\n\n  // STEP 6: Save\n  const saveForm = new URLSearchParams();\n  saveForm.append(\"scrollLeft\", \"0\");\n  saveForm.append(\"scrollTop\", \"0\");\n  saveForm.append(\"__EVENTTARGET\", \"\");\n  saveForm.append(\"__EVENTARGUMENT\", \"\");\n  saveForm.append(\"__VIEWSTATE\", vs3);\n  saveForm.append(\"__VIEWSTATEGENERATOR\", vsg3);\n  saveForm.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  saveForm.append(\"__EVENTVALIDATION\", ev3);\n  saveForm.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  saveForm.append(\"ctl00$hdnQuickmenu\", \"1\");\n  saveForm.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  saveForm.append(\"ctl00$body$txtBenHeadName\", updatedPositionName);\n  saveForm.append(\"ctl00$body$hdnDisplayMethod\", \"\");\n  saveForm.append(\"ctl00$body$txtEmpDisplayNo\", updatedEmployeeName);\n  \n  if (checkboxChecked) {\n    saveForm.append(\"ctl00$body$chkAssignWorkFlow\", \"on\");\n  }\n  \n  saveForm.append(\"ctl00$body$butSave\", \"Save\");\n\n  const finalResponse = await fetch(url, { method: \"POST\", headers, body: saveForm });\n  const saveHtml = await finalResponse.text();\n\n  if (finalResponse.status === 200) {\n    const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n    const errorMsg = saveDoc.querySelector(\".alert-danger, .error, #ctl00_body_lblMessage\")?.textContent;\n    \n    if (errorMsg && errorMsg.trim() !== \"\") {\n      return { status: \"ERROR\", message: `Save failed: ${errorMsg.trim()}` };\n    }\n\n    \n    const changes = [];\n    if (args.newPositionName) changes.push(`position name to \"${updatedPositionName}\"`);\n    if (employeeChanged) changes.push(`assigned employee to ${updatedEmployeeName} (ID: ${args.employeeId})`);\n    if (args.createWorkflowApproval !== undefined) {\n      changes.push(`workflow approval ${checkboxChecked ? 'enabled' : 'disabled'}`);\n    }\n    \n    return {\n      status: \"SUCCESS\",\n      message: `Successfully updated ${args.positionName}. Changed: ${changes.join(', ')}.`,\n      positionName: updatedPositionName,\n      assignedEmployee: updatedEmployeeName,\n      employeeId: args.employeeId,\n      workflowApprovalEnabled: checkboxChecked,\n      previousEmployee: currentEmployeeDisplay\n    };\n  }\n\n  return {\n    status: \"ERROR\",\n    message: \"Failed to update. Please verify in the UI.\"\n  };\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

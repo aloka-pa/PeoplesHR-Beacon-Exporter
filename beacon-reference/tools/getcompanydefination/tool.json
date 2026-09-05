@@ -1,0 +1,75 @@
+{
+  "id": "690dc561931a2d61ba0b11bb",
+  "slug": "getcompanydefination",
+  "name": "getCompanyDefination",
+  "description": "in this tool generate the Company Defination details and display only name and level do not show the ids.",
+  "instructions": null,
+  "taskName": "Company Defination Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getCompanyDefination",
+  "createdAt": "2025-04-26T10:21:16.209Z",
+  "updatedAt": "2025-04-26T10:21:16.209Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "91a9f90946d26d2dbdda89c05a37565a4151f751ed6882174621909c20bf6921",
+  "lastExportedAt": "2026-09-05T19:39:24.532Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc561931a2d61ba0b11bb",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getCompanyDefination",
+      "description": "in this tool generate the Company Defination details and display only name and level do not show the ids.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getCompanyDefination",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "680cb39c376b56344c7a35a8"
+      },
+      "by": "1927",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/CompanyHierarchyDefine.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"CompanyHierarchyDefine\");\n  window.company = details;\n  const parser = new DOMParser();\n  const parsedDocument = parser.parseFromString(details.rawData, 'text/html');\n\n  const extractedData = Array.from(parsedDocument.querySelectorAll(\"tbody tr\")).map(row => {\n    const [levelCell, nameCell] = row.querySelectorAll(\"td\");\n    const href = row.querySelector(\"a\")?.getAttribute(\"href\") || \"\";\n    const nodeMatch = href.match(/__doPostBack\\('([^']+)'/);\n\n    return {\n      node: nodeMatch?.[1] || \"\",\n      name: nameCell?.innerText.trim() || \"\",\n      level: levelCell?.innerText.trim() || \"\"\n    };\n  }).filter(item => item.node && item.name && item.level);\n  return extractedData;\n})\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Company Defination Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-26T10:21:16.209Z",
+      "updatedAt": "2025-04-26T10:21:16.209Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getCompanyDefination",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "680cb39c376b56344c7a35a8"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/CompanyHierarchyDefine.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"CompanyHierarchyDefine\");\n  window.company = details;\n  const parser = new DOMParser();\n  const parsedDocument = parser.parseFromString(details.rawData, 'text/html');\n\n  const extractedData = Array.from(parsedDocument.querySelectorAll(\"tbody tr\")).map(row => {\n    const [levelCell, nameCell] = row.querySelectorAll(\"td\");\n    const href = row.querySelector(\"a\")?.getAttribute(\"href\") || \"\";\n    const nodeMatch = href.match(/__doPostBack\\('([^']+)'/);\n\n    return {\n      node: nodeMatch?.[1] || \"\",\n      name: nameCell?.innerText.trim() || \"\",\n      level: levelCell?.innerText.trim() || \"\"\n    };\n  }).filter(item => item.node && item.name && item.level);\n  return extractedData;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

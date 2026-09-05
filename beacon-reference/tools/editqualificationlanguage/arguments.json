@@ -1,0 +1,80 @@
+{
+  "arguments": [
+    {
+      "name": "languageCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The language code to identify the record to edit (e.g., \"000006\"). Either languageCode or languageName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "languageCode",
+        "type": "string",
+        "description": "The language code to identify the record to edit (e.g., \"000006\"). Either languageCode or languageName must be provided.",
+        "required": false,
+        "_id": "6953ed32adcdbcc09d259e6d"
+      }
+    },
+    {
+      "name": "languageName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The language name to identify the record to edit (e.g., \"Korean\"). Either languageCode or languageName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "languageName",
+        "type": "string",
+        "description": "The language name to identify the record to edit (e.g., \"Korean\"). Either languageCode or languageName must be provided.",
+        "required": false,
+        "_id": "6953ed32adcdbcc09d259e6e"
+      }
+    },
+    {
+      "name": "newLanguageName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The new name for the language. If not provided, the language name will remain unchanged. ",
+      "advanced": false,
+      "raw": {
+        "name": "newLanguageName",
+        "type": "string",
+        "description": "The new name for the language. If not provided, the language name will remain unchanged. ",
+        "required": false,
+        "_id": "6953ed32adcdbcc09d259e6f"
+      }
+    },
+    {
+      "name": "ratingCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The code of the rating method to assign (e.g., \"000001\" for \"Rating_01\"). Either ratingCode or ratingName can be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "ratingCode",
+        "type": "string",
+        "description": "The code of the rating method to assign (e.g., \"000001\" for \"Rating_01\"). Either ratingCode or ratingName can be provided.",
+        "required": false,
+        "_id": "6953ed32adcdbcc09d259e70"
+      }
+    },
+    {
+      "name": "ratingName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The name of the rating method to assign (e.g., \"Rating_01\"). Either ratingCode or ratingName can be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "ratingName",
+        "type": "string",
+        "description": "The name of the rating method to assign (e.g., \"Rating_01\"). Either ratingCode or ratingName can be provided.",
+        "required": false,
+        "_id": "6953ed32adcdbcc09d259e71"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

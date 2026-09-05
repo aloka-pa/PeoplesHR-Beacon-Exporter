@@ -1,0 +1,75 @@
+{
+  "id": "690dc566931a2d61ba0b165e",
+  "slug": "createbloodgroup",
+  "name": "createBloodGroup",
+  "description": "in this tool create Blood Group.",
+  "instructions": null,
+  "taskName": "Create Blood Group",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createBloodGroup",
+  "createdAt": "2025-05-04T17:49:55.115Z",
+  "updatedAt": "2025-05-04T17:49:55.115Z",
+  "assignedAgents": [],
+  "contentHash": "e8b917e1c706fea4cdea547d2a015e5f8fa245aa151f6bbd19424637c736e38e",
+  "lastExportedAt": "2026-09-05T19:39:24.123Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b165e",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createBloodGroup",
+      "description": "in this tool create Blood Group.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createBloodGroup",
+        "args": [
+          {
+            "name": "ctl00$body$txtName",
+            "type": "string",
+            "description": "to give the blood group example:-\"A +\",\"A -\",etc..",
+            "required": true,
+            "_id": "6817a8c3001dad7b67fba00c"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6817a8c3001dad7b67fba00b"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"BloodGroup\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"BloodGroup\");\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: newInt.viewState,\n    __VIEWSTATEGENERATOR: newInt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: newInt.eventValidation,\n    \"ctl00$body$txtName\": args.ctl00$body$txtName,\n    \"ctl00$body$butSave\": \"Save\"\n  }, \"BloodGroup\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const bloodgroup = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const createdetails = {\n    code,\n    bloodgroup\n  };\n  return createdetails;\n})",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create Blood Group",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-04T17:49:55.115Z",
+      "updatedAt": "2025-05-04T17:49:55.115Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createBloodGroup",
+      "args": [
+        {
+          "name": "ctl00$body$txtName",
+          "type": "string",
+          "description": "to give the blood group example:-\"A +\",\"A -\",etc..",
+          "required": true,
+          "_id": "6817a8c3001dad7b67fba00c"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6817a8c3001dad7b67fba00b"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"BloodGroup\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"BloodGroup\");\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: newInt.viewState,\n    __VIEWSTATEGENERATOR: newInt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: newInt.eventValidation,\n    \"ctl00$body$txtName\": args.ctl00$body$txtName,\n    \"ctl00$body$butSave\": \"Save\"\n  }, \"BloodGroup\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const bloodgroup = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const createdetails = {\n    code,\n    bloodgroup\n  };\n  return createdetails;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

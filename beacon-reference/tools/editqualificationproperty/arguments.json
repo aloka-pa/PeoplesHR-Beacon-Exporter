@@ -1,0 +1,95 @@
+{
+  "arguments": [
+    {
+      "name": "propertyCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The unique qualification property code to identify which record to update (e.g., \"000003\")",
+      "advanced": false,
+      "raw": {
+        "name": "propertyCode",
+        "type": "string",
+        "description": "The unique qualification property code to identify which record to update (e.g., \"000003\")",
+        "required": false,
+        "_id": "6954c3a12248683501a4c62b"
+      }
+    },
+    {
+      "name": "propertyName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The unique qualification property code to identify which record to update (e.g., \"000003\")",
+      "advanced": false,
+      "raw": {
+        "name": "propertyName",
+        "type": "string",
+        "description": "The unique qualification property code to identify which record to update (e.g., \"000003\")",
+        "required": false,
+        "_id": "6954c3a12248683501a4c62c"
+      }
+    },
+    {
+      "name": "newPropertyName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The new name for the qualification property (e.g., \"Year - 2018/2019\")",
+      "advanced": false,
+      "raw": {
+        "name": "newPropertyName",
+        "type": "string",
+        "description": "The new name for the qualification property (e.g., \"Year - 2018/2019\")",
+        "required": false,
+        "_id": "6954c3a12248683501a4c62d"
+      }
+    },
+    {
+      "name": "qualificationCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The qualification code (6-digit, e.g., \"000003\") or qualification name (e.g., \"Junior Prefect\") to associate with this property",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationCode",
+        "type": "string",
+        "description": "The qualification code (6-digit, e.g., \"000003\") or qualification name (e.g., \"Junior Prefect\") to associate with this property",
+        "required": false,
+        "_id": "6954c3a12248683501a4c62e"
+      }
+    },
+    {
+      "name": "qualificationName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The qualification name to associate with this property (e.g., \"G C E Ordinary Level Examination 2019\")",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationName",
+        "type": "string",
+        "description": "The qualification name to associate with this property (e.g., \"G C E Ordinary Level Examination 2019\")",
+        "required": false,
+        "_id": "6954c3a12248683501a4c62f"
+      }
+    },
+    {
+      "name": "dataType",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The data type for this property. Must be one of: \"String\", \"Numeric\", \"Boolean\", \"Date\"",
+      "advanced": false,
+      "raw": {
+        "name": "dataType",
+        "type": "string",
+        "description": "The data type for this property. Must be one of: \"String\", \"Numeric\", \"Boolean\", \"Date\"",
+        "required": false,
+        "_id": "6954c3a12248683501a4c630"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

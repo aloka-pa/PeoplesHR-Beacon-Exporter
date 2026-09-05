@@ -1,0 +1,24 @@
+{
+  "id": "690dc584931a2d61ba0b2bee",
+  "slug": "hasmenu",
+  "name": "hasMenu",
+  "status": "live",
+  "createdAt": "2025-08-20T06:38:26.328Z",
+  "updatedAt": "2025-08-20T06:38:26.328Z",
+  "contentHash": "bda7d6aae8150a7a5be054f473c0d606260fc8980b27aa58c8cffb7666c2e5f2",
+  "lastExportedAt": "2026-09-05T19:41:29.712Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc584931a2d61ba0b2bee",
+    "name": "hasMenu",
+    "status": "live",
+    "code": "(function (keyword) {\n  const menu = BeaconBar.user?.metaData?.menu || BeaconBar.user?.metaData?.menus || [];\n\n  return menu.some(x => {\n    if (typeof x === \"string\") {\n      return x.toLowerCase().includes(keyword.toLowerCase());\n    }\n    if (typeof x === \"object\") {\n      return Object.values(x).some(val =>\n        String(val).toLowerCase().includes(keyword.toLowerCase())\n      );\n    }\n    return false;\n  });\n})\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

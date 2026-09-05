@@ -1,0 +1,155 @@
+{
+  "arguments": [
+    {
+      "name": "qualificationCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "he unique code identifier for the qualification to update (e.g., '000005')",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationCode",
+        "type": "string",
+        "description": "he unique code identifier for the qualification to update (e.g., '000005')",
+        "required": false,
+        "_id": "6954a44c0eece7a2ce8e125b"
+      }
+    },
+    {
+      "name": "qualificationName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The current name of the qualification to search for and then to update (e.g., \"Junior Prefect\")",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationName",
+        "type": "string",
+        "description": "The current name of the qualification to search for and then to update (e.g., \"Junior Prefect\")",
+        "required": false,
+        "_id": "6954a44c0eece7a2ce8e125c"
+      }
+    },
+    {
+      "name": "newQualificationName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The new name for the qualification (e.g., \"Junior Prefect 2018/2019\")",
+      "advanced": false,
+      "raw": {
+        "name": "newQualificationName",
+        "type": "string",
+        "description": "The new name for the qualification (e.g., \"Junior Prefect 2018/2019\")",
+        "required": false,
+        "_id": "6954a44c0eece7a2ce8e125d"
+      }
+    },
+    {
+      "name": "ratingMethodCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The rating method code to assign (e.g., \"000001\")",
+      "advanced": false,
+      "raw": {
+        "name": "ratingMethodCode",
+        "type": "string",
+        "description": "The rating method code to assign (e.g., \"000001\")",
+        "required": false,
+        "_id": "6954a44c0eece7a2ce8e125e"
+      }
+    },
+    {
+      "name": "ratingMethodName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The rating method name to assign, alternative to ratingMethodCode (e.g., \"Rating_01\")",
+      "advanced": false,
+      "raw": {
+        "name": "ratingMethodName",
+        "type": "string",
+        "description": "The rating method name to assign, alternative to ratingMethodCode (e.g., \"Rating_01\")",
+        "required": false,
+        "_id": "6954a44c0eece7a2ce8e125f"
+      }
+    },
+    {
+      "name": "qualificationTypeCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The qualification type code to assign (e.g., \"000008\")",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationTypeCode",
+        "type": "string",
+        "description": "The qualification type code to assign (e.g., \"000008\")",
+        "required": false,
+        "_id": "6954a44c0eece7a2ce8e1260"
+      }
+    },
+    {
+      "name": "qualificationTypeName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The qualification type name to assign, alternative to qualificationTypeCode (e.g., \"leadership roles\")",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationTypeName",
+        "type": "string",
+        "description": "The qualification type name to assign, alternative to qualificationTypeCode (e.g., \"leadership roles\")",
+        "required": false,
+        "_id": "6954a44c0eece7a2ce8e1261"
+      }
+    },
+    {
+      "name": "classificationCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The classification code to assign (e.g., \"000006\")\n",
+      "advanced": false,
+      "raw": {
+        "name": "classificationCode",
+        "type": "string",
+        "description": "The classification code to assign (e.g., \"000006\")\n",
+        "required": false,
+        "_id": "6954a44c0eece7a2ce8e1262"
+      }
+    },
+    {
+      "name": "classificationName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The classification name to assign, alternative to classificationCode (e.g., \"Soft skills / Short term qualifications\")",
+      "advanced": false,
+      "raw": {
+        "name": "classificationName",
+        "type": "string",
+        "description": "The classification name to assign, alternative to classificationCode (e.g., \"Soft skills / Short term qualifications\")",
+        "required": false,
+        "_id": "6954a44c0eece7a2ce8e1263"
+      }
+    },
+    {
+      "name": "hasExpiration",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": " Set expiration status, accepts string \"true\" or \"false\" (e.g., \"true\")",
+      "advanced": false,
+      "raw": {
+        "name": "hasExpiration",
+        "type": "string",
+        "description": " Set expiration status, accepts string \"true\" or \"false\" (e.g., \"true\")",
+        "required": false,
+        "_id": "6954a44c0eece7a2ce8e1264"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

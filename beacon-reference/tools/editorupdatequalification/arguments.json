@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "qualification",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "qualification ,Ex:-  \"Bachelor Degree\"",
+      "advanced": false,
+      "raw": {
+        "name": "qualification",
+        "type": "string",
+        "description": "qualification ,Ex:-  \"Bachelor Degree\"",
+        "required": true,
+        "_id": "680f32b5f6ef15e616462fef"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

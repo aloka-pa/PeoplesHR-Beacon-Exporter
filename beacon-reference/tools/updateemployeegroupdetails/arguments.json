@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "empGroupName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the employee group Name or description.",
+      "advanced": false,
+      "raw": {
+        "name": "empGroupName",
+        "type": "string",
+        "description": "to give the employee group Name or description.",
+        "required": true,
+        "_id": "6815f87a79ebe9607c188d38"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

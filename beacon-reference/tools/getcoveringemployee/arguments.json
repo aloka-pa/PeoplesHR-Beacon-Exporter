@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "searchKey",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to search for employee name or Id to get the employee information.",
+      "advanced": false,
+      "raw": {
+        "name": "searchKey",
+        "type": "string",
+        "description": "to search for employee name or Id to get the employee information.",
+        "required": true,
+        "_id": "680d0d63c4a1b2535b9c4f30"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

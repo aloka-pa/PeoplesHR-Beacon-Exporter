@@ -1,0 +1,24 @@
+{
+  "id": "690dc58c931a2d61ba0b3384",
+  "slug": "submitrange",
+  "name": "submitrange",
+  "status": "live",
+  "createdAt": "2025-06-05T16:12:16.176Z",
+  "updatedAt": "2026-07-17T12:56:03.921Z",
+  "contentHash": "ac88faa735896427b1d06eb98843a4fb2c05d06f6751a9a041cfd235411b982d",
+  "lastExportedAt": "2026-09-05T19:41:14.232Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58c931a2d61ba0b3384",
+    "name": "submitrange",
+    "status": "live",
+    "code": "async function submitRoundingPattern(viewS, args) {\n  //done\n  const myHeaders = new Headers({\n    \"accept\": \"*/*\",\n    \"accept-language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n    \"cache-control\": \"no-cache\",\n    \"content-type\": \"application/x-www-form-urlencoded; charset=UTF-8\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n\n  });\n\n  const raw = new URLSearchParams({\n    \"ctl00$main$RadScriptManager\": \"ctl00$body$upPnlDetailView|ctl00$body$rbtnRange\",\n    \"ctl00_main_RadScriptManager_HiddenField\": \"\",\n    \"ctl00$body$txtRoundingPatternName\": args.roundingPatternName,\n    \"ctl00$body$Rounding_pattern\": \"rbtnRange\",\n    \"ctl00$body$cboMethod\": args.method || \"2\",\n    \"ctl00$body$txtNumVal\": args.numVal || \"00:30\",\n    \"ctl00$body$tpTest$txtTime\": \"\",\n    \"ctl00$action$ButtonPanel$butDelete$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butReset$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSave$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSummary$isControlEnabled\": \"True\",\n    \"ctl00$hdnCulturDateFormat\": \"M/d/yyyy\",\n    \"__EVENTTARGET\": \"ctl00$body$rbtnRange\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": viewS.viewState,\n    \"__VIEWSTATEGENERATOR\": viewS.viewStateGenerator || \"79BC7E24\",\n    \"__SCROLLPOSITIONX\": \"0\",\n    \"__SCROLLPOSITIONY\": \"0\",\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": viewS.eventValidation,\n    \"__ASYNCPOST\": \"true\"\n  }).toString();\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw,\n    redirect: \"follow\"\n  };\n\n  try {\n    const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n    const response = await fetch(`${reqOptions}TNA/RoundingInformation.aspx`, requestOptions);\n    const result = await response.text();\n    function extractViewState(htmlText) {\n      const data = {};\n\n      const regexMap = {\n        viewState: /__VIEWSTATE\\|([^|]+)/,\n        viewStateGenerator: /__VIEWSTATEGENERATOR\\|([^|]+)/,\n        eventValidation: /__EVENTVALIDATION\\|([^|]+)/,\n        eventTarget: /postBackControlIDs\\|\\|([^|,\\n]+)/ // First one from list\n      };\n\n      for (const [key, regex] of Object.entries(regexMap)) {\n        const match = htmlText.match(regex);\n        if (match) {\n          data[key] = decodeURIComponent(match[1]);\n        } else {\n        }\n      }\n\n      return data;\n    }\n    const resp = extractViewState(result)\n    return resp;\n\n  } catch (error) {\n    throw error;\n  }\n}\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

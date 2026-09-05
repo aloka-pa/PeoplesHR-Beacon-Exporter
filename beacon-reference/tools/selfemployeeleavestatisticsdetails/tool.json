@@ -1,0 +1,91 @@
+{
+  "id": "690dc56b931a2d61ba0b1ac2",
+  "slug": "selfemployeeleavestatisticsdetails",
+  "name": "selfEmployeeLeaveStatisticsDetails",
+  "description": "in this api return for only self employee Statistics balance. no other employee leave Statistics calling.",
+  "instructions": null,
+  "taskName": "Fetching The Leave Statistics",
+  "tags": [
+    "Absent Management",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "selfEmployeeLeaveStatisticsDetails",
+  "createdAt": "2025-08-18T10:44:52.886Z",
+  "updatedAt": "2025-08-18T10:44:52.886Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c72",
+      "name": "AbsenceManagementEmployee"
+    }
+  ],
+  "contentHash": "b10db384a9999cbf428abb30888239fc8ed4640c9d50f35bbf9aa3a49ebdf6b0",
+  "lastExportedAt": "2026-09-05T19:39:23.463Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1ac2",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selfEmployeeLeaveStatisticsDetails",
+      "description": "in this api return for only self employee Statistics balance. no other employee leave Statistics calling.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selfEmployeeLeaveStatisticsDetails",
+        "args": [
+          {
+            "name": "year",
+            "type": "string",
+            "description": "to give the Leave Statistics year.",
+            "required": true,
+            "_id": "68a3042428722f48ed6f7c1a"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68a3042428722f48ed6f7c19"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return []\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"AbsenceV9/LeaveHistory/LeaveHistory?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const empKey = await BeaconBar.executeFunction(\"employeeLeaveApplication\")();\n  const myHeaders = new Headers();\n  myHeaders.append(\"__cfafvalue\", window.csrf);\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"content-type\", \"application/json\");\n      myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const url = `${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveStats/GetLeaveStatistics/`;\n  const request = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: JSON.stringify({\n      EmpNumber: empKey,\n      LeaveYear: args.year\n    })\n  };\n\n  const response = await fetch(url, request);\n  const datas = await response.json();\n  return datas;\n})\n",
+      "groupName": "",
+      "tags": [
+        "Absent Management",
+        "Headers"
+      ],
+      "taskName": "Fetching The Leave Statistics",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-18T10:44:52.886Z",
+      "updatedAt": "2025-08-18T10:44:52.886Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c72",
+          "name": "AbsenceManagementEmployee"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selfEmployeeLeaveStatisticsDetails",
+      "args": [
+        {
+          "name": "year",
+          "type": "string",
+          "description": "to give the Leave Statistics year.",
+          "required": true,
+          "_id": "68a3042428722f48ed6f7c1a"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68a3042428722f48ed6f7c19"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return []\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"AbsenceV9/LeaveHistory/LeaveHistory?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const empKey = await BeaconBar.executeFunction(\"employeeLeaveApplication\")();\n  const myHeaders = new Headers();\n  myHeaders.append(\"__cfafvalue\", window.csrf);\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"content-type\", \"application/json\");\n      myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const url = `${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveStats/GetLeaveStatistics/`;\n  const request = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: JSON.stringify({\n      EmpNumber: empKey,\n      LeaveYear: args.year\n    })\n  };\n\n  const response = await fetch(url, request);\n  const datas = await response.json();\n  return datas;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

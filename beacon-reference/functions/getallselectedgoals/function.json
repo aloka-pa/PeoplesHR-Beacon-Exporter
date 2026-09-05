@@ -1,0 +1,24 @@
+{
+  "id": "690dc583931a2d61ba0b2abc",
+  "slug": "getallselectedgoals",
+  "name": "getallSelectedGoals",
+  "status": "live",
+  "createdAt": "2025-08-05T04:20:50.631Z",
+  "updatedAt": "2026-07-17T12:55:52.024Z",
+  "contentHash": "c0ec67b3b0c2ed88c5e9dd7f4ec7ed7229c2c851f5405d84c00fc7eaebfda039",
+  "lastExportedAt": "2026-09-05T19:41:21.771Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc583931a2d61ba0b2abc",
+    "name": "getallSelectedGoals",
+    "status": "live",
+    "code": "(async function(args) {\n\n\nconst employeeData = await (async function extractFullEmployeeInfo() {\n    const iframe = document.querySelector('#ifrmPage');\n    if (!iframe) {\n        return null;\n    }\n\n    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;\n\n    const container = iframeDoc.querySelector('#perfv8-goalplanning-partial-employeeinformationheader-7');\n    if (!container) {\n        return null;\n    }\n\n    const img = container.querySelector('img');\n    const imageSrc = img?.getAttribute('src') || '';\n    let empNumber = null;\n\n    if (imageSrc) {\n        const url = new URL(imageSrc, window.location.origin); // handles relative URLs\n        empNumber = new URLSearchParams(url.search).get('Emp_number');\n    }\n\n    const nameSpans = Array.from(container.querySelectorAll('span.V2_perName'));\n    const empName = nameSpans[0]?.innerText?.trim() || '';\n    const separator = nameSpans[1]?.innerText?.trim() || '';\n    const empCode = nameSpans[2]?.innerText?.trim() || '';\n\n    const designation = container.querySelector('span.notbold')?.innerText?.trim() || '';\n    const evaluation = container.querySelectorAll('span.Employee_info_span_center')[0]?.innerText?.trim() || '';\n    const corporateTitle = container.querySelectorAll('span.Employee_info_span_center')[1]?.innerText?.trim() || '';\n    const personalGrade = container.querySelectorAll('span.Employee_info_span_center')[2]?.innerText?.trim() || '';\n\n    return {\n        empImageURL: imageSrc || null,\n        empNumber: empNumber || null,\n        empName,\n        empCode,\n        designation,\n        evaluation,\n        corporateTitle,\n        personalGrade\n    };\n})();\n\n     BeaconBar.setSharedData(\"employeeNo\",employeeData.empNumber );\n\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n\n  const { Eval_id } = args;\n\n  const url = `${reqOptions}PerfV8/api/GoalPlanning/LoadEmployeeGoals?Eval_id=${encodeURIComponent(Eval_id)}&Emp_number=${encodeURIComponent(employeeData.empNumber)}&GoalVersion=${encodeURIComponent('1')}&_=${Date.now()}`;\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(url, requestOptions);\n  const data = await response.json();\n  return data;\n })\n// ({\n//   Eval_id: \"5\",\n//   Emp_number: \"TGthOHhQUDBCMkhjNERBbGFLU055cDJlWE1URk9MOEg5eC84MGc4NEFLYWRIS25FdmNTK25CT1lGTHFhWFJ4cC9aWEhNR3YrYXJ5UnlKaklvckNvN2ZOa1RrNGdnU0RuaXVqcVpNUm04RjhHNy83cWw3eVRzSGxYMmZRRENkWDBYb1ZIaFFWTXFFNWlaN2J5NE9DQkorRlo3RWVmL3Q3TkppSlpMQzFGUWtnSlNxMkZSN3RBQStxbzdzNnI4SHB2ZytVT05MNTZjamZTVEF0Tm5GOUpzalczdW1rc2grbmtqQzU1WnhiTThRaDZTQThkYjdkNCtRNTlUWFRpOVJGQXdDRXFIZm5qVlI1S2lWOW1Fak81ODhoaWEvbXBsUHNSVHhSbVZMc1hWcUhqSEgySjlHR1ArVjgxZjBlbllKS0lWcXlJN2RWODF3VEJyWWV2YlFmRXVPc2ZZTFhJRllpY1JpcVdGMUxCY3NqSTFZeFVpNGROWVBiVy9tWHNFanpUaHJ2dGNrUExKanlYRHJ2VVVLeW9leHd1ZlFkSk54eVYvTUEwNGFaWjFIdkhvOEhoV3cwUFJqVG9MNlhQOUp5K3NLNmVBb245TTFjRHZVY2hDUHZ0b2lnajNjMTBWakpiZkhkUm0yQ29jYUhlNjQyL01iQ0V2KzRwbjh6SWM3SXFzQW1PVXZ0aFNLMnlEQ21nZEpIWUM5cWZZZVIyR1BXckFpZzg1TnpMWmlFQ3FxTVF0eFJtSC9LY0FtczZFTkVHbjN0MWNnQ1duME83OGlNQjAvOEt0Zz09\",\n//   GoalVersion: \"1\"\n// });\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

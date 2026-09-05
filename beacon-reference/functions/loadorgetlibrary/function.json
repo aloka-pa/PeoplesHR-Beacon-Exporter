@@ -1,0 +1,24 @@
+{
+  "id": "690dc585931a2d61ba0b2cef",
+  "slug": "loadorgetlibrary",
+  "name": "loadOrGetLibrary",
+  "status": "live",
+  "createdAt": "2025-05-05T10:34:07.980Z",
+  "updatedAt": "2025-05-05T10:34:07.980Z",
+  "contentHash": "b8fb59a07aa32cdb2b19553930a2879416cd81b512c3f973c2456d36a60ac935",
+  "lastExportedAt": "2026-09-05T19:41:43.448Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc585931a2d61ba0b2cef",
+    "name": "loadOrGetLibrary",
+    "status": "live",
+    "code": "(async function(name){\n    const map = {\n        \"fuse\": \"https://cdn.beacon.li/libs/fuse.js-7.0.0.js\",\n        \"alasql\": \"https://cdn.beacon.li/libs/alasql-4.js\",\n        \"axios\": \"https://cdn.beacon.li/libs/axios-0.19.2.js\",\n        \"pdf\" : \"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js\"\n    }\n    const url = map[name];\n    if(!url) {\n        throw new Error(\"Script doesn't exists\");\n    }\n    await BeaconBar.executeFunction(\"loadJS\")(name, url);\n    if(name === \"alasql\") {\n        return window.alasql;\n    }\n    if(name === \"fuse\") {\n        return window.Fuse;\n    }\n    if(name === \"axios\") {\n        return window.axios;\n    }\n     if(name === \"pdf\") {\n        return window.pdf;\n    }\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

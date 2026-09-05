@@ -1,0 +1,211 @@
+{
+  "id": "6954ad8cadcdbcc09d2665ec",
+  "slug": "createqualificationdetails",
+  "name": "createQualificationDetails",
+  "description": "Creates a new qualification record in the system with name, rating method, qualification type, classification, and expiration status.",
+  "instructions": null,
+  "taskName": "Creating New Qualification Record",
+  "tags": [
+    "EIMAdmin",
+    "QualificationInformation"
+  ],
+  "status": "live",
+  "signature": "createQualificationDetails",
+  "createdAt": "2025-12-31T04:58:52.888Z",
+  "updatedAt": "2026-06-15T07:30:28.530Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "6eeb1429c4fd2c3928d253546aecd63b7bf671bc3a9a0bd2ab102078dd9c1d44",
+  "lastExportedAt": "2026-09-05T19:39:22.410Z",
+  "raw": {
+    "basic": {
+      "_id": "6954ad8cadcdbcc09d2665ec",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createQualificationDetails",
+      "description": "Creates a new qualification record in the system with name, rating method, qualification type, classification, and expiration status.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createQualificationDetails",
+        "args": [
+          {
+            "name": "qualificationName",
+            "type": "string",
+            "description": "The name of the new qualification (e.g., \"Batch rep\")",
+            "required": true,
+            "_id": "6954ad8cadcdbcc09d2665ee"
+          },
+          {
+            "name": "ratingMethodCode",
+            "type": "string",
+            "description": "The rating method code to assign (e.g., \"000001\")\n",
+            "required": false,
+            "_id": "6954ad8cadcdbcc09d2665ef"
+          },
+          {
+            "name": "ratingMethodName",
+            "type": "string",
+            "description": "The rating method name to assign, alternative to ratingMethodCode (e.g., \"Rating_01\")\nNote: the user must provide either ratingMethodCode OR ratingMethodName (not both)",
+            "required": false,
+            "_id": "6954ad8cadcdbcc09d2665f0"
+          },
+          {
+            "name": "qualificationTypeCode",
+            "type": "string",
+            "description": "The qualification type code to assign (e.g., \"000008\")",
+            "required": false,
+            "_id": "6954ad8cadcdbcc09d2665f1"
+          },
+          {
+            "name": "qualificationTypeName",
+            "type": "string",
+            "description": "The qualification type name to assign, alternative to qualificationTypeCode (e.g., \"leadership roles\")\nNote: the user must provide either qualificationTypeCode OR qualificationTypeName (not both)",
+            "required": false,
+            "_id": "6954ad8cadcdbcc09d2665f2"
+          },
+          {
+            "name": "classificationCode",
+            "type": "string",
+            "description": "The classification code to assign (e.g., \"000006\")",
+            "required": false,
+            "_id": "6954ad8cadcdbcc09d2665f3"
+          },
+          {
+            "name": "classificationName",
+            "type": "string",
+            "description": "The classification name to assign, alternative to classificationCode (e.g., \"Soft skills\")\nNote: the user must provide either classificationCode OR classificationName (not both)",
+            "required": false,
+            "_id": "6954ad8cadcdbcc09d2665f4"
+          },
+          {
+            "name": "hasExpiration",
+            "type": "string",
+            "description": "Set expiration status, accepts string \"true\" or \"false\" (default: \"false\")",
+            "required": false,
+            "_id": "6954ad8cadcdbcc09d2665f5"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6954ad8cadcdbcc09d2665ed"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Qualifications.aspx\")) {\n    return {\n      status: \"NO_ACCESS\",\n      message: \"You do not have access to Qualifications screen. Please contact HR Admin.\"\n    };\n  }\n\n  // Validate required fields\n  if (!args.qualificationName) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"qualificationName is required to create a new qualification\"\n    };\n  }\n\n  if (!args.ratingMethodCode && !args.ratingMethodName) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"Either ratingMethodCode or ratingMethodName is required\"\n    };\n  }\n\n  if (!args.qualificationTypeCode && !args.qualificationTypeName) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"Either qualificationTypeCode or qualificationTypeName is required\"\n    };\n  }\n\n  if (!args.classificationCode && !args.classificationName) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"Either classificationCode or classificationName is required\"\n    };\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Qualifications\");\n\n  const headers = new Headers();\n  headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n  headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Qualifications.aspx\");\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/Qualifications.aspx`;\n\n  const parser = new DOMParser();\n\n  // Helper function to find dropdown code by name\n  const findDropdownCode = (doc, dropdownSelector, searchName) => {\n    const dropdown = doc.querySelector(dropdownSelector);\n    const options = dropdown?.querySelectorAll(\"option\") || [];\n    \n    for (const option of options) {\n      const optionText = option.textContent.trim();\n      const optionValue = option.value;\n      \n      if (optionText.toLowerCase().includes(searchName.toLowerCase()) && optionValue !== \"-1\") {\n        return optionValue;\n      }\n    }\n    return null;\n  };\n\n  // STEP 1: Click New button to open new qualification form\n  const newFormData = new FormData();\n  newFormData.append(\"scrollLeft\", \"0\");\n  newFormData.append(\"scrollTop\", \"0\");\n  newFormData.append(\"__EVENTTARGET\", \"\");\n  newFormData.append(\"__EVENTARGUMENT\", \"\");\n  newFormData.append(\"__VIEWSTATE\", details.viewState);\n  newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n  newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"QUALIFI_CODE\");\n  newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n  newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  newFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  newFormData.append(\"ctl00$body$butNew\", \"New\");\n\n  const newResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: newFormData\n  });\n\n  const newDoc = parser.parseFromString(await newResponse.text(), \"text/html\");\n\n  let currentViewState = newDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  let currentEventValidation = newDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  let currentViewStateGen = newDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // Determine hasExpiration\n  const hasExpiration = args.hasExpiration !== undefined ? \n    (args.hasExpiration === \"true\" || args.hasExpiration === true) : false;\n\n  // STEP 2: If expiration checkbox is being checked, trigger intermediate POST\n  let currentDoc = newDoc;\n  if (hasExpiration) {\n    const expirationFormData = new FormData();\n    expirationFormData.append(\"scrollLeft\", \"0\");\n    expirationFormData.append(\"scrollTop\", \"0\");\n    expirationFormData.append(\"__EVENTTARGET\", \"ctl00$body$ChkisExpire\");\n    expirationFormData.append(\"__EVENTARGUMENT\", \"\");\n    expirationFormData.append(\"__VIEWSTATE\", currentViewState);\n    expirationFormData.append(\"__VIEWSTATEGENERATOR\", currentViewStateGen);\n    expirationFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    expirationFormData.append(\"__EVENTVALIDATION\", currentEventValidation);\n    expirationFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    expirationFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    expirationFormData.append(\"ctl00$body$txtName\", args.qualificationName);\n    expirationFormData.append(\"ctl00$body$ChkisExpire\", \"on\");\n    expirationFormData.append(\"ctl00$body$dpRatmethod\", \"-1\");\n    expirationFormData.append(\"ctl00$body$dpSalary\", \"-1\");\n    expirationFormData.append(\"ctl00$body$dpClassification\", \"-1\");\n\n    const expirationResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: expirationFormData\n    });\n\n    currentDoc = parser.parseFromString(await expirationResponse.text(), \"text/html\");\n    \n    currentViewState = currentDoc.querySelector(\"#__VIEWSTATE\")?.value || currentViewState;\n    currentEventValidation = currentDoc.querySelector(\"#__EVENTVALIDATION\")?.value || currentEventValidation;\n    currentViewStateGen = currentDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || currentViewStateGen;\n  }\n\n  // Determine rating method code\n  let ratingMethodCode = \"\";\n  if (args.ratingMethodCode) {\n    ratingMethodCode = args.ratingMethodCode;\n  } else if (args.ratingMethodName) {\n    const foundCode = findDropdownCode(currentDoc, \"#ctl00_body_dpRatmethod\", args.ratingMethodName);\n    if (foundCode) {\n      ratingMethodCode = foundCode;\n    } else {\n      return {\n        status: \"INVALID_ARGS\",\n        message: `Rating Method \"${args.ratingMethodName}\" not found in the dropdown. Please verify the rating method name.`\n      };\n    }\n  }\n\n  // Determine qualification type code\n  let qualificationTypeCode = \"\";\n  if (args.qualificationTypeCode) {\n    qualificationTypeCode = args.qualificationTypeCode;\n  } else if (args.qualificationTypeName) {\n    const foundCode = findDropdownCode(currentDoc, \"#ctl00_body_dpSalary\", args.qualificationTypeName);\n    if (foundCode) {\n      qualificationTypeCode = foundCode;\n    } else {\n      return {\n        status: \"INVALID_ARGS\",\n        message: `Qualification Type \"${args.qualificationTypeName}\" not found in the dropdown. Please verify the qualification type name.`\n      };\n    }\n  }\n\n  // STEP 3: Trigger qualification type change to load classification options\n  const typeChangeFormData = new FormData();\n  typeChangeFormData.append(\"scrollLeft\", \"0\");\n  typeChangeFormData.append(\"scrollTop\", \"0\");\n  typeChangeFormData.append(\"__EVENTTARGET\", \"ctl00$body$dpSalary\");\n  typeChangeFormData.append(\"__EVENTARGUMENT\", \"\");\n  typeChangeFormData.append(\"__VIEWSTATE\", currentViewState);\n  typeChangeFormData.append(\"__VIEWSTATEGENERATOR\", currentViewStateGen);\n  typeChangeFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  typeChangeFormData.append(\"__EVENTVALIDATION\", currentEventValidation);\n  typeChangeFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  typeChangeFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  typeChangeFormData.append(\"ctl00$body$txtName\", args.qualificationName);\n  \n  if (hasExpiration) {\n    typeChangeFormData.append(\"ctl00$body$ChkisExpire\", \"on\");\n  }\n  \n  typeChangeFormData.append(\"ctl00$body$dpRatmethod\", ratingMethodCode);\n  typeChangeFormData.append(\"ctl00$body$dpSalary\", qualificationTypeCode);\n  typeChangeFormData.append(\"ctl00$body$dpClassification\", \"-1\");\n\n  const typeChangeResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: typeChangeFormData\n  });\n\n  const typeChangeDoc = parser.parseFromString(await typeChangeResponse.text(), \"text/html\");\n  \n  currentViewState = typeChangeDoc.querySelector(\"#__VIEWSTATE\")?.value || currentViewState;\n  currentEventValidation = typeChangeDoc.querySelector(\"#__EVENTVALIDATION\")?.value || currentEventValidation;\n  currentViewStateGen = typeChangeDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || currentViewStateGen;\n\n  // Determine classification code (now that options are loaded)\n  let classificationCode = \"\";\n  if (args.classificationCode) {\n    classificationCode = args.classificationCode;\n  } else if (args.classificationName) {\n    const foundCode = findDropdownCode(typeChangeDoc, \"#ctl00_body_dpClassification\", args.classificationName);\n    if (foundCode) {\n      classificationCode = foundCode;\n    } else {\n      return {\n        status: \"INVALID_ARGS\",\n        message: `Classification \"${args.classificationName}\" not found in the dropdown. Please verify the classification name.`\n      };\n    }\n  }\n\n  // STEP 4: Save the new qualification\n  const saveFormData = new FormData();\n  saveFormData.append(\"scrollLeft\", \"0\");\n  saveFormData.append(\"scrollTop\", \"0\");\n  saveFormData.append(\"__EVENTTARGET\", \"\");\n  saveFormData.append(\"__EVENTARGUMENT\", \"\");\n  saveFormData.append(\"__VIEWSTATE\", currentViewState);\n  saveFormData.append(\"__VIEWSTATEGENERATOR\", currentViewStateGen);\n  saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  saveFormData.append(\"__EVENTVALIDATION\", currentEventValidation);\n  saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  saveFormData.append(\"ctl00$body$txtName\", args.qualificationName);\n  \n  if (hasExpiration) {\n    saveFormData.append(\"ctl00$body$ChkisExpire\", \"on\");\n  }\n  \n  saveFormData.append(\"ctl00$body$dpRatmethod\", ratingMethodCode);\n  saveFormData.append(\"ctl00$body$dpSalary\", qualificationTypeCode);\n  saveFormData.append(\"ctl00$body$dpClassification\", classificationCode);\n  saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n  const finalResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: saveFormData\n  });\n\n  const saveHtml = await finalResponse.text();\n\n  if (finalResponse.status === 200) {\n    const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n    const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n    \n    if (errorMsg) {\n      return {\n        status: \"ERROR\",\n        message: `Save failed: ${errorMsg.trim()}`\n      };\n    }\n\n    // Extract the newly created qualification code\n    const newCode = saveDoc.querySelector(\"#ctl00_body_txtCode\")?.value || \"\";\n\n    // Get dropdown names for response\n    const getRatingMethodName = () => {\n      if (ratingMethodCode) {\n        const option = typeChangeDoc.querySelector(`#ctl00_body_dpRatmethod option[value=\"${ratingMethodCode}\"]`);\n        return option?.textContent.trim() || null;\n      }\n      return null;\n    };\n\n    const getQualificationTypeName = () => {\n      if (qualificationTypeCode) {\n        const option = typeChangeDoc.querySelector(`#ctl00_body_dpSalary option[value=\"${qualificationTypeCode}\"]`);\n        return option?.textContent.trim() || null;\n      }\n      return null;\n    };\n\n    const getClassificationName = () => {\n      if (classificationCode) {\n        const option = typeChangeDoc.querySelector(`#ctl00_body_dpClassification option[value=\"${classificationCode}\"]`);\n        return option?.textContent.trim() || null;\n      }\n      return null;\n    };\n\n    return {\n      status: \"SUCCESS\",\n      message: `Successfully created new Qualification${newCode ? ` (${newCode})` : \"\"}`,\n      qualificationCode: newCode,\n      qualificationName: args.qualificationName,\n      ratingMethodCode: ratingMethodCode,\n      ratingMethodName: getRatingMethodName(),\n      qualificationTypeCode: qualificationTypeCode,\n      qualificationTypeName: getQualificationTypeName(),\n      classificationCode: classificationCode,\n      classificationName: getClassificationName(),\n      hasExpiration: hasExpiration\n    };\n  }\n\n  return {\n    status: \"ERROR\",\n    message: \"Failed to create Qualification. Please verify in the UI.\"\n  };\n})",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "QualificationInformation"
+      ],
+      "taskName": "Creating New Qualification Record",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-31T04:58:52.888Z",
+      "updatedAt": "2026-06-15T07:30:28.530Z",
+      "__v": 5,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "createQualificationDetails",
+      "args": [
+        {
+          "name": "qualificationName",
+          "type": "string",
+          "description": "The name of the new qualification (e.g., \"Batch rep\")",
+          "required": true,
+          "_id": "6954ad8cadcdbcc09d2665ee"
+        },
+        {
+          "name": "ratingMethodCode",
+          "type": "string",
+          "description": "The rating method code to assign (e.g., \"000001\")\n",
+          "required": false,
+          "_id": "6954ad8cadcdbcc09d2665ef"
+        },
+        {
+          "name": "ratingMethodName",
+          "type": "string",
+          "description": "The rating method name to assign, alternative to ratingMethodCode (e.g., \"Rating_01\")\nNote: the user must provide either ratingMethodCode OR ratingMethodName (not both)",
+          "required": false,
+          "_id": "6954ad8cadcdbcc09d2665f0"
+        },
+        {
+          "name": "qualificationTypeCode",
+          "type": "string",
+          "description": "The qualification type code to assign (e.g., \"000008\")",
+          "required": false,
+          "_id": "6954ad8cadcdbcc09d2665f1"
+        },
+        {
+          "name": "qualificationTypeName",
+          "type": "string",
+          "description": "The qualification type name to assign, alternative to qualificationTypeCode (e.g., \"leadership roles\")\nNote: the user must provide either qualificationTypeCode OR qualificationTypeName (not both)",
+          "required": false,
+          "_id": "6954ad8cadcdbcc09d2665f2"
+        },
+        {
+          "name": "classificationCode",
+          "type": "string",
+          "description": "The classification code to assign (e.g., \"000006\")",
+          "required": false,
+          "_id": "6954ad8cadcdbcc09d2665f3"
+        },
+        {
+          "name": "classificationName",
+          "type": "string",
+          "description": "The classification name to assign, alternative to classificationCode (e.g., \"Soft skills\")\nNote: the user must provide either classificationCode OR classificationName (not both)",
+          "required": false,
+          "_id": "6954ad8cadcdbcc09d2665f4"
+        },
+        {
+          "name": "hasExpiration",
+          "type": "string",
+          "description": "Set expiration status, accepts string \"true\" or \"false\" (default: \"false\")",
+          "required": false,
+          "_id": "6954ad8cadcdbcc09d2665f5"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6954ad8cadcdbcc09d2665ed"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Qualifications.aspx\")) {\n    return {\n      status: \"NO_ACCESS\",\n      message: \"You do not have access to Qualifications screen. Please contact HR Admin.\"\n    };\n  }\n\n  // Validate required fields\n  if (!args.qualificationName) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"qualificationName is required to create a new qualification\"\n    };\n  }\n\n  if (!args.ratingMethodCode && !args.ratingMethodName) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"Either ratingMethodCode or ratingMethodName is required\"\n    };\n  }\n\n  if (!args.qualificationTypeCode && !args.qualificationTypeName) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"Either qualificationTypeCode or qualificationTypeName is required\"\n    };\n  }\n\n  if (!args.classificationCode && !args.classificationName) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"Either classificationCode or classificationName is required\"\n    };\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Qualifications\");\n\n  const headers = new Headers();\n  headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n  headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Qualifications.aspx\");\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/Qualifications.aspx`;\n\n  const parser = new DOMParser();\n\n  // Helper function to find dropdown code by name\n  const findDropdownCode = (doc, dropdownSelector, searchName) => {\n    const dropdown = doc.querySelector(dropdownSelector);\n    const options = dropdown?.querySelectorAll(\"option\") || [];\n    \n    for (const option of options) {\n      const optionText = option.textContent.trim();\n      const optionValue = option.value;\n      \n      if (optionText.toLowerCase().includes(searchName.toLowerCase()) && optionValue !== \"-1\") {\n        return optionValue;\n      }\n    }\n    return null;\n  };\n\n  // STEP 1: Click New button to open new qualification form\n  const newFormData = new FormData();\n  newFormData.append(\"scrollLeft\", \"0\");\n  newFormData.append(\"scrollTop\", \"0\");\n  newFormData.append(\"__EVENTTARGET\", \"\");\n  newFormData.append(\"__EVENTARGUMENT\", \"\");\n  newFormData.append(\"__VIEWSTATE\", details.viewState);\n  newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n  newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"QUALIFI_CODE\");\n  newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n  newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  newFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  newFormData.append(\"ctl00$body$butNew\", \"New\");\n\n  const newResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: newFormData\n  });\n\n  const newDoc = parser.parseFromString(await newResponse.text(), \"text/html\");\n\n  let currentViewState = newDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  let currentEventValidation = newDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  let currentViewStateGen = newDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // Determine hasExpiration\n  const hasExpiration = args.hasExpiration !== undefined ? \n    (args.hasExpiration === \"true\" || args.hasExpiration === true) : false;\n\n  // STEP 2: If expiration checkbox is being checked, trigger intermediate POST\n  let currentDoc = newDoc;\n  if (hasExpiration) {\n    const expirationFormData = new FormData();\n    expirationFormData.append(\"scrollLeft\", \"0\");\n    expirationFormData.append(\"scrollTop\", \"0\");\n    expirationFormData.append(\"__EVENTTARGET\", \"ctl00$body$ChkisExpire\");\n    expirationFormData.append(\"__EVENTARGUMENT\", \"\");\n    expirationFormData.append(\"__VIEWSTATE\", currentViewState);\n    expirationFormData.append(\"__VIEWSTATEGENERATOR\", currentViewStateGen);\n    expirationFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    expirationFormData.append(\"__EVENTVALIDATION\", currentEventValidation);\n    expirationFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    expirationFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    expirationFormData.append(\"ctl00$body$txtName\", args.qualificationName);\n    expirationFormData.append(\"ctl00$body$ChkisExpire\", \"on\");\n    expirationFormData.append(\"ctl00$body$dpRatmethod\", \"-1\");\n    expirationFormData.append(\"ctl00$body$dpSalary\", \"-1\");\n    expirationFormData.append(\"ctl00$body$dpClassification\", \"-1\");\n\n    const expirationResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: expirationFormData\n    });\n\n    currentDoc = parser.parseFromString(await expirationResponse.text(), \"text/html\");\n    \n    currentViewState = currentDoc.querySelector(\"#__VIEWSTATE\")?.value || currentViewState;\n    currentEventValidation = currentDoc.querySelector(\"#__EVENTVALIDATION\")?.value || currentEventValidation;\n    currentViewStateGen = currentDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || currentViewStateGen;\n  }\n\n  // Determine rating method code\n  let ratingMethodCode = \"\";\n  if (args.ratingMethodCode) {\n    ratingMethodCode = args.ratingMethodCode;\n  } else if (args.ratingMethodName) {\n    const foundCode = findDropdownCode(currentDoc, \"#ctl00_body_dpRatmethod\", args.ratingMethodName);\n    if (foundCode) {\n      ratingMethodCode = foundCode;\n    } else {\n      return {\n        status: \"INVALID_ARGS\",\n        message: `Rating Method \"${args.ratingMethodName}\" not found in the dropdown. Please verify the rating method name.`\n      };\n    }\n  }\n\n  // Determine qualification type code\n  let qualificationTypeCode = \"\";\n  if (args.qualificationTypeCode) {\n    qualificationTypeCode = args.qualificationTypeCode;\n  } else if (args.qualificationTypeName) {\n    const foundCode = findDropdownCode(currentDoc, \"#ctl00_body_dpSalary\", args.qualificationTypeName);\n    if (foundCode) {\n      qualificationTypeCode = foundCode;\n    } else {\n      return {\n        status: \"INVALID_ARGS\",\n        message: `Qualification Type \"${args.qualificationTypeName}\" not found in the dropdown. Please verify the qualification type name.`\n      };\n    }\n  }\n\n  // STEP 3: Trigger qualification type change to load classification options\n  const typeChangeFormData = new FormData();\n  typeChangeFormData.append(\"scrollLeft\", \"0\");\n  typeChangeFormData.append(\"scrollTop\", \"0\");\n  typeChangeFormData.append(\"__EVENTTARGET\", \"ctl00$body$dpSalary\");\n  typeChangeFormData.append(\"__EVENTARGUMENT\", \"\");\n  typeChangeFormData.append(\"__VIEWSTATE\", currentViewState);\n  typeChangeFormData.append(\"__VIEWSTATEGENERATOR\", currentViewStateGen);\n  typeChangeFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  typeChangeFormData.append(\"__EVENTVALIDATION\", currentEventValidation);\n  typeChangeFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  typeChangeFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  typeChangeFormData.append(\"ctl00$body$txtName\", args.qualificationName);\n  \n  if (hasExpiration) {\n    typeChangeFormData.append(\"ctl00$body$ChkisExpire\", \"on\");\n  }\n  \n  typeChangeFormData.append(\"ctl00$body$dpRatmethod\", ratingMethodCode);\n  typeChangeFormData.append(\"ctl00$body$dpSalary\", qualificationTypeCode);\n  typeChangeFormData.append(\"ctl00$body$dpClassification\", \"-1\");\n\n  const typeChangeResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: typeChangeFormData\n  });\n\n  const typeChangeDoc = parser.parseFromString(await typeChangeResponse.text(), \"text/html\");\n  \n  currentViewState = typeChangeDoc.querySelector(\"#__VIEWSTATE\")?.value || currentViewState;\n  currentEventValidation = typeChangeDoc.querySelector(\"#__EVENTVALIDATION\")?.value || currentEventValidation;\n  currentViewStateGen = typeChangeDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || currentViewStateGen;\n\n  // Determine classification code (now that options are loaded)\n  let classificationCode = \"\";\n  if (args.classificationCode) {\n    classificationCode = args.classificationCode;\n  } else if (args.classificationName) {\n    const foundCode = findDropdownCode(typeChangeDoc, \"#ctl00_body_dpClassification\", args.classificationName);\n    if (foundCode) {\n      classificationCode = foundCode;\n    } else {\n      return {\n        status: \"INVALID_ARGS\",\n        message: `Classification \"${args.classificationName}\" not found in the dropdown. Please verify the classification name.`\n      };\n    }\n  }\n\n  // STEP 4: Save the new qualification\n  const saveFormData = new FormData();\n  saveFormData.append(\"scrollLeft\", \"0\");\n  saveFormData.append(\"scrollTop\", \"0\");\n  saveFormData.append(\"__EVENTTARGET\", \"\");\n  saveFormData.append(\"__EVENTARGUMENT\", \"\");\n  saveFormData.append(\"__VIEWSTATE\", currentViewState);\n  saveFormData.append(\"__VIEWSTATEGENERATOR\", currentViewStateGen);\n  saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  saveFormData.append(\"__EVENTVALIDATION\", currentEventValidation);\n  saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  saveFormData.append(\"ctl00$body$txtName\", args.qualificationName);\n  \n  if (hasExpiration) {\n    saveFormData.append(\"ctl00$body$ChkisExpire\", \"on\");\n  }\n  \n  saveFormData.append(\"ctl00$body$dpRatmethod\", ratingMethodCode);\n  saveFormData.append(\"ctl00$body$dpSalary\", qualificationTypeCode);\n  saveFormData.append(\"ctl00$body$dpClassification\", classificationCode);\n  saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n  const finalResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: saveFormData\n  });\n\n  const saveHtml = await finalResponse.text();\n\n  if (finalResponse.status === 200) {\n    const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n    const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n    \n    if (errorMsg) {\n      return {\n        status: \"ERROR\",\n        message: `Save failed: ${errorMsg.trim()}`\n      };\n    }\n\n    // Extract the newly created qualification code\n    const newCode = saveDoc.querySelector(\"#ctl00_body_txtCode\")?.value || \"\";\n\n    // Get dropdown names for response\n    const getRatingMethodName = () => {\n      if (ratingMethodCode) {\n        const option = typeChangeDoc.querySelector(`#ctl00_body_dpRatmethod option[value=\"${ratingMethodCode}\"]`);\n        return option?.textContent.trim() || null;\n      }\n      return null;\n    };\n\n    const getQualificationTypeName = () => {\n      if (qualificationTypeCode) {\n        const option = typeChangeDoc.querySelector(`#ctl00_body_dpSalary option[value=\"${qualificationTypeCode}\"]`);\n        return option?.textContent.trim() || null;\n      }\n      return null;\n    };\n\n    const getClassificationName = () => {\n      if (classificationCode) {\n        const option = typeChangeDoc.querySelector(`#ctl00_body_dpClassification option[value=\"${classificationCode}\"]`);\n        return option?.textContent.trim() || null;\n      }\n      return null;\n    };\n\n    return {\n      status: \"SUCCESS\",\n      message: `Successfully created new Qualification${newCode ? ` (${newCode})` : \"\"}`,\n      qualificationCode: newCode,\n      qualificationName: args.qualificationName,\n      ratingMethodCode: ratingMethodCode,\n      ratingMethodName: getRatingMethodName(),\n      qualificationTypeCode: qualificationTypeCode,\n      qualificationTypeName: getQualificationTypeName(),\n      classificationCode: classificationCode,\n      classificationName: getClassificationName(),\n      hasExpiration: hasExpiration\n    };\n  }\n\n  return {\n    status: \"ERROR\",\n    message: \"Failed to create Qualification. Please verify in the UI.\"\n  };\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

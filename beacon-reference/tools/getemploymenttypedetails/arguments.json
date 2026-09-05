@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "empTypeCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the employee Type Code.",
+      "advanced": false,
+      "raw": {
+        "name": "empTypeCode",
+        "type": "string",
+        "description": "to give the employee Type Code.",
+        "required": true,
+        "_id": "6815fd5a1fa8066d7b0d54b7"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

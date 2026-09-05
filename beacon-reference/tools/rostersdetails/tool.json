@@ -1,0 +1,91 @@
+{
+  "id": "690dc569931a2d61ba0b198d",
+  "slug": "rostersdetails",
+  "name": "rostersDetails",
+  "description": "Before in this api. first execute the \"rosterGroups\" tool to get user selected roster name corresponding roster group id will be take.",
+  "instructions": null,
+  "taskName": "Fetcher The Rosters",
+  "tags": [
+    "Attendence",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "rostersDetails",
+  "createdAt": "2025-06-05T11:45:18.788Z",
+  "updatedAt": "2025-06-05T11:45:18.788Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "14b1c8c1f2ec8f2af66986752e4178ec4d3ffc292fda0c49721e69b592b2c626",
+  "lastExportedAt": "2026-09-05T19:39:23.643Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b198d",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "rostersDetails",
+      "description": "Before in this api. first execute the \"rosterGroups\" tool to get user selected roster name corresponding roster group id will be take.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "rostersDetails",
+        "args": [
+          {
+            "name": "rosetrId",
+            "type": "string",
+            "description": "to get roster group id example \"10\".",
+            "required": true,
+            "_id": "6841834e1ed253048a7610ed"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6841834e1ed253048a7610ec"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    url: `${location.origin}/${reqOptions.sl}/tnavue/service/api/Roster/GetRostersByGroupId`,\n    method: 'POST',\n    headers: {\n      'Content-Type': 'application/json',\n      'Accept': 'application/json',\n      'x-requested-with': 'XMLHttpRequest'\n      // 'Cookie': 'ASP.NET_SessionId=cm101gkmudechmbl4hmoln3i; __RequestVerificationToken_L2hyYjU1=_Wlf80K884J1-06yE4Y0PmXCap6MRvvj4GnO15Q0MUwumyAt3GdRZqYSZNYv_g1z4f3BBZY5fpuvvCqTe69hW77VYqQ1; THEME_V8=default; .ASPXAUTH=241656AF614F5C57E7E671253351BAB2E5327E36273DFBB8653E95F93272BB9786E449B32DABBCCAACB72017EA6471D7AB327DD8F987997F4DC29BE96D1350263A3AEE5CFCF5EB81F54F2C1B485B6164C6AE6BE9EE265C3EA567E9940F69D5E8; ehrm85=...; my-application-browser-tab={\"guid\":\"a72db831-856c-9064-de89-e5f54e53350f\",\"timestamp\":1749121553347}'\n    },\n    body: JSON.stringify({\n      RosterGroup: args.rosetrId\n    }),\n    // credentials: 'include'\n  };\n})",
+      "transformer": "(function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"TNAVUE/app/RosterEmployee?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  return data;\n})",
+      "groupName": "",
+      "tags": [
+        "Attendence",
+        "Headers"
+      ],
+      "taskName": "Fetcher The Rosters",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-05T11:45:18.788Z",
+      "updatedAt": "2025-06-05T11:45:18.788Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "rostersDetails",
+      "args": [
+        {
+          "name": "rosetrId",
+          "type": "string",
+          "description": "to get roster group id example \"10\".",
+          "required": true,
+          "_id": "6841834e1ed253048a7610ed"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6841834e1ed253048a7610ec"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    url: `${location.origin}/${reqOptions.sl}/tnavue/service/api/Roster/GetRostersByGroupId`,\n    method: 'POST',\n    headers: {\n      'Content-Type': 'application/json',\n      'Accept': 'application/json',\n      'x-requested-with': 'XMLHttpRequest'\n      // 'Cookie': 'ASP.NET_SessionId=cm101gkmudechmbl4hmoln3i; __RequestVerificationToken_L2hyYjU1=_Wlf80K884J1-06yE4Y0PmXCap6MRvvj4GnO15Q0MUwumyAt3GdRZqYSZNYv_g1z4f3BBZY5fpuvvCqTe69hW77VYqQ1; THEME_V8=default; .ASPXAUTH=241656AF614F5C57E7E671253351BAB2E5327E36273DFBB8653E95F93272BB9786E449B32DABBCCAACB72017EA6471D7AB327DD8F987997F4DC29BE96D1350263A3AEE5CFCF5EB81F54F2C1B485B6164C6AE6BE9EE265C3EA567E9940F69D5E8; ehrm85=...; my-application-browser-tab={\"guid\":\"a72db831-856c-9064-de89-e5f54e53350f\",\"timestamp\":1749121553347}'\n    },\n    body: JSON.stringify({\n      RosterGroup: args.rosetrId\n    }),\n    // credentials: 'include'\n  };\n})",
+    "transformer": "(function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"TNAVUE/app/RosterEmployee?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  return data;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

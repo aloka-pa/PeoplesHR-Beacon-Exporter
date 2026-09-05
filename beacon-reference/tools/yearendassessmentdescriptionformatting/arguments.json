@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "approvalcomments",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "approvalcomments are getting no of and need take as semicolon separated in the description and dont take \"appraiser\" word does not taken limit is 2000 characters  and no need to take sub headings like \"comment:\" like this ",
+      "advanced": false,
+      "raw": {
+        "name": "approvalcomments",
+        "type": "string",
+        "description": "approvalcomments are getting no of and need take as semicolon separated in the description and dont take \"appraiser\" word does not taken limit is 2000 characters  and no need to take sub headings like \"comment:\" like this ",
+        "required": true,
+        "_id": "6839837aee810f144aeb58f5"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

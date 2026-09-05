@@ -1,0 +1,24 @@
+{
+  "id": "690dc580931a2d61ba0b2751",
+  "slug": "getbenefitapplicationstructure",
+  "name": "getBenefitApplicationStructure",
+  "status": "live",
+  "createdAt": "2025-05-21T08:03:56.386Z",
+  "updatedAt": "2025-05-21T08:03:56.386Z",
+  "contentHash": "3be30becd24aa4a4d43ac7d33451fc65f6fff87a7518c5d73f37f6906727b2f8",
+  "lastExportedAt": "2026-09-05T19:41:41.232Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc580931a2d61ba0b2751",
+    "name": "getBenefitApplicationStructure",
+    "status": "live",
+    "code": "(async function (benCode) {\n\n  const sl = await BeaconBar.getSharedData(\"sl\");\n  const jsonHeaders = new Headers();\n  jsonHeaders.append(\"Accept\", \"application/json, text/javascript, */*; q=0.01\");\n  jsonHeaders.append(\"Content-Type\", \"application/json; charset=UTF-8\");\n  jsonHeaders.append(\"X-Requested-With\", \"XMLHttpRequest\");\n\n  let raw;\n\n  if(!BeaconBar.user.metaData.menus.includes(\"Benefitv9/Application/Application/?mode=2&mvc=1&bs=4\")) {\n    raw = JSON.stringify({\n      betCode: benCode,\n      empNumber: window.Emp,\n      visibilityState: \"1\",\n      isWorkflow: \"0\",\n      appId: window?.benEmp?.appId || null,\n      wfMainId: null,\n      cancelWfMainId: null,\n      keyValue: window?.benEmp?.keyValue || null,\n      BetAppYear: window?.benEmp?.betAppYear\n    });\n  } else {\n    raw = JSON.stringify({\n      betCode: benCode,\n      empNumber: window.Emp,\n      visibilityState: window.benefitdetails?.VisibilityState,\n      isWorkflow: window.benefitdetails?.IsWorkflow,\n      appId: window.benefitdetails?.AppId,\n      wfMainId: window.benefitdetails?.WfMainId,\n      cancelWfMainId: window.benefitdetails?.CancelWfMainId,\n      keyValue: window.benefitdetails?.KeyValue,\n      BetAppYear: window.benefitdetails?.BetAppYear\n    });\n  }\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: jsonHeaders,\n    body: raw,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${sl}/BenefitV9/api/ApplicationApi/GetApplicationStructure/`, requestOptions);\n  const details = await response.json();\n\n  window.structure = details;\n\n  const effectYears = details.applicationRowVms?.[3]?.ApplicationStructureRowVms?.[0]?.RefObjectValue?.map(x => ({\n    years: x.Id,\n    yearValue: x.Value\n  }));\n\n  const effectMonths = details.applicationRowVms?.[3]?.ApplicationStructureRowVms?.[1]?.RefObjectValue?.map(x => ({\n    months: x.Id,\n    monthsValue: x.Value\n  }));\n\n  return {\n    // applicationRows: details.applicationRowVms,\n    effectYears: effectYears,\n    effectMonths: effectMonths\n  };\n})\n",
+    "by": "2414",
+    "__v": 0
+  }
+}

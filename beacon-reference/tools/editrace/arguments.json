@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    {
+      "name": "raceCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "race code to search for and then edit (required)",
+      "advanced": false,
+      "raw": {
+        "name": "raceCode",
+        "type": "string",
+        "description": "race code to search for and then edit (required)",
+        "required": false,
+        "_id": "695245ac1b4be94eea2a8fce"
+      }
+    },
+    {
+      "name": "raceName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "A partial or full name used to search for races.",
+      "advanced": false,
+      "raw": {
+        "name": "raceName",
+        "type": "string",
+        "description": "A partial or full name used to search for races.",
+        "required": false,
+        "_id": "6957a08cca68a9f2794ff30b"
+      }
+    },
+    {
+      "name": "newRaceName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The new name to update the race record, optional if no change is needed.",
+      "advanced": false,
+      "raw": {
+        "name": "newRaceName",
+        "type": "string",
+        "description": "The new name to update the race record, optional if no change is needed.",
+        "required": false,
+        "_id": "6957a08cca68a9f2794ff30c"
+      }
+    },
+    {
+      "name": "raceDescription",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The updated description for the race, optional if no change is needed.",
+      "advanced": false,
+      "raw": {
+        "name": "raceDescription",
+        "type": "string",
+        "description": "The updated description for the race, optional if no change is needed.",
+        "required": false,
+        "_id": "6957a08cca68a9f2794ff30d"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,24 @@
+{
+  "id": "690dc578931a2d61ba0b20ad",
+  "slug": "priorotapproval",
+  "name": "PriorOTApproval ",
+  "status": "live",
+  "createdAt": "2025-06-16T04:55:45.628Z",
+  "updatedAt": "2025-06-16T04:55:45.628Z",
+  "contentHash": "7b6c7791735010ab0cd23632f42f94872dfc940283908dbd90db958a71ce8733",
+  "lastExportedAt": "2026-09-05T19:41:34.754Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc578931a2d61ba0b20ad",
+    "name": "PriorOTApproval ",
+    "status": "live",
+    "code": "(async function (args , item) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n  const digest = await BeaconBar.executeFunction(\"getDigest\")(`mvc=1&bs=4&WFMainID=${item.WorkflowMainId}&Allowedit=${args.Allowedit}&CATID=${args.CATID}`)\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const response = await fetch(`${reqOptions}TNAV9/PriorOT/PriorOTApproval/?mvc=1&bs=4&WFMainID=${item.WorkflowMainId}&Allowedit=${args.Allowedit}&CATID=${args.CATID}&digest=${digest.digest}&_=${Date.now()}`, requestOptions)\n  const data = await response.text()\n  return data;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

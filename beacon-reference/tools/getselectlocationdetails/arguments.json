@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "countryName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get country name for user prompt.",
+      "advanced": false,
+      "raw": {
+        "name": "countryName",
+        "type": "string",
+        "description": "to get country name for user prompt.",
+        "required": true,
+        "_id": "680b8de1851c8da9149a32c4"
+      }
+    },
+    {
+      "name": "provinceValue",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get provinceValue for list province names to select one province name to corresponding value you take.",
+      "advanced": false,
+      "raw": {
+        "name": "provinceValue",
+        "type": "string",
+        "description": "to get provinceValue for list province names to select one province name to corresponding value you take.",
+        "required": true,
+        "_id": "680b994b95acec8cf7225478"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

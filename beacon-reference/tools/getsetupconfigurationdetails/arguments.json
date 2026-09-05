@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "sessionCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the session code for setupConfiguration api fetch to display all sessions name corresponding code you can take. Example:\"1\"",
+      "advanced": false,
+      "raw": {
+        "name": "sessionCode",
+        "type": "string",
+        "description": "to get the session code for setupConfiguration api fetch to display all sessions name corresponding code you can take. Example:\"1\"",
+        "required": true,
+        "_id": "680f4fd14acb458907efa5b9"
+      }
+    },
+    {
+      "name": "profileCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the profile code for setupConfiguration api fetch to display all profile name corresponding code you can take. Example:\"1\"",
+      "advanced": false,
+      "raw": {
+        "name": "profileCode",
+        "type": "string",
+        "description": "to get the profile code for setupConfiguration api fetch to display all profile name corresponding code you can take. Example:\"1\"",
+        "required": true,
+        "_id": "680f4fd14acb458907efa5ba"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

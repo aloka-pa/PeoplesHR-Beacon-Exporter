@@ -1,0 +1,24 @@
+{
+  "id": "6a171f0817220dc72372f0ef",
+  "slug": "segmentempinfo",
+  "name": "segmentEmpinfo",
+  "status": "live",
+  "createdAt": "2026-05-27T16:42:48.689Z",
+  "updatedAt": "2026-05-28T07:39:48.936Z",
+  "contentHash": "486b3b6eb6bfd154452a9c73d784aa576740d10bcc34d7c2c50c2572643363a0",
+  "lastExportedAt": "2026-09-05T19:41:26.298Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "6a171f0817220dc72372f0ef",
+    "name": "segmentEmpinfo",
+    "status": "live",
+    "code": "(function () {\n    const enabledAgents = JSON.parse(\n        localStorage.getItem('enabledAgents') || '[]'\n    );\n        return enabledAgents\n        .map(agent => String(agent).toLowerCase())\n        .includes('empinfo'.toLowerCase());\n})",
+    "by": "7829",
+    "__v": 1
+  }
+}

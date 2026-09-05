@@ -1,0 +1,131 @@
+{
+  "id": "690dc569931a2d61ba0b1991",
+  "slug": "getroundinginformation",
+  "name": "getRoundingInformation",
+  "description": "Retrieves rounding pattern information including pattern name, type, rounding method, and rounding value. Can retrieve either a specific pattern by code or all available patterns with their full details.",
+  "instructions": null,
+  "taskName": "fetching rounding information",
+  "tags": [
+    "Attendance",
+    "Headers",
+    "Phase2",
+    "Modified"
+  ],
+  "status": "live",
+  "signature": "getRoundingInformation",
+  "createdAt": "2025-06-05T13:43:41.889Z",
+  "updatedAt": "2026-06-15T07:35:41.410Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "346d50ce49e9910505d420f0edb4fa4d5705d4f4ebc29cc4bf8561b05290dc12",
+  "lastExportedAt": "2026-09-05T19:39:22.324Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b1991",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getRoundingInformation",
+      "description": "Retrieves rounding pattern information including pattern name, type, rounding method, and rounding value. Can retrieve either a specific pattern by code or all available patterns with their full details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getRoundingInformation",
+        "args": [
+          {
+            "name": "patternCode",
+            "type": "string",
+            "description": "The unique code identifier for the rounding pattern (e.g., \"000002\"). If not provided, returns all available patterns with their details.",
+            "required": false,
+            "_id": "68419f0de8e2ea71391a7d10"
+          },
+          {
+            "name": "patternName",
+            "type": "string",
+            "description": "The full or partial name of the rounding pattern to search for (e.g., \"test\", \"Pattern 1\")",
+            "required": false,
+            "_id": "695791c9b2a1ded6eb5a2bfe"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68419f0de8e2ea71391a7d0f"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"TNA/RoundingInformation.aspx\")) {\n    return {\n      status: \"NO_ACCESS\",\n      message: \"You do not have access to Rounding Information screen. Please contact HR Admin.\"\n    };\n  }\n\n  // Get all rounding patterns\n  const allPatterns = await BeaconBar.executeFunction(\"getRoundingInformation\")();\n\n  if (!allPatterns || allPatterns.length === 0) {\n    return {\n      status: \"NOT_FOUND\",\n      message: \"No rounding patterns found in the system\"\n    };\n  }\n\n  // Helper function to extract rounding info from HTML\n  function extractRoundingInfoFromHTML(htmlString) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(htmlString, \"text/html\");\n\n    const result = {};\n\n    // Pattern Name\n    const patternInput = doc.querySelector('#ctl00_body_txtRoundingPatternName');\n    result.patternName = patternInput?.value || '';\n\n    // Pattern Type (General or Range)\n    const radioGeneral = doc.querySelector('#ctl00_body_rbtnGeneral');\n    const radioRange = doc.querySelector('#ctl00_body_rbtnRange');\n    if (radioGeneral?.checked) {\n      result.patternType = 'General';\n    } else if (radioRange?.checked) {\n      result.patternType = 'Range';\n    } else {\n      result.patternType = 'Unknown';\n    }\n\n    // Rounding Method\n    const methodSelect = doc.querySelector('#ctl00_body_cboMethod');\n    if (methodSelect) {\n      const selectedOption = methodSelect.options[methodSelect.selectedIndex];\n      result.roundingMethod = selectedOption?.textContent.trim() || methodSelect.value;\n    }\n\n    // Rounding Value\n    const numValInput = doc.querySelector('#ctl00_body_txtNumVal');\n    result.roundingValue = numValInput?.value || '';\n\n    return result;\n  }\n\n  // If user provides specific pattern code OR name, return only that pattern\n  if (args.patternCode || args.patternName) {\n    let matchedPattern = null;\n\n    // Search by code if provided\n    if (args.patternCode) {\n      matchedPattern = allPatterns.find(x => x.code === args.patternCode);\n    }\n    \n    // Search by name if code not found or not provided\n    if (!matchedPattern && args.patternName) {\n      matchedPattern = allPatterns.find(x => \n        x.name && x.name.toLowerCase().includes(args.patternName.toLowerCase())\n      );\n    }\n    \n    if (!matchedPattern) {\n      const searchedBy = args.patternCode ? `code \"${args.patternCode}\"` : `name \"${args.patternName}\"`;\n      return {\n        status: \"NOT_FOUND\",\n        message: `Rounding pattern with ${searchedBy} not found`\n      };\n    }\n\n    const htmlResult = await BeaconBar.executeFunction(\"openRoundingInformation\")(matchedPattern);\n    const details = extractRoundingInfoFromHTML(htmlResult);\n\n    return {\n      status: \"SUCCESS\",\n      message: `Rounding information retrieved successfully`,\n      pattern: {\n        code: matchedPattern.code,\n        name: matchedPattern.name || details.patternName,\n        patternName: details.patternName,\n        patternType: details.patternType,\n        roundingMethod: details.roundingMethod,\n        roundingValue: details.roundingValue\n      }\n    };\n  }\n\n  // If no specific code or name provided, return ALL patterns with their details\n  const allPatternDetails = [];\n  \n  for (const pattern of allPatterns) {\n    try {\n      const htmlResult = await BeaconBar.executeFunction(\"openRoundingInformation\")(pattern);\n      const details = extractRoundingInfoFromHTML(htmlResult);\n      \n      allPatternDetails.push({\n        code: pattern.code,\n        name: pattern.name || details.patternName,\n        patternName: details.patternName,\n        patternType: details.patternType,\n        roundingMethod: details.roundingMethod,\n        roundingValue: details.roundingValue\n      });\n    } catch (error) {\n      // If one pattern fails, still continue with others\n      allPatternDetails.push({\n        code: pattern.code,\n        name: pattern.name,\n        error: \"Failed to load details\"\n      });\n    }\n  }\n\n  return {\n    status: \"SUCCESS\",\n    message: `Found ${allPatternDetails.length} rounding pattern(s)`,\n    count: allPatternDetails.length,\n    patterns: allPatternDetails\n  };\n})",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "Headers",
+        "Phase2",
+        "Modified"
+      ],
+      "taskName": "fetching rounding information",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-05T13:43:41.889Z",
+      "updatedAt": "2026-06-15T07:35:41.410Z",
+      "__v": 3,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getRoundingInformation",
+      "args": [
+        {
+          "name": "patternCode",
+          "type": "string",
+          "description": "The unique code identifier for the rounding pattern (e.g., \"000002\"). If not provided, returns all available patterns with their details.",
+          "required": false,
+          "_id": "68419f0de8e2ea71391a7d10"
+        },
+        {
+          "name": "patternName",
+          "type": "string",
+          "description": "The full or partial name of the rounding pattern to search for (e.g., \"test\", \"Pattern 1\")",
+          "required": false,
+          "_id": "695791c9b2a1ded6eb5a2bfe"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68419f0de8e2ea71391a7d0f"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"TNA/RoundingInformation.aspx\")) {\n    return {\n      status: \"NO_ACCESS\",\n      message: \"You do not have access to Rounding Information screen. Please contact HR Admin.\"\n    };\n  }\n\n  // Get all rounding patterns\n  const allPatterns = await BeaconBar.executeFunction(\"getRoundingInformation\")();\n\n  if (!allPatterns || allPatterns.length === 0) {\n    return {\n      status: \"NOT_FOUND\",\n      message: \"No rounding patterns found in the system\"\n    };\n  }\n\n  // Helper function to extract rounding info from HTML\n  function extractRoundingInfoFromHTML(htmlString) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(htmlString, \"text/html\");\n\n    const result = {};\n\n    // Pattern Name\n    const patternInput = doc.querySelector('#ctl00_body_txtRoundingPatternName');\n    result.patternName = patternInput?.value || '';\n\n    // Pattern Type (General or Range)\n    const radioGeneral = doc.querySelector('#ctl00_body_rbtnGeneral');\n    const radioRange = doc.querySelector('#ctl00_body_rbtnRange');\n    if (radioGeneral?.checked) {\n      result.patternType = 'General';\n    } else if (radioRange?.checked) {\n      result.patternType = 'Range';\n    } else {\n      result.patternType = 'Unknown';\n    }\n\n    // Rounding Method\n    const methodSelect = doc.querySelector('#ctl00_body_cboMethod');\n    if (methodSelect) {\n      const selectedOption = methodSelect.options[methodSelect.selectedIndex];\n      result.roundingMethod = selectedOption?.textContent.trim() || methodSelect.value;\n    }\n\n    // Rounding Value\n    const numValInput = doc.querySelector('#ctl00_body_txtNumVal');\n    result.roundingValue = numValInput?.value || '';\n\n    return result;\n  }\n\n  // If user provides specific pattern code OR name, return only that pattern\n  if (args.patternCode || args.patternName) {\n    let matchedPattern = null;\n\n    // Search by code if provided\n    if (args.patternCode) {\n      matchedPattern = allPatterns.find(x => x.code === args.patternCode);\n    }\n    \n    // Search by name if code not found or not provided\n    if (!matchedPattern && args.patternName) {\n      matchedPattern = allPatterns.find(x => \n        x.name && x.name.toLowerCase().includes(args.patternName.toLowerCase())\n      );\n    }\n    \n    if (!matchedPattern) {\n      const searchedBy = args.patternCode ? `code \"${args.patternCode}\"` : `name \"${args.patternName}\"`;\n      return {\n        status: \"NOT_FOUND\",\n        message: `Rounding pattern with ${searchedBy} not found`\n      };\n    }\n\n    const htmlResult = await BeaconBar.executeFunction(\"openRoundingInformation\")(matchedPattern);\n    const details = extractRoundingInfoFromHTML(htmlResult);\n\n    return {\n      status: \"SUCCESS\",\n      message: `Rounding information retrieved successfully`,\n      pattern: {\n        code: matchedPattern.code,\n        name: matchedPattern.name || details.patternName,\n        patternName: details.patternName,\n        patternType: details.patternType,\n        roundingMethod: details.roundingMethod,\n        roundingValue: details.roundingValue\n      }\n    };\n  }\n\n  // If no specific code or name provided, return ALL patterns with their details\n  const allPatternDetails = [];\n  \n  for (const pattern of allPatterns) {\n    try {\n      const htmlResult = await BeaconBar.executeFunction(\"openRoundingInformation\")(pattern);\n      const details = extractRoundingInfoFromHTML(htmlResult);\n      \n      allPatternDetails.push({\n        code: pattern.code,\n        name: pattern.name || details.patternName,\n        patternName: details.patternName,\n        patternType: details.patternType,\n        roundingMethod: details.roundingMethod,\n        roundingValue: details.roundingValue\n      });\n    } catch (error) {\n      // If one pattern fails, still continue with others\n      allPatternDetails.push({\n        code: pattern.code,\n        name: pattern.name,\n        error: \"Failed to load details\"\n      });\n    }\n  }\n\n  return {\n    status: \"SUCCESS\",\n    message: `Found ${allPatternDetails.length} rounding pattern(s)`,\n    count: allPatternDetails.length,\n    patterns: allPatternDetails\n  };\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

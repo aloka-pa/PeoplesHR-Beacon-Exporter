@@ -1,0 +1,113 @@
+{
+  "id": "690dc569931a2d61ba0b191c",
+  "slug": "selectingemployeeslist",
+  "name": "selectingEmployeeslist",
+  "description": "selectingEmployeeslist , before calling this api you need to call the \"getTalentReviewCycle\" and  here are selecting that variable get the employees list. and how the talent review cycle to slect the user.",
+  "instructions": null,
+  "taskName": "selectingEmployeeslist",
+  "tags": [
+    "selectingCandidatePool"
+  ],
+  "status": "live",
+  "signature": "selectingEmployeeslist",
+  "createdAt": "2025-06-03T12:34:41.429Z",
+  "updatedAt": "2026-07-17T12:54:54.771Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c4f",
+      "name": "SelectLeaderShipCandiates"
+    }
+  ],
+  "contentHash": "4eb128bf44b084eea61c6dd84b3b62f8a4f5f5401369723eda46af4a7db38cea",
+  "lastExportedAt": "2026-09-05T19:39:22.048Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b191c",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selectingEmployeeslist",
+      "description": "selectingEmployeeslist , before calling this api you need to call the \"getTalentReviewCycle\" and  here are selecting that variable get the employees list. and how the talent review cycle to slect the user.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selectingEmployeeslist",
+        "args": [
+          {
+            "name": "reviewCycle",
+            "type": "string",
+            "description": "reviewCycle , takes only that value. Ex:- \"2\"  this reviewcycle no need to take the the user consent",
+            "required": true,
+            "_id": "683eebe10b31dbd99b043892"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a261eb37eae4bf184134e"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  BeaconBar.setSharedData(\"argscycle\" , args)\n  const State = BeaconBar.getSharedData(\"selectLeaderShipViewState\");\n  await BeaconBar.executeFunction(\"selectedLeaderShip\")(args, State);\n\n  const searchEmployees = await BeaconBar.executeFunction(\"searchEmployee\")();\n  const selectingEmployees = await BeaconBar.executeFunction(\"selectEmployees\")(searchEmployees);\n\nfunction extractEmployeeDataFromHTMLAdvanced(htmlString) {\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(htmlString, 'text/html');\n  const table = doc.querySelector('table.MasterTable_Default');\n\n  if (!table) {\n    return { employees: [], invalidRows: [] };\n  }\n\n  const rows = table.querySelectorAll('tbody tr');\n  const employees = [];\n  const invalidRows = [];\n\n  rows.forEach((row, index) => {\n    const cells = row.querySelectorAll('td');\n    if (cells.length === 4) {\n      const checkbox = cells[0].querySelector('input[type=\"checkbox\"]'); // ✅ new\n      const employeeNo = cells[1].textContent.trim();\n      const name = cells[2].textContent.trim();\n      const dateJoined = cells[3].textContent.trim();\n\n      // collect checkbox info if available\n      const checkboxInfo = checkbox\n        ? {\n            name: checkbox.name || null,\n          }\n        : null;\n\n      const potentialEmployee = {\n        employeeNo,\n        name,\n        dateJoined,\n        checkbox: checkboxInfo, // ✅ include checkbox\n        rowIndex: index\n      };\n\n      const isValidName = name.length > 0 && name !== '';\n      const isValidDate = /^\\d{1,2}\\/\\d{1,2}\\/\\d{4}$/.test(dateJoined);\n\n      if (isValidName && isValidDate) {\n        employees.push(potentialEmployee);\n      } else {\n        invalidRows.push({\n          ...potentialEmployee,\n          issues: {\n            invalidName: !isValidName,\n            invalidDate: !isValidDate\n          }\n        });\n      }\n    }\n  });\n\n  return { employees, invalidRows };\n}\n\n\n  // ✅ fix: access only employees\n  const { employees, invalidRows } = extractEmployeeDataFromHTMLAdvanced(selectingEmployees);\n  BeaconBar.setSharedData(\"employeesname\", employees)\n function removeCheckboxInfo(employees) {\n  return employees.map(({ checkbox, ...rest }) => rest);\n}\nconst removedCheckboxInfo = removeCheckboxInfo(employees);\n  await BeaconBar.executeFunction(\"downloadcsv\")(removedCheckboxInfo, \"selectedList\");\n\n  // ✅ reformatted only employees array\n  const reformatted = removedCheckboxInfo.map((item, i) => ({\n    ...item,\n    rowIndex: i\n  }));\n  \n  return { employees: reformatted, message: \"do you want add any creteria filters ask just as consent\" };\n})\n",
+      "sampleRequest": {
+        "reviewCycle": "2"
+      },
+      "groupName": "",
+      "tags": [
+        "selectingCandidatePool"
+      ],
+      "taskName": "selectingEmployeeslist",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-03T12:34:41.429Z",
+      "updatedAt": "2026-07-17T12:54:54.771Z",
+      "__v": 2,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c4f",
+          "name": "SelectLeaderShipCandiates"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selectingEmployeeslist",
+      "args": [
+        {
+          "name": "reviewCycle",
+          "type": "string",
+          "description": "reviewCycle , takes only that value. Ex:- \"2\"  this reviewcycle no need to take the the user consent",
+          "required": true,
+          "_id": "683eebe10b31dbd99b043892"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a261eb37eae4bf184134e"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  BeaconBar.setSharedData(\"argscycle\" , args)\n  const State = BeaconBar.getSharedData(\"selectLeaderShipViewState\");\n  await BeaconBar.executeFunction(\"selectedLeaderShip\")(args, State);\n\n  const searchEmployees = await BeaconBar.executeFunction(\"searchEmployee\")();\n  const selectingEmployees = await BeaconBar.executeFunction(\"selectEmployees\")(searchEmployees);\n\nfunction extractEmployeeDataFromHTMLAdvanced(htmlString) {\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(htmlString, 'text/html');\n  const table = doc.querySelector('table.MasterTable_Default');\n\n  if (!table) {\n    return { employees: [], invalidRows: [] };\n  }\n\n  const rows = table.querySelectorAll('tbody tr');\n  const employees = [];\n  const invalidRows = [];\n\n  rows.forEach((row, index) => {\n    const cells = row.querySelectorAll('td');\n    if (cells.length === 4) {\n      const checkbox = cells[0].querySelector('input[type=\"checkbox\"]'); // ✅ new\n      const employeeNo = cells[1].textContent.trim();\n      const name = cells[2].textContent.trim();\n      const dateJoined = cells[3].textContent.trim();\n\n      // collect checkbox info if available\n      const checkboxInfo = checkbox\n        ? {\n            name: checkbox.name || null,\n          }\n        : null;\n\n      const potentialEmployee = {\n        employeeNo,\n        name,\n        dateJoined,\n        checkbox: checkboxInfo, // ✅ include checkbox\n        rowIndex: index\n      };\n\n      const isValidName = name.length > 0 && name !== '';\n      const isValidDate = /^\\d{1,2}\\/\\d{1,2}\\/\\d{4}$/.test(dateJoined);\n\n      if (isValidName && isValidDate) {\n        employees.push(potentialEmployee);\n      } else {\n        invalidRows.push({\n          ...potentialEmployee,\n          issues: {\n            invalidName: !isValidName,\n            invalidDate: !isValidDate\n          }\n        });\n      }\n    }\n  });\n\n  return { employees, invalidRows };\n}\n\n\n  // ✅ fix: access only employees\n  const { employees, invalidRows } = extractEmployeeDataFromHTMLAdvanced(selectingEmployees);\n  BeaconBar.setSharedData(\"employeesname\", employees)\n function removeCheckboxInfo(employees) {\n  return employees.map(({ checkbox, ...rest }) => rest);\n}\nconst removedCheckboxInfo = removeCheckboxInfo(employees);\n  await BeaconBar.executeFunction(\"downloadcsv\")(removedCheckboxInfo, \"selectedList\");\n\n  // ✅ reformatted only employees array\n  const reformatted = removedCheckboxInfo.map((item, i) => ({\n    ...item,\n    rowIndex: i\n  }));\n  \n  return { employees: reformatted, message: \"do you want add any creteria filters ask just as consent\" };\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {
+        "reviewCycle": "2"
+      },
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

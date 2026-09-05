@@ -1,0 +1,91 @@
+{
+  "id": "690dc565931a2d61ba0b1594",
+  "slug": "updatefunctiondetails",
+  "name": "updateFunctionDetails",
+  "description": "In this tool, begin by executing the \"getEIMAttributeList\" API to retrieve existing data. Then, compare the updated function name with the previous name from the  getEIMAttributeList  response before proceeding with the update.",
+  "instructions": null,
+  "taskName": "Update Function Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateFunctionDetails",
+  "createdAt": "2025-05-02T12:32:35.742Z",
+  "updatedAt": "2025-05-02T12:32:35.742Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "b976f8fa8341ec519fb749ea46f5563b9e10488840ae4b095544221f4250b70d",
+  "lastExportedAt": "2026-09-05T19:39:24.229Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc565931a2d61ba0b1594",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateFunctionDetails",
+      "description": "In this tool, begin by executing the \"getEIMAttributeList\" API to retrieve existing data. Then, compare the updated function name with the previous name from the  getEIMAttributeList  response before proceeding with the update.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateFunctionDetails",
+        "args": [
+          {
+            "name": "functionName",
+            "type": "string",
+            "description": "to give the function name or description.",
+            "required": true,
+            "_id": "6814bb637c1d0fe37e2836c7"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6814bb637c1d0fe37e2836c6"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Function.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/Function.aspx');\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n  } else {\n    url = \"Function\"\n  }\n\n  const editInit = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.fu.viewState,\n    __VIEWSTATEGENERATOR: window.fu.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.fu.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butEdit\": \"Edit\"\n  }, url);\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtName\": args.functionName || \"\",\n    \"ctl00$body$butSave\": \"Save\"\n  }, url);\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const functionDetails = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const result = {\n    code,\n    functionDetails\n  };\n  if (saveResponse === false) {\n    return \"try again api is fail.\"\n  } else {\n    return result;\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update Function Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-02T12:32:35.742Z",
+      "updatedAt": "2025-05-02T12:32:35.742Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateFunctionDetails",
+      "args": [
+        {
+          "name": "functionName",
+          "type": "string",
+          "description": "to give the function name or description.",
+          "required": true,
+          "_id": "6814bb637c1d0fe37e2836c7"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6814bb637c1d0fe37e2836c6"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Function.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/Function.aspx');\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n  } else {\n    url = \"Function\"\n  }\n\n  const editInit = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.fu.viewState,\n    __VIEWSTATEGENERATOR: window.fu.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.fu.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butEdit\": \"Edit\"\n  }, url);\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtName\": args.functionName || \"\",\n    \"ctl00$body$butSave\": \"Save\"\n  }, url);\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const functionDetails = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const result = {\n    code,\n    functionDetails\n  };\n  if (saveResponse === false) {\n    return \"try again api is fail.\"\n  } else {\n    return result;\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

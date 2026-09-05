@@ -1,0 +1,80 @@
+{
+  "arguments": [
+    {
+      "name": "districtName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "name of the district to create",
+      "advanced": false,
+      "raw": {
+        "name": "districtName",
+        "type": "string",
+        "description": "name of the district to create",
+        "required": true,
+        "_id": "69534d615c168b76aad53bc4"
+      }
+    },
+    {
+      "name": "provinceCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Province code to select (recommended). Maps to ctl00$body$dpcountry. Example: \"000087\".",
+      "advanced": false,
+      "raw": {
+        "name": "provinceCode",
+        "type": "string",
+        "description": "Province code to select (recommended). Maps to ctl00$body$dpcountry. Example: \"000087\".",
+        "required": false,
+        "_id": "69534d615c168b76aad53bc5"
+      }
+    },
+    {
+      "name": "provinceName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Province name to select (fallback if code not provided). Tool matches option text (case-insensitive, contains).",
+      "advanced": false,
+      "raw": {
+        "name": "provinceName",
+        "type": "string",
+        "description": "Province name to select (fallback if code not provided). Tool matches option text (case-insensitive, contains).",
+        "required": false,
+        "_id": "697f9fb632be68838ce454b7"
+      }
+    },
+    {
+      "name": "openFromSearch",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "\"true\" / \"false\" (default \"false\"). If \"true\", loads a Search context first, then clicks New.",
+      "advanced": false,
+      "raw": {
+        "name": "openFromSearch",
+        "type": "string",
+        "description": "\"true\" / \"false\" (default \"false\"). If \"true\", loads a Search context first, then clicks New.",
+        "required": false,
+        "_id": "697f9fb632be68838ce454b8"
+      }
+    },
+    {
+      "name": "searchDistrictName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Used only when openFromSearch=\"true\" to prefill search text.",
+      "advanced": false,
+      "raw": {
+        "name": "searchDistrictName",
+        "type": "string",
+        "description": "Used only when openFromSearch=\"true\" to prefill search text.",
+        "required": false,
+        "_id": "697f9fb632be68838ce454b9"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

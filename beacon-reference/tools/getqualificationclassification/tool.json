@@ -1,0 +1,206 @@
+{
+  "id": "695204a2632bdc03f92c2f31",
+  "slug": "getqualificationclassification",
+  "name": "getQualificationClassification",
+  "description": "Retrieves qualification classification records from the system by code, name, or as a full list. Supports partial matching and can return either summary data or detailed records. Also handles “get all/available/existing qualifications” requests using fetchMode. ",
+  "instructions": null,
+  "taskName": "Fetching Qualification Classifications",
+  "tags": [
+    "EIMAdmin",
+    "Qualification Information"
+  ],
+  "status": "live",
+  "signature": "getQualificationClassification",
+  "createdAt": "2025-12-29T04:33:38.546Z",
+  "updatedAt": "2026-02-02T14:33:17.874Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "a95150d267d17fb1ef5e93c993e44316bcfcef8a8d63baed0c7c835a20b4eef7",
+  "lastExportedAt": "2026-09-05T19:39:23.018Z",
+  "raw": {
+    "basic": {
+      "_id": "695204a2632bdc03f92c2f31",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getQualificationClassification",
+      "description": "Retrieves qualification classification records from the system by code, name, or as a full list. Supports partial matching and can return either summary data or detailed records. Also handles “get all/available/existing qualifications” requests using fetchMode. ",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getQualificationClassification",
+        "args": [
+          {
+            "name": "classificationCode",
+            "type": "string",
+            "description": "Use the provided classification code to search and return the corresponding qualification classification details.",
+            "required": false,
+            "_id": "695204a2632bdc03f92c2f33"
+          },
+          {
+            "name": "classificationName",
+            "type": "string",
+            "description": "Use the provided classification name to search and return the corresponding qualification classification details.",
+            "required": false,
+            "_id": "6963ff94cae462cb939d0882"
+          },
+          {
+            "name": "includeDetails",
+            "type": "string",
+            "description": "If true, fetches detailed info for each match. Default: false",
+            "required": false,
+            "_id": "696400ce5f98759a5e149e87"
+          },
+          {
+            "name": "fetchMode",
+            "type": "string",
+            "description": "Returns all qualification classifications instead of searching by code or name. Use values like \"ALL\", \"AVAILABLE\", \"EXISTING\", or \"LIST\" when the user asks for all or available qualifications. If set, code/name filters are ignored.",
+            "required": false,
+            "_id": "697e0b9ca6ea5550b4cbcf05"
+          },
+          {
+            "name": "returnAll",
+            "type": "string",
+            "description": "Returns all qualification classifications instead of searching by code or name. Use values like \"ALL\", \"AVAILABLE\", \"EXISTING\", or \"LIST\" when the user asks for all or available qualifications. If set, code/name filters are ignored.",
+            "required": false,
+            "_id": "69808b24ab0bd3ea43d02672"
+          },
+          {
+            "name": "pageNumber",
+            "type": "string",
+            "description": "when not auto-fetching all, fetch a specific page (default 1)",
+            "required": false,
+            "_id": "69808b24ab0bd3ea43d02673"
+          },
+          {
+            "name": "pageSize",
+            "type": "string",
+            "description": "requested size (default 100)",
+            "required": false,
+            "_id": "69808b24ab0bd3ea43d02674"
+          },
+          {
+            "name": "autoFetchAllPages",
+            "type": "string",
+            "description": "truthy → fetch all pages (default true when all-mode)",
+            "required": false,
+            "_id": "69808b24ab0bd3ea43d02675"
+          },
+          {
+            "name": "maxPages",
+            "type": "string",
+            "description": "safety limit (default 50)",
+            "required": false,
+            "_id": "69808b24ab0bd3ea43d02676"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "695204a2632bdc03f92c2f32"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/QualificationClassific.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Qualification Classification screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Helpers (STRING ONLY)\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const toLower = (v) => okText(v).toLowerCase();\n    const isTruthy = (v) => {\n      const t = toLower(v);\n      return [\"true\",\"1\",\"yes\",\"y\",\"all\",\"showall\",\"show all\",\"list\",\"a list\",\"available\",\"existing\"].includes(t);\n    };\n\n    const code = okText(args?.classificationCode);\n    const name = okText(args?.classificationName);\n\n    const includeDetails = isTruthy(args?.includeDetails);\n\n    const fetchMode = toLower(args?.fetchMode);\n    const isAllMode = [\"all\", \"available\", \"existing\", \"list\"].includes(fetchMode) || isTruthy(args?.returnAll);\n\n    const pageNumberRaw = okText(args?.pageNumber) || \"1\";\n    const pageNumber = Number.isFinite(Number(pageNumberRaw)) ? Math.max(1, parseInt(pageNumberRaw, 10)) : 1;\n\n    const pageSizeRaw = okText(args?.pageSize) || \"100\";\n    const pageSize = Number.isFinite(Number(pageSizeRaw)) ? Math.max(1, parseInt(pageSizeRaw, 10)) : 100;\n\n    const autoFetchAllPages = isAllMode ? true : isTruthy(args?.autoFetchAllPages);\n\n    const maxPagesRaw = okText(args?.maxPages) || \"50\";\n    const maxPages = Number.isFinite(Number(maxPagesRaw)) ? Math.max(1, parseInt(maxPagesRaw, 10)) : 50;\n\n    /* -------------------------------------------------\n     * 3) Input validation\n     * ------------------------------------------------- */\n    if (!isAllMode && !code && !name) {\n      return {\n        status: \"INVALID_ARGS\",\n        message:\n          \"Error: either classificationCode or classificationName is required, OR set fetchMode/returnAll to ALL/AVAILABLE/EXISTING/LIST.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 4) Initial hidden fields + URL\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"QualificationClassific\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/QualificationClassific.aspx\");\n    const url = updateUrl?.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/QualificationClassific.aspx`;\n\n    const parser = new DOMParser();\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const extractState = (doc) => ({\n      viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n      viewStateGen: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n      eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\"\n    });\n\n    const extractPagerInfo = (doc) => {\n      const pagerText = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\n      // \"Displaying page 1 of 3, items 1 to 3 of 9.\"\n      const m = pagerText.match(/Displaying page\\s+(\\d+)\\s+of\\s+(\\d+).*?of\\s+(\\d+)/i);\n      const currentPage = m ? parseInt(m[1], 10) : 1;\n      const totalPages = m ? parseInt(m[2], 10) : 1;\n      const totalItems = m ? parseInt(m[3], 10) : null;\n\n      const pageTargets = {};\n      doc.querySelectorAll(\".PagerLeft_Default a\").forEach((a) => {\n        const pageNo = (a.textContent || \"\").trim();\n        const href = a.getAttribute(\"href\") || \"\";\n        const mm = href.match(/__doPostBack\\('([^']+)','([^']*)'\\)/);\n        if (pageNo && mm) pageTargets[pageNo] = { target: mm[1], arg: mm[2] || \"\" };\n      });\n\n      return { currentPage, totalPages, totalItems, pageTargets };\n    };\n\n    const extractRows = (doc) => {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const out = [];\n\n      for (const row of rows) {\n        const cells = row.querySelectorAll(\"td\");\n        if (cells.length < 2) continue;\n\n        const rowCode = (cells[0]?.textContent || \"\").trim();\n        const rowClassification = (cells[1]?.textContent || \"\").trim();\n        const rowRank = (cells[2]?.textContent || \"\").trim();\n\n        if (!rowCode && !rowClassification) continue;\n\n        // store row element for edit link extraction if includeDetails\n        out.push({ code: rowCode, classification: rowClassification, rank: rowRank, rowEl: row });\n      }\n\n      return out;\n    };\n\n    const applyFilter = (items) => {\n      if (isAllMode) return items;\n\n      const codeNeedle = code.toLowerCase();\n      const nameNeedle = name.toLowerCase();\n\n      return items.filter((r) => {\n        if (code) return (r.code || \"\").toLowerCase().includes(codeNeedle);\n        return (r.classification || \"\").toLowerCase().includes(nameNeedle);\n      });\n    };\n\n    /* -------------------------------------------------\n     * 5) Determine search criteria/value\n     * ------------------------------------------------- */\n    const searchCriteria = code ? \"QUALCLASSIFIC_CODE\" : \"QUALCLASSIFIC_NAME\";\n    const searchValue = code || name;\n\n    /* -------------------------------------------------\n     * 6) POST #1: Search or Show All (page 1)\n     * ------------------------------------------------- */\n    const postSearchOrAll = async () => {\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", \"\");\n      formData.append(\"__EVENTARGUMENT\", \"\");\n      formData.append(\"__VIEWSTATE\", details.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n      formData.append(\"ctl00$body$hdnIsHead\", \"\");\n      formData.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n\n      // criteria required even for ALL\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", isAllMode ? \"QUALCLASSIFIC_CODE\" : searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", isAllMode ? \"\" : searchValue);\n\n      if (isAllMode) {\n        formData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n      } else {\n        formData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n      }\n\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n      return parser.parseFromString(html, \"text/html\");\n    };\n\n    /* -------------------------------------------------\n     * 7) Pager postback (REAL FIX)\n     * ------------------------------------------------- */\n    const postToPage = async (fromDoc, targetPage) => {\n      const state = extractState(fromDoc);\n      const pager = extractPagerInfo(fromDoc);\n      const key = String(targetPage);\n      const event = pager.pageTargets[key];\n      if (!event?.target) return null;\n\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", event.target);\n      formData.append(\"__EVENTARGUMENT\", event.arg || \"\");\n      formData.append(\"__VIEWSTATE\", state.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", state.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n      formData.append(\"ctl00$body$hdnIsHead\", \"\");\n      formData.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n\n      // Keep search context (safe)\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", isAllMode ? \"QUALCLASSIFIC_CODE\" : searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", isAllMode ? \"\" : searchValue);\n\n      // Keep pager fields (safe)\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", key);\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n      return parser.parseFromString(html, \"text/html\");\n    };\n\n    /* -------------------------------------------------\n     * 8) includeDetails: open row (edit)\n     * ------------------------------------------------- */\n    const openRowDetails = async (pageDoc, rowEl) => {\n      const editHref = rowEl.querySelector(\"a\")?.getAttribute(\"href\") || \"\";\n      const mm = editHref.match(/__doPostBack\\('([^']+)','([^']*)'\\)/);\n      const eventTarget = mm ? mm[1] : \"\";\n      const eventArg = mm ? (mm[2] || \"\") : \"\";\n\n      if (!eventTarget) return null;\n\n      const state = extractState(pageDoc);\n\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", eventTarget);\n      formData.append(\"__EVENTARGUMENT\", eventArg);\n      formData.append(\"__VIEWSTATE\", state.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", state.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      // Keep search context (safe)\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", isAllMode ? \"QUALCLASSIFIC_CODE\" : searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", isAllMode ? \"\" : searchValue);\n\n      // Keep pager fields (safe)\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n\n      // You can parse html and extract extra fields if needed later.\n      // For now we just confirm the open worked by returning html length.\n      return { opened: true, htmlLength: html.length };\n    };\n\n    /* -------------------------------------------------\n     * 9) Run\n     * ------------------------------------------------- */\n    const firstDoc = await postSearchOrAll();\n    const pager1 = extractPagerInfo(firstDoc);\n\n    // If ALL mode => fetch all pages\n    if (autoFetchAllPages) {\n      const allResults = [];\n      let currentDoc = firstDoc;\n      let pager = pager1;\n\n      let safety = 0;\n      while (safety < maxPages) {\n        safety += 1;\n\n        const pageRows = extractRows(currentDoc);\n        const matches = applyFilter(pageRows);\n\n        if (!includeDetails) {\n          allResults.push(...matches.map(r => ({\n            code: r.code,\n            classification: r.classification,\n            rank: r.rank\n          })));\n        } else {\n          for (const r of matches) {\n            // open details (optional)\n            await openRowDetails(currentDoc, r.rowEl);\n            allResults.push({\n              code: r.code,\n              classification: r.classification,\n              rank: r.rank\n            });\n          }\n        }\n\n        if (!(pager.currentPage < pager.totalPages)) break;\n\n        const next = pager.currentPage + 1;\n        const nextDoc = await postToPage(currentDoc, next);\n        if (!nextDoc) break;\n\n        currentDoc = nextDoc;\n        pager = extractPagerInfo(currentDoc);\n      }\n\n      if (!allResults.length) {\n        return {\n          status: \"NOT_FOUND\",\n          message: isAllMode\n            ? \"No qualification classifications found.\"\n            : \"No qualification classifications found matching the search criteria.\",\n          searchedFor: isAllMode ? fetchMode : searchValue\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        mode: isAllMode ? \"ALL\" : \"SEARCH_ALL_PAGES\",\n        includeDetails: includeDetails ? \"true\" : \"false\",\n        count: allResults.length,\n        classifications: allResults\n      };\n    }\n\n    // Single page mode: allow paging prompts\n    let finalDoc = firstDoc;\n    const safeTarget = Math.min(pageNumber, pager1.totalPages || pageNumber);\n\n    if (safeTarget > 1) {\n      const paged = await postToPage(firstDoc, safeTarget);\n      if (paged) finalDoc = paged;\n    }\n\n    const pager = extractPagerInfo(finalDoc);\n    const rows = extractRows(finalDoc);\n    const matches = applyFilter(rows);\n\n    const moreAvailable = pager.currentPage < pager.totalPages;\n    const nextPage = moreAvailable ? String(pager.currentPage + 1) : \"\";\n\n    if (!matches.length) {\n      return {\n        status: \"NOT_FOUND\",\n        message: isAllMode\n          ? `No qualification classifications found on page ${pager.currentPage}.`\n          : \"No qualification classifications found matching the search criteria.\",\n        pageNumber: String(pager.currentPage),\n        totalPages: String(pager.totalPages || 1),\n        moreAvailable: moreAvailable ? \"true\" : \"false\",\n        nextPage\n      };\n    }\n\n    const resultPage = [];\n    if (!includeDetails) {\n      for (const r of matches) {\n        resultPage.push({ code: r.code, classification: r.classification, rank: r.rank });\n      }\n    } else {\n      for (const r of matches) {\n        await openRowDetails(finalDoc, r.rowEl);\n        resultPage.push({ code: r.code, classification: r.classification, rank: r.rank });\n      }\n    }\n\n    return {\n      status: \"SUCCESS\",\n      mode: isAllMode ? \"ALL_PAGE\" : \"SEARCH_PAGE\",\n      includeDetails: includeDetails ? \"true\" : \"false\",\n      pageNumber: String(pager.currentPage),\n      totalPages: String(pager.totalPages || 1),\n      moreAvailable: moreAvailable ? \"true\" : \"false\",\n      nextPage,\n      count: resultPage.length,\n      classifications: resultPage\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unknown error\",\n      error: String(err)\n    };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "Qualification Information"
+      ],
+      "taskName": "Fetching Qualification Classifications",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-29T04:33:38.546Z",
+      "updatedAt": "2026-02-02T14:33:17.874Z",
+      "__v": 17,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getQualificationClassification",
+      "args": [
+        {
+          "name": "classificationCode",
+          "type": "string",
+          "description": "Use the provided classification code to search and return the corresponding qualification classification details.",
+          "required": false,
+          "_id": "695204a2632bdc03f92c2f33"
+        },
+        {
+          "name": "classificationName",
+          "type": "string",
+          "description": "Use the provided classification name to search and return the corresponding qualification classification details.",
+          "required": false,
+          "_id": "6963ff94cae462cb939d0882"
+        },
+        {
+          "name": "includeDetails",
+          "type": "string",
+          "description": "If true, fetches detailed info for each match. Default: false",
+          "required": false,
+          "_id": "696400ce5f98759a5e149e87"
+        },
+        {
+          "name": "fetchMode",
+          "type": "string",
+          "description": "Returns all qualification classifications instead of searching by code or name. Use values like \"ALL\", \"AVAILABLE\", \"EXISTING\", or \"LIST\" when the user asks for all or available qualifications. If set, code/name filters are ignored.",
+          "required": false,
+          "_id": "697e0b9ca6ea5550b4cbcf05"
+        },
+        {
+          "name": "returnAll",
+          "type": "string",
+          "description": "Returns all qualification classifications instead of searching by code or name. Use values like \"ALL\", \"AVAILABLE\", \"EXISTING\", or \"LIST\" when the user asks for all or available qualifications. If set, code/name filters are ignored.",
+          "required": false,
+          "_id": "69808b24ab0bd3ea43d02672"
+        },
+        {
+          "name": "pageNumber",
+          "type": "string",
+          "description": "when not auto-fetching all, fetch a specific page (default 1)",
+          "required": false,
+          "_id": "69808b24ab0bd3ea43d02673"
+        },
+        {
+          "name": "pageSize",
+          "type": "string",
+          "description": "requested size (default 100)",
+          "required": false,
+          "_id": "69808b24ab0bd3ea43d02674"
+        },
+        {
+          "name": "autoFetchAllPages",
+          "type": "string",
+          "description": "truthy → fetch all pages (default true when all-mode)",
+          "required": false,
+          "_id": "69808b24ab0bd3ea43d02675"
+        },
+        {
+          "name": "maxPages",
+          "type": "string",
+          "description": "safety limit (default 50)",
+          "required": false,
+          "_id": "69808b24ab0bd3ea43d02676"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "695204a2632bdc03f92c2f32"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/QualificationClassific.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Qualification Classification screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Helpers (STRING ONLY)\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const toLower = (v) => okText(v).toLowerCase();\n    const isTruthy = (v) => {\n      const t = toLower(v);\n      return [\"true\",\"1\",\"yes\",\"y\",\"all\",\"showall\",\"show all\",\"list\",\"a list\",\"available\",\"existing\"].includes(t);\n    };\n\n    const code = okText(args?.classificationCode);\n    const name = okText(args?.classificationName);\n\n    const includeDetails = isTruthy(args?.includeDetails);\n\n    const fetchMode = toLower(args?.fetchMode);\n    const isAllMode = [\"all\", \"available\", \"existing\", \"list\"].includes(fetchMode) || isTruthy(args?.returnAll);\n\n    const pageNumberRaw = okText(args?.pageNumber) || \"1\";\n    const pageNumber = Number.isFinite(Number(pageNumberRaw)) ? Math.max(1, parseInt(pageNumberRaw, 10)) : 1;\n\n    const pageSizeRaw = okText(args?.pageSize) || \"100\";\n    const pageSize = Number.isFinite(Number(pageSizeRaw)) ? Math.max(1, parseInt(pageSizeRaw, 10)) : 100;\n\n    const autoFetchAllPages = isAllMode ? true : isTruthy(args?.autoFetchAllPages);\n\n    const maxPagesRaw = okText(args?.maxPages) || \"50\";\n    const maxPages = Number.isFinite(Number(maxPagesRaw)) ? Math.max(1, parseInt(maxPagesRaw, 10)) : 50;\n\n    /* -------------------------------------------------\n     * 3) Input validation\n     * ------------------------------------------------- */\n    if (!isAllMode && !code && !name) {\n      return {\n        status: \"INVALID_ARGS\",\n        message:\n          \"Error: either classificationCode or classificationName is required, OR set fetchMode/returnAll to ALL/AVAILABLE/EXISTING/LIST.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 4) Initial hidden fields + URL\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"QualificationClassific\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/QualificationClassific.aspx\");\n    const url = updateUrl?.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/QualificationClassific.aspx`;\n\n    const parser = new DOMParser();\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const extractState = (doc) => ({\n      viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n      viewStateGen: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n      eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\"\n    });\n\n    const extractPagerInfo = (doc) => {\n      const pagerText = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\n      // \"Displaying page 1 of 3, items 1 to 3 of 9.\"\n      const m = pagerText.match(/Displaying page\\s+(\\d+)\\s+of\\s+(\\d+).*?of\\s+(\\d+)/i);\n      const currentPage = m ? parseInt(m[1], 10) : 1;\n      const totalPages = m ? parseInt(m[2], 10) : 1;\n      const totalItems = m ? parseInt(m[3], 10) : null;\n\n      const pageTargets = {};\n      doc.querySelectorAll(\".PagerLeft_Default a\").forEach((a) => {\n        const pageNo = (a.textContent || \"\").trim();\n        const href = a.getAttribute(\"href\") || \"\";\n        const mm = href.match(/__doPostBack\\('([^']+)','([^']*)'\\)/);\n        if (pageNo && mm) pageTargets[pageNo] = { target: mm[1], arg: mm[2] || \"\" };\n      });\n\n      return { currentPage, totalPages, totalItems, pageTargets };\n    };\n\n    const extractRows = (doc) => {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const out = [];\n\n      for (const row of rows) {\n        const cells = row.querySelectorAll(\"td\");\n        if (cells.length < 2) continue;\n\n        const rowCode = (cells[0]?.textContent || \"\").trim();\n        const rowClassification = (cells[1]?.textContent || \"\").trim();\n        const rowRank = (cells[2]?.textContent || \"\").trim();\n\n        if (!rowCode && !rowClassification) continue;\n\n        // store row element for edit link extraction if includeDetails\n        out.push({ code: rowCode, classification: rowClassification, rank: rowRank, rowEl: row });\n      }\n\n      return out;\n    };\n\n    const applyFilter = (items) => {\n      if (isAllMode) return items;\n\n      const codeNeedle = code.toLowerCase();\n      const nameNeedle = name.toLowerCase();\n\n      return items.filter((r) => {\n        if (code) return (r.code || \"\").toLowerCase().includes(codeNeedle);\n        return (r.classification || \"\").toLowerCase().includes(nameNeedle);\n      });\n    };\n\n    /* -------------------------------------------------\n     * 5) Determine search criteria/value\n     * ------------------------------------------------- */\n    const searchCriteria = code ? \"QUALCLASSIFIC_CODE\" : \"QUALCLASSIFIC_NAME\";\n    const searchValue = code || name;\n\n    /* -------------------------------------------------\n     * 6) POST #1: Search or Show All (page 1)\n     * ------------------------------------------------- */\n    const postSearchOrAll = async () => {\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", \"\");\n      formData.append(\"__EVENTARGUMENT\", \"\");\n      formData.append(\"__VIEWSTATE\", details.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n      formData.append(\"ctl00$body$hdnIsHead\", \"\");\n      formData.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n\n      // criteria required even for ALL\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", isAllMode ? \"QUALCLASSIFIC_CODE\" : searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", isAllMode ? \"\" : searchValue);\n\n      if (isAllMode) {\n        formData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n      } else {\n        formData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n      }\n\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n      return parser.parseFromString(html, \"text/html\");\n    };\n\n    /* -------------------------------------------------\n     * 7) Pager postback (REAL FIX)\n     * ------------------------------------------------- */\n    const postToPage = async (fromDoc, targetPage) => {\n      const state = extractState(fromDoc);\n      const pager = extractPagerInfo(fromDoc);\n      const key = String(targetPage);\n      const event = pager.pageTargets[key];\n      if (!event?.target) return null;\n\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", event.target);\n      formData.append(\"__EVENTARGUMENT\", event.arg || \"\");\n      formData.append(\"__VIEWSTATE\", state.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", state.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n      formData.append(\"ctl00$body$hdnIsHead\", \"\");\n      formData.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n\n      // Keep search context (safe)\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", isAllMode ? \"QUALCLASSIFIC_CODE\" : searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", isAllMode ? \"\" : searchValue);\n\n      // Keep pager fields (safe)\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", key);\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n      return parser.parseFromString(html, \"text/html\");\n    };\n\n    /* -------------------------------------------------\n     * 8) includeDetails: open row (edit)\n     * ------------------------------------------------- */\n    const openRowDetails = async (pageDoc, rowEl) => {\n      const editHref = rowEl.querySelector(\"a\")?.getAttribute(\"href\") || \"\";\n      const mm = editHref.match(/__doPostBack\\('([^']+)','([^']*)'\\)/);\n      const eventTarget = mm ? mm[1] : \"\";\n      const eventArg = mm ? (mm[2] || \"\") : \"\";\n\n      if (!eventTarget) return null;\n\n      const state = extractState(pageDoc);\n\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", eventTarget);\n      formData.append(\"__EVENTARGUMENT\", eventArg);\n      formData.append(\"__VIEWSTATE\", state.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", state.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      // Keep search context (safe)\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", isAllMode ? \"QUALCLASSIFIC_CODE\" : searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", isAllMode ? \"\" : searchValue);\n\n      // Keep pager fields (safe)\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await res.text();\n\n      // You can parse html and extract extra fields if needed later.\n      // For now we just confirm the open worked by returning html length.\n      return { opened: true, htmlLength: html.length };\n    };\n\n    /* -------------------------------------------------\n     * 9) Run\n     * ------------------------------------------------- */\n    const firstDoc = await postSearchOrAll();\n    const pager1 = extractPagerInfo(firstDoc);\n\n    // If ALL mode => fetch all pages\n    if (autoFetchAllPages) {\n      const allResults = [];\n      let currentDoc = firstDoc;\n      let pager = pager1;\n\n      let safety = 0;\n      while (safety < maxPages) {\n        safety += 1;\n\n        const pageRows = extractRows(currentDoc);\n        const matches = applyFilter(pageRows);\n\n        if (!includeDetails) {\n          allResults.push(...matches.map(r => ({\n            code: r.code,\n            classification: r.classification,\n            rank: r.rank\n          })));\n        } else {\n          for (const r of matches) {\n            // open details (optional)\n            await openRowDetails(currentDoc, r.rowEl);\n            allResults.push({\n              code: r.code,\n              classification: r.classification,\n              rank: r.rank\n            });\n          }\n        }\n\n        if (!(pager.currentPage < pager.totalPages)) break;\n\n        const next = pager.currentPage + 1;\n        const nextDoc = await postToPage(currentDoc, next);\n        if (!nextDoc) break;\n\n        currentDoc = nextDoc;\n        pager = extractPagerInfo(currentDoc);\n      }\n\n      if (!allResults.length) {\n        return {\n          status: \"NOT_FOUND\",\n          message: isAllMode\n            ? \"No qualification classifications found.\"\n            : \"No qualification classifications found matching the search criteria.\",\n          searchedFor: isAllMode ? fetchMode : searchValue\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        mode: isAllMode ? \"ALL\" : \"SEARCH_ALL_PAGES\",\n        includeDetails: includeDetails ? \"true\" : \"false\",\n        count: allResults.length,\n        classifications: allResults\n      };\n    }\n\n    // Single page mode: allow paging prompts\n    let finalDoc = firstDoc;\n    const safeTarget = Math.min(pageNumber, pager1.totalPages || pageNumber);\n\n    if (safeTarget > 1) {\n      const paged = await postToPage(firstDoc, safeTarget);\n      if (paged) finalDoc = paged;\n    }\n\n    const pager = extractPagerInfo(finalDoc);\n    const rows = extractRows(finalDoc);\n    const matches = applyFilter(rows);\n\n    const moreAvailable = pager.currentPage < pager.totalPages;\n    const nextPage = moreAvailable ? String(pager.currentPage + 1) : \"\";\n\n    if (!matches.length) {\n      return {\n        status: \"NOT_FOUND\",\n        message: isAllMode\n          ? `No qualification classifications found on page ${pager.currentPage}.`\n          : \"No qualification classifications found matching the search criteria.\",\n        pageNumber: String(pager.currentPage),\n        totalPages: String(pager.totalPages || 1),\n        moreAvailable: moreAvailable ? \"true\" : \"false\",\n        nextPage\n      };\n    }\n\n    const resultPage = [];\n    if (!includeDetails) {\n      for (const r of matches) {\n        resultPage.push({ code: r.code, classification: r.classification, rank: r.rank });\n      }\n    } else {\n      for (const r of matches) {\n        await openRowDetails(finalDoc, r.rowEl);\n        resultPage.push({ code: r.code, classification: r.classification, rank: r.rank });\n      }\n    }\n\n    return {\n      status: \"SUCCESS\",\n      mode: isAllMode ? \"ALL_PAGE\" : \"SEARCH_PAGE\",\n      includeDetails: includeDetails ? \"true\" : \"false\",\n      pageNumber: String(pager.currentPage),\n      totalPages: String(pager.totalPages || 1),\n      moreAvailable: moreAvailable ? \"true\" : \"false\",\n      nextPage,\n      count: resultPage.length,\n      classifications: resultPage\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unknown error\",\n      error: String(err)\n    };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

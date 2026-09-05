@@ -1,0 +1,98 @@
+{
+  "id": "690dc567931a2d61ba0b179d",
+  "slug": "getassignlanguagedetails",
+  "name": "getAssignLanguageDetails",
+  "description": "This tool is used to generate and return the assigned language details. If the user submits a query related to assigned languages, this tool should be executed. If no records are found, no further updates can be made.",
+  "instructions": null,
+  "taskName": "Fetching Assign Language Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getAssignLanguageDetails",
+  "createdAt": "2025-05-16T13:52:32.550Z",
+  "updatedAt": "2025-05-16T13:52:32.550Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "252c48ccfb743df955ac60d18d1b5d193e11ad85d535972f516aeef51767f6f5",
+  "lastExportedAt": "2026-09-05T19:39:23.919Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc567931a2d61ba0b179d",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getAssignLanguageDetails",
+      "description": "This tool is used to generate and return the assigned language details. If the user submits a query related to assigned languages, this tool should be executed. If no records are found, no further updates can be made.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getAssignLanguageDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to give the employee id Example:- \"000001\" etc...",
+            "required": true,
+            "_id": "6827432081dc680489a490db"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6827432081dc680489a490da"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignLanguage.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/AssignLanguage.aspx\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const getUrl = `${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`;\n  const response = await fetch(getUrl, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n  const detailsText = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(detailsText, \"text/html\");\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const publicKey = doc.querySelector(\"#ctl00_body_txtPublicKey\")?.value || \"\";\n  const empNumber = doc.querySelector(\"#ctl00_body_txtEmpNumber\")?.value || \"\";\n\n  await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"\");\n  urlencoded.append(\"scrollTop\", \"\");\n  urlencoded.append(\"__EVENTTARGET\", \"GetSearchResult\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewStateGenerator);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded.append(\"ctl00$hdnQuickmenu\", \"\");\n  urlencoded.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", empNumber);\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded.append(\"ctl00$body$txtPublicKey\", publicKey);\n  urlencoded.append(\"ctl00$body$txtEmpNumber\", empNumber);\n  urlencoded.append(\"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n\n  const responsePost = await fetch(getUrl, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  const textPost = await responsePost.text();\n  const doc123 = parser.parseFromString(textPost, \"text/html\");\n  const first = await BeaconBar.executeFunction(\"getDomExtract\")(textPost);\n  const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(first.publicKey, args.id);\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", first.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", first.viewStateGenerator);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", first.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded1.append(\"ctl00$hdnQuickmenu\", \"\");\n  urlencoded1.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", args.id);\n  urlencoded1.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded1.append(\"ctl00$body$txtPublicKey\", first.publicKey);\n  urlencoded1.append(\"ctl00$body$txtEmpNumber\", empEnc);\n  urlencoded1.append(\"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"2\");\n  urlencoded1.append(\"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdLanuages_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$butEdit\", \"Edit\");\n\n  const responsePost1 = await fetch(getUrl, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  });\n\n  const textPost1 = await responsePost1.text();\n  window.language = await BeaconBar.executeFunction(\"getDomExtract\")(textPost1);\n  const document = parser.parseFromString(textPost1, \"text/html\");\n\n  const rows = document.querySelectorAll(\"tr[id^='ctl00_body_grdLanuages_ctl00__']\");\n  const assignLanguageDedails = [];\n\n  rows.forEach(row => {\n    const cells = row.querySelectorAll(\"td\");\n    const language = cells[0]?.textContent.trim() || \"\";\n    const reading = cells[1]?.textContent.trim() || \"\";\n    const writing = cells[2]?.textContent.trim() || \"\";\n    const speaking = cells[3]?.textContent.trim() || \"\";\n    const editLinkHref = cells[4]?.querySelector(\"a\")?.getAttribute(\"href\") || \"\";\n\n    const match = editLinkHref.match(/__doPostBack\\('([^']+)'/);\n    const editKey = match ? match[1] : \"\";\n\n    assignLanguageDedails.push({\n      language,\n      reading,\n      writing,\n      speaking,\n      editKey\n    });\n  });\n\n  const languages = Array.from(document.querySelectorAll(\"#ctl00_body_cboLanuage option\")).map(option => ({\n    name: option.textContent.trim(),\n    value: option.value\n  }));\n  const empNum = doc123.querySelector(\"#ctl00_body_EmpSearch_txtEmpDisplayNumber\").value || \"\";\n  if (empNum === args.id) {\n    return { assignLanguageDedails, languages }\n  } else {\n    return \"no availbel in the employee exist and display employee id.\"\n  }\n\n});\n",
+      "sampleRequest": {
+        "id": "000001"
+      },
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Fetching Assign Language Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-16T13:52:32.550Z",
+      "updatedAt": "2025-05-16T13:52:32.550Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getAssignLanguageDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to give the employee id Example:- \"000001\" etc...",
+          "required": true,
+          "_id": "6827432081dc680489a490db"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6827432081dc680489a490da"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignLanguage.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/AssignLanguage.aspx\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const getUrl = `${location.origin}/${reqOptions.sl}/${updateUrlData.pageUrl}`;\n  const response = await fetch(getUrl, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n  const detailsText = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(detailsText, \"text/html\");\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const publicKey = doc.querySelector(\"#ctl00_body_txtPublicKey\")?.value || \"\";\n  const empNumber = doc.querySelector(\"#ctl00_body_txtEmpNumber\")?.value || \"\";\n\n  await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"\");\n  urlencoded.append(\"scrollTop\", \"\");\n  urlencoded.append(\"__EVENTTARGET\", \"GetSearchResult\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", viewStateGenerator);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded.append(\"ctl00$hdnQuickmenu\", \"\");\n  urlencoded.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", empNumber);\n  urlencoded.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded.append(\"ctl00$body$txtPublicKey\", publicKey);\n  urlencoded.append(\"ctl00$body$txtEmpNumber\", empNumber);\n  urlencoded.append(\"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n\n  const responsePost = await fetch(getUrl, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  const textPost = await responsePost.text();\n  const doc123 = parser.parseFromString(textPost, \"text/html\");\n  const first = await BeaconBar.executeFunction(\"getDomExtract\")(textPost);\n  const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(first.publicKey, args.id);\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", first.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", first.viewStateGenerator);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", first.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"m/d/yy\");\n  urlencoded1.append(\"ctl00$hdnQuickmenu\", \"\");\n  urlencoded1.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$EmpSearch$hdnEmpNumber\", args.id);\n  urlencoded1.append(\"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\", \"\");\n  urlencoded1.append(\"ctl00$body$txtPublicKey\", first.publicKey);\n  urlencoded1.append(\"ctl00$body$txtEmpNumber\", empEnc);\n  urlencoded1.append(\"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"2\");\n  urlencoded1.append(\"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdLanuages_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$butEdit\", \"Edit\");\n\n  const responsePost1 = await fetch(getUrl, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  });\n\n  const textPost1 = await responsePost1.text();\n  window.language = await BeaconBar.executeFunction(\"getDomExtract\")(textPost1);\n  const document = parser.parseFromString(textPost1, \"text/html\");\n\n  const rows = document.querySelectorAll(\"tr[id^='ctl00_body_grdLanuages_ctl00__']\");\n  const assignLanguageDedails = [];\n\n  rows.forEach(row => {\n    const cells = row.querySelectorAll(\"td\");\n    const language = cells[0]?.textContent.trim() || \"\";\n    const reading = cells[1]?.textContent.trim() || \"\";\n    const writing = cells[2]?.textContent.trim() || \"\";\n    const speaking = cells[3]?.textContent.trim() || \"\";\n    const editLinkHref = cells[4]?.querySelector(\"a\")?.getAttribute(\"href\") || \"\";\n\n    const match = editLinkHref.match(/__doPostBack\\('([^']+)'/);\n    const editKey = match ? match[1] : \"\";\n\n    assignLanguageDedails.push({\n      language,\n      reading,\n      writing,\n      speaking,\n      editKey\n    });\n  });\n\n  const languages = Array.from(document.querySelectorAll(\"#ctl00_body_cboLanuage option\")).map(option => ({\n    name: option.textContent.trim(),\n    value: option.value\n  }));\n  const empNum = doc123.querySelector(\"#ctl00_body_EmpSearch_txtEmpDisplayNumber\").value || \"\";\n  if (empNum === args.id) {\n    return { assignLanguageDedails, languages }\n  } else {\n    return \"no availbel in the employee exist and display employee id.\"\n  }\n\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {
+        "id": "000001"
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "690dc583931a2d61ba0b2a7e",
+  "slug": "getworkflowgroups",
+  "name": "getWorkFlowGroups",
+  "status": "live",
+  "createdAt": "2025-06-02T11:00:47.359Z",
+  "updatedAt": "2026-07-17T12:55:56.795Z",
+  "contentHash": "7c2b76f451b388695c345cc7de867fe120c2d49fca2377d4b284bf5d8501210e",
+  "lastExportedAt": "2026-09-05T19:41:18.695Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc583931a2d61ba0b2a7e",
+    "name": "getWorkFlowGroups",
+    "status": "live",
+    "code": "(async function (args) {\n  //done\n  const state = await BeaconBar.getSharedData(\"failedViewState\");\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('WorkFlow_v6/DefineWorkflowGroup.aspx');\n  const headers = new Headers({\n    \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\",\n    \"accept-language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n    \"cache-control\": \"max-age=0\",\n    \"content-type\": \"application/x-www-form-urlencoded\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n  });\n\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const baseUrl = `${reqOptions}${updateurl.updateUrl}`;\n\n  const randomX = Math.floor(Math.random() * 10).toString();\n  const randomY = Math.floor(Math.random() * 90 + 10).toString();\n\n  const formData = new URLSearchParams();\n\n  formData.append(\"ctl00_body_RadScriptManager1_HiddenField\", \"\");\n  formData.append(\"__EVENTTARGET\", \"\");\n  formData.append(\"__EVENTARGUMENT\", \"\");\n  formData.append(\"__VIEWSTATE\", state.viewState.viewState);\n  formData.append(\"__VIEWSTATEGENERATOR\", state.viewState.viewStateGenerator);\n  formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  formData.append(\"__EVENTVALIDATION\", state.viewState.eventValidation);\n  formData.append(\"ctl00$action$hdnWFGrpStatus\", \"\");\n  formData.append(\"ctl00$action$hdnWFGrpMemberStatus\", \"\");\n\n  if (args) {\n    formData.append(`${args}.x`, randomX);\n    formData.append(`${args}.y`, randomY);\n  } else {\n  }\n\n  const response = await fetch(baseUrl, {\n    method: \"POST\",\n    headers,\n    body: formData,\n    redirect: \"follow\"\n  });\n\n  const responseData = await response.text();\n  return responseData;\n});",
+    "by": "34476",
+    "__v": 1
+  }
+}

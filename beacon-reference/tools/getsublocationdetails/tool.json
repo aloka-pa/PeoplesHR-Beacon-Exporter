@@ -1,0 +1,95 @@
+{
+  "id": "690dc561931a2d61ba0b1222",
+  "slug": "getsublocationdetails",
+  "name": "getSubLocationDetails",
+  "description": "in this tool generate the sub location Details",
+  "instructions": null,
+  "taskName": "Sub Location",
+  "tags": [],
+  "status": "unlive",
+  "signature": "getSubLocationDetails",
+  "createdAt": "2025-04-27T14:45:36.290Z",
+  "updatedAt": "2026-07-17T12:54:15.952Z",
+  "assignedAgents": [],
+  "contentHash": "2deb9ffa94fb5d6f3251da045eae2f6ec4dcd419f9c86b5a9498c1262bffb0de",
+  "lastExportedAt": "2026-09-05T19:39:22.077Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc561931a2d61ba0b1222",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getSubLocationDetails",
+      "description": "in this tool generate the sub location Details",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getSubLocationDetails",
+        "args": [
+          {
+            "name": "sublocationCode",
+            "type": "string",
+            "description": "to get sub location details to give the prompt sub location code",
+            "required": true,
+            "_id": "680e431039076bbb628a26c7"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a25f78b2d7b5a7143ed56"
+      },
+      "by": "34476",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"SubLocation\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$hdnIsHead\", \"\");\n  urlencoded1.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"SUB_LOC_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", args.sublocationCode);\n  urlencoded1.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  urlencoded1.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"5\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$hdnDefCountry\", \"\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(\"/hr/EIM/SubLocation.aspx\", requestOptions1);\n  const html1 = await response1.text();\n  const viewDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html1);\n  const parser = new DOMParser();\n  const document1 = parser.parseFromString(html1, 'text/html');\n  const anchor = document1.querySelector('tr[id^=\"ctl00_body_grdSummary_ctl00__\"] a[href^=\"javascript:__doPostBack\"]');\n  const href = anchor?.getAttribute('href') || \"\";\n  const match = href.match(/__doPostBack\\('([^']+)'/);\n  const postBackKey = match ? match[1] : \"\";\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", postBackKey);\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewDetails.viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewDetails.viewStateGen);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", viewDetails.eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00$body$hdnIsHead\", \"\");\n  urlencoded2.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$cboCriteria\", \"SUB_LOC_CODE\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$txtContent\", args.sublocationCode);\n  urlencoded2.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00_body_grdSummary_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$hdnDefCountry\", \"\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\"/hr/EIM/SubLocation.aspx\", requestOptions2);\n  const html2 = await response2.text();\n  const costDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html2);\n  window.sl = costDetails;\n\n  const document2 = parser.parseFromString(html2, 'text/html');\n  const code = document2.getElementById(\"ctl00_body_txtCode\")?.value || \"\";\n  const description = document2.getElementById(\"ctl00_body_txtName\")?.value || \"\";\n  const locationSelect = document2.getElementById(\"ctl00_body_ddlLocation\");\n  const selectedLocation = locationSelect?.options[locationSelect.selectedIndex];\n  const location = {\n    id: selectedLocation?.value || \"\",\n    name: selectedLocation?.textContent?.trim() || \"\"\n  };\n  const headOfSubLocation = document2.getElementById(\"ctl00_body_txtHeadName\")?.value || \"\";\n  debugger;\n  const select = document2.getElementById(\"ctl00_body_ddlLocation\");\n  const options = Array.from(select.options);\n\n  const locationData = options.map(option => ({\n    id: option.value,\n    name: option.textContent.trim()\n  }));\n\n  const sublocationData = {\n    Code: code,\n    Description: description,\n    Location: location,\n    HeadOfSubLocation: headOfSubLocation,\n    allLocation: locationData\n  };\n\n\n  return sublocationData;\n})\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Sub Location",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-27T14:45:36.290Z",
+      "updatedAt": "2026-07-17T12:54:15.952Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getSubLocationDetails",
+      "args": [
+        {
+          "name": "sublocationCode",
+          "type": "string",
+          "description": "to get sub location details to give the prompt sub location code",
+          "required": true,
+          "_id": "680e431039076bbb628a26c7"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a25f78b2d7b5a7143ed56"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"SubLocation\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$hdnIsHead\", \"\");\n  urlencoded1.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"SUB_LOC_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", args.sublocationCode);\n  urlencoded1.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  urlencoded1.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"5\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$hdnDefCountry\", \"\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(\"/hr/EIM/SubLocation.aspx\", requestOptions1);\n  const html1 = await response1.text();\n  const viewDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html1);\n  const parser = new DOMParser();\n  const document1 = parser.parseFromString(html1, 'text/html');\n  const anchor = document1.querySelector('tr[id^=\"ctl00_body_grdSummary_ctl00__\"] a[href^=\"javascript:__doPostBack\"]');\n  const href = anchor?.getAttribute('href') || \"\";\n  const match = href.match(/__doPostBack\\('([^']+)'/);\n  const postBackKey = match ? match[1] : \"\";\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", postBackKey);\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewDetails.viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewDetails.viewStateGen);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", viewDetails.eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00$body$hdnIsHead\", \"\");\n  urlencoded2.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$cboCriteria\", \"SUB_LOC_CODE\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$txtContent\", args.sublocationCode);\n  urlencoded2.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00_body_grdSummary_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$hdnDefCountry\", \"\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\"/hr/EIM/SubLocation.aspx\", requestOptions2);\n  const html2 = await response2.text();\n  const costDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html2);\n  window.sl = costDetails;\n\n  const document2 = parser.parseFromString(html2, 'text/html');\n  const code = document2.getElementById(\"ctl00_body_txtCode\")?.value || \"\";\n  const description = document2.getElementById(\"ctl00_body_txtName\")?.value || \"\";\n  const locationSelect = document2.getElementById(\"ctl00_body_ddlLocation\");\n  const selectedLocation = locationSelect?.options[locationSelect.selectedIndex];\n  const location = {\n    id: selectedLocation?.value || \"\",\n    name: selectedLocation?.textContent?.trim() || \"\"\n  };\n  const headOfSubLocation = document2.getElementById(\"ctl00_body_txtHeadName\")?.value || \"\";\n  debugger;\n  const select = document2.getElementById(\"ctl00_body_ddlLocation\");\n  const options = Array.from(select.options);\n\n  const locationData = options.map(option => ({\n    id: option.value,\n    name: option.textContent.trim()\n  }));\n\n  const sublocationData = {\n    Code: code,\n    Description: description,\n    Location: location,\n    HeadOfSubLocation: headOfSubLocation,\n    allLocation: locationData\n  };\n\n\n  return sublocationData;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

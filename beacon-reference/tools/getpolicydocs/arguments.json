@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "query",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Query input from the user",
+      "advanced": false,
+      "raw": {
+        "name": "query",
+        "type": "string",
+        "description": "Query input from the user",
+        "required": true,
+        "_id": "6833f70c808c7c746a260ed9"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

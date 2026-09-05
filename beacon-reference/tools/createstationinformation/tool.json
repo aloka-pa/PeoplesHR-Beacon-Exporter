@@ -1,0 +1,155 @@
+{
+  "id": "69545635f72a612a8c8864ae",
+  "slug": "createstationinformation",
+  "name": "createStationInformation",
+  "description": "Creates a new station information record in the system with name, transport cost, and route assignment.\nWhen creating a record all name, transport cost, and route are required.\nWhen choosing the route, the user must provide either the route code (e.g., \"000002\") or route name (e.g., \"Central Expressway\").",
+  "instructions": null,
+  "taskName": "Creating New Station Record",
+  "tags": [
+    "EIMAdmin",
+    "CensusInformation"
+  ],
+  "status": "live",
+  "signature": "createStationInformation",
+  "createdAt": "2025-12-30T22:46:13.651Z",
+  "updatedAt": "2026-06-15T07:34:18.914Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "daa43b415d1895d1c3a4cbb57b25666735b4b0d3e208db55bc61f0766b99b228",
+  "lastExportedAt": "2026-09-05T19:39:22.346Z",
+  "raw": {
+    "basic": {
+      "_id": "69545635f72a612a8c8864ae",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createStationInformation",
+      "description": "Creates a new station information record in the system with name, transport cost, and route assignment.\nWhen creating a record all name, transport cost, and route are required.\nWhen choosing the route, the user must provide either the route code (e.g., \"000002\") or route name (e.g., \"Central Expressway\").",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createStationInformation",
+        "args": [
+          {
+            "name": "stationName",
+            "type": "string",
+            "description": "The name of the new station (e.g., \"Maharagama\")",
+            "required": true,
+            "_id": "69545635f72a612a8c8864b0"
+          },
+          {
+            "name": "transportCost",
+            "type": "string",
+            "description": "The transport cost for the station (e.g., \"780\" or \"780.00\")",
+            "required": true,
+            "_id": "69545635f72a612a8c8864b1"
+          },
+          {
+            "name": "routeCode",
+            "type": "string",
+            "description": "The code of the new route. The user must provide either the route code (e.g., \"000002\") or route name (e.g., \"Central Expressway\")",
+            "required": false,
+            "_id": "69545635f72a612a8c8864b2"
+          },
+          {
+            "name": "routeName",
+            "type": "string",
+            "description": "The name of the new route. The user must provide either the route code (e.g., \"000002\") or route name (e.g., \"Central Expressway\")",
+            "required": false,
+            "_id": "69545635f72a612a8c8864b3"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "69545635f72a612a8c8864af"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/StationInformation.aspx\")) {\n    return {\n      status: \"NO_ACCESS\",\n      message: \"You do not have access to Station Information screen. Please contact HR Admin.\"\n    };\n  }\n\n  // Validate required fields\n  if (!args.stationName || !args.transportCost) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"Both stationName and transportCost are required to create a new station\"\n    };\n  }\n\n  // Validate that either routeCode or routeName is provided\n  if (!args.routeCode && !args.routeName) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"Either routeCode or routeName is required to create a new station\"\n    };\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"StationInformation\");\n\n  const headers = new Headers();\n  headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n  headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/StationInformation.aspx\");\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/StationInformation.aspx`;\n\n  const parser = new DOMParser();\n\n  // Click New button to open new station form\n  const newFormData = new FormData();\n  newFormData.append(\"scrollLeft\", \"0\");\n  newFormData.append(\"scrollTop\", \"0\");\n  newFormData.append(\"__EVENTTARGET\", \"\");\n  newFormData.append(\"__EVENTARGUMENT\", \"\");\n  newFormData.append(\"__VIEWSTATE\", details.viewState);\n  newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n  newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"STATION_CODE\");\n  newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n  newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  newFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  newFormData.append(\"ctl00$body$butNew\", \"New\");\n\n  const newResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: newFormData\n  });\n\n  const newDoc = parser.parseFromString(await newResponse.text(), \"text/html\");\n\n  const newViewState = newDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const newEventValidation = newDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const newViewStateGen = newDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // Determine route code - with flexible input handling\n  let routeCode = \"\";\n  \n  // If routeCode is provided, use it directly\n  if (args.routeCode) {\n    routeCode = args.routeCode;\n  }\n  // If routeName is provided, look it up in the dropdown\n  else if (args.routeName) {\n    const routeDropdown = newDoc.querySelector(\"#ctl00_body_dpRoute\");\n    const options = routeDropdown?.querySelectorAll(\"option\") || [];\n    \n    let foundRouteCode = null;\n    for (const option of options) {\n      const optionText = option.textContent.trim();\n      const optionValue = option.value;\n      \n      if (optionText.toLowerCase().includes(args.routeName.toLowerCase()) && optionValue !== \"-1\") {\n        foundRouteCode = optionValue;\n        break;\n      }\n    }\n    \n    if (foundRouteCode) {\n      routeCode = foundRouteCode;\n    } else {\n      return {\n        status: \"INVALID_ARGS\",\n        message: `Route \"${args.routeName}\" not found in the dropdown. Please verify the route name.`\n      };\n    }\n  }\n\n  // Save the new station\n  const saveFormData = new FormData();\n  saveFormData.append(\"scrollLeft\", \"0\");\n  saveFormData.append(\"scrollTop\", \"0\");\n  saveFormData.append(\"__EVENTTARGET\", \"\");\n  saveFormData.append(\"__EVENTARGUMENT\", \"\");\n  saveFormData.append(\"__VIEWSTATE\", newViewState);\n  saveFormData.append(\"__VIEWSTATEGENERATOR\", newViewStateGen);\n  saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  saveFormData.append(\"__EVENTVALIDATION\", newEventValidation);\n  saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  saveFormData.append(\"ctl00$body$txtStation\", args.stationName);\n  saveFormData.append(\"ctl00$body$txtCost\", args.transportCost);\n  saveFormData.append(\"ctl00$body$dpRoute\", routeCode);\n  saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n  const finalResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: saveFormData\n  });\n\n  const saveHtml = await finalResponse.text();\n\n  if (finalResponse.status === 200) {\n    const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n    const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n    \n    if (errorMsg) {\n      return {\n        status: \"ERROR\",\n        message: `Save failed: ${errorMsg.trim()}`\n      };\n    }\n\n    // Extract the newly created station code from the response\n    const newCode = saveDoc.querySelector(\"#ctl00_body_txtCode\")?.value || \"\";\n\n    // Get route name from the dropdown for response\n    let routeName = null;\n    if (routeCode) {\n      const routeOption = newDoc.querySelector(`#ctl00_body_dpRoute option[value=\"${routeCode}\"]`);\n      routeName = routeOption?.textContent.trim() || null;\n    }\n\n    return {\n      status: \"SUCCESS\",\n      message: `Successfully created new Station Information${newCode ? ` (${newCode})` : \"\"}`,\n      stationCode: newCode,\n      stationName: args.stationName,\n      transportCost: args.transportCost,\n      routeCode: routeCode,\n      routeName: routeName\n    };\n  }\n\n  return {\n    status: \"ERROR\",\n    message: \"Failed to create Station Information. Please verify in the UI.\"\n  };\n})",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "CensusInformation"
+      ],
+      "taskName": "Creating New Station Record",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-30T22:46:13.651Z",
+      "updatedAt": "2026-06-15T07:34:18.914Z",
+      "__v": 2,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "createStationInformation",
+      "args": [
+        {
+          "name": "stationName",
+          "type": "string",
+          "description": "The name of the new station (e.g., \"Maharagama\")",
+          "required": true,
+          "_id": "69545635f72a612a8c8864b0"
+        },
+        {
+          "name": "transportCost",
+          "type": "string",
+          "description": "The transport cost for the station (e.g., \"780\" or \"780.00\")",
+          "required": true,
+          "_id": "69545635f72a612a8c8864b1"
+        },
+        {
+          "name": "routeCode",
+          "type": "string",
+          "description": "The code of the new route. The user must provide either the route code (e.g., \"000002\") or route name (e.g., \"Central Expressway\")",
+          "required": false,
+          "_id": "69545635f72a612a8c8864b2"
+        },
+        {
+          "name": "routeName",
+          "type": "string",
+          "description": "The name of the new route. The user must provide either the route code (e.g., \"000002\") or route name (e.g., \"Central Expressway\")",
+          "required": false,
+          "_id": "69545635f72a612a8c8864b3"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "69545635f72a612a8c8864af"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/StationInformation.aspx\")) {\n    return {\n      status: \"NO_ACCESS\",\n      message: \"You do not have access to Station Information screen. Please contact HR Admin.\"\n    };\n  }\n\n  // Validate required fields\n  if (!args.stationName || !args.transportCost) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"Both stationName and transportCost are required to create a new station\"\n    };\n  }\n\n  // Validate that either routeCode or routeName is provided\n  if (!args.routeCode && !args.routeName) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"Either routeCode or routeName is required to create a new station\"\n    };\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"StationInformation\");\n\n  const headers = new Headers();\n  headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n  headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/StationInformation.aspx\");\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/StationInformation.aspx`;\n\n  const parser = new DOMParser();\n\n  // Click New button to open new station form\n  const newFormData = new FormData();\n  newFormData.append(\"scrollLeft\", \"0\");\n  newFormData.append(\"scrollTop\", \"0\");\n  newFormData.append(\"__EVENTTARGET\", \"\");\n  newFormData.append(\"__EVENTARGUMENT\", \"\");\n  newFormData.append(\"__VIEWSTATE\", details.viewState);\n  newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n  newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"STATION_CODE\");\n  newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n  newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  newFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  newFormData.append(\"ctl00$body$butNew\", \"New\");\n\n  const newResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: newFormData\n  });\n\n  const newDoc = parser.parseFromString(await newResponse.text(), \"text/html\");\n\n  const newViewState = newDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const newEventValidation = newDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const newViewStateGen = newDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // Determine route code - with flexible input handling\n  let routeCode = \"\";\n  \n  // If routeCode is provided, use it directly\n  if (args.routeCode) {\n    routeCode = args.routeCode;\n  }\n  // If routeName is provided, look it up in the dropdown\n  else if (args.routeName) {\n    const routeDropdown = newDoc.querySelector(\"#ctl00_body_dpRoute\");\n    const options = routeDropdown?.querySelectorAll(\"option\") || [];\n    \n    let foundRouteCode = null;\n    for (const option of options) {\n      const optionText = option.textContent.trim();\n      const optionValue = option.value;\n      \n      if (optionText.toLowerCase().includes(args.routeName.toLowerCase()) && optionValue !== \"-1\") {\n        foundRouteCode = optionValue;\n        break;\n      }\n    }\n    \n    if (foundRouteCode) {\n      routeCode = foundRouteCode;\n    } else {\n      return {\n        status: \"INVALID_ARGS\",\n        message: `Route \"${args.routeName}\" not found in the dropdown. Please verify the route name.`\n      };\n    }\n  }\n\n  // Save the new station\n  const saveFormData = new FormData();\n  saveFormData.append(\"scrollLeft\", \"0\");\n  saveFormData.append(\"scrollTop\", \"0\");\n  saveFormData.append(\"__EVENTTARGET\", \"\");\n  saveFormData.append(\"__EVENTARGUMENT\", \"\");\n  saveFormData.append(\"__VIEWSTATE\", newViewState);\n  saveFormData.append(\"__VIEWSTATEGENERATOR\", newViewStateGen);\n  saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  saveFormData.append(\"__EVENTVALIDATION\", newEventValidation);\n  saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  saveFormData.append(\"ctl00$body$txtStation\", args.stationName);\n  saveFormData.append(\"ctl00$body$txtCost\", args.transportCost);\n  saveFormData.append(\"ctl00$body$dpRoute\", routeCode);\n  saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n  const finalResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: saveFormData\n  });\n\n  const saveHtml = await finalResponse.text();\n\n  if (finalResponse.status === 200) {\n    const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n    const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n    \n    if (errorMsg) {\n      return {\n        status: \"ERROR\",\n        message: `Save failed: ${errorMsg.trim()}`\n      };\n    }\n\n    // Extract the newly created station code from the response\n    const newCode = saveDoc.querySelector(\"#ctl00_body_txtCode\")?.value || \"\";\n\n    // Get route name from the dropdown for response\n    let routeName = null;\n    if (routeCode) {\n      const routeOption = newDoc.querySelector(`#ctl00_body_dpRoute option[value=\"${routeCode}\"]`);\n      routeName = routeOption?.textContent.trim() || null;\n    }\n\n    return {\n      status: \"SUCCESS\",\n      message: `Successfully created new Station Information${newCode ? ` (${newCode})` : \"\"}`,\n      stationCode: newCode,\n      stationName: args.stationName,\n      transportCost: args.transportCost,\n      routeCode: routeCode,\n      routeName: routeName\n    };\n  }\n\n  return {\n    status: \"ERROR\",\n    message: \"Failed to create Station Information. Please verify in the UI.\"\n  };\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

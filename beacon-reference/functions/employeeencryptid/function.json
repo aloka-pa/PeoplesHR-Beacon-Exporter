@@ -1,0 +1,24 @@
+{
+  "id": "690dc57c931a2d61ba0b24c0",
+  "slug": "employeeencryptid",
+  "name": "employeeEncryptId",
+  "status": "live",
+  "createdAt": "2025-05-30T08:37:57.177Z",
+  "updatedAt": "2026-04-25T16:18:41.653Z",
+  "contentHash": "8f12e7a637b2b6bc5cddabf073c7ea5f84fe30c3c8c814c25979f86e49b62fcd",
+  "lastExportedAt": "2026-09-05T19:41:27.078Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57c931a2d61ba0b24c0",
+    "name": "employeeEncryptId",
+    "status": "live",
+    "code": "(async function (pubkey,empId) {\n  //done\n  //https://hrmv101phqaupgrade.phrsandbox.dev/hr/EIM/JavaScript/forge.min.js neww\n  //https://cdn.jsdelivr.net/npm/node-forge@1.3.1/dist/forge.min.js ol\n  if (typeof forge === 'undefined') {\n    await new Promise((resolve, reject) => {\n      const script = document.createElement('script');\n      script.src = 'https://hrmv101phqaupgrade.phrsandbox.dev/hr/EIM/JavaScript/forge.min.js';\n      script.onload = resolve;\n      script.onerror = reject;\n      document.head.appendChild(script);\n    });\n  }\n  function encryptWithForge(publicKeyPem, data) {\n    data = data.replace(/\\s/g, \"\");\n    const publicKey = forge.pki.publicKeyFromPem(publicKeyPem);\n    const dataBytes = forge.util.encodeUtf8(data);\n    const encryptedBytes = publicKey.encrypt(dataBytes, 'RSA-OAEP', {\n      md: forge.md.sha256.create()\n    });\n    return forge.util.encode64(encryptedBytes);\n  }\n  const encrypted = encryptWithForge(pubkey, empId);\n  return encrypted;\n});\n",
+    "by": "10308",
+    "__v": 5
+  }
+}

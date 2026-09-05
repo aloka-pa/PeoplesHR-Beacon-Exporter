@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "classificationCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "the code to search for",
+      "advanced": false,
+      "raw": {
+        "name": "classificationCode",
+        "type": "string",
+        "description": "the code to search for",
+        "required": true,
+        "_id": "6952a300ae6788d5ccf93bbf"
+      }
+    },
+    {
+      "name": "classificationName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "updated classification name (optional)",
+      "advanced": false,
+      "raw": {
+        "name": "classificationName",
+        "type": "string",
+        "description": "updated classification name (optional)",
+        "required": false,
+        "_id": "6952a300ae6788d5ccf93bc0"
+      }
+    },
+    {
+      "name": "rank",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "new rank (optional)",
+      "advanced": false,
+      "raw": {
+        "name": "rank",
+        "type": "string",
+        "description": "new rank (optional)",
+        "required": false,
+        "_id": "6952a300ae6788d5ccf93bc1"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

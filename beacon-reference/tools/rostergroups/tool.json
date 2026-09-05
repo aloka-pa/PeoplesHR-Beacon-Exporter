@@ -1,0 +1,75 @@
+{
+  "id": "690dc569931a2d61ba0b1982",
+  "slug": "rostergroups",
+  "name": "rosterGroups",
+  "description": "in this tool generate roster groups and corresponding ids.",
+  "instructions": null,
+  "taskName": "Fetching The Roster Groups",
+  "tags": [
+    "Attendance",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "rosterGroups",
+  "createdAt": "2025-06-05T11:32:00.355Z",
+  "updatedAt": "2025-06-05T11:32:00.355Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "24d0f7d8f0e40818486caa2c388794d64e0d24483d87b6812b66fe40e9d779aa",
+  "lastExportedAt": "2026-09-05T19:39:23.650Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b1982",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "rosterGroups",
+      "description": "in this tool generate roster groups and corresponding ids.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "rosterGroups",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "684180307ececc56c5716a5c"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"TNAVUE/app/RosterEmployee?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('TNAVUE/app/RosterEmployee?mvc=1');\n  let urls;\n\n  if (updateurl.updateUrl) {\n    urls = updateurl.updateUrl\n  } else {\n    urls = \"TNAVUE/app/RosterEmployee?mvc=1\"\n  }\n\n  const digest = await BeaconBar.executeFunction('getDigest')(updateurl.updateParams);\n\n  const details = await fetch(`${location.origin}/${reqOptions.sl}/${urls}&digest=${digest.digest}`, requestOptions);\n  const text = await details.text();\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(text, \"text/html\");\n\n  const html = document.documentElement.innerHTML;\n  const empMatch = html.match(/window\\.\\$LoggedEmpNumber\\s*=\\s*'([^']+)'/);\n  const loginEmpNumber = empMatch ? empMatch[1] : 'N/A';\n  const userIdMatch = html.match(/window\\.\\$LoggedUserId\\s*=\\s*'([^']+)'/);\n  const loginUserId = userIdMatch ? userIdMatch[1] : 'N/A';\n\n  const url = `${location.origin}/${reqOptions.sl}/tnavue/service/api/Roster/GetRoleWiseRosterGroupData`;\n\n  const payload = {\n    loginEmpNumber: loginEmpNumber,\n    loginUserId: loginUserId,\n    adminRoleCode: 20\n  };\n\n  const response = await fetch(url, {\n    method: 'POST',\n    headers: {\n      'Accept': 'application/json, text/plain, */*',\n      'Content-Type': 'application/json',\n      'Cache-Control': 'no-cache',\n      'Pragma': 'no-cache',\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    credentials: 'include',\n    body: JSON.stringify(payload)\n  });\n  return await response.json();\n})",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "Headers"
+      ],
+      "taskName": "Fetching The Roster Groups",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-05T11:32:00.355Z",
+      "updatedAt": "2025-06-05T11:32:00.355Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "rosterGroups",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "684180307ececc56c5716a5c"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"TNAVUE/app/RosterEmployee?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('TNAVUE/app/RosterEmployee?mvc=1');\n  let urls;\n\n  if (updateurl.updateUrl) {\n    urls = updateurl.updateUrl\n  } else {\n    urls = \"TNAVUE/app/RosterEmployee?mvc=1\"\n  }\n\n  const digest = await BeaconBar.executeFunction('getDigest')(updateurl.updateParams);\n\n  const details = await fetch(`${location.origin}/${reqOptions.sl}/${urls}&digest=${digest.digest}`, requestOptions);\n  const text = await details.text();\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(text, \"text/html\");\n\n  const html = document.documentElement.innerHTML;\n  const empMatch = html.match(/window\\.\\$LoggedEmpNumber\\s*=\\s*'([^']+)'/);\n  const loginEmpNumber = empMatch ? empMatch[1] : 'N/A';\n  const userIdMatch = html.match(/window\\.\\$LoggedUserId\\s*=\\s*'([^']+)'/);\n  const loginUserId = userIdMatch ? userIdMatch[1] : 'N/A';\n\n  const url = `${location.origin}/${reqOptions.sl}/tnavue/service/api/Roster/GetRoleWiseRosterGroupData`;\n\n  const payload = {\n    loginEmpNumber: loginEmpNumber,\n    loginUserId: loginUserId,\n    adminRoleCode: 20\n  };\n\n  const response = await fetch(url, {\n    method: 'POST',\n    headers: {\n      'Accept': 'application/json, text/plain, */*',\n      'Content-Type': 'application/json',\n      'Cache-Control': 'no-cache',\n      'Pragma': 'no-cache',\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    credentials: 'include',\n    body: JSON.stringify(payload)\n  });\n  return await response.json();\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

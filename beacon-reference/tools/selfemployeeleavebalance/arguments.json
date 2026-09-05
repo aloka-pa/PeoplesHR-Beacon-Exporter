@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "year",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "user to give the year, if the user not given ai current year will be take.",
+      "advanced": false,
+      "raw": {
+        "name": "year",
+        "type": "string",
+        "description": "user to give the year, if the user not given ai current year will be take.",
+        "required": true,
+        "_id": "68a31fe100336f2188784b06"
+      }
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the employee id.must be execute the 'getAdminInformationDetails' to get the self employee id. must be required field. example id \"1234\"",
+      "advanced": false,
+      "raw": {
+        "name": "id",
+        "type": "string",
+        "description": "to get the employee id.must be execute the 'getAdminInformationDetails' to get the self employee id. must be required field. example id \"1234\"",
+        "required": true,
+        "_id": "68b0490683e3e8378fc8f38b"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

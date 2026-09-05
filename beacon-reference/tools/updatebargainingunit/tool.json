@@ -1,0 +1,88 @@
+{
+  "id": "690dc564931a2d61ba0b14fd",
+  "slug": "updatebargainingunit",
+  "name": "updateBargainingUnit",
+  "description": "In this tool, to update a Bargaining Unit, must and should be first execute the \"getEIMAttributeList\" API. If any of the required fields—ctl00$body$txtBGNCode, ctl00$body$txtBGNName, ctl00$body$txtAbbreviation, ctl00$body$txtRegDate, ctl00$body$txtRegNumber, or ctl00$body$txtRegBody—are missing from the input, fetch the corresponding values using the getEIMAttributeList API before proceeding.\n\n\n\n\n\n\n\n",
+  "instructions": null,
+  "taskName": "Update Bargaining Unit",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateBargainingUnit",
+  "createdAt": "2025-04-30T14:09:20.527Z",
+  "updatedAt": "2026-05-15T07:07:33.020Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "bed3137015ca6e857b8394b89df2380bef3728a6d95a98310c90710d97e90124",
+  "lastExportedAt": "2026-09-05T19:39:22.552Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b14fd",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateBargainingUnit",
+      "description": "In this tool, to update a Bargaining Unit, must and should be first execute the \"getEIMAttributeList\" API. If any of the required fields—ctl00$body$txtBGNCode, ctl00$body$txtBGNName, ctl00$body$txtAbbreviation, ctl00$body$txtRegDate, ctl00$body$txtRegNumber, or ctl00$body$txtRegBody—are missing from the input, fetch the corresponding values using the getEIMAttributeList API before proceeding.\n\n\n\n\n\n\n\n",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateBargainingUnit",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtBGNCode\": {\n      \"type\": \"string\",\n      \"description\": \"Unique code for the bargaining unit.directly access to get the code for getBargainingUnitDetails Api.\"\n    },\n    \"ctl00_body_txtBGNName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the bargaining unit.\"\n    },\n    \"ctl00_body_txtAbbreviation\": {\n      \"type\": \"string\",\n      \"description\": \"Abbreviation of the bargaining unit name.\"\n    },\n    \"ctl00_body_txtRegDate\": {\n      \"type\": \"string\",\n      \"format\": \"date\",\n      \"description\": \"Date when the bargaining unit was registered. data format '05/01/2025'\"\n    },\n    \"ctl00_body_txtRegNumber\": {\n      \"type\": \"integer\",\n      \"description\": \"Registration number of the bargaining unit.only numbers access string not access\"\n    },\n    \"ctl00_body_txtRegBody\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the body with which the bargaining unit is registered.\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtBGNCode\",\n    \"ctl00_body_txtBGNName\",\n    \"ctl00_body_txtAbbreviation\",\n    \"ctl00_body_txtRegDate\",\n    \"ctl00_body_txtRegNumber\",\n    \"ctl00_body_txtRegBody\"\n  ]\n}",
+        "_id": "68122f10001dad7b67f765aa"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/BargainingUnit.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/BargainingUnit.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"BargainingUnit\";\n  }\n\n  const editInit =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.bu.viewState,\n      __VIEWSTATEGENERATOR: window.bu.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.bu.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$butEdit\": \"Edit\",\n\n      \"ctl00$body$hdnEventType\": \"\"\n\n    }, url);\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: editInit.viewState,\n      __VIEWSTATEGENERATOR: editInit.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: editInit.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$txtBGNCode\":\n        args[\"ctl00_body_txtBGNCode\"] || \"\",\n\n      \"ctl00$body$txtBGNName\":\n        args[\"ctl00_body_txtBGNName\"] || \"\",\n\n      \"ctl00$body$txtAbbreviation\":\n        args[\"ctl00_body_txtAbbreviation\"] || \"\",\n\n      \"ctl00$body$txtRegDate\":\n        args[\"ctl00_body_txtRegDate\"] || \"\",\n\n      \"ctl00$body$txtRegNumber\":\n        args[\"ctl00_body_txtRegNumber\"] || \"\",\n\n      \"ctl00$body$txtRegBody\":\n        args[\"ctl00_body_txtRegBody\"] || \"\",\n\n      \"ctl00$body$butSave\": \"Save\",\n\n      \"ctl00$body$hdnEventType\": \"2\"\n\n    }, url);\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const getValue = (id) => {\n    const el = doc.getElementById(id);\n    return el ? el.value.trim() : \"\";\n  };\n\n  const updateBargainingUnitDetails = {\n    code:\n      getValue(\"ctl00_body_txtBGNCode\"),\n\n    name:\n      getValue(\"ctl00_body_txtBGNName\"),\n\n    abbreviation:\n      getValue(\"ctl00_body_txtAbbreviation\"),\n\n    registeredDate:\n      getValue(\"ctl00_body_txtRegDate\"),\n\n    registeredNumber:\n      getValue(\"ctl00_body_txtRegNumber\"),\n\n    registeredBody:\n      getValue(\"ctl00_body_txtRegBody\")\n  };\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\";\n  } else {\n    return updateBargainingUnitDetails;\n  }\n\n});",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update Bargaining Unit",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-30T14:09:20.527Z",
+      "updatedAt": "2026-05-15T07:07:33.020Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateBargainingUnit",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtBGNCode\": {\n      \"type\": \"string\",\n      \"description\": \"Unique code for the bargaining unit.directly access to get the code for getBargainingUnitDetails Api.\"\n    },\n    \"ctl00_body_txtBGNName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the bargaining unit.\"\n    },\n    \"ctl00_body_txtAbbreviation\": {\n      \"type\": \"string\",\n      \"description\": \"Abbreviation of the bargaining unit name.\"\n    },\n    \"ctl00_body_txtRegDate\": {\n      \"type\": \"string\",\n      \"format\": \"date\",\n      \"description\": \"Date when the bargaining unit was registered. data format '05/01/2025'\"\n    },\n    \"ctl00_body_txtRegNumber\": {\n      \"type\": \"integer\",\n      \"description\": \"Registration number of the bargaining unit.only numbers access string not access\"\n    },\n    \"ctl00_body_txtRegBody\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the body with which the bargaining unit is registered.\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtBGNCode\",\n    \"ctl00_body_txtBGNName\",\n    \"ctl00_body_txtAbbreviation\",\n    \"ctl00_body_txtRegDate\",\n    \"ctl00_body_txtRegNumber\",\n    \"ctl00_body_txtRegBody\"\n  ]\n}",
+      "_id": "68122f10001dad7b67f765aa"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/BargainingUnit.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/BargainingUnit.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"BargainingUnit\";\n  }\n\n  const editInit =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.bu.viewState,\n      __VIEWSTATEGENERATOR: window.bu.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.bu.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$butEdit\": \"Edit\",\n\n      \"ctl00$body$hdnEventType\": \"\"\n\n    }, url);\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: editInit.viewState,\n      __VIEWSTATEGENERATOR: editInit.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: editInit.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$txtBGNCode\":\n        args[\"ctl00_body_txtBGNCode\"] || \"\",\n\n      \"ctl00$body$txtBGNName\":\n        args[\"ctl00_body_txtBGNName\"] || \"\",\n\n      \"ctl00$body$txtAbbreviation\":\n        args[\"ctl00_body_txtAbbreviation\"] || \"\",\n\n      \"ctl00$body$txtRegDate\":\n        args[\"ctl00_body_txtRegDate\"] || \"\",\n\n      \"ctl00$body$txtRegNumber\":\n        args[\"ctl00_body_txtRegNumber\"] || \"\",\n\n      \"ctl00$body$txtRegBody\":\n        args[\"ctl00_body_txtRegBody\"] || \"\",\n\n      \"ctl00$body$butSave\": \"Save\",\n\n      \"ctl00$body$hdnEventType\": \"2\"\n\n    }, url);\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const getValue = (id) => {\n    const el = doc.getElementById(id);\n    return el ? el.value.trim() : \"\";\n  };\n\n  const updateBargainingUnitDetails = {\n    code:\n      getValue(\"ctl00_body_txtBGNCode\"),\n\n    name:\n      getValue(\"ctl00_body_txtBGNName\"),\n\n    abbreviation:\n      getValue(\"ctl00_body_txtAbbreviation\"),\n\n    registeredDate:\n      getValue(\"ctl00_body_txtRegDate\"),\n\n    registeredNumber:\n      getValue(\"ctl00_body_txtRegNumber\"),\n\n    registeredBody:\n      getValue(\"ctl00_body_txtRegBody\")\n  };\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\";\n  } else {\n    return updateBargainingUnitDetails;\n  }\n\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

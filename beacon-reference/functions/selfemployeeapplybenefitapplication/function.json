@@ -1,0 +1,24 @@
+{
+  "id": "690dc589931a2d61ba0b30c3",
+  "slug": "selfemployeeapplybenefitapplication",
+  "name": "selfEmployeeApplyBenefitApplication",
+  "status": "live",
+  "createdAt": "2025-08-21T13:51:01.122Z",
+  "updatedAt": "2025-08-21T13:51:01.122Z",
+  "contentHash": "fa592af9eb063f26ccb7bc55d96a90a203cd18d2c1c51241b5318b4c17e3ab9f",
+  "lastExportedAt": "2026-09-05T19:41:28.068Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc589931a2d61ba0b30c3",
+    "name": "selfEmployeeApplyBenefitApplication",
+    "status": "live",
+    "code": "(async function () {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('Benefitv9/Application/Application/?mvc=1');\n    let url = updateurl.updateUrl || \"Benefitv9/Application/Application/?mvc=1\";\n\n    const digestkey1 = await BeaconBar.executeFunction('getDigest')(updateurl.updateParams);\n    const sl = await BeaconBar.getSharedData(\"sl\");\n\n    const myHeaders = new Headers({\n        \"accept\": \"*/*\",\n        \"accept-language\": \"en-US,en;q=0.9\",\n        \"Content-Type\": \"application/x-www-form-urlencoded\",\n        \"x-requested-with\" : \"XMLHttpRequest\"\n    });\n\n    const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n\n    const response1 = await fetch(`${location.origin}/${sl}/${url}&digest=${digestkey1.digest}`, requestOptions);\n    const data1 = await response1.text();\n\n    const objMatch = data1.match(/window\\.BenefitApplicationObj\\s*=\\s*'([^']+)'/);\n    let benefitObj = null;\n\n    if (objMatch) {\n        try {\n            benefitObj = JSON.parse(objMatch[1]);\n        } catch (e) { }\n    }\n\n    let empNumber = null;\n    let benefitTypes = [];\n    let appId = null;\n    let keyValue = null;\n\n    if (benefitObj) {\n        empNumber = benefitObj.CurrentEmployeeNumber || null;\n        appId = benefitObj.AppId || null;\n        keyValue = benefitObj.KeyValue || null;\n        betAppYear = benefitObj.BetAppYear || null\n        benefitTypes = (benefitObj.BmBenefitTypes || []).map(x => ({\n            BetCode: x.BetCode,\n            BetName: x.BetName\n        }));\n    }\n\n    const match = data1.match(/window\\.BenefitApplicationObj\\s*=\\s*(['\"])(.*?)\\1;/s);\n\n    const jsonString = match ? match[2] : null;\n    const parsed = JSON.parse(jsonString);\n\n    window.benefitdetails = parsed;\n\n    return {\n        empNumber: empNumber,\n        appId: appId,\n        keyValue: keyValue,\n        betAppYear: betAppYear,\n        benefitTypes: benefitTypes\n    };\n});\n",
+    "by": "2414",
+    "__v": 0
+  }
+}

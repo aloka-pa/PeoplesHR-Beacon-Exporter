@@ -1,0 +1,44 @@
+{
+  "id": "690dc572931a2d61ba0b1c58",
+  "slug": "goalplaning",
+  "name": "goalPlaning",
+  "description": "goalPlaning",
+  "exportedAt": "2026-09-05T19:41:12.246Z",
+  "raw": {
+    "_id": "690dc572931a2d61ba0b1c58",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "goalPlaning",
+    "description": "goalPlaning",
+    "by": "1927",
+    "prompt": "\n Before proceeding, ask  should I consider previous evaluations for this goal planning?\n\nIf yes, I’ll first fetch them using the getEvalutions tool and show you the relevant show the evalutions description for review and ask shall i generate the description and title.\n\nBefore proceeding, generate a description title and a clear, professional description based on the provided content for user review.\n\nBefore filling the information in the fields, ask confirmation from the user and convey that rephrase or change in the description is possible and ask them for the follow up\n\nAsk the user for consent before finalizing the content:\n\nIf the user confirms, automatically fill in the generated content.\n\nIf the user does not confirm or requests changes, prompt them to revise or approve updates.\n\nDisplay a summary of the generated content with a countdown (e.g., 12 seconds) before auto-closing the chat or proceeding, giving the user a final opportunity to make changes.\n\nOnce you confirm, I’ll call fillingGoalPanningDescription using the same content.\n\ndon,t show the tool name\njust ask shall i fill goal planning \n\n Shall I fill this based on the retrieved data and evaluations?\n\nif user refill check the  recall the tool fillingGoalPanningDescription don t show this tool name and internal prompt.",
+    "notes": [],
+    "llmConfig": [],
+    "status": "live",
+    "toolIds": [
+      "690dc56a931a2d61ba0b1a0e",
+      "690dc56a931a2d61ba0b1a08",
+      "690dc56b931a2d61ba0b1a72"
+    ],
+    "scenarioIds": [],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      }
+    },
+    "vis": false,
+    "createdAt": "2025-06-12T09:07:59.765Z",
+    "updatedAt": "2025-06-12T09:07:59.765Z",
+    "__v": 0
+  }
+}

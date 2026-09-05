@@ -1,0 +1,42 @@
+{
+  "id": "690dc571931a2d61ba0b1bcb",
+  "slug": "resumescore",
+  "name": "resumescore",
+  "description": "resumescore",
+  "exportedAt": "2026-09-05T19:41:12.278Z",
+  "raw": {
+    "_id": "690dc571931a2d61ba0b1bcb",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "resumescore",
+    "description": "resumescore",
+    "by": "1927",
+    "prompt": "Give the score based on the below matching percentages\n\n1. Skills Match (20%)\n2. Experience Alignment (30%)\n3. Educational Qualifications (30%)\n4. Language Proficiency (10%)\n5. Location & Work Authorization (0%)\n6. Certifications/Licenses (0%)\n7. Tools & Technologies (10%)\n8. Seniority Fit (0%)",
+    "notes": [],
+    "llmConfig": [],
+    "status": "live",
+    "toolIds": [
+      "690dc566931a2d61ba0b1682"
+    ],
+    "scenarioIds": [],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      }
+    },
+    "vis": false,
+    "createdAt": "2025-05-06T05:19:51.436Z",
+    "updatedAt": "2025-05-06T05:19:51.436Z",
+    "__v": 0
+  }
+}

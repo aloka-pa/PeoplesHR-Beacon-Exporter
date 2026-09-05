@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "relationshipCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Use this to identify the relationship record by code (recommended).\nPerforms an exact match against the results grid and selects that record for editing.",
+      "advanced": false,
+      "raw": {
+        "name": "relationshipCode",
+        "type": "string",
+        "description": "Use this to identify the relationship record by code (recommended).\nPerforms an exact match against the results grid and selects that record for editing.",
+        "required": false,
+        "_id": "69543e06a2db81744fd183a9"
+      }
+    },
+    {
+      "name": "relationshipName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Use this to identify the relationship record by its name when code is not available.\nMatches case-insensitive exact name; if multiple matches occur, the tool returns an AMBIGUOUS response instead of updating the wrong record.  (e.g., \"Spouse\").",
+      "advanced": false,
+      "raw": {
+        "name": "relationshipName",
+        "type": "string",
+        "description": "Use this to identify the relationship record by its name when code is not available.\nMatches case-insensitive exact name; if multiple matches occur, the tool returns an AMBIGUOUS response instead of updating the wrong record.  (e.g., \"Spouse\").",
+        "required": false,
+        "_id": "69543e06a2db81744fd183aa"
+      }
+    },
+    {
+      "name": "newRelationshipName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "New name to save into ctl00$body$txtName (max 20 chars).\nIf not provided, the tool will not update anything and the relationship name will remain unchanged.",
+      "advanced": false,
+      "raw": {
+        "name": "newRelationshipName",
+        "type": "string",
+        "description": "New name to save into ctl00$body$txtName (max 20 chars).\nIf not provided, the tool will not update anything and the relationship name will remain unchanged.",
+        "required": false,
+        "_id": "69543e06a2db81744fd183ab"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

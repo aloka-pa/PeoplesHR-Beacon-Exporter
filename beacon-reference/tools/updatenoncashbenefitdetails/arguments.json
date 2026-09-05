@@ -1,0 +1,29 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "ctl00_body_txtName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Description or name of the non-cash benefit item.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Description or name of the non-cash benefit item."
+      }
+    },
+    {
+      "name": "ctl00_body_dpCategory",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Selected category code for the non-cash benefit item.If the user updates the category details, use the corresponding category value when calling the getNonCashBenefitDetails API",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Selected category code for the non-cash benefit item.If the user updates the category details, use the corresponding category value when calling the getNonCashBenefitDetails API"
+      }
+    }
+  ]
+}

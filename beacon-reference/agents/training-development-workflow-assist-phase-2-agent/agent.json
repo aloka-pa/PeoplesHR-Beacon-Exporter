@@ -1,0 +1,95 @@
+{
+  "id": "69562bd4e05f6cdd1594bd17",
+  "slug": "training-development-workflow-assist-phase-2-agent",
+  "name": "Training & Development | Workflow Assist | Phase 2 | Agent",
+  "description": "An intelligent assistant that helps training administrators create professional, comprehensive course descriptions through a guided conversation. The agent asks targeted questions about the course topic, target audience, duration, learning objectives, and training mode, then generates a well-structured description that automatically populates into the course creation form. Administrators can review and refine the generated content before finalizing the course setup.",
+  "exportedAt": "2026-09-05T19:41:12.231Z",
+  "raw": {
+    "_id": "69562bd4e05f6cdd1594bd17",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "Training & Development | Workflow Assist | Phase 2 | Agent",
+    "description": "An intelligent assistant that helps training administrators create professional, comprehensive course descriptions through a guided conversation. The agent asks targeted questions about the course topic, target audience, duration, learning objectives, and training mode, then generates a well-structured description that automatically populates into the course creation form. Administrators can review and refine the generated content before finalizing the course setup.",
+    "by": "10329",
+    "prompt": "",
+    "notes": [],
+    "llmConfig": [],
+    "status": "live",
+    "toolIds": [
+      "694a7a05d1084e089f1f6b53",
+      "6956293bab9dbe6266aec3e1",
+      "690dc567931a2d61ba0b1769"
+    ],
+    "scenarioIds": [],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "cache": {
+      "enabled": false
+    },
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "callKnowledgeBase",
+        "args": [
+          {
+            "name": "query",
+            "type": "string",
+            "description": "The query to be executed by the agent",
+            "required": true,
+            "_id": "69562bd4e05f6cdd1594bd19"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n       \"type\":  \"object\",\n       \"properties\": {},\n       \"required\": []\n       }",
+        "_id": "695dfde030d3fb190d7668c9"
+      },
+      "target": {
+        "entityValue": "",
+        "shardKey1": "",
+        "shardKey2": "",
+        "shardKey3": ""
+      }
+    },
+    "vis": false,
+    "piiConfig": {
+      "piiEnabled": false,
+      "predefinedEntities": [
+        {
+          "name": "PERSON",
+          "enabled": false
+        },
+        {
+          "name": "LOCATION",
+          "enabled": false
+        },
+        {
+          "name": "DATE_TIME",
+          "enabled": false
+        },
+        {
+          "name": "EMAIL_ADDRESS",
+          "enabled": false
+        },
+        {
+          "name": "PHONE_NUMBER",
+          "enabled": false
+        }
+      ],
+      "customEntities": []
+    },
+    "createdAt": "2026-01-01T08:09:56.150Z",
+    "updatedAt": "2026-01-07T06:32:00.538Z",
+    "__v": 4,
+    "maxTokens": "[REDACTED]"
+  }
+}

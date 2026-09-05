@@ -1,0 +1,160 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "entity",
+      "type": null,
+      "required": true,
+      "defaultValue": null,
+      "description": "Specifies the entity based on the query.",
+      "advanced": true,
+      "raw": {
+        "enum": [
+          "systemParameters",
+          "overtimeInformation",
+          "gracePeriodInformation",
+          "rosterInformation",
+          "shiftInformation",
+          "rosterEmployee"
+        ],
+        "description": "Specifies the entity based on the query."
+      }
+    },
+    {
+      "name": "systemParameters",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": null,
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "properties": {
+          "parameterName": {
+            "type": "string",
+            "description": "user give the Parameter Name and you ask the parameter name for example 'Attachment Allowed Types','Attachment Maximum Size' etc.."
+          }
+        },
+        "required": [
+          "parameterName"
+        ]
+      }
+    },
+    {
+      "name": "overtimeInformation",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "user to ask concent ot type name ,before get the over time information, must and should user to ask ot type name then will be search ot, if the user overtime related query pic in this api. to generate the over time information.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "user to ask concent ot type name ,before get the over time information, must and should user to ask ot type name then will be search ot, if the user overtime related query pic in this api. to generate the over time information.",
+        "properties": {
+          "otTypeName": {
+            "type": "string",
+            "description": "user to ask concent ot type name,user to ask ot type name then after proced example 'pre-ex','pot one hour' etc.. what user give the ot type same you take string"
+          }
+        },
+        "required": [
+          "otTypeName"
+        ]
+      }
+    },
+    {
+      "name": "gracePeriodInformation",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "if the user Grace Period Information related query pic in this api. to generate the over time information.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "if the user Grace Period Information related query pic in this api. to generate the over time information.",
+        "properties": {
+          "codeId": {
+            "type": "string",
+            "description": "to give the code id example:'000001','000010' etc.."
+          }
+        },
+        "required": [
+          "codeId"
+        ]
+      }
+    },
+    {
+      "name": "rosterInformation",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": null,
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "properties": {
+          "rosterCode": {
+            "type": "string",
+            "description": "use must be ask the roster code,to give the roster Code example:'Roster CS','Roster CA', '00000DR', '003','Aster Hospitals, UAE' etc.."
+          }
+        },
+        "required": [
+          "rosterCode"
+        ]
+      }
+    },
+    {
+      "name": "shiftInformation",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "in this api generate the shift information details.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "in this api generate the shift information details.",
+        "properties": {
+          "shiftName": {
+            "type": "string",
+            "description": "user give the shift Name and you ask the shift name for example '0700-1500' etc.."
+          }
+        },
+        "required": [
+          "shiftName"
+        ]
+      }
+    },
+    {
+      "name": "rosterEmployee",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "In this tool, when a user searches by roster name, first execute the rostersDetails tool to fetch the employee information. If the user searches directly using an employee ID, execute the request using the employee ID only—no tool call is required. Additionally, when searching by roster name, do not prompt the user for the employee ID.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "In this tool, when a user searches by roster name, first execute the rostersDetails tool to fetch the employee information. If the user searches directly using an employee ID, execute the request using the employee ID only—no tool call is required. Additionally, when searching by roster name, do not prompt the user for the employee ID.",
+        "properties": {
+          "empId": {
+            "type": "string",
+            "description": "to give the user employee id Example '000001'"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "roster",
+              "employee"
+            ],
+            "description": "if the roster name to return 'roster' if the user search for employee id return for 'employee'"
+          },
+          "rosterId": {
+            "type": "string",
+            "description": "to get the user select roster corresponding id will be take roster Id Example '000030'"
+          }
+        },
+        "required": [
+          "empId"
+        ]
+      }
+    }
+  ]
+}

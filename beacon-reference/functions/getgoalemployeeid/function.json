@@ -1,0 +1,24 @@
+{
+  "id": "690dc581931a2d61ba0b288f",
+  "slug": "getgoalemployeeid",
+  "name": "getGoalEmployeeId",
+  "status": "live",
+  "createdAt": "2025-08-04T09:21:28.793Z",
+  "updatedAt": "2025-08-04T09:21:28.793Z",
+  "contentHash": "c5be29faf2d7d22297fa684ec038df4296c494a86727eeba53e1df1228d4d442",
+  "lastExportedAt": "2026-09-05T19:41:30.829Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc581931a2d61ba0b288f",
+    "name": "getGoalEmployeeId",
+    "status": "live",
+    "code": "(async function () {\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"*/*\");\n    myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n    const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n    const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n    const response = await fetch(`${reqOptions}PerfV8//GoalPlanning/_EmployeeInformationHeader/?_=${Date.now()}`, requestOptions)\n    const data = await response.text()\n    const match = data.match(/Emp_number=([^'\"]+)/);\nconst empNumber = match ? match[1] : null;\n    return empNumber;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "id": "695217fcda1bb97137b67cea",
+  "slug": "createcountry",
+  "name": "createCountry",
+  "description": "create a new country record",
+  "instructions": null,
+  "taskName": "Creating New Country Record",
+  "tags": [
+    "EIMAdmin",
+    "GeographicalLocations"
+  ],
+  "status": "live",
+  "signature": "createCountry",
+  "createdAt": "2025-12-29T05:56:12.230Z",
+  "updatedAt": "2026-08-28T03:31:09.107Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "a47e885cc362fe924562cb585baf1db06e4aaced21323a938426fbed5c9c121b",
+  "lastExportedAt": "2026-09-05T19:39:21.949Z",
+  "raw": {
+    "basic": {
+      "_id": "695217fcda1bb97137b67cea",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createCountry",
+      "description": "create a new country record",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createCountry",
+        "args": [
+          {
+            "name": "countryName",
+            "type": "string",
+            "description": "Name of the country to be created",
+            "required": true,
+            "_id": "6963e60be41922c8c733a96c"
+          },
+          {
+            "name": "isBase",
+            "type": "string",
+            "description": "Indicates whether this country is a Base Country (accepts \"true/false\". \"yes/no\"",
+            "required": true,
+            "_id": "6963e60be41922c8c733a96d"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6a9100fdd20ecd56a3252c67"
+      },
+      "by": "36419",
+      "fetcher": "(function (args, reqOptions) {\r\n  return {\r\n    code: `(function(){\r\n        return [];\r\n      })`\r\n  };\r\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* Access validation */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Country.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Country screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* Input validation */\n    if (!args?.countryName || args.countryName.trim() === \"\") {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: countryName is required\"\n      };\n    }\n\n    /* Helper function for boolean conversion */\n    const stringToBoolean = (val) => {\n      if (typeof val === \"string\") {\n        return [\"true\", \"yes\", \"1\"].includes(val.toLowerCase().trim());\n      }\n      return Boolean(val);\n    };\n\n    /* Initial page state */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"Country\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Country.aspx\");\n\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Country.aspx`;\n\n    const parser = new DOMParser();\n\n    /* Click New to get the form */\n    const newFormData = new FormData();\n    newFormData.append(\"scrollLeft\", \"0\");\n    newFormData.append(\"scrollTop\", \"0\");\n    newFormData.append(\"__EVENTTARGET\", \"\");\n    newFormData.append(\"__EVENTARGUMENT\", \"\");\n    newFormData.append(\"__VIEWSTATE\", details.viewState);\n    newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n    newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"COU_CODE\");\n    newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n    newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n    newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n    newFormData.append(\"ctl00$body$butNew\", \"New\");\n\n    const newResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: newFormData\n    });\n\n    const newDoc = parser.parseFromString(await newResponse.text(), \"text/html\");\n\n    /* Extract ViewState after clicking New */\n    const viewState = newDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const eventValidation = newDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const viewStateGen = newDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Get hdnPreCountry value from the form */\n    const hdnPreCountry = newDoc.querySelector(\"#ctl00_body_hdnPreCountry\")?.value || \"\";\n\n    /* Prepare checkbox value */\n    const isBaseCountry = args.isBase !== undefined ? stringToBoolean(args.isBase) : false;\n\n    /* Save with the country data */\n    const saveFormData = new FormData();\n    saveFormData.append(\"scrollLeft\", \"0\");\n    saveFormData.append(\"scrollTop\", \"0\");\n    saveFormData.append(\"__EVENTTARGET\", \"\");\n    saveFormData.append(\"__EVENTARGUMENT\", \"\");\n    saveFormData.append(\"__VIEWSTATE\", viewState);\n    saveFormData.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n    saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    saveFormData.append(\"__EVENTVALIDATION\", eventValidation);\n    saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n    saveFormData.append(\"ctl00$body$hdnPreCountry\", hdnPreCountry);\n    saveFormData.append(\"ctl00$body$txtName\", args.countryName.trim());\n    \n    // Only append checkbox if true (ASP.NET pattern)\n    if (isBaseCountry) {\n      saveFormData.append(\"ctl00$body$chkBase\", \"on\");\n    }\n    \n    saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n    const saveResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: saveFormData\n    });\n\n    const saveHtml = await saveResponse.text();\n\n    if (saveResponse.status === 200) {\n      const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n      const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n      \n      if (errorMsg) {\n        return {\n          status: \"ERROR\",\n          message: `Save failed: ${errorMsg.trim()}`\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: \"Successfully created country record!\",\n        countryName: args.countryName,\n        isBase: isBaseCountry\n      };\n    }\n\n    return {\n      status: \"ERROR\",\n      message: \"Failed to create country. Please verify in the UI.\"\n    };\n\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err.message,\n      error: err.toString()\n    };\n  }\n});",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "GeographicalLocations"
+      ],
+      "taskName": "Creating New Country Record",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-29T05:56:12.230Z",
+      "updatedAt": "2026-08-28T03:31:09.107Z",
+      "__v": 10,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "createCountry",
+      "args": [
+        {
+          "name": "countryName",
+          "type": "string",
+          "description": "Name of the country to be created",
+          "required": true,
+          "_id": "6963e60be41922c8c733a96c"
+        },
+        {
+          "name": "isBase",
+          "type": "string",
+          "description": "Indicates whether this country is a Base Country (accepts \"true/false\". \"yes/no\"",
+          "required": true,
+          "_id": "6963e60be41922c8c733a96d"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6a9100fdd20ecd56a3252c67"
+    },
+    "fetcher": "(function (args, reqOptions) {\r\n  return {\r\n    code: `(function(){\r\n        return [];\r\n      })`\r\n  };\r\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* Access validation */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Country.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Country screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* Input validation */\n    if (!args?.countryName || args.countryName.trim() === \"\") {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: countryName is required\"\n      };\n    }\n\n    /* Helper function for boolean conversion */\n    const stringToBoolean = (val) => {\n      if (typeof val === \"string\") {\n        return [\"true\", \"yes\", \"1\"].includes(val.toLowerCase().trim());\n      }\n      return Boolean(val);\n    };\n\n    /* Initial page state */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"Country\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Country.aspx\");\n\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Country.aspx`;\n\n    const parser = new DOMParser();\n\n    /* Click New to get the form */\n    const newFormData = new FormData();\n    newFormData.append(\"scrollLeft\", \"0\");\n    newFormData.append(\"scrollTop\", \"0\");\n    newFormData.append(\"__EVENTTARGET\", \"\");\n    newFormData.append(\"__EVENTARGUMENT\", \"\");\n    newFormData.append(\"__VIEWSTATE\", details.viewState);\n    newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n    newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"COU_CODE\");\n    newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n    newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n    newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n    newFormData.append(\"ctl00$body$butNew\", \"New\");\n\n    const newResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: newFormData\n    });\n\n    const newDoc = parser.parseFromString(await newResponse.text(), \"text/html\");\n\n    /* Extract ViewState after clicking New */\n    const viewState = newDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const eventValidation = newDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const viewStateGen = newDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Get hdnPreCountry value from the form */\n    const hdnPreCountry = newDoc.querySelector(\"#ctl00_body_hdnPreCountry\")?.value || \"\";\n\n    /* Prepare checkbox value */\n    const isBaseCountry = args.isBase !== undefined ? stringToBoolean(args.isBase) : false;\n\n    /* Save with the country data */\n    const saveFormData = new FormData();\n    saveFormData.append(\"scrollLeft\", \"0\");\n    saveFormData.append(\"scrollTop\", \"0\");\n    saveFormData.append(\"__EVENTTARGET\", \"\");\n    saveFormData.append(\"__EVENTARGUMENT\", \"\");\n    saveFormData.append(\"__VIEWSTATE\", viewState);\n    saveFormData.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n    saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    saveFormData.append(\"__EVENTVALIDATION\", eventValidation);\n    saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n    saveFormData.append(\"ctl00$body$hdnPreCountry\", hdnPreCountry);\n    saveFormData.append(\"ctl00$body$txtName\", args.countryName.trim());\n    \n    // Only append checkbox if true (ASP.NET pattern)\n    if (isBaseCountry) {\n      saveFormData.append(\"ctl00$body$chkBase\", \"on\");\n    }\n    \n    saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n    const saveResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: saveFormData\n    });\n\n    const saveHtml = await saveResponse.text();\n\n    if (saveResponse.status === 200) {\n      const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n      const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n      \n      if (errorMsg) {\n        return {\n          status: \"ERROR\",\n          message: `Save failed: ${errorMsg.trim()}`\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: \"Successfully created country record!\",\n        countryName: args.countryName,\n        isBase: isBaseCountry\n      };\n    }\n\n    return {\n      status: \"ERROR\",\n      message: \"Failed to create country. Please verify in the UI.\"\n    };\n\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err.message,\n      error: err.toString()\n    };\n  }\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

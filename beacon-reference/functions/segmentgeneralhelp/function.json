@@ -1,0 +1,24 @@
+{
+  "id": "6a19215427c3d147d845d37d",
+  "slug": "segmentgeneralhelp",
+  "name": "segmentGeneralHelp",
+  "status": "unlive",
+  "createdAt": "2026-05-29T05:17:08.747Z",
+  "updatedAt": "2026-05-29T06:08:31.351Z",
+  "contentHash": "55c143dd7e0668c3e0248465fdc227748c40cc6510ea40eac7f10c54800475f1",
+  "lastExportedAt": "2026-09-05T19:41:25.410Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "6a19215427c3d147d845d37d",
+    "name": "segmentGeneralHelp",
+    "status": "unlive",
+    "code": "(function () {\r\n    const enabledAgents = JSON.parse(\r\n        localStorage.getItem('enabledAgents') || '[]'\r\n    );\r\n\r\n    const normalizedAgents = enabledAgents.map(agent =>\r\n        String(agent).toLowerCase().replace(/\\s+/g, '')\r\n    );\r\n\r\n    // Enable General Help only when prodhelp and/or org support is requested.\r\n    return normalizedAgents.includes('prodhelp') || normalizedAgents.includes('orgsup');\r\n})()",
+    "by": "10308",
+    "__v": 3
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "690dc584931a2d61ba0b2bf6",
+  "slug": "leaveaprovalutil",
+  "name": "leaveaprovalutil",
+  "status": "live",
+  "createdAt": "2025-06-17T05:00:48.930Z",
+  "updatedAt": "2025-06-17T05:00:48.930Z",
+  "contentHash": "debbfa8e64b4d08d3f0ec14846c6df377decf74c2fd8df30aa2487d7298ed398",
+  "lastExportedAt": "2026-09-05T19:41:33.218Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc584931a2d61ba0b2bf6",
+    "name": "leaveaprovalutil",
+    "status": "live",
+    "code": "(async function(args){\n    const myHeaders = new Headers();\nmyHeaders.append(\"accept\", \"*/*\");\nmyHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\nconst requestOptions = {\n  method: \"GET\",\n  headers: myHeaders,\n  redirect: \"follow\"\n};\nconst reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\nconst digest = await BeaconBar.executeFunction(\"getDigest\")(`bs=4&mvc=1&WFMainID=${args.WFMainID}&Allowedit=${args.Allowedit}&CATID=${args.CATID}`)\nconst response = await fetch(`${reqOptions}AbsenceV9/LeaveApproval/LeaveApproval?bs=4&mvc=1&WFMainID=${args.WFMainID}&Allowedit=${args.Allowedit}&CATID=${args.CATID}&digest=${digest.digest}`, requestOptions)\n  const data = await  response.text()\n  return data ;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

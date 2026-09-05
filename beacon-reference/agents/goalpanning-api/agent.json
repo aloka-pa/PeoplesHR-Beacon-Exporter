@@ -1,0 +1,66 @@
+{
+  "id": "690dc572931a2d61ba0b1c5a",
+  "slug": "goalpanning-api",
+  "name": "GoalPanning(API)",
+  "description": "GoalPanning(API)",
+  "exportedAt": "2026-09-05T19:41:12.243Z",
+  "raw": {
+    "_id": "690dc572931a2d61ba0b1c5a",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "GoalPanning(API)",
+    "description": "GoalPanning(API)",
+    "by": "1927",
+    "prompt": "First, execute the getEvaluation API to retrieve the list of available evaluations. Once the user selects (user gives that particular serial number takes better to that )a specific evaluation,  capture its EVAL_ID and pass it to the loadGoals API to fetch the corresponding goals.\n\nIf the user selects a goal group instead, proceed with creating a new goal group. When creating a goal group, Based on the selected goal group, generate a goal title and a concise description that clearly reflect the intent and focus of the group.\n\nAfter creating the goals then show to user if user approves then only proceed to create goal planning\n\nThe title should be short, specific, and action-oriented.\nThe description should briefly explain the purpose or expected outcome of the goal, ideally in 1–2 lines.",
+    "notes": [],
+    "llmConfig": [],
+    "status": "live",
+    "toolIds": [
+      "690dc56b931a2d61ba0b1a92",
+      "690dc56b931a2d61ba0b1a8b",
+      "690dc56b931a2d61ba0b1a9e",
+      "690dc56b931a2d61ba0b1a9a"
+    ],
+    "scenarioIds": [],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "callKnowledgeBase",
+        "args": [
+          {
+            "name": "query",
+            "type": "string",
+            "description": "The query to be executed by the agent",
+            "required": true,
+            "_id": "68a6c1d3724e84ba6c1cd249"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n       \"type\":  \"object\",\n       \"properties\": {},\n       \"required\": []\n       }",
+        "_id": "68e8daf3d17a0db62157e11c"
+      },
+      "target": {
+        "entityValue": "",
+        "shardKey1": "",
+        "shardKey2": "",
+        "shardKey3": ""
+      }
+    },
+    "vis": false,
+    "createdAt": "2025-08-05T04:05:55.497Z",
+    "updatedAt": "2025-08-05T04:05:55.497Z",
+    "__v": 0
+  }
+}

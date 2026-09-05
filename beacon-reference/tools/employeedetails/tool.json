@@ -1,0 +1,101 @@
+{
+  "id": "690dc566931a2d61ba0b16c7",
+  "slug": "employeedetails",
+  "name": "employeeDetails",
+  "description": "This tool is used to generate employee details. If the query is admin-related queries the system must automatically execute the getAdminInformationDetails tool to retrieve the admin user's display number (e.g., \"000001\"). In such cases, the user should not be prompted to provide an employee display number. This rule is mandatory and must be applied to all admin-specific queries. The \"getAdminInformationDetails\" tool should always be used to fetch the required admin information in these scenarios. then after must be  execute in this tool",
+  "instructions": null,
+  "taskName": "Employee Details",
+  "tags": [
+    "Absence Management",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "employeeDetails",
+  "createdAt": "2025-05-11T09:40:53.361Z",
+  "updatedAt": "2026-04-24T07:37:52.299Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be3",
+      "name": "AbsenceManagement"
+    }
+  ],
+  "contentHash": "94e9be6fef958a526d8d884425fa5a996abaadf126926ff3a26d3066df70fc0d",
+  "lastExportedAt": "2026-09-05T19:39:22.729Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b16c7",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "employeeDetails",
+      "description": "This tool is used to generate employee details. If the query is admin-related queries the system must automatically execute the getAdminInformationDetails tool to retrieve the admin user's display number (e.g., \"000001\"). In such cases, the user should not be prompted to provide an employee display number. This rule is mandatory and must be applied to all admin-specific queries. The \"getAdminInformationDetails\" tool should always be used to fetch the required admin information in these scenarios. then after must be  execute in this tool",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "employeeDetails",
+        "args": [
+          {
+            "name": "empId",
+            "type": "string",
+            "description": "to give the employee display number example \"000001\"",
+            "required": true,
+            "_id": "68207aa395ae2ca7d961bd10"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "682070a5ca79bb97b9d9579c"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.some(menu => menu.includes(\"AbsenceV9/LeaveApplication/LeaveApplication?mvc=1&isAllEmployee=1\"))) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const tokens = await BeaconBar.executeFunction('application')();\n  window.logs = tokens;\n  const raw = JSON.stringify({\n    empNumber: tokens.empNumber2,\n    criteriaValues: [{ Id: \"202\", Value: args.empId, FromDate: \"\", ToDate: \"\", IsAndSelected: false, IsOrSelected: false }],\n    key: tokens.keyValue,\n    modeId: \"2\",\n    supEmpNumber: null,\n    tblPageNo: 1,\n    tblSearchText: \"\",\n    sortColumn: \"2\",\n    sortOrder: \"asc\"\n  });\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: {\n      \"accept\": \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n\n    },\n    body: raw,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetSearchList/`, requestOptions);\n  const details = await response.json();\n\n  const employeeDetails = details.Object.data.map(item => ({\n    empId: item.Col1,\n    name: item.Col2,\n    dateOfBirth: item.Col3\n  }));\n  return employeeDetails;\n});\n",
+      "groupName": "",
+      "tags": [
+        "Absence Management",
+        "Headers"
+      ],
+      "taskName": "Employee Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-11T09:40:53.361Z",
+      "updatedAt": "2026-04-24T07:37:52.299Z",
+      "__v": 7,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be3",
+          "name": "AbsenceManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "employeeDetails",
+      "args": [
+        {
+          "name": "empId",
+          "type": "string",
+          "description": "to give the employee display number example \"000001\"",
+          "required": true,
+          "_id": "68207aa395ae2ca7d961bd10"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "682070a5ca79bb97b9d9579c"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.some(menu => menu.includes(\"AbsenceV9/LeaveApplication/LeaveApplication?mvc=1&isAllEmployee=1\"))) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const tokens = await BeaconBar.executeFunction('application')();\n  window.logs = tokens;\n  const raw = JSON.stringify({\n    empNumber: tokens.empNumber2,\n    criteriaValues: [{ Id: \"202\", Value: args.empId, FromDate: \"\", ToDate: \"\", IsAndSelected: false, IsOrSelected: false }],\n    key: tokens.keyValue,\n    modeId: \"2\",\n    supEmpNumber: null,\n    tblPageNo: 1,\n    tblSearchText: \"\",\n    sortColumn: \"2\",\n    sortOrder: \"asc\"\n  });\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: {\n      \"accept\": \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n\n    },\n    body: raw,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetSearchList/`, requestOptions);\n  const details = await response.json();\n\n  const employeeDetails = details.Object.data.map(item => ({\n    empId: item.Col1,\n    name: item.Col2,\n    dateOfBirth: item.Col3\n  }));\n  return employeeDetails;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

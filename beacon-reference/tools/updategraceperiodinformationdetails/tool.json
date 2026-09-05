@@ -1,0 +1,133 @@
+{
+  "id": "690dc56b931a2d61ba0b1a6b",
+  "slug": "updategraceperiodinformationdetails",
+  "name": "updateGracePeriodInformationDetails",
+  "description": "Before update for grace period information details.must and should be first execute for \"getAttendanceModule\" tool. to get edit data and if the user update any field for example rounding pater and previous grace period user update name corresponding value will be take. if the user to update fields first ask for the user grace code only do not ask for grace name or other.",
+  "instructions": null,
+  "taskName": "Update The Grace Period Information",
+  "tags": [
+    "Attendance",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateGracePeriodInformationDetails",
+  "createdAt": "2025-06-25T13:43:41.099Z",
+  "updatedAt": "2025-06-25T13:43:41.099Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "865c9aaab78af5b3605af85ddf5b57bd07e64651a0f71bd211625d33ebf61c27",
+  "lastExportedAt": "2026-09-05T19:39:23.519Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1a6b",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateGracePeriodInformationDetails",
+      "description": "Before update for grace period information details.must and should be first execute for \"getAttendanceModule\" tool. to get edit data and if the user update any field for example rounding pater and previous grace period user update name corresponding value will be take. if the user to update fields first ask for the user grace code only do not ask for grace name or other.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateGracePeriodInformationDetails",
+        "args": [
+          {
+            "name": "garcePeriodName",
+            "type": "string",
+            "description": "to get the grace period name if the user update to get the human update value if the user not update take before api data corresponding value will be take example \"hello123\"",
+            "required": true,
+            "_id": "685bfd0dafa936e2712696ef"
+          },
+          {
+            "name": "roundingPattern",
+            "type": "string",
+            "description": "to get the grace rounding Pattern if the user update to get the human update value if the user not update take before api data corresponding value will be take name corresponding value will be take example \"000010\"",
+            "required": true,
+            "_id": "685bfd0dafa936e2712696f0"
+          },
+          {
+            "name": "previousGracePeriod",
+            "type": "string",
+            "description": "to get the grace previous Grace Period if the user update to get the human update value if the user not update take before api data corresponding value will be take name corresponding value will be take example \"000010\"",
+            "required": true,
+            "_id": "685bfd0dafa936e2712696f1"
+          },
+          {
+            "name": "duration",
+            "type": "string",
+            "description": "if the user update will be take update value other then previous value take example \"5\" etc..",
+            "required": true,
+            "_id": "685bfd0dafa936e2712696f2"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "685bfd0dafa936e2712696ee"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const save = await BeaconBar.executeFunction('module')({\n    \"ctl00$main$RadScriptManager\": \"ctl00$action$UpdatePanel2|ctl00$action$ButtonPanel$butSave$imgbtnSave\",\n    \"ctl00_main_RadScriptManager_HiddenField\": \"\",\n    \"ctl00$body$GraceName_txt\": args.garcePeriodName,\n    \"ctl00$body$cmdRoundings\": args.roundingPattern,\n    \"ctl00$body$cmbPreviousGrace\": args.previousGracePeriod,\n    \"ctl00$body$nbDuraton\": args.duration,\n    \"ctl00$body$tpTest2$txtTime\": \"\",\n    \"ctl00$action$ButtonPanel$butDelete$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butReset$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSave$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSummary$isControlEnabled\": \"True\",\n    \"ctl00$action$maxLateVal\": window.maxval,\n    \"ctl00$hdnCulturDateFormat\": \"M/d/yyyy\",\n    \"__EVENTTARGET\": \"\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": window.graceupdate.viewState1,\n    \"__VIEWSTATEGENERATOR\": window.graceupdate.viewStateGen1,\n    \"__SCROLLPOSITIONX\": \"0\",\n    \"__SCROLLPOSITIONY\": \"0\",\n    \"__EVENTVALIDATION\": window.graceupdate.eventValidation1,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"hiddenInputToUpdateATBuffer_CommonToolkitScripts\": \"1\",\n    \"__ASYNCPOST\": \"true\",\n    \"ctl00$action$ButtonPanel$butSave$imgbtnSave\": \"Save\"\n  }, `${reqOptions.sl}/TNA/GracePeriodInformation`);\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(save.rawData, 'text/html');\n\n  const gracePeriodName = document.querySelector('#ctl00_body_GraceName_txt')?.value;\n  const roundingPatternSelect = document.querySelector('#ctl00_body_cmdRoundings');\n  const roundingPattern = roundingPatternSelect?.options[roundingPatternSelect.selectedIndex]?.text;\n  const previousGraceSelect = document.querySelector('#ctl00_body_cmbPreviousGrace');\n  const previousGracePeriod = previousGraceSelect?.options[previousGraceSelect.selectedIndex]?.text;\n  const duration = document.querySelector('#ctl00_body_nbDuraton')?.value;\n\n  return {\n    \"Grace Period Name\": gracePeriodName,\n    \"Rounding Pattern\": roundingPattern,\n    \"Previous Grace Period\": previousGracePeriod,\n    \"Duration\": duration\n  };\n\n})",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "Headers"
+      ],
+      "taskName": "Update The Grace Period Information",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-25T13:43:41.099Z",
+      "updatedAt": "2025-06-25T13:43:41.099Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateGracePeriodInformationDetails",
+      "args": [
+        {
+          "name": "garcePeriodName",
+          "type": "string",
+          "description": "to get the grace period name if the user update to get the human update value if the user not update take before api data corresponding value will be take example \"hello123\"",
+          "required": true,
+          "_id": "685bfd0dafa936e2712696ef"
+        },
+        {
+          "name": "roundingPattern",
+          "type": "string",
+          "description": "to get the grace rounding Pattern if the user update to get the human update value if the user not update take before api data corresponding value will be take name corresponding value will be take example \"000010\"",
+          "required": true,
+          "_id": "685bfd0dafa936e2712696f0"
+        },
+        {
+          "name": "previousGracePeriod",
+          "type": "string",
+          "description": "to get the grace previous Grace Period if the user update to get the human update value if the user not update take before api data corresponding value will be take name corresponding value will be take example \"000010\"",
+          "required": true,
+          "_id": "685bfd0dafa936e2712696f1"
+        },
+        {
+          "name": "duration",
+          "type": "string",
+          "description": "if the user update will be take update value other then previous value take example \"5\" etc..",
+          "required": true,
+          "_id": "685bfd0dafa936e2712696f2"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "685bfd0dafa936e2712696ee"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const save = await BeaconBar.executeFunction('module')({\n    \"ctl00$main$RadScriptManager\": \"ctl00$action$UpdatePanel2|ctl00$action$ButtonPanel$butSave$imgbtnSave\",\n    \"ctl00_main_RadScriptManager_HiddenField\": \"\",\n    \"ctl00$body$GraceName_txt\": args.garcePeriodName,\n    \"ctl00$body$cmdRoundings\": args.roundingPattern,\n    \"ctl00$body$cmbPreviousGrace\": args.previousGracePeriod,\n    \"ctl00$body$nbDuraton\": args.duration,\n    \"ctl00$body$tpTest2$txtTime\": \"\",\n    \"ctl00$action$ButtonPanel$butDelete$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butReset$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSave$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSummary$isControlEnabled\": \"True\",\n    \"ctl00$action$maxLateVal\": window.maxval,\n    \"ctl00$hdnCulturDateFormat\": \"M/d/yyyy\",\n    \"__EVENTTARGET\": \"\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": window.graceupdate.viewState1,\n    \"__VIEWSTATEGENERATOR\": window.graceupdate.viewStateGen1,\n    \"__SCROLLPOSITIONX\": \"0\",\n    \"__SCROLLPOSITIONY\": \"0\",\n    \"__EVENTVALIDATION\": window.graceupdate.eventValidation1,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"hiddenInputToUpdateATBuffer_CommonToolkitScripts\": \"1\",\n    \"__ASYNCPOST\": \"true\",\n    \"ctl00$action$ButtonPanel$butSave$imgbtnSave\": \"Save\"\n  }, `${reqOptions.sl}/TNA/GracePeriodInformation`);\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(save.rawData, 'text/html');\n\n  const gracePeriodName = document.querySelector('#ctl00_body_GraceName_txt')?.value;\n  const roundingPatternSelect = document.querySelector('#ctl00_body_cmdRoundings');\n  const roundingPattern = roundingPatternSelect?.options[roundingPatternSelect.selectedIndex]?.text;\n  const previousGraceSelect = document.querySelector('#ctl00_body_cmbPreviousGrace');\n  const previousGracePeriod = previousGraceSelect?.options[previousGraceSelect.selectedIndex]?.text;\n  const duration = document.querySelector('#ctl00_body_nbDuraton')?.value;\n\n  return {\n    \"Grace Period Name\": gracePeriodName,\n    \"Rounding Pattern\": roundingPattern,\n    \"Previous Grace Period\": previousGracePeriod,\n    \"Duration\": duration\n  };\n\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

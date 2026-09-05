@@ -1,0 +1,75 @@
+{
+  "id": "690dc568931a2d61ba0b1890",
+  "slug": "healthplandependentdetails",
+  "name": "healthPlanDependentDetails",
+  "description": "in this too generate the health plan dependent details for health plan years, plan names, Dependents,Dependent Dental Enrollment etc. Before in this api execute first execute the \"getApplicationStructure\" tool then after execute in this tool. must should first execute for \"getApplicationStructure\" tool.",
+  "instructions": null,
+  "taskName": "healthPlanDependentDetails",
+  "tags": [
+    "BenefitManagement",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "healthPlanDependentDetails",
+  "createdAt": "2025-05-28T11:08:18.308Z",
+  "updatedAt": "2025-05-28T11:08:18.308Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be9",
+      "name": "BenefitManagement"
+    }
+  ],
+  "contentHash": "e6eb242bf754d0e4927a55a01d2106392811cc5af2cfea3c05d3a8de7c7b0ce4",
+  "lastExportedAt": "2026-09-05T19:39:23.820Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b1890",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "healthPlanDependentDetails",
+      "description": "in this too generate the health plan dependent details for health plan years, plan names, Dependents,Dependent Dental Enrollment etc. Before in this api execute first execute the \"getApplicationStructure\" tool then after execute in this tool. must should first execute for \"getApplicationStructure\" tool.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "healthPlanDependentDetails",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6836eea2d1954a2e4d35e39a"
+      },
+      "by": "2414",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const jsonHeaders = new Headers();\n  jsonHeaders.append(\"Accept\", \"application/json, text/javascript, */*; q=0.01\");\n  jsonHeaders.append(\"Content-Type\", \"application/json; charset=UTF-8\");\n  jsonHeaders.append(\"X-Requested-With\", \"XMLHttpRequest\");\n\n\n  // window.structure.applicationRowVms[3].ApplicationStructureRowVms[0].RefValue = args.dataReimbursement.yearValue;\n  // window.structure.applicationRowVms[3].ApplicationStructureRowVms[1].RefValue = args.dataReimbursement.monthValue;\n  // window.structure.applicationRowVms[4].ApplicationStructureRowVms[0].RefValue = args.dataReimbursement.amount;\n  // window.structure.applicationRowVms[5].ApplicationStructureRowVms[0].RefValue = args.dataReimbursement.requestAmount;\n\n  window.structure.applicationRowVms.forEach(x => {\n    x.ApplicationStructureRowVms.forEach(y => {\n      if (y.ApplicationGridDefVm === null) {\n        y.ApplicationGridDefVm = {\n          ApplicationGridRowVms: [],\n          GridData: {\n            RowItems: []\n          }\n        };\n      }\n    });\n  });\n\n\n  const raw = JSON.stringify({\n    \"ApplicationRowVms\": window.structure.applicationRowVms.slice(0, 5),\n    \"CurrentBenefitStructId\": window.structure.applicationRowVms[1].ApplicationStructureRowVms[0].BesId,\n    \"CurrentEmployeeNumber\": window.Emp,\n    \"CurrentBenefitTypeCode\": window.benCode.benCode,\n    \"VisibilityState\": window.benefitdetails.VisibilityState,\n    \"ReadOnlyState\": window.benefitdetails.ReadOnlyState,\n    \"StepId\": window.benefitdetails.StepId,\n    \"AppId\": window.benefitdetails.AppId,\n    \"WfMainId\": window.benefitdetails.WfMainId,\n    \"CancelWfMainId\": window.benefitdetails.CancelWfMainId,\n    \"IsWorkflow\": window.benefitdetails.IsWorkflow,\n    \"IsSummary\": window.benefitdetails.IsSummary,\n    \"BetAppYear\": window.benefitdetails.BetAppYear\n  });\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: jsonHeaders,\n    body: raw,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9//api/ApplicationApi/GetDependentControlValues/`, requestOptions);\n  const details = await response.json();\n  window.rk = details;\n  return details;\n})",
+      "groupName": "",
+      "tags": [
+        "BenefitManagement",
+        "Headers"
+      ],
+      "taskName": "healthPlanDependentDetails",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-28T11:08:18.308Z",
+      "updatedAt": "2025-05-28T11:08:18.308Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be9",
+          "name": "BenefitManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "healthPlanDependentDetails",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6836eea2d1954a2e4d35e39a"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const jsonHeaders = new Headers();\n  jsonHeaders.append(\"Accept\", \"application/json, text/javascript, */*; q=0.01\");\n  jsonHeaders.append(\"Content-Type\", \"application/json; charset=UTF-8\");\n  jsonHeaders.append(\"X-Requested-With\", \"XMLHttpRequest\");\n\n\n  // window.structure.applicationRowVms[3].ApplicationStructureRowVms[0].RefValue = args.dataReimbursement.yearValue;\n  // window.structure.applicationRowVms[3].ApplicationStructureRowVms[1].RefValue = args.dataReimbursement.monthValue;\n  // window.structure.applicationRowVms[4].ApplicationStructureRowVms[0].RefValue = args.dataReimbursement.amount;\n  // window.structure.applicationRowVms[5].ApplicationStructureRowVms[0].RefValue = args.dataReimbursement.requestAmount;\n\n  window.structure.applicationRowVms.forEach(x => {\n    x.ApplicationStructureRowVms.forEach(y => {\n      if (y.ApplicationGridDefVm === null) {\n        y.ApplicationGridDefVm = {\n          ApplicationGridRowVms: [],\n          GridData: {\n            RowItems: []\n          }\n        };\n      }\n    });\n  });\n\n\n  const raw = JSON.stringify({\n    \"ApplicationRowVms\": window.structure.applicationRowVms.slice(0, 5),\n    \"CurrentBenefitStructId\": window.structure.applicationRowVms[1].ApplicationStructureRowVms[0].BesId,\n    \"CurrentEmployeeNumber\": window.Emp,\n    \"CurrentBenefitTypeCode\": window.benCode.benCode,\n    \"VisibilityState\": window.benefitdetails.VisibilityState,\n    \"ReadOnlyState\": window.benefitdetails.ReadOnlyState,\n    \"StepId\": window.benefitdetails.StepId,\n    \"AppId\": window.benefitdetails.AppId,\n    \"WfMainId\": window.benefitdetails.WfMainId,\n    \"CancelWfMainId\": window.benefitdetails.CancelWfMainId,\n    \"IsWorkflow\": window.benefitdetails.IsWorkflow,\n    \"IsSummary\": window.benefitdetails.IsSummary,\n    \"BetAppYear\": window.benefitdetails.BetAppYear\n  });\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: jsonHeaders,\n    body: raw,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9//api/ApplicationApi/GetDependentControlValues/`, requestOptions);\n  const details = await response.json();\n  window.rk = details;\n  return details;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

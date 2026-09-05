@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "electorateName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Name of the new electorate",
+      "advanced": false,
+      "raw": {
+        "name": "electorateName",
+        "type": "string",
+        "description": "Name of the new electorate",
+        "required": true,
+        "_id": "695365a3c4a4daa640bee370"
+      }
+    },
+    {
+      "name": "district",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Either district code or name",
+      "advanced": false,
+      "raw": {
+        "name": "district",
+        "type": "string",
+        "description": "Either district code or name",
+        "required": false,
+        "_id": "695365a3c4a4daa640bee371"
+      }
+    },
+    {
+      "name": "districtName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "District name explicitly",
+      "advanced": false,
+      "raw": {
+        "name": "districtName",
+        "type": "string",
+        "description": "District name explicitly",
+        "required": false,
+        "_id": "695365a3c4a4daa640bee372"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

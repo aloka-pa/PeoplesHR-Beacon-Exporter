@@ -1,0 +1,106 @@
+{
+  "id": "690dc56b931a2d61ba0b1a72",
+  "slug": "fillinggoalpanningdescription-2",
+  "name": "fillingGoalPanningDescription",
+  "description": "fillingGoalPanningDescription , every goal need to generate some  description and send as the goal description and text  generate all descriptions ",
+  "instructions": null,
+  "taskName": "fillingGoalPanningDescription",
+  "tags": [
+    "Goal Planning"
+  ],
+  "status": "live",
+  "signature": "fillingGoalPanningDescription",
+  "createdAt": "2025-07-30T06:17:49.674Z",
+  "updatedAt": "2025-11-12T11:57:57.196Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c58",
+      "name": "goalPlaning"
+    }
+  ],
+  "contentHash": "162fedd865b1afd9171de476fd013e54458cdeae9f3546b5b3090e1797985d85",
+  "lastExportedAt": "2026-09-05T19:39:23.204Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1a72",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "fillingGoalPanningDescription",
+      "description": "fillingGoalPanningDescription , every goal need to generate some  description and send as the goal description and text  generate all descriptions ",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "fillingGoalPanningDescription",
+        "args": [
+          {
+            "name": "GoalPlaningDescription",
+            "type": "string",
+            "description": "GoalPlaningDescription , already generated context takes here ",
+            "required": true,
+            "_id": "6889b90deeba7ba5f997c1fe"
+          },
+          {
+            "name": "GoalTitle",
+            "type": "string",
+            "description": "GoalTitle , tkes here already generated context takes here ",
+            "required": true,
+            "_id": "6889b90deeba7ba5f997c1ff"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6889b90deeba7ba5f997c1fd"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(function (data, args, reqOptions) {\n  const goalTitle = args.GoalTitle || \"\";\n  const goalDescription = args.GoalPlaningDescription || \"\";\n\n  const iframe = document.getElementById('ifrmPage');\n  if (!iframe || !iframe.contentDocument || !iframe.contentWindow) {\n    return \"iframe or its content not available.\";\n  }\n\n  const iframeDoc = iframe.contentDocument;\n  const iframeWin = iframe.contentWindow;\n  const iframeCKEDITOR = iframeWin.CKEDITOR;\n\n  if (!iframeCKEDITOR) {\n    return \"CKEditor not found inside iframe.\";\n  }\n\n  const textareas = iframeDoc.querySelectorAll(\"textarea[id*='txtTitle_']:not(.label-Hide):not(.label-Hide *)\");\n\n  let goalFilled = false;\n\n  for (const txtTitleElement of textareas) {\n    txtTitleElement.value = goalTitle;\n\n    const koCtx = iframeWin.ko.contextFor(txtTitleElement);\n    if (koCtx?.$data?.GOAL_TITLE && typeof koCtx.$data.GOAL_TITLE === \"function\") {\n      koCtx.$data.GOAL_TITLE(goalTitle);\n      goalFilled = true;\n      break;\n    }\n  }\n\n  if (!goalFilled) {\n    alert(\"Please click 'Add Goal' first before proceeding.\");\n    return \"No goal section found. Prompted user to add goal.\";\n  }\n\n  for (const instanceName in iframeCKEDITOR.instances) {\n    if (iframeCKEDITOR.instances.hasOwnProperty(instanceName)) {\n      iframeCKEDITOR.instances[instanceName].setData(goalDescription);\n    }\n  }\n\n  setTimeout(() => {\n    if (typeof BeaconBar?.closeChat === \"function\") {\n      BeaconBar.closeChat();\n    }\n  }, 12000);\n\n  setTimeout(() => {\n    if (typeof BeaconBar?.showSnackbar === \"function\") {\n      BeaconBar.showSnackbar(\"If you want to add a goal, please click 'Generate Goal Planning Description' again.\");\n    }\n  }, 14000);\n\n  return {\n    message: \"Goal title and description filled. Chat will collapse in 12 secs. Click 'Generate Goal Description' again to repeat.\"\n  };\n});\n",
+      "groupName": "",
+      "tags": [
+        "Goal Planning"
+      ],
+      "taskName": "fillingGoalPanningDescription",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-07-30T06:17:49.674Z",
+      "updatedAt": "2025-11-12T11:57:57.196Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c58",
+          "name": "goalPlaning"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "fillingGoalPanningDescription",
+      "args": [
+        {
+          "name": "GoalPlaningDescription",
+          "type": "string",
+          "description": "GoalPlaningDescription , already generated context takes here ",
+          "required": true,
+          "_id": "6889b90deeba7ba5f997c1fe"
+        },
+        {
+          "name": "GoalTitle",
+          "type": "string",
+          "description": "GoalTitle , tkes here already generated context takes here ",
+          "required": true,
+          "_id": "6889b90deeba7ba5f997c1ff"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6889b90deeba7ba5f997c1fd"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(function (data, args, reqOptions) {\n  const goalTitle = args.GoalTitle || \"\";\n  const goalDescription = args.GoalPlaningDescription || \"\";\n\n  const iframe = document.getElementById('ifrmPage');\n  if (!iframe || !iframe.contentDocument || !iframe.contentWindow) {\n    return \"iframe or its content not available.\";\n  }\n\n  const iframeDoc = iframe.contentDocument;\n  const iframeWin = iframe.contentWindow;\n  const iframeCKEDITOR = iframeWin.CKEDITOR;\n\n  if (!iframeCKEDITOR) {\n    return \"CKEditor not found inside iframe.\";\n  }\n\n  const textareas = iframeDoc.querySelectorAll(\"textarea[id*='txtTitle_']:not(.label-Hide):not(.label-Hide *)\");\n\n  let goalFilled = false;\n\n  for (const txtTitleElement of textareas) {\n    txtTitleElement.value = goalTitle;\n\n    const koCtx = iframeWin.ko.contextFor(txtTitleElement);\n    if (koCtx?.$data?.GOAL_TITLE && typeof koCtx.$data.GOAL_TITLE === \"function\") {\n      koCtx.$data.GOAL_TITLE(goalTitle);\n      goalFilled = true;\n      break;\n    }\n  }\n\n  if (!goalFilled) {\n    alert(\"Please click 'Add Goal' first before proceeding.\");\n    return \"No goal section found. Prompted user to add goal.\";\n  }\n\n  for (const instanceName in iframeCKEDITOR.instances) {\n    if (iframeCKEDITOR.instances.hasOwnProperty(instanceName)) {\n      iframeCKEDITOR.instances[instanceName].setData(goalDescription);\n    }\n  }\n\n  setTimeout(() => {\n    if (typeof BeaconBar?.closeChat === \"function\") {\n      BeaconBar.closeChat();\n    }\n  }, 12000);\n\n  setTimeout(() => {\n    if (typeof BeaconBar?.showSnackbar === \"function\") {\n      BeaconBar.showSnackbar(\"If you want to add a goal, please click 'Generate Goal Planning Description' again.\");\n    }\n  }, 14000);\n\n  return {\n    message: \"Goal title and description filled. Chat will collapse in 12 secs. Click 'Generate Goal Description' again to repeat.\"\n  };\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

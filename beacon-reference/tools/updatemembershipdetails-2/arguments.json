@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "employeeNumber",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the Unique identifier for the employee id or name.",
+      "advanced": false,
+      "raw": {
+        "name": "employeeNumber",
+        "type": "string",
+        "description": "to give the Unique identifier for the employee id or name.",
+        "required": true,
+        "_id": "68386626e50b37370a6f8f76"
+      }
+    },
+    {
+      "name": "updateId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get update id for before api resposne to user select update name corresposnding update id will be take example 'ctl00$body$grdgrade$ctl00$ctl04$ctl01' to get update id for 'getMembershipDetails' tool.",
+      "advanced": false,
+      "raw": {
+        "name": "updateId",
+        "type": "string",
+        "description": "to get update id for before api resposne to user select update name corresposnding update id will be take example 'ctl00$body$grdgrade$ctl00$ctl04$ctl01' to get update id for 'getMembershipDetails' tool.",
+        "required": true,
+        "_id": "68386626e50b37370a6f8f77"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

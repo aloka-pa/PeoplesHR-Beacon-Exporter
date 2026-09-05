@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "jobDescriptionTypeCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get details for Job Description Type Details using search for jobDescriptionTypeCode",
+      "advanced": false,
+      "raw": {
+        "name": "jobDescriptionTypeCode",
+        "type": "string",
+        "description": "to get details for Job Description Type Details using search for jobDescriptionTypeCode",
+        "required": true,
+        "_id": "6811ab1668ca7396dee1795d"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

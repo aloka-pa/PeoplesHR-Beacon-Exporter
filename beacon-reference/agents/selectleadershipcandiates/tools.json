@@ -1,0 +1,37 @@
+[
+  {
+    "toolId": "690dc569931a2d61ba0b191c",
+    "toolName": "selectingEmployeeslist",
+    "path": "tools/selectingemployeeslist"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b195e",
+    "toolName": "selectedEmployeesSubmit",
+    "path": "tools/selectedemployeessubmit"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b195a",
+    "toolName": "searchByCreteriaClassificationadd",
+    "path": "tools/searchbycreteriaclassificationadd"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b1942",
+    "toolName": "selectingEmployeesByCreteria",
+    "path": "tools/selectingemployeesbycreteria"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b1934",
+    "toolName": "getSelectEmployeeByCreteriaOptions",
+    "path": "tools/getselectemployeebycreteriaoptions"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b190d",
+    "toolName": "searchSelectEmployees",
+    "path": "tools/searchselectemployees"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b190a",
+    "toolName": "getTalentReviewCycle",
+    "path": "tools/gettalentreviewcycle"
+  }
+]

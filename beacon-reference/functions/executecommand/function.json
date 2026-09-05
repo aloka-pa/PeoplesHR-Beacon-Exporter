@@ -1,0 +1,24 @@
+{
+  "id": "690dc57c931a2d61ba0b25ce",
+  "slug": "executecommand",
+  "name": "executeCommand",
+  "status": "live",
+  "createdAt": "2025-05-13T20:04:41.267Z",
+  "updatedAt": "2026-07-17T12:55:50.325Z",
+  "contentHash": "d6f27e81e3d4efa08960891a631e925706abe7783ff2c4267cbd7bcc1b3b1f94",
+  "lastExportedAt": "2026-09-05T19:41:22.205Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57c931a2d61ba0b25ce",
+    "name": "executeCommand",
+    "status": "live",
+    "code": "(async function (param) {\n\n  const EXCLUDE_KEYS = [\"mvc\", \"bs\"];\n\n  // Strip leading ../ or ./\n  const trimmedUrl = param.replace(/^(\\.\\.\\/)+|(\\.\\/)+/, \"\");\n\n  // Normalize URL by removing EXCLUDE_KEYS from query params for comparison\n  function normalizeUrl(url) {\n    const [path, query] = url.split(\"?\");\n    const params = new URLSearchParams(query || \"\");\n    EXCLUDE_KEYS.forEach(key => params.delete(key));\n    const remaining = params.toString();\n    return remaining ? `${path}?${remaining}` : path;\n  }\n\n  const normalizedInput = normalizeUrl(trimmedUrl).toLowerCase();\n\n  // Match menu by comparing normalized URLs (excluding mvc, bs)\n  const matchedMenu = BeaconBar?.user?.metaData?.menus?.find(menu =>\n    normalizeUrl(menu).toLowerCase() === normalizedInput\n  ) ?? null;\n\n\n  // If no match, use loadModuleUrl directly\n  if (!matchedMenu) {\n    top.loadModuleUrl(trimmedUrl);\n    return;\n  }\n\n  const updatedParam = await BeaconBar.executeFunction(\"updateUrlParams\")(matchedMenu);\n\n  let finalUrl;\n\n  // 🔑 Key fix: only hit the digest API when the MATCHED MENU URL actually has params.\n  // updatedParam.updateParams reflects the matched menu's own params, not the user's input.\n  const hasParams = updatedParam.updateParams !== null &&\n                     updatedParam.updateParams !== undefined &&\n                     Object.keys(updatedParam.updateParams).length > 0;\n\n  if (!hasParams) {\n\n    // No params on the matched menu URL -> skip digest entirely, just use updateUrl as-is\n    if (matchedMenu.includes(\"#\")) {\n      const [base, hashPart] = updatedParam.updateUrl.split(\"#\");\n      finalUrl = `../${base.replace(/^\\//, \"\")}${hashPart ? `#${hashPart}` : \"\"}`;\n    } else {\n      const parser = new URL(updatedParam.updateUrl, window.location.origin);\n      const cleanPath = parser.pathname.replace(/^\\//, \"\");\n      const remainingQuery = parser.searchParams.toString();\n      finalUrl = `../${cleanPath}${remainingQuery ? `?${remainingQuery}` : \"\"}`;\n    }\n\n  } else if (matchedMenu.includes(\"#\")) {\n\n    const [base, hashPart] = updatedParam.updateUrl.split(\"#\");\n    const [hashPath, hashQuery] = hashPart.split(\"?\");\n    const queryParams = new URLSearchParams(hashQuery || \"\");\n    const digestObj = await BeaconBar.executeFunction(\"getDigest\")(updatedParam.updateParams);\n    queryParams.set(\"digest\", decodeURIComponent(digestObj.digest));\n    finalUrl = `../${base.replace(/^\\//, \"\")}#${hashPath}?${queryParams.toString()}`;\n\n  } else {\n\n    const parser = new URL(updatedParam.updateUrl, window.location.origin);\n    const digestObj = await BeaconBar.executeFunction(\"getDigest\")(updatedParam.updateParams);\n    parser.searchParams.set(\"digest\", decodeURIComponent(digestObj.digest));\n    const cleanPath = parser.pathname.replace(/^\\//, \"\");\n    finalUrl = `../${cleanPath}?${parser.searchParams.toString()}`;\n\n  }\n\n  top.loadModulePageUrl(finalUrl);\n\n})",
+    "by": "34476",
+    "__v": 7
+  }
+}

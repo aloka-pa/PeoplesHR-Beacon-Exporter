@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "countryCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get country name corresponding value will be take example code \"000001\".",
+      "advanced": false,
+      "raw": {
+        "name": "countryCode",
+        "type": "string",
+        "description": "to get country name corresponding value will be take example code \"000001\".",
+        "required": true,
+        "_id": "685558b24f4896dd09f82542"
+      }
+    },
+    {
+      "name": "provinceCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get province name corresponding value will be take example code \"000001\".",
+      "advanced": false,
+      "raw": {
+        "name": "provinceCode",
+        "type": "string",
+        "description": "to get province name corresponding value will be take example code \"000001\".",
+        "required": true,
+        "_id": "685558b24f4896dd09f82543"
+      }
+    },
+    {
+      "name": "countryName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get country name for user prompt.",
+      "advanced": false,
+      "raw": {
+        "name": "countryName",
+        "type": "string",
+        "description": "to get country name for user prompt.",
+        "required": true,
+        "_id": "6855652d79e79dcd873c9cfc"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

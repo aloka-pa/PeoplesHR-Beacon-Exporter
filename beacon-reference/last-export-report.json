@@ -1,0 +1,16 @@
+{
+  "agentsDiscovered": 28,
+  "toolsDiscovered": 356,
+  "toolsExported": 0,
+  "toolsSkippedUnchanged": 356,
+  "toolsFailed": [],
+  "toolsMissing": [],
+  "toolsPruned": [],
+  "functionsDiscovered": 180,
+  "functionsExported": 179,
+  "functionsSkippedUnchanged": 1,
+  "functionsFailed": [],
+  "functionsMissing": [],
+  "functionsPruned": [],
+  "generatedAt": "2026-09-05T19:41:47.171Z"
+}

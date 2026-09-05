@@ -1,0 +1,175 @@
+{
+  "id": "695b30266b3624f62140898a",
+  "slug": "getteamattendanceapprovaldetails",
+  "name": "getTeamAttendanceApprovalDetails",
+  "description": "Before executing the getAttendanceApprovalDetails API, the following validations must run in sequence:\nEmployee check: If the query includes an employee ID first run adminInformation to get the logged-in employee ID, then validate it via getPaginatedTypeaheadList before calling the final API.\nRoster check: If a roster name is provided without an employee ID, execute rosterDetails to get the correct roster ID. Skip getPaginatedTypeaheadList in this case.\nDate check: Validate the date format using the dateFormat API.\nAll steps must succeed; skipping any will cause API failure. Final response is in tabular format with Date, Employee Name, Employee Number, Shift, InTime, OutTime, WorkHours, Overtime, Late, Early, NoPay, Status.",
+  "instructions": null,
+  "taskName": "fetching team attendance approval details",
+  "tags": [
+    "Attendance",
+    "SupervisoryOperations",
+    "TeamAttendanceApproval"
+  ],
+  "status": "unlive",
+  "signature": "getTeamAttendanceApprovalDetails",
+  "createdAt": "2026-01-05T03:29:42.923Z",
+  "updatedAt": "2026-07-17T12:54:22.404Z",
+  "assignedAgents": [],
+  "contentHash": "f35ff917ed20e87c1af114b7143c24342bf152e7c977d2c219a79f0d22ff9182",
+  "lastExportedAt": "2026-09-05T19:39:22.071Z",
+  "raw": {
+    "basic": {
+      "_id": "695b30266b3624f62140898a",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getTeamAttendanceApprovalDetails",
+      "description": "Before executing the getAttendanceApprovalDetails API, the following validations must run in sequence:\nEmployee check: If the query includes an employee ID first run adminInformation to get the logged-in employee ID, then validate it via getPaginatedTypeaheadList before calling the final API.\nRoster check: If a roster name is provided without an employee ID, execute rosterDetails to get the correct roster ID. Skip getPaginatedTypeaheadList in this case.\nDate check: Validate the date format using the dateFormat API.\nAll steps must succeed; skipping any will cause API failure. Final response is in tabular format with Date, Employee Name, Employee Number, Shift, InTime, OutTime, WorkHours, Overtime, Late, Early, NoPay, Status.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getTeamAttendanceApprovalDetails",
+        "args": [
+          {
+            "name": "fromDate",
+            "type": "string",
+            "description": "Start date for attendance approval period (format: DD/MM/YYYY)",
+            "required": true,
+            "_id": "695f36f52c9ba44772ded134"
+          },
+          {
+            "name": "toDate",
+            "type": "string",
+            "description": "End date for attendance approval period (format: DD/MM/YYYY)",
+            "required": true,
+            "_id": "695f36f52c9ba44772ded135"
+          },
+          {
+            "name": "empNumber",
+            "type": "string",
+            "description": "to get the employee id for \"getPaginatedTypeaheadList\" api. Example:-\"000006\" or \"00001\" etc...",
+            "required": false,
+            "_id": "695f36f52c9ba44772ded136"
+          },
+          {
+            "name": "rosterCode",
+            "type": "string",
+            "description": "Roster code filter. Default: \"\" (all rosters)",
+            "required": false,
+            "_id": "696bb79c8d4e88b9a7b5699d"
+          },
+          {
+            "name": "isGroupByEmployee",
+            "type": "string",
+            "description": "Group results by employee. Default: false",
+            "required": false,
+            "_id": "696bb79c8d4e88b9a7b5699e"
+          },
+          {
+            "name": "filterMode",
+            "type": "string",
+            "description": "Filter mode. Default: \"1\"",
+            "required": false,
+            "_id": "696bb79c8d4e88b9a7b5699f"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"id\": {\n      \"type\": \"string\",\n      \"description\": \"The employee ID (e.g., '000011') or roster code. If providing an employee ID, the system will fetch attendance approval records for that specific employee. If providing a roster code, it will fetch records for all employees in that roster.\"\n    },\n    \"fromDate\": {\n      \"type\": \"string\",\n      \"description\": \"Start date in DD/MM/YYYY format (e.g., '01/01/2025')\"\n    },\n    \"toDate\": {\n      \"type\": \"string\",\n      \"description\": \"End date in DD/MM/YYYY format (e.g., '31/01/2025')\"\n    },\n    \"rosterCode\": {\n      \"type\": \"string\",\n      \"description\": \"Optional roster code (e.g., '000004'). If provided, fetches approval records for all employees in the roster instead of a specific employee.\",\n      \"default\": null\n    }\n  },\n  \"required\": [\n    \"id\",\n    \"fromDate\",\n    \"toDate\"\n  ]\n}",
+        "_id": "6a5a25fef62ec5c6a120cff4"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  // Permission check\n  const hasAccess = BeaconBar.user.metaData.menus.includes(\"TNAV9/AttendanceApproval/AttendanceApplication/1?mvc=1\");\n  \n  if (!hasAccess) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  // Validate required parameters\n  if (!args.fromDate || !args.toDate) {\n    return \"Error: fromDate and toDate are required parameters.\";\n  }\n\n  try {\n    // Step 3: Initialize window.empLog if not already done\n    if (!window.empLog || !window.empLog.empNumber2 || !window.empLog.keyValue) {\n      \n      const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('TNAV9/ManualInOut/ManualInOut/0');\n      \n      let url;\n      if(updateurl.updateUrl){\n          url = updateurl.updateUrl;\n      } else {\n          url = \"TNAV9/ManualInOut/ManualInOut/0?mvc=1\";\n      }\n\n      const digestkey1 = await BeaconBar.executeFunction('getDigest')(updateurl.updateParams);\n      \n      const sl = reqOptions.sl;\n      \n      const myHeaders = new Headers();\n      myHeaders.append(\"accept\", \"*/*\");\n      myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n      myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n      myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n      const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\",\n        credentials: \"include\"\n      };\n\n      const pageUrl = `${location.origin}/${sl}/${url}&digest=${digestkey1.digest}&_=${Date.now()}`;\n      \n      const response1 = await fetch(pageUrl, requestOptions);\n      \n      if (!response1.ok) {\n        return `Error: Failed to initialize. Status: ${response1.status}`;\n      }\n      \n      const data1 = await response1.text();\n\n      // Extract patterns from the page\n      const empNumberPattern = /empNumber=([^\"&]+)/;\n      const callBackPattern = /(?:callBack=|SearchCallBack\":\")(.*?)(?:&|\")/;\n      const elgModIdPattern = /elgmodid=([^\"&]+)/;\n      const elgGrpIdPattern = /elggrpid=([^\"&]+)/;\n      const elgParamPattern = /ElgParam=([^\"&]+)/;\n      const searchTokenPattern = /searchToken=([^\"&']+)/;\n\n      const empNumberMatch = data1.match(empNumberPattern);\n      const callBackMatch = data1.match(callBackPattern);\n      const elgModIdMatch = data1.match(elgModIdPattern);\n      const elgGrpIdMatch = data1.match(elgGrpIdPattern);\n      const elgParamMatch = data1.match(elgParamPattern);\n      const searchTokenMatch = data1.match(searchTokenPattern);\n\n      const empNumber = empNumberMatch ? empNumberMatch[1] : \"\";\n      const callBack = callBackMatch ? decodeURIComponent(callBackMatch[1]) : \"\";\n      const elgModId = elgModIdMatch ? elgModIdMatch[1] : \"\";\n      const elgGrpId = elgGrpIdMatch ? elgGrpIdMatch[1] : \"\";\n      const elgParam = elgParamMatch ? elgParamMatch[1] : \"\";\n      const searchToken = searchTokenMatch ? searchTokenMatch[1] : \"\";\n\n\n      const searchUrl = `${location.origin}/${sl}/CommonComponents/Search/Search?empNumber=${empNumber}&callBack=${callBack}&searchMode=2&searchQueryMode=All&searchQueryState=ActiveOnly&isMultiple=1&breadCrumbEnable=0&isDivLoading=0&displayName=&elgmodid=${elgModId}&elggrpid=${elgGrpId}&ElgParam=${elgParam}&searchToken=${searchToken}&_=${Date.now()}`;\n      \n      const response2 = await fetch(searchUrl, requestOptions);\n      \n      const data2 = await response2.text();\n\n      const empNumberMatch2 = data2.match(/\"EmpNumber\":\"([^\"]+)\"/);\n      const keyValueMatch = data2.match(/\"KeyValue\":\"([^\"]+)\"/);\n\n      const empNumber2 = empNumberMatch2 ? empNumberMatch2[1] : \"\";\n      const keyValue = keyValueMatch ? keyValueMatch[1] : \"\";\n\n\n      if (!empNumber2 || !keyValue) {\n        return \"Error: Failed to initialize session credentials. Please try again or contact support.\";\n      }\n\n      window.empLog = {\n        empNumber2,\n        keyValue\n      };\n      \n    } else {\n    }\n\n    // Step 4: Setup headers\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"*/*\");\n    myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n    myHeaders.append(\"cache-control\", \"no-cache\");\n    myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const requestOptions = {\n      method: \"GET\",\n      headers: myHeaders,\n      redirect: \"follow\",\n      credentials: \"include\"\n    };\n\n    // Step 5: Get employee credentials\n    \n    let empNumber2;\n\n    if (args.empNumber) {\n      \n      const response1 = await fetch(\n        `${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.empNumber}&key=${window.empLog.keyValue}&_=${Date.now()}`,\n        requestOptions\n      );\n\n\n      if (!response1.ok) {\n        const errorText = await response1.text();\n        return `Error: Failed to get employee credentials. Status: ${response1.status}. Please ensure you have proper access.`;\n      }\n\n      const details = await response1.json();\n\n      // Check if the response indicates an error or invalid employee\n      if (!details.Status || (details.Message && details.Message.includes(\"not valid\"))) {\n        return `Error: Employee number \"${args.empNumber}\" is not valid. Please check the employee number and try again.`;\n      }\n\n      empNumber2 = details?.Message || args.empNumber;\n    } else {\n      // Use logged-in user's credentials\n      empNumber2 = window.empLog.empNumber2;\n    }\n\n    // Step 6: Prepare payload for GetGridDataByCriteria (matching the exact network structure)\n    \n    const rawPayload = {\n      DataFilter: {\n        FromDateText: args.fromDate,\n        ToDateText: args.toDate,\n        IsGroupByEmployee: args.isGroupByEmployee !== undefined ? args.isGroupByEmployee : false,\n        FilterMode: args.filterMode || \"1\",\n        EmpNumber: empNumber2,\n        RosterCode: args.rosterCode || \"\",\n        callBackId: args.callBackId || 3,\n        isShowShiftHoursInShiftAdjEnabled: false,\n        IsClientUoc: false\n      },\n      AdvancedDataFilter: {\n        AllInOut: args.allInOut !== undefined ? args.allInOut : true,\n        DataWithOT: args.dataWithOT !== undefined ? args.dataWithOT : false,\n        DataWithLate: args.dataWithLate !== undefined ? args.dataWithLate : false,\n        DataWithNoPay: args.dataWithNoPay !== undefined ? args.dataWithNoPay : false\n      }\n    };\n\n\n    // Step 7: Call GetGridDataByCriteria API with complete headers\n    \n    const requestOptions1 = {\n      method: \"POST\",\n      headers: {\n        \"accept\": \"*/*\",\n        \"accept-language\": \"en-US,en;q=0.9\",\n        \"cache-control\": \"no-cache\",\n        \"content-type\": \"application/json\",\n        \"origin\": location.origin,\n        \"referer\": `${location.origin}/${reqOptions.sl}/home/index`,\n        \"sec-fetch-dest\": \"empty\",\n        \"sec-fetch-mode\": \"cors\",\n        \"sec-fetch-site\": \"same-origin\",\n        \"x-requested-with\": \"XMLHttpRequest\"\n      },\n      body: JSON.stringify(rawPayload),\n      redirect: \"follow\",\n      credentials: \"include\"\n    };\n\n    const apiUrl = `${location.origin}/${reqOptions.sl}/tnav9/api/AttendanceApproval/GetGridDataByCriteria/`;\n\n    const response2 = await fetch(apiUrl, requestOptions1);\n\n    if (!response2.ok) {\n      const errorText = await response2.text();\n      return `Error: Failed to fetch attendance data. Status: ${response2.status}. Response: ${errorText}`;\n    }\n\n    const details1 = await response2.json();\n\n    // Step 8: Process attendance records\n    \n    const attendanceRecords = details1.AttendanceSummaryDetailList?.map((entry) => {\n      return {\n        Date: entry.DatInDateString?.split(\" \")[0] || \"-\",\n        Shift: entry.ShiftAbbreviation || \"OFF\",\n        InDate: entry.InDateText || \"-\",\n        InTime: entry.InTimeText || \"-\",\n        OutDate: entry.OutDateText || \"-\",\n        OutTime: entry.OutTimeText || \"-\",\n        Breaks: entry.BreakCount || 0,\n        Overtime: formatTime(entry.TotalOvertime),\n        EarlyMin: formatTime(entry.StartLate),\n        LateMin: formatTime(entry.EndLate),\n        WorkHours: formatTime(entry.WorkHours),\n        Nopay: entry.NopayDays ? entry.NopayDays.toFixed(2) : \"0.00\",\n        Leave: entry.LeaveDaysLabelString || \"\",\n        RecordStatus: entry.RecordStatus,\n        RecordStatusText: entry.RecordStatusText || \"Unknown\",\n        _original: entry\n      };\n    }) || [];\n\n\n    // Step 9: Calculate summaries\n    \n    const pendingRecords = attendanceRecords.filter(r => \n      r.RecordStatus === 0 || \n      r.RecordStatusText === \"V/R\" || \n      r.RecordStatusText === \"P/A\" ||\n      r.RecordStatusText === \"Pending\"\n    );\n    \n    const approvedRecords = attendanceRecords.filter(r => \n      r.RecordStatus === 1 || \n      r.RecordStatusText === \"Approved\"\n    );\n    \n    const rejectedRecords = attendanceRecords.filter(r => \n      r.RecordStatus === 2 || \n      r.RecordStatusText === \"Rejected\"\n    );\n\n    const summary = {\n      totalRecords: attendanceRecords.length,\n      pendingRecords: pendingRecords.length,\n      approvedRecords: approvedRecords.length,\n      rejectedRecords: rejectedRecords.length\n    };\n\n\n    // Step 10: Prepare result\n    \n    const result = {\n      period: {\n        fromDate: args.fromDate,\n        toDate: args.toDate\n      },\n      employee: {\n        empNumber: empNumber2,\n        empNumberInput: args.empNumber || \"Current User\"\n      },\n      summary: summary,\n      records: attendanceRecords,\n      _instructions: \"Show summary first. Then show records in a table. Highlight pending records that need approval.\",\n      _rawData: details1\n    };\n\n    return result;\n\n  } catch (error) {\n    return `Critical Error: ${error.message || error}`;\n  }\n\n  // Helper function\n  function formatTime(value) {\n    if (!value || value === 0) return \"00:00\";\n    const hours = Math.floor(value);\n    const minutes = Math.round((value - hours) * 60);\n    return `${String(hours).padStart(2, \"0\")}:${String(minutes).padStart(2, \"0\")}`;\n  }\n});",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "SupervisoryOperations",
+        "TeamAttendanceApproval"
+      ],
+      "taskName": "fetching team attendance approval details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2026-01-05T03:29:42.923Z",
+      "updatedAt": "2026-07-17T12:54:22.404Z",
+      "__v": 55,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getTeamAttendanceApprovalDetails",
+      "args": [
+        {
+          "name": "fromDate",
+          "type": "string",
+          "description": "Start date for attendance approval period (format: DD/MM/YYYY)",
+          "required": true,
+          "_id": "695f36f52c9ba44772ded134"
+        },
+        {
+          "name": "toDate",
+          "type": "string",
+          "description": "End date for attendance approval period (format: DD/MM/YYYY)",
+          "required": true,
+          "_id": "695f36f52c9ba44772ded135"
+        },
+        {
+          "name": "empNumber",
+          "type": "string",
+          "description": "to get the employee id for \"getPaginatedTypeaheadList\" api. Example:-\"000006\" or \"00001\" etc...",
+          "required": false,
+          "_id": "695f36f52c9ba44772ded136"
+        },
+        {
+          "name": "rosterCode",
+          "type": "string",
+          "description": "Roster code filter. Default: \"\" (all rosters)",
+          "required": false,
+          "_id": "696bb79c8d4e88b9a7b5699d"
+        },
+        {
+          "name": "isGroupByEmployee",
+          "type": "string",
+          "description": "Group results by employee. Default: false",
+          "required": false,
+          "_id": "696bb79c8d4e88b9a7b5699e"
+        },
+        {
+          "name": "filterMode",
+          "type": "string",
+          "description": "Filter mode. Default: \"1\"",
+          "required": false,
+          "_id": "696bb79c8d4e88b9a7b5699f"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"id\": {\n      \"type\": \"string\",\n      \"description\": \"The employee ID (e.g., '000011') or roster code. If providing an employee ID, the system will fetch attendance approval records for that specific employee. If providing a roster code, it will fetch records for all employees in that roster.\"\n    },\n    \"fromDate\": {\n      \"type\": \"string\",\n      \"description\": \"Start date in DD/MM/YYYY format (e.g., '01/01/2025')\"\n    },\n    \"toDate\": {\n      \"type\": \"string\",\n      \"description\": \"End date in DD/MM/YYYY format (e.g., '31/01/2025')\"\n    },\n    \"rosterCode\": {\n      \"type\": \"string\",\n      \"description\": \"Optional roster code (e.g., '000004'). If provided, fetches approval records for all employees in the roster instead of a specific employee.\",\n      \"default\": null\n    }\n  },\n  \"required\": [\n    \"id\",\n    \"fromDate\",\n    \"toDate\"\n  ]\n}",
+      "_id": "6a5a25fef62ec5c6a120cff4"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  // Permission check\n  const hasAccess = BeaconBar.user.metaData.menus.includes(\"TNAV9/AttendanceApproval/AttendanceApplication/1?mvc=1\");\n  \n  if (!hasAccess) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  // Validate required parameters\n  if (!args.fromDate || !args.toDate) {\n    return \"Error: fromDate and toDate are required parameters.\";\n  }\n\n  try {\n    // Step 3: Initialize window.empLog if not already done\n    if (!window.empLog || !window.empLog.empNumber2 || !window.empLog.keyValue) {\n      \n      const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('TNAV9/ManualInOut/ManualInOut/0');\n      \n      let url;\n      if(updateurl.updateUrl){\n          url = updateurl.updateUrl;\n      } else {\n          url = \"TNAV9/ManualInOut/ManualInOut/0?mvc=1\";\n      }\n\n      const digestkey1 = await BeaconBar.executeFunction('getDigest')(updateurl.updateParams);\n      \n      const sl = reqOptions.sl;\n      \n      const myHeaders = new Headers();\n      myHeaders.append(\"accept\", \"*/*\");\n      myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n      myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n      myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n      const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\",\n        credentials: \"include\"\n      };\n\n      const pageUrl = `${location.origin}/${sl}/${url}&digest=${digestkey1.digest}&_=${Date.now()}`;\n      \n      const response1 = await fetch(pageUrl, requestOptions);\n      \n      if (!response1.ok) {\n        return `Error: Failed to initialize. Status: ${response1.status}`;\n      }\n      \n      const data1 = await response1.text();\n\n      // Extract patterns from the page\n      const empNumberPattern = /empNumber=([^\"&]+)/;\n      const callBackPattern = /(?:callBack=|SearchCallBack\":\")(.*?)(?:&|\")/;\n      const elgModIdPattern = /elgmodid=([^\"&]+)/;\n      const elgGrpIdPattern = /elggrpid=([^\"&]+)/;\n      const elgParamPattern = /ElgParam=([^\"&]+)/;\n      const searchTokenPattern = /searchToken=([^\"&']+)/;\n\n      const empNumberMatch = data1.match(empNumberPattern);\n      const callBackMatch = data1.match(callBackPattern);\n      const elgModIdMatch = data1.match(elgModIdPattern);\n      const elgGrpIdMatch = data1.match(elgGrpIdPattern);\n      const elgParamMatch = data1.match(elgParamPattern);\n      const searchTokenMatch = data1.match(searchTokenPattern);\n\n      const empNumber = empNumberMatch ? empNumberMatch[1] : \"\";\n      const callBack = callBackMatch ? decodeURIComponent(callBackMatch[1]) : \"\";\n      const elgModId = elgModIdMatch ? elgModIdMatch[1] : \"\";\n      const elgGrpId = elgGrpIdMatch ? elgGrpIdMatch[1] : \"\";\n      const elgParam = elgParamMatch ? elgParamMatch[1] : \"\";\n      const searchToken = searchTokenMatch ? searchTokenMatch[1] : \"\";\n\n\n      const searchUrl = `${location.origin}/${sl}/CommonComponents/Search/Search?empNumber=${empNumber}&callBack=${callBack}&searchMode=2&searchQueryMode=All&searchQueryState=ActiveOnly&isMultiple=1&breadCrumbEnable=0&isDivLoading=0&displayName=&elgmodid=${elgModId}&elggrpid=${elgGrpId}&ElgParam=${elgParam}&searchToken=${searchToken}&_=${Date.now()}`;\n      \n      const response2 = await fetch(searchUrl, requestOptions);\n      \n      const data2 = await response2.text();\n\n      const empNumberMatch2 = data2.match(/\"EmpNumber\":\"([^\"]+)\"/);\n      const keyValueMatch = data2.match(/\"KeyValue\":\"([^\"]+)\"/);\n\n      const empNumber2 = empNumberMatch2 ? empNumberMatch2[1] : \"\";\n      const keyValue = keyValueMatch ? keyValueMatch[1] : \"\";\n\n\n      if (!empNumber2 || !keyValue) {\n        return \"Error: Failed to initialize session credentials. Please try again or contact support.\";\n      }\n\n      window.empLog = {\n        empNumber2,\n        keyValue\n      };\n      \n    } else {\n    }\n\n    // Step 4: Setup headers\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"*/*\");\n    myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n    myHeaders.append(\"cache-control\", \"no-cache\");\n    myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const requestOptions = {\n      method: \"GET\",\n      headers: myHeaders,\n      redirect: \"follow\",\n      credentials: \"include\"\n    };\n\n    // Step 5: Get employee credentials\n    \n    let empNumber2;\n\n    if (args.empNumber) {\n      \n      const response1 = await fetch(\n        `${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.empNumber}&key=${window.empLog.keyValue}&_=${Date.now()}`,\n        requestOptions\n      );\n\n\n      if (!response1.ok) {\n        const errorText = await response1.text();\n        return `Error: Failed to get employee credentials. Status: ${response1.status}. Please ensure you have proper access.`;\n      }\n\n      const details = await response1.json();\n\n      // Check if the response indicates an error or invalid employee\n      if (!details.Status || (details.Message && details.Message.includes(\"not valid\"))) {\n        return `Error: Employee number \"${args.empNumber}\" is not valid. Please check the employee number and try again.`;\n      }\n\n      empNumber2 = details?.Message || args.empNumber;\n    } else {\n      // Use logged-in user's credentials\n      empNumber2 = window.empLog.empNumber2;\n    }\n\n    // Step 6: Prepare payload for GetGridDataByCriteria (matching the exact network structure)\n    \n    const rawPayload = {\n      DataFilter: {\n        FromDateText: args.fromDate,\n        ToDateText: args.toDate,\n        IsGroupByEmployee: args.isGroupByEmployee !== undefined ? args.isGroupByEmployee : false,\n        FilterMode: args.filterMode || \"1\",\n        EmpNumber: empNumber2,\n        RosterCode: args.rosterCode || \"\",\n        callBackId: args.callBackId || 3,\n        isShowShiftHoursInShiftAdjEnabled: false,\n        IsClientUoc: false\n      },\n      AdvancedDataFilter: {\n        AllInOut: args.allInOut !== undefined ? args.allInOut : true,\n        DataWithOT: args.dataWithOT !== undefined ? args.dataWithOT : false,\n        DataWithLate: args.dataWithLate !== undefined ? args.dataWithLate : false,\n        DataWithNoPay: args.dataWithNoPay !== undefined ? args.dataWithNoPay : false\n      }\n    };\n\n\n    // Step 7: Call GetGridDataByCriteria API with complete headers\n    \n    const requestOptions1 = {\n      method: \"POST\",\n      headers: {\n        \"accept\": \"*/*\",\n        \"accept-language\": \"en-US,en;q=0.9\",\n        \"cache-control\": \"no-cache\",\n        \"content-type\": \"application/json\",\n        \"origin\": location.origin,\n        \"referer\": `${location.origin}/${reqOptions.sl}/home/index`,\n        \"sec-fetch-dest\": \"empty\",\n        \"sec-fetch-mode\": \"cors\",\n        \"sec-fetch-site\": \"same-origin\",\n        \"x-requested-with\": \"XMLHttpRequest\"\n      },\n      body: JSON.stringify(rawPayload),\n      redirect: \"follow\",\n      credentials: \"include\"\n    };\n\n    const apiUrl = `${location.origin}/${reqOptions.sl}/tnav9/api/AttendanceApproval/GetGridDataByCriteria/`;\n\n    const response2 = await fetch(apiUrl, requestOptions1);\n\n    if (!response2.ok) {\n      const errorText = await response2.text();\n      return `Error: Failed to fetch attendance data. Status: ${response2.status}. Response: ${errorText}`;\n    }\n\n    const details1 = await response2.json();\n\n    // Step 8: Process attendance records\n    \n    const attendanceRecords = details1.AttendanceSummaryDetailList?.map((entry) => {\n      return {\n        Date: entry.DatInDateString?.split(\" \")[0] || \"-\",\n        Shift: entry.ShiftAbbreviation || \"OFF\",\n        InDate: entry.InDateText || \"-\",\n        InTime: entry.InTimeText || \"-\",\n        OutDate: entry.OutDateText || \"-\",\n        OutTime: entry.OutTimeText || \"-\",\n        Breaks: entry.BreakCount || 0,\n        Overtime: formatTime(entry.TotalOvertime),\n        EarlyMin: formatTime(entry.StartLate),\n        LateMin: formatTime(entry.EndLate),\n        WorkHours: formatTime(entry.WorkHours),\n        Nopay: entry.NopayDays ? entry.NopayDays.toFixed(2) : \"0.00\",\n        Leave: entry.LeaveDaysLabelString || \"\",\n        RecordStatus: entry.RecordStatus,\n        RecordStatusText: entry.RecordStatusText || \"Unknown\",\n        _original: entry\n      };\n    }) || [];\n\n\n    // Step 9: Calculate summaries\n    \n    const pendingRecords = attendanceRecords.filter(r => \n      r.RecordStatus === 0 || \n      r.RecordStatusText === \"V/R\" || \n      r.RecordStatusText === \"P/A\" ||\n      r.RecordStatusText === \"Pending\"\n    );\n    \n    const approvedRecords = attendanceRecords.filter(r => \n      r.RecordStatus === 1 || \n      r.RecordStatusText === \"Approved\"\n    );\n    \n    const rejectedRecords = attendanceRecords.filter(r => \n      r.RecordStatus === 2 || \n      r.RecordStatusText === \"Rejected\"\n    );\n\n    const summary = {\n      totalRecords: attendanceRecords.length,\n      pendingRecords: pendingRecords.length,\n      approvedRecords: approvedRecords.length,\n      rejectedRecords: rejectedRecords.length\n    };\n\n\n    // Step 10: Prepare result\n    \n    const result = {\n      period: {\n        fromDate: args.fromDate,\n        toDate: args.toDate\n      },\n      employee: {\n        empNumber: empNumber2,\n        empNumberInput: args.empNumber || \"Current User\"\n      },\n      summary: summary,\n      records: attendanceRecords,\n      _instructions: \"Show summary first. Then show records in a table. Highlight pending records that need approval.\",\n      _rawData: details1\n    };\n\n    return result;\n\n  } catch (error) {\n    return `Critical Error: ${error.message || error}`;\n  }\n\n  // Helper function\n  function formatTime(value) {\n    if (!value || value === 0) return \"00:00\";\n    const hours = Math.floor(value);\n    const minutes = Math.round((value - hours) * 60);\n    return `${String(hours).padStart(2, \"0\")}:${String(minutes).padStart(2, \"0\")}`;\n  }\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

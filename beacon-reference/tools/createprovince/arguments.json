@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "provinceName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Province name to create (e.g., \"test prov\"). Trimmed before save. Must not be empty.",
+      "advanced": false,
+      "raw": {
+        "name": "provinceName",
+        "type": "string",
+        "description": "Province name to create (e.g., \"test prov\"). Trimmed before save. Must not be empty.",
+        "required": true,
+        "_id": "6952924cc990ad820910118f"
+      }
+    },
+    {
+      "name": "country",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Country to assign to the province.\nAccepts 6-digit country code or country name (\"United States\"). Matching is case-insensitive. If a non-code name is provided, the tool tries exact match, then partial match; returns suggestions if ambiguous.",
+      "advanced": false,
+      "raw": {
+        "name": "country",
+        "type": "string",
+        "description": "Country to assign to the province.\nAccepts 6-digit country code or country name (\"United States\"). Matching is case-insensitive. If a non-code name is provided, the tool tries exact match, then partial match; returns suggestions if ambiguous.",
+        "required": true,
+        "_id": "6952924cc990ad8209101190"
+      }
+    },
+    {
+      "name": "anseliCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Reference code / anseli code if the screen supports it (maps to ctl00$body$txtrefcode).\nIf not provided, sends empty.",
+      "advanced": false,
+      "raw": {
+        "name": "anseliCode",
+        "type": "string",
+        "description": "Reference code / anseli code if the screen supports it (maps to ctl00$body$txtrefcode).\nIf not provided, sends empty.",
+        "required": false,
+        "_id": "697f83f532be68838ce42f1e"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

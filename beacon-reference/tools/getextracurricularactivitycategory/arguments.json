@@ -1,0 +1,80 @@
+{
+  "arguments": [
+    {
+      "name": "categoryCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The unique code identifier category code to search (partial supported, but usually exact code works best). Example: \"000001\"",
+      "advanced": false,
+      "raw": {
+        "name": "categoryCode",
+        "type": "string",
+        "description": "The unique code identifier category code to search (partial supported, but usually exact code works best). Example: \"000001\"",
+        "required": false,
+        "_id": "6953a02a0ae74b03509a8c5d"
+      }
+    },
+    {
+      "name": "categoryName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Category name / partial name to search (partial match). Example: \"academic\"",
+      "advanced": false,
+      "raw": {
+        "name": "categoryName",
+        "type": "string",
+        "description": "Category name / partial name to search (partial match). Example: \"academic\"",
+        "required": false,
+        "_id": "6953a02a0ae74b03509a8c5e"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set to \"show all\" / \"all\" / \"yes\" (or any phrase like \"get all\", \"list\", \"existing\", \"available\") to return all categories across all pages.\n(Also triggers automatically if the user types those keywords inside categoryCode or categoryName.)",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "Set to \"show all\" / \"all\" / \"yes\" (or any phrase like \"get all\", \"list\", \"existing\", \"available\") to return all categories across all pages.\n(Also triggers automatically if the user types those keywords inside categoryCode or categoryName.)",
+        "required": false,
+        "_id": "697fa2db972f5a0a65f83248"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Initial page size to request on the first grid load (default \"10\"). After the first response, the transformer adopts the UI page size automatically.",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "Initial page size to request on the first grid load (default \"10\"). After the first response, the transformer adopts the UI page size automatically.",
+        "required": false,
+        "_id": "697fa2db972f5a0a65f83249"
+      }
+    },
+    {
+      "name": "maxPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Safety limit for how many pages the transformer will scan when collecting records (default is high). Useful to prevent very large pulls.",
+      "advanced": false,
+      "raw": {
+        "name": "maxPages",
+        "type": "string",
+        "description": "Safety limit for how many pages the transformer will scan when collecting records (default is high). Useful to prevent very large pulls.",
+        "required": false,
+        "_id": "697fa2db972f5a0a65f8324b"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

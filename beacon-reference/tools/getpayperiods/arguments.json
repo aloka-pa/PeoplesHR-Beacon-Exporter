@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    {
+      "name": "PayType",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Selected Pay Type",
+      "advanced": false,
+      "raw": {
+        "name": "PayType",
+        "type": "string",
+        "description": "Selected Pay Type",
+        "required": true,
+        "_id": "69eeb94f6dd27c2ac5c49252"
+      }
+    },
+    {
+      "name": "PayYear",
+      "type": "number",
+      "required": true,
+      "defaultValue": null,
+      "description": "Selected Pay Year",
+      "advanced": false,
+      "raw": {
+        "name": "PayYear",
+        "type": "number",
+        "description": "Selected Pay Year",
+        "required": true,
+        "_id": "69eeb94f6dd27c2ac5c49253"
+      }
+    },
+    {
+      "name": "EmpNumber",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Employee Number",
+      "advanced": false,
+      "raw": {
+        "name": "EmpNumber",
+        "type": "string",
+        "description": "Employee Number",
+        "required": false,
+        "_id": "69eeb94f6dd27c2ac5c49254"
+      }
+    },
+    {
+      "name": "PaySchId",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Pay Schedule Id",
+      "advanced": false,
+      "raw": {
+        "name": "PaySchId",
+        "type": "string",
+        "description": "Pay Schedule Id",
+        "required": false,
+        "_id": "69eeb94f6dd27c2ac5c49255"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

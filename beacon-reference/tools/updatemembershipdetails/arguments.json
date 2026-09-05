@@ -1,0 +1,29 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "ctl00_body_txtName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name of the membership.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The name of the membership."
+      }
+    },
+    {
+      "name": "ctl00_body_dpcountry",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The code corresponding to the selected membership type. if the user not update to get corresponsding data for getMembershipDetails api. and corresponding value wiil be take Example:-'000001'",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The code corresponding to the selected membership type. if the user not update to get corresponsding data for getMembershipDetails api. and corresponding value wiil be take Example:-'000001'"
+      }
+    }
+  ]
+}

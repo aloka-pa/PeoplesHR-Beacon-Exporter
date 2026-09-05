@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the ID for getCompanyDefination tool.",
+      "advanced": false,
+      "raw": {
+        "name": "id",
+        "type": "string",
+        "description": "to get the ID for getCompanyDefination tool.",
+        "required": true,
+        "_id": "680cbd67f6ef15e616449643"
+      }
+    },
+    {
+      "name": "updateName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "what you want update name to give the user prompt.",
+      "advanced": false,
+      "raw": {
+        "name": "updateName",
+        "type": "string",
+        "description": "what you want update name to give the user prompt.",
+        "required": true,
+        "_id": "680cbd67f6ef15e616449644"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

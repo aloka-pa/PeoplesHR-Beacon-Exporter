@@ -1,0 +1,125 @@
+{
+  "arguments": [
+    {
+      "name": "provinceCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Province code to search (e.g., \"000085\"). Exact match.",
+      "advanced": false,
+      "raw": {
+        "name": "provinceCode",
+        "type": "string",
+        "description": "Province code to search (e.g., \"000085\"). Exact match.",
+        "required": false,
+        "_id": "6952532d9d93d92e5df256c9"
+      }
+    },
+    {
+      "name": "provinceName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Province name to search (e.g., \"Sabarag\"). Partial match, case-insensitive.",
+      "advanced": false,
+      "raw": {
+        "name": "provinceName",
+        "type": "string",
+        "description": "Province name to search (e.g., \"Sabarag\"). Partial match, case-insensitive.",
+        "required": false,
+        "_id": "6953512efbe9c497d06ccca2"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "If set to something like \"yes\", \"true\", \"all\", \"list\", \"available\", \"existing\", etc., the transformer will return a paginated list of provinces (40 per call).",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "If set to something like \"yes\", \"true\", \"all\", \"list\", \"available\", \"existing\", etc., the transformer will return a paginated list of provinces (40 per call).",
+        "required": false,
+        "_id": "697f7eb33c27f51defa15874"
+      }
+    },
+    {
+      "name": "pageToken",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Internal paging token returned by the previous call (Option B). If provided, the transformer fetches the next page of 40 from the grid.",
+      "advanced": false,
+      "raw": {
+        "name": "pageToken",
+        "type": "string",
+        "description": "Internal paging token returned by the previous call (Option B). If provided, the transformer fetches the next page of 40 from the grid.",
+        "required": false,
+        "_id": "697f7eb33c27f51defa15875"
+      }
+    },
+    {
+      "name": "mode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "\"search\" default\n\"showAll\" for pagination listing",
+      "advanced": false,
+      "raw": {
+        "name": "mode",
+        "type": "string",
+        "description": "\"search\" default\n\"showAll\" for pagination listing",
+        "required": false,
+        "_id": "697f8ce58534fce07a4705eb"
+      }
+    },
+    {
+      "name": "page",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "used only for mode=\"showAll\"",
+      "advanced": false,
+      "raw": {
+        "name": "page",
+        "type": "string",
+        "description": "used only for mode=\"showAll\"",
+        "required": false,
+        "_id": "697f8ce58534fce07a4705ec"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "(optional, fixed internally to 40 to meet requirement)",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "(optional, fixed internally to 40 to meet requirement)",
+        "required": false,
+        "_id": "697f8ce58534fce07a4705ed"
+      }
+    },
+    {
+      "name": "matchType",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "\"partial\" default for name\n\n\"exact\" for code (and optionally name if needed)",
+      "advanced": false,
+      "raw": {
+        "name": "matchType",
+        "type": "string",
+        "description": "\"partial\" default for name\n\n\"exact\" for code (and optionally name if needed)",
+        "required": false,
+        "_id": "697f8ce58534fce07a4705ee"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

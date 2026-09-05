@@ -1,0 +1,105 @@
+{
+  "id": "690dc568931a2d61ba0b186c",
+  "slug": "updatelanguagesdetails",
+  "name": "updateLanguagesDetails",
+  "description": "in this tool generate the user update language details. Before in this api call first execute the \"getAssignLanguageDetails\" tool. If the no records are found,no further updates can be made.",
+  "instructions": null,
+  "taskName": "Fetching Language Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateLanguagesDetails",
+  "createdAt": "2025-05-26T15:11:31.210Z",
+  "updatedAt": "2025-05-26T15:11:31.210Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "e808bb7602d163f2f69c935249d16fdaf1849e0c7d582a394a243a621e63f30f",
+  "lastExportedAt": "2026-09-05T19:39:23.836Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b186c",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateLanguagesDetails",
+      "description": "in this tool generate the user update language details. Before in this api call first execute the \"getAssignLanguageDetails\" tool. If the no records are found,no further updates can be made.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateLanguagesDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to give the Unique identifier for the employee id or name.",
+            "required": true,
+            "_id": "683ff9b5821cb330fd639cae"
+          },
+          {
+            "name": "updateId",
+            "type": "string",
+            "description": "to get update id for before api resposne to user select update name corresposnding edit id will be take example 'ctl00$body$grdgrade$ctl00$ctl04$ctl01' to get edit  id for 'getAssignLanguageDetails' tool.",
+            "required": true,
+            "_id": "683ff9b5821cb330fd639caf"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"readingcheck\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\", \"off\"],\n      \"description\": \"Reading check box, either 'on' or 'off'\"\n    },\n    \"speakingcheck\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\", \"off\"],\n      \"description\": \"Speaking check box, either 'on' or 'off'\"\n    },\n    \"writingcheck\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\", \"off\"],\n      \"description\": \"Writing check box, either 'on' or 'off'\"\n    },\n    \"gradeReading\": {\n      \"type\": \"string\",\n      \"description\": \"Grade for Reading: Distinction, Fail, Pass, First Class\"\n    },\n    \"gradeWriting\": {\n      \"type\": \"string\",\n      \"description\": \"Grade for Writing: Distinction, Fail, Pass, First Class\"\n    },\n    \"gradeSpeaking\": {\n      \"type\": \"string\",\n      \"description\": \"Grade for Speaking: Distinction, Fail, Pass, First Class\"\n    },\n    \"language\": {\n      \"type\": \"string\",\n      \"description\": \"Language code (6-digit number, e.g., '000002') takes form the get assignlanguages\"\n    }\n  },\n  \"required\": [\"readingcheck\", \"speakingcheck\", \"writingcheck\" , \"language\" , \"gradeSpeaking\" ,\"gradeWriting\",\"gradeReading\" ]\n}\n",
+        "_id": "683484a3e50b37370a67c3ea"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n    if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignLanguage.aspx\")) {\n        return \"It seems you don't have access. Please check with the HR Admin\";\n    }\n\n    const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(window.language.publicKey, args.id);\n\n    const editResponse = await BeaconBar.executeFunction('module')({\n        scrollLeft: \"0\",\n        scrollTop: \"0\",\n        __EVENTTARGET: args.updateId,\n        __EVENTARGUMENT: \"\",\n        __LASTFOCUS: \"\",\n        __VIEWSTATE: window.language.viewState,\n        __VIEWSTATEGENERATOR: window.language.viewStateGen,\n        __VIEWSTATEENCRYPTED: \"\",\n        __EVENTVALIDATION: window.language.eventValidation,\n        \"ctl00$hdnDateFormat\": \"m/d/yy\",\n        \"ctl00$hdnQuickmenu\": \"1\",\n        \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n        \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n        \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n        \"ctl00$body$cboLanuage\": \"-1\",\n        \"ctl00$body$txtPublicKey\": window.language.publicKey,\n        \"ctl00$body$txtEmpNumber\": empEnc,\n        \"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n        \"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n        \"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"2\",\n        \"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n        \"ctl00_body_grdLanuages_ClientState\": \"\"\n    }, `${reqOptions.sl}/EIM/AssignLanguage.aspx`);\n\n    const parser = new DOMParser();\n    const document = parser.parseFromString(editResponse.rawData, \"text/html\");\n\n    window.language = editResponse;\n\n    const languageSelect = document.querySelector(\"#ctl00_body_cboLanuage\");\n    const readingSelect = document.querySelector(\"#ctl00_body_cboLanGradeReading\");\n    const writingSelect = document.querySelector(\"#ctl00_body_cboLanGradeWriting\");\n    const speakingSelect = document.querySelector(\"#ctl00_body_cboLanGradeSpeaking\");\n\n    const selectedLanguage = {\n        label: languageSelect.options[languageSelect.selectedIndex].textContent.trim(),\n        value: languageSelect.value\n    };\n\n    const reading = {\n        label: readingSelect.options[readingSelect.selectedIndex].textContent.trim(),\n        value: readingSelect.value\n    };\n\n    const writing = {\n        label: writingSelect.options[writingSelect.selectedIndex].textContent.trim(),\n        value: writingSelect.value\n    };\n\n    const speaking = {\n        label: speakingSelect.options[speakingSelect.selectedIndex].textContent.trim(),\n        value: speakingSelect.value\n    };\n\n    const ratingGrades = Array.from(readingSelect.options)\n        .filter(option => option.value !== \"-1\")\n        .map(option => ({\n            gradeKey: option.value,\n            gradeValue: option.textContent.trim()\n        }));\n\n    const selectedLanguageDetails = {\n        language: selectedLanguage,\n        READING: reading,\n        WRITING: writing,\n        SPEAKING: speaking\n    };\n    return { selectedLanguageDetails, ratingGrades };\n\n});\n",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Fetching Language Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-26T15:11:31.210Z",
+      "updatedAt": "2025-05-26T15:11:31.210Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateLanguagesDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to give the Unique identifier for the employee id or name.",
+          "required": true,
+          "_id": "683ff9b5821cb330fd639cae"
+        },
+        {
+          "name": "updateId",
+          "type": "string",
+          "description": "to get update id for before api resposne to user select update name corresposnding edit id will be take example 'ctl00$body$grdgrade$ctl00$ctl04$ctl01' to get edit  id for 'getAssignLanguageDetails' tool.",
+          "required": true,
+          "_id": "683ff9b5821cb330fd639caf"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"readingcheck\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\", \"off\"],\n      \"description\": \"Reading check box, either 'on' or 'off'\"\n    },\n    \"speakingcheck\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\", \"off\"],\n      \"description\": \"Speaking check box, either 'on' or 'off'\"\n    },\n    \"writingcheck\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\", \"off\"],\n      \"description\": \"Writing check box, either 'on' or 'off'\"\n    },\n    \"gradeReading\": {\n      \"type\": \"string\",\n      \"description\": \"Grade for Reading: Distinction, Fail, Pass, First Class\"\n    },\n    \"gradeWriting\": {\n      \"type\": \"string\",\n      \"description\": \"Grade for Writing: Distinction, Fail, Pass, First Class\"\n    },\n    \"gradeSpeaking\": {\n      \"type\": \"string\",\n      \"description\": \"Grade for Speaking: Distinction, Fail, Pass, First Class\"\n    },\n    \"language\": {\n      \"type\": \"string\",\n      \"description\": \"Language code (6-digit number, e.g., '000002') takes form the get assignlanguages\"\n    }\n  },\n  \"required\": [\"readingcheck\", \"speakingcheck\", \"writingcheck\" , \"language\" , \"gradeSpeaking\" ,\"gradeWriting\",\"gradeReading\" ]\n}\n",
+      "_id": "683484a3e50b37370a67c3ea"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n    if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignLanguage.aspx\")) {\n        return \"It seems you don't have access. Please check with the HR Admin\";\n    }\n\n    const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(window.language.publicKey, args.id);\n\n    const editResponse = await BeaconBar.executeFunction('module')({\n        scrollLeft: \"0\",\n        scrollTop: \"0\",\n        __EVENTTARGET: args.updateId,\n        __EVENTARGUMENT: \"\",\n        __LASTFOCUS: \"\",\n        __VIEWSTATE: window.language.viewState,\n        __VIEWSTATEGENERATOR: window.language.viewStateGen,\n        __VIEWSTATEENCRYPTED: \"\",\n        __EVENTVALIDATION: window.language.eventValidation,\n        \"ctl00$hdnDateFormat\": \"m/d/yy\",\n        \"ctl00$hdnQuickmenu\": \"1\",\n        \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n        \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n        \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n        \"ctl00$body$cboLanuage\": \"-1\",\n        \"ctl00$body$txtPublicKey\": window.language.publicKey,\n        \"ctl00$body$txtEmpNumber\": empEnc,\n        \"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n        \"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n        \"ctl00$body$grdLanuages$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"2\",\n        \"ctl00_body_grdLanuages_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n        \"ctl00_body_grdLanuages_ClientState\": \"\"\n    }, `${reqOptions.sl}/EIM/AssignLanguage.aspx`);\n\n    const parser = new DOMParser();\n    const document = parser.parseFromString(editResponse.rawData, \"text/html\");\n\n    window.language = editResponse;\n\n    const languageSelect = document.querySelector(\"#ctl00_body_cboLanuage\");\n    const readingSelect = document.querySelector(\"#ctl00_body_cboLanGradeReading\");\n    const writingSelect = document.querySelector(\"#ctl00_body_cboLanGradeWriting\");\n    const speakingSelect = document.querySelector(\"#ctl00_body_cboLanGradeSpeaking\");\n\n    const selectedLanguage = {\n        label: languageSelect.options[languageSelect.selectedIndex].textContent.trim(),\n        value: languageSelect.value\n    };\n\n    const reading = {\n        label: readingSelect.options[readingSelect.selectedIndex].textContent.trim(),\n        value: readingSelect.value\n    };\n\n    const writing = {\n        label: writingSelect.options[writingSelect.selectedIndex].textContent.trim(),\n        value: writingSelect.value\n    };\n\n    const speaking = {\n        label: speakingSelect.options[speakingSelect.selectedIndex].textContent.trim(),\n        value: speakingSelect.value\n    };\n\n    const ratingGrades = Array.from(readingSelect.options)\n        .filter(option => option.value !== \"-1\")\n        .map(option => ({\n            gradeKey: option.value,\n            gradeValue: option.textContent.trim()\n        }));\n\n    const selectedLanguageDetails = {\n        language: selectedLanguage,\n        READING: reading,\n        WRITING: writing,\n        SPEAKING: speaking\n    };\n    return { selectedLanguageDetails, ratingGrades };\n\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "690dc57a931a2d61ba0b2288",
+  "slug": "benefitapplication",
+  "name": "benefitApplication",
+  "status": "live",
+  "createdAt": "2025-05-20T11:24:01.799Z",
+  "updatedAt": "2025-05-20T11:24:01.799Z",
+  "contentHash": "d406125d9f12d8e864aa7425d3076b52f13ad71ec7169698aa133e4ba67a9262",
+  "lastExportedAt": "2026-09-05T19:41:41.373Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57a931a2d61ba0b2288",
+    "name": "benefitApplication",
+    "status": "live",
+    "code": "(async function (id) {\n  const url = await BeaconBar.executeFunction(\"updateUrlParams\")(\"Benefitv9/Application/Application/?mode=2&mvc=1\");\n\n  const digestkey1 = await BeaconBar.executeFunction('getDigest')(url.updateParams);\n  const sl = await BeaconBar.getSharedData(\"sl\");\n\n  const jsonHeaders = new Headers();\n  jsonHeaders.append(\"Accept\", \"application/json, text/javascript, */*; q=0.01\");\n  jsonHeaders.append(\"Content-Type\", \"application/json; charset=UTF-8\");\n  jsonHeaders.append(\"X-Requested-With\", \"XMLHttpRequest\");\n\n  const getHeaders = new Headers();\n  getHeaders.append(\"Accept\", \"*/*\");\n  getHeaders.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n\n  const requestOptionsGet = {\n    method: \"GET\",\n    headers: getHeaders,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/${sl}/${url.updateUrl}&digest=${digestkey1.digest}`, requestOptionsGet);\n  const data1 = await response1.text();\n  const match = data1.match(/window\\.BenefitApplicationObj\\s*=\\s*(['\"])(.*?)\\1;/s);\n\n  const jsonString = match ? match[2] : null;\n  const parsed = JSON.parse(jsonString);\n\n  const empNumber = parsed.LogEmpNumber;\n  const callBack = decodeURIComponent(parsed.CallBackMethod);\n  const searchToken = parsed.searchToken;\n\n  const digest = await BeaconBar.executeFunction('getDigest')(\n    `empNumber=${empNumber}&callBack=${callBack}&searchMode=2&searchQueryMode=all&searchQueryState=activeonly&breadCrumbEnable=0&isDivLoading=1&isShowDisplayName=0&divId=searchBenDiv2&searchToken=${searchToken}`\n  );\n\n  const searchUrl = `${location.origin}/${sl}/CommonComponents/Search/Search?empNumber=${empNumber}&callBack=${callBack}&searchMode=2&searchQueryMode=all&searchQueryState=activeonly&breadCrumbEnable=0&isDivLoading=1&isShowDisplayName=0&divId=searchBenDiv2&searchToken=${searchToken}&digest=${digest.digest}&_=${Date.now()}`;\n\n  const response2 = await fetch(searchUrl, requestOptionsGet);\n  const data2 = await response2.text();\n\n  const empNumberMatch2 = data2.match(/\"EmpNumber\":\"([^\"]+)\"/);\n  const keyValueMatch = data2.match(/\"KeyValue\":\"([^\"]+)\"/);\n\n  const empNumber2 = empNumberMatch2 ? empNumberMatch2[1] : \"\";\n  const keyValue = keyValueMatch ? keyValueMatch[1] : \"\";\n\n  window.empLog = { empNumber2, keyValue };\n\n  const raw = JSON.stringify({\n    empNumber: empNumber2,\n    criteriaValues: [\n      {\n        Id: \"202\",\n        Value: id,\n        FromDate: \"\",\n        ToDate: \"\",\n        IsAndSelected: false,\n        IsOrSelected: false\n      }\n    ],\n    key: keyValue,\n    modeId: \"2\",\n    supEmpNumber: null,\n    tblPageNo: 1,\n    tblSearchText: \"\",\n    sortColumn: \"2\",\n    sortOrder: \"asc\"\n  });\n\n  const requestOptionsPost = {\n    method: \"POST\",\n    headers: jsonHeaders,\n    body: raw,\n    redirect: \"follow\"\n  };\n\n  const response3 = await fetch(`${location.origin}/${sl}/CommonComponents/Search/GetSearchList/`, requestOptionsPost);\n  const details = await response3.json();\n\n  const empName = details?.Object?.data[0]?.Col2 || \"\";\n  const empId = details?.Object?.data[0]?.Col1 || \"\";\n  const empDateofJoin = details?.Object?.data[0]?.Col3 || \"\";\n  if (empName) {\n    const response4 = await fetch(\n      `${location.origin}/${sl}/CommonComponents/Search/GetEmpNumber/?loggedEmpNumber=${empNumber2}&empNumber=${empId}&empDisplayName=${empName}&empDateJoined=${empDateofJoin}&key=${keyValue}&_=${Date.now()}`,\n      requestOptionsGet\n    );\n\n    const details1 = await response4.json();\n    window.benefitdetails = parsed;\n\n    // const benefitTypes = parsed.BmBenefitTypes.map(x => ({\n    //   benefitTypeCode: x.BetCode,\n    //   benefitTypeName: x.BetName\n    // }));\n\n    // const applicationId = decodeURIComponent(parsed.AppId);\n    // const benefitYear = parsed.BetAppYear;\n    // const benefitApplicationDetails = {\n    //   benefitTypes,\n    //   applicationId,\n    //   benefitYear\n    // }\n\n    return {\n      empnumber: details1.Message,\n      keyvalue: parsed.KeyValue\n    }\n  } else {\n    return `Employee is Not availabel in this employee ${id}`\n  }\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

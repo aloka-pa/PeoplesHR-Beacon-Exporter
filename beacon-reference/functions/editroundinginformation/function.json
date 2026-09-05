@@ -1,0 +1,24 @@
+{
+  "id": "690dc57b931a2d61ba0b23c9",
+  "slug": "editroundinginformation",
+  "name": "editRoundingInformation",
+  "status": "live",
+  "createdAt": "2025-06-05T13:21:15.438Z",
+  "updatedAt": "2025-06-05T13:21:15.438Z",
+  "contentHash": "e23a5732ec7588749fbc66ae8c7aa4efeb91c17857f8eac96c0e51db4704bbb3",
+  "lastExportedAt": "2026-09-05T19:41:37.740Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57b931a2d61ba0b23c9",
+    "name": "editRoundingInformation",
+    "status": "live",
+    "code": "(async function(args) {\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"*/*\");\n    myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n    myHeaders.append(\"cache-control\", \"no-cache\");\n    myHeaders.append(\"content-type\", \"application/x-www-form-urlencoded; charset=UTF-8\");\n\n    const raw = new URLSearchParams({\n        \"ctl00$main$RadScriptManager\": \"ctl00$action$upPnlBtn|ctl00$action$ButtonPanel$butEdit$imgbtnSave\",\n        \"ctl00_main_RadScriptManager_HiddenField\": \"\",\n        \"ctl00$body$txtRoundingPatternName\": \"Beacons\",\n        \"ctl00$body$Rounding_pattern\": \"rbtnGeneral\",\n        \"ctl00$body$cboMethod\": \"1\",\n        \"ctl00$body$txtNumVal\": \"00:13\",\n        \"ctl00$body$tpTest$txtTime\": \"\",\n        \"ctl00$action$ButtonPanel$butNew$isControlEnabled\": \"True\",\n        \"ctl00$action$ButtonPanel$butEdit$isControlEnabled\": \"True\",\n        \"ctl00$action$ButtonPanel$butDelete$isControlEnabled\": \"True\",\n        \"ctl00$action$ButtonPanel$butSummary$isControlEnabled\": \"True\",\n        \"ctl00$hdnCulturDateFormat\": \"M/d/yyyy\",\n        \"__EVENTTARGET\": \"\",\n        \"__EVENTARGUMENT\": \"\",\n        \"__LASTFOCUS\": \"\",\n        \"__VIEWSTATE\": args.viewState,\n        \"__VIEWSTATEENCRYPTED\" : \"\",\n        \"__ASYNCPOST\":true ,\n        \"ctl00$action$ButtonPanel$butEdit$imgbtnSave\": Edit\n        })\n\nconst response = await fetch(`https://devtest-echoengineers.phrsandbox.dev/hrb5/TNA/RoundingInformation.aspx`, requestOptions)\n  const data = await  response.text();\n return data ;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

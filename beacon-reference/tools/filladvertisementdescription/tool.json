@@ -1,0 +1,85 @@
+{
+  "id": "690dc568931a2d61ba0b18c6",
+  "slug": "filladvertisementdescription",
+  "name": "fillAdvertisementDescription",
+  "description": "fillAdvertisementDescription ",
+  "instructions": null,
+  "taskName": "Filling Advertisement Description",
+  "tags": [],
+  "status": "live",
+  "signature": "fillAdvertisementDescription",
+  "createdAt": "2025-05-30T13:33:10.711Z",
+  "updatedAt": "2025-05-30T13:33:10.711Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1c12",
+      "name": "GenarateAdvertisement"
+    }
+  ],
+  "contentHash": "9161ef6b4fafe308f8765661aae31ba9f4af567a96fc3acdec2fe4c2588d6df8",
+  "lastExportedAt": "2026-09-05T19:39:23.776Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b18c6",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "fillAdvertisementDescription",
+      "description": "fillAdvertisementDescription ",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "fillAdvertisementDescription",
+        "args": [
+          {
+            "name": "description",
+            "type": "string",
+            "description": "Filling Advertisement Description limit is 2300 characters and takes as  it is with bold tags html bold tags.",
+            "required": true,
+            "_id": "6839b396c45a7af87d5f03af"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6839b396c45a7af87d5f03ae"
+      },
+      "by": "1927",
+      "fetcher": "(function(args){\n    return{\n        code:`(function(){\n            return {}\n        })`\n    }\n});\n\n\n",
+      "transformer": "(function (_data, args, reqOptions) {\n  const iframe = document.getElementById(\"ifrmPage\");\n\n  if (!iframe || !iframe.contentWindow || !iframe.contentDocument) {\n    alert(\"Iframe not accessible or not loaded.\");\n    return { success: false };\n  }\n\n  const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;\n  const richEditor = iframeDoc.querySelector('.note-editable');\n\n  if (richEditor && args.description) {\n    richEditor.innerHTML = \"\";\n\n    const rawText = args.description;\n    let i = 0;\n\n    const typeInterval = setInterval(() => {\n      if (i < rawText.length) {\n        const currentText = rawText.slice(0, i + 1);\n        const formattedText = currentText\n          .replace(/\\*\\*(.*?)\\*\\*/g, \"<b>$1</b>\")\n          .replace(/\\n/g, \"<br>\");\n\n        richEditor.innerHTML = formattedText;\n        i++;\n      } else {\n        clearInterval(typeInterval);\n\n        const inputEvent = new iframe.contentWindow.Event('input', { bubbles: true });\n        richEditor.dispatchEvent(inputEvent);\n      }\n    }, 10);\n  }\n\n  return {\n    success: true\n  };\n});\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Filling Advertisement Description",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-30T13:33:10.711Z",
+      "updatedAt": "2025-05-30T13:33:10.711Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1c12",
+          "name": "GenarateAdvertisement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "fillAdvertisementDescription",
+      "args": [
+        {
+          "name": "description",
+          "type": "string",
+          "description": "Filling Advertisement Description limit is 2300 characters and takes as  it is with bold tags html bold tags.",
+          "required": true,
+          "_id": "6839b396c45a7af87d5f03af"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6839b396c45a7af87d5f03ae"
+    },
+    "fetcher": "(function(args){\n    return{\n        code:`(function(){\n            return {}\n        })`\n    }\n});\n\n\n",
+    "transformer": "(function (_data, args, reqOptions) {\n  const iframe = document.getElementById(\"ifrmPage\");\n\n  if (!iframe || !iframe.contentWindow || !iframe.contentDocument) {\n    alert(\"Iframe not accessible or not loaded.\");\n    return { success: false };\n  }\n\n  const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;\n  const richEditor = iframeDoc.querySelector('.note-editable');\n\n  if (richEditor && args.description) {\n    richEditor.innerHTML = \"\";\n\n    const rawText = args.description;\n    let i = 0;\n\n    const typeInterval = setInterval(() => {\n      if (i < rawText.length) {\n        const currentText = rawText.slice(0, i + 1);\n        const formattedText = currentText\n          .replace(/\\*\\*(.*?)\\*\\*/g, \"<b>$1</b>\")\n          .replace(/\\n/g, \"<br>\");\n\n        richEditor.innerHTML = formattedText;\n        i++;\n      } else {\n        clearInterval(typeInterval);\n\n        const inputEvent = new iframe.contentWindow.Event('input', { bubbles: true });\n        richEditor.dispatchEvent(inputEvent);\n      }\n    }, 10);\n  }\n\n  return {\n    success: true\n  };\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "id": "690dc571931a2d61ba0b1c16",
+  "slug": "feedbackanddevelopment",
+  "name": "FeedbackAndDevelopment",
+  "description": "FeedbackAndDevelopment",
+  "exportedAt": "2026-09-05T19:41:12.261Z",
+  "raw": {
+    "_id": "690dc571931a2d61ba0b1c16",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "FeedbackAndDevelopment",
+    "description": "FeedbackAndDevelopment",
+    "by": "1927",
+    "prompt": "**Objective:**\n   * Retrieve or capture the data required for the description.\n   * Process and improve the data: Improve grammar, correct spelling mistakes, rephrase for clarity, and elaborate on all points.\n   * Display the **formatted description content** (unfilled template) to the user before making any changes or updates.\n\n**User Confirmation Flow:**\n   * After showing the formatted but unfilled description, wait for the user's response.\n   * Prompt the user **only once** with the question:\n     **\"Shall I fill this description, or would you like me to refine the content further?\"**\n\n**Response Handling:**\n   * **If user consents** (replies with: \"fill\", \"yes\", \"proceed\", \"go ahead\", or similar):\n     - Call **\"FeedbackAndDevelopmentPlanFilling\"** immediately with the refined data.\n   \n   * **If user says \"refine\"** (replies with \"refine\", \"rephrase\", \"rework\" or similar without specific instructions):\n     - Apply preset refinements to improve: grammar, tone, detail level, clarity, and overall polish\n     - Show the refined version\n     - Ask again: **\"Shall I fill this description, or would you like me to refine the content further?\"**\n   \n   * **If user provides specific refinement instructions** (e.g., \"make it more formal\", \"add more detail to section X\", \"shorten this part\"):\n     - Apply the specific refinements requested by the user\n     - Show the refined version\n     - Ask again: **\"Shall I fill this description, or would you like me to refine the content further?\"**\n   \n   * **Only if response is ambiguous**: Ask for clarification between fill or refine\n\n**Behavioral Rules:**\n   * Do **not** generate, modify, or auto-complete the description before receiving explicit confirmation to fill.\n   * Do **not** ask multiple questions at once during the initial confirmation.\n   * Do **not** attempt to infer consent from silence or unrelated replies.\n   * When refining, **always show** the updated content before asking for confirmation again.\n   * Ensure that once the user consents to fill, the system clearly shows what data was filled afterward for transparency.\n   * When a field is left blank, always leave it blank — never insert placeholder text, symbols, or filler content, unless user explicitly asks for that comment to be filled.\n\n\n**Summary of Flow:**\n   * Step 1: Get data → Format and improve the content\n   * Step 2: Show formatted but unfilled description\n   * Step 3: Ask: **\"Shall I fill this description, or would you like me to refine the content further?\"**\n   * Step 4a: If user says \"refine\" (generic) → Apply preset refinements (grammar, tone, detail, clarity) → Show updated version → Return to Step 3\n   * Step 4b: If user gives specific instructions → Apply those specific refinements → Show updated version → Return to Step 3\n   * Step 4c: If user consents → Call **\"FeedbackAndDevelopmentPlanFilling\"** → Step 5\n   * Step 5: Display the filled result",
+    "notes": [],
+    "llmConfig": [],
+    "status": "live",
+    "toolIds": [
+      "690dc569931a2d61ba0b1915"
+    ],
+    "scenarioIds": [],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "callKnowledgeBase",
+        "args": [
+          {
+            "name": "query",
+            "type": "string",
+            "description": "The query to be executed by the agent",
+            "required": true,
+            "_id": "6895bf67b0783c97508e5936"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n       \"type\":  \"object\",\n       \"properties\": {},\n       \"required\": []\n       }",
+        "_id": "690464e2aed477ea2025166a"
+      },
+      "target": {
+        "entityValue": "",
+        "shardKey1": "",
+        "shardKey2": "",
+        "shardKey3": ""
+      }
+    },
+    "vis": false,
+    "createdAt": "2025-05-30T09:22:22.408Z",
+    "updatedAt": "2025-05-30T09:22:22.408Z",
+    "__v": 0
+  }
+}

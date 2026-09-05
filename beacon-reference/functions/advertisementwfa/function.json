@@ -1,0 +1,24 @@
+{
+  "id": "690dc579931a2d61ba0b2188",
+  "slug": "advertisementwfa",
+  "name": "advertisementWFA",
+  "status": "live",
+  "createdAt": "2025-06-25T16:11:45.261Z",
+  "updatedAt": "2025-06-25T16:11:45.261Z",
+  "contentHash": "6e1ba13da0c6760bcb794a8bd14e7ac066946150fd068823d08bea4dec0ec170",
+  "lastExportedAt": "2026-09-05T19:41:31.696Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc579931a2d61ba0b2188",
+    "name": "advertisementWFA",
+    "status": "live",
+    "code": "BeaconBar.openChatV2({\n   agentName: \"Genarate Advertisement\",\n   message: `Generate Advertisement Description for ${ document.querySelector('input[name=\"rec-e-AdT\"]').value || \"\"}` \n})\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

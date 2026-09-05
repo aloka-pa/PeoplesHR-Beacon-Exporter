@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    {
+      "name": "propertyName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name for the new qualification property (e.g., \"Completed date - 2023 Dec\", \"Grade Level\")",
+      "advanced": false,
+      "raw": {
+        "name": "propertyName",
+        "type": "string",
+        "description": "The name for the new qualification property (e.g., \"Completed date - 2023 Dec\", \"Grade Level\")",
+        "required": true,
+        "_id": "6954c8b90ab338868fafa901"
+      }
+    },
+    {
+      "name": "qualificationCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The qualification code (6-digit, e.g., \"000009\") or qualification name (e.g., \"MSc in Data Science\") to associate with this property",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationCode",
+        "type": "string",
+        "description": "The qualification code (6-digit, e.g., \"000009\") or qualification name (e.g., \"MSc in Data Science\") to associate with this property",
+        "required": false,
+        "_id": "6954c8b90ab338868fafa902"
+      }
+    },
+    {
+      "name": "qualificationName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The qualification name to associate with this property (e.g., \"G C E Ordinary Level Examination 2019\")",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationName",
+        "type": "string",
+        "description": "The qualification name to associate with this property (e.g., \"G C E Ordinary Level Examination 2019\")",
+        "required": false,
+        "_id": "6954c8b90ab338868fafa903"
+      }
+    },
+    {
+      "name": "dataType",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The data type for this property. Must be one of: \"String\", \"Numeric\", \"Boolean\", \"Date\"",
+      "advanced": false,
+      "raw": {
+        "name": "dataType",
+        "type": "string",
+        "description": "The data type for this property. Must be one of: \"String\", \"Numeric\", \"Boolean\", \"Date\"",
+        "required": true,
+        "_id": "6954c8b90ab338868fafa904"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

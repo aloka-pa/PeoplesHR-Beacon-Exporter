@@ -1,0 +1,24 @@
+{
+  "id": "690dc588931a2d61ba0b2fc4",
+  "slug": "searchemployee",
+  "name": "searchEmployee",
+  "status": "live",
+  "createdAt": null,
+  "updatedAt": null,
+  "contentHash": "4b9315db3d0670c93c3763519feb5213e9241712a0e3fcc304b20b989b5c6f6a",
+  "lastExportedAt": "2026-09-05T19:39:25.314Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc588931a2d61ba0b2fc4",
+    "name": "searchEmployee",
+    "status": "live",
+    "code": "(async function () {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n  const eligibility = await BeaconBar.executeFunction(\"eligibilityGroup\")();\n  BeaconBar.setSharedData(\"eligibility\", eligibility);\n  const digest = await BeaconBar.executeFunction(\"getDigest\")(eligibility);\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n\n  const url = `${reqOptions}Talent/SearchDialog.aspx?${eligibility}&digest=${digest.digest}`;\n\n  const response = await fetch(url, requestOptions);\n  const data = await response.text();\n  function extractViewState(html) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(html, \"text/html\");\n\n    const SupervisorEmpNumber = doc.querySelector(\"#body_hdnSupervisorEmpNumber\")?.value || \"\";\n\n    const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n    const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const comapanydetails = doc.querySelector(\"#body_hdnIsCompanyDetail\")?.value || \"\";\n    const eventarguement = doc.querySelector(\"#__EVENTARGUMENT\")?.value || \"\";\n    const employeeSearch = doc.querySelector(\"label[for='TalentEmployeeSearch_ctl05_ctl07']\").innerText;\n    const talentemployee = doc.querySelector(\"#TalentEmployeeSearch_ctl05_ctl07\")?.value || \"\";\n    const searchCreteria = doc.querySelector('#TalentEmployeeSearch_ctl05_ctl19')?.value || \"\" ;\n\n    return {\n      viewState, viewStateGenerator, eventValidation, SupervisorEmpNumber, comapanydetails, eventarguement, employeeSearch\n      , talentemployee , searchCreteria\n    }\n  }\n function extractDocumentOptions(html) {\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html, \"text/html\");\n\n  const select = doc.querySelector('select[name=\"TalentEmployeeSearch$ctl05$ctl21\"]');\n  if (!select) return [];\n\n  const options = Array.from(select.options).map(opt => ({\n    value: opt.value,\n    label: opt.text.trim()\n  }));\n\n  return options;\n}\n const options = extractDocumentOptions(data);\n BeaconBar.setSharedData(\"options\", options);\n\n  const extracteddata = extractViewState(data);\n  BeaconBar.setSharedData(\"creteria\",extracteddata )\n  return extracteddata;\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

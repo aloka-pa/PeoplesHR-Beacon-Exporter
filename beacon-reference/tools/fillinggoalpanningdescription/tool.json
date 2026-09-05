@@ -1,0 +1,123 @@
+{
+  "id": "690dc56a931a2d61ba0b1a0e",
+  "slug": "fillinggoalpanningdescription",
+  "name": "fillingGoalPanningDescription",
+  "description": "fillingGoalPanningDescription , every goal need to generate some  description and send as the goal description and text  generate all descriptions ",
+  "instructions": null,
+  "taskName": "Filling Goal Panning Description",
+  "tags": [
+    "Goal Planning"
+  ],
+  "status": "unlive",
+  "signature": "fillingGoalPanningDescription",
+  "createdAt": "2025-06-12T10:09:42.034Z",
+  "updatedAt": "2026-07-17T12:50:56.361Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c58",
+      "name": "goalPlaning"
+    }
+  ],
+  "contentHash": "bd651d522d31e4321dfafadbeaaaa61251ebdace42d0d4d90f10be5e0d81db91",
+  "lastExportedAt": "2026-09-05T19:39:22.210Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56a931a2d61ba0b1a0e",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "fillingGoalPanningDescription",
+      "description": "fillingGoalPanningDescription , every goal need to generate some  description and send as the goal description and text  generate all descriptions ",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "fillingGoalPanningDescription",
+        "args": [
+          {
+            "name": "GoalPlaningDescriptions",
+            "type": "string",
+            "description": "GoalPlaningDescriptions  are send as  separated by Semicolons  ; And no need the description in no need 1 serial numbers  minimum characters 400 characters maximum 2000characters and just onlytakes the  categoryof the key value is the description",
+            "required": true,
+            "_id": "684aa766480bb76c50bc0122"
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "description": "title , this is 4 words title and best words take by ai generated title",
+            "required": true,
+            "_id": "68526f0b27141f694a366f0c"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a25306c2e732b5048effa"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(function (data, args, reqOptions) {\n\n  function parseGoalPlaningDescriptions(rawText) {\n    const descriptionMap = {};\n    if (!rawText) {\n      return descriptionMap;\n    }\n\n    rawText.split(\";\").forEach((entry) => {\n      const [title, ...descParts] = entry.split(\":\");\n      if (title && descParts.length > 0) {\n        const key = title.trim().toLowerCase();\n        const value = descParts.join(\":\").trim();\n        if (key && value) {\n          descriptionMap[key] = value;\n        }\n      }\n    });\n\n    return descriptionMap;\n  }\n\n  const rawGoalPlaningDescriptions = args.GoalPlaningDescriptions || \"\";\n  const goalTitle = args.title || \"\";\n  const descriptionMap = parseGoalPlaningDescriptions(rawGoalPlaningDescriptions);\n\n  if (Object.keys(descriptionMap).length === 0) {\n    return \"No valid descriptions found to process.\";\n  }\n\n  const iframe = document.getElementById('ifrmPage');\n  if (!iframe || !iframe.contentDocument || !iframe.contentWindow) {\n    return \"iframe or its content not available.\";\n  }\n\n  const iframeDoc = iframe.contentDocument;\n  const iframeCKEDITOR = iframe.contentWindow.CKEDITOR;\n  if (!iframeCKEDITOR) {\n    return \"CKEditor not found inside iframe.\";\n  }\n\n  const textareas = iframeDoc.querySelectorAll(\"textarea[id*='txtTitle_']:not(.label-Hide):not(.label-Hide *)\");\n  let filled = false;\n\n  textareas.forEach((txtTitleElement) => {\n    const panel = txtTitleElement.closest('.panel') || txtTitleElement.closest('[class*=\"panel\"]');\n    if (!panel) return;\n\n    const groupHeader = panel.querySelector('.panel-heading .normal.HeaderJs') ||\n                        panel.querySelector('.panel-heading') ||\n                        panel.querySelector('.HeaderJs');\n    if (!groupHeader) return;\n\n    const groupName = groupHeader.textContent.trim();\n    const groupKey = groupName.toLowerCase();\n\n    if (descriptionMap[groupKey]) {\n      // Fill the title\n      txtTitleElement.value = goalTitle;\n\n      const koCtx = iframe.contentWindow.ko.contextFor(txtTitleElement);\n      if (koCtx?.$data?.GOAL_TITLE && typeof koCtx.$data.GOAL_TITLE === \"function\") {\n        koCtx.$data.GOAL_TITLE(goalTitle);\n      }\n\n      // Fill the description in CKEditor\n      for (const instanceName in iframeCKEDITOR.instances) {\n        const editorInstance = iframeCKEDITOR.instances[instanceName];\n        editorInstance.setData(descriptionMap[groupKey]);\n      }\n\n      filled = true;\n    }\n  });\n\n  setTimeout(() => {\n    BeaconBar.closeChat();\n  }, 12000);\n\n  setTimeout(() => {\n    BeaconBar.showSnackbar(\"If you want to add a goal, please click 'Generate Goal Planning Description' again.\");\n  }, 14000);\n\n  if (filled) {\n    return {\n      message: \"Generated based on the description. Now show actions and measurements suggestions — each description needs a goal title. the chat is collapsed in 12 secs if you want again do that click generate goal Desription show in strong text \"\n    };\n  } else {\n    alert(\"Please click 'Add Goal' first before proceeding.\");\n    return \"No matching goal section found to fill. Prompted user to add goal.\";\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "Goal Planning"
+      ],
+      "taskName": "Filling Goal Panning Description",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-06-12T10:09:42.034Z",
+      "updatedAt": "2026-07-17T12:50:56.361Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c58",
+          "name": "goalPlaning"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "fillingGoalPanningDescription",
+      "args": [
+        {
+          "name": "GoalPlaningDescriptions",
+          "type": "string",
+          "description": "GoalPlaningDescriptions  are send as  separated by Semicolons  ; And no need the description in no need 1 serial numbers  minimum characters 400 characters maximum 2000characters and just onlytakes the  categoryof the key value is the description",
+          "required": true,
+          "_id": "684aa766480bb76c50bc0122"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "title , this is 4 words title and best words take by ai generated title",
+          "required": true,
+          "_id": "68526f0b27141f694a366f0c"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a25306c2e732b5048effa"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(function (data, args, reqOptions) {\n\n  function parseGoalPlaningDescriptions(rawText) {\n    const descriptionMap = {};\n    if (!rawText) {\n      return descriptionMap;\n    }\n\n    rawText.split(\";\").forEach((entry) => {\n      const [title, ...descParts] = entry.split(\":\");\n      if (title && descParts.length > 0) {\n        const key = title.trim().toLowerCase();\n        const value = descParts.join(\":\").trim();\n        if (key && value) {\n          descriptionMap[key] = value;\n        }\n      }\n    });\n\n    return descriptionMap;\n  }\n\n  const rawGoalPlaningDescriptions = args.GoalPlaningDescriptions || \"\";\n  const goalTitle = args.title || \"\";\n  const descriptionMap = parseGoalPlaningDescriptions(rawGoalPlaningDescriptions);\n\n  if (Object.keys(descriptionMap).length === 0) {\n    return \"No valid descriptions found to process.\";\n  }\n\n  const iframe = document.getElementById('ifrmPage');\n  if (!iframe || !iframe.contentDocument || !iframe.contentWindow) {\n    return \"iframe or its content not available.\";\n  }\n\n  const iframeDoc = iframe.contentDocument;\n  const iframeCKEDITOR = iframe.contentWindow.CKEDITOR;\n  if (!iframeCKEDITOR) {\n    return \"CKEditor not found inside iframe.\";\n  }\n\n  const textareas = iframeDoc.querySelectorAll(\"textarea[id*='txtTitle_']:not(.label-Hide):not(.label-Hide *)\");\n  let filled = false;\n\n  textareas.forEach((txtTitleElement) => {\n    const panel = txtTitleElement.closest('.panel') || txtTitleElement.closest('[class*=\"panel\"]');\n    if (!panel) return;\n\n    const groupHeader = panel.querySelector('.panel-heading .normal.HeaderJs') ||\n                        panel.querySelector('.panel-heading') ||\n                        panel.querySelector('.HeaderJs');\n    if (!groupHeader) return;\n\n    const groupName = groupHeader.textContent.trim();\n    const groupKey = groupName.toLowerCase();\n\n    if (descriptionMap[groupKey]) {\n      // Fill the title\n      txtTitleElement.value = goalTitle;\n\n      const koCtx = iframe.contentWindow.ko.contextFor(txtTitleElement);\n      if (koCtx?.$data?.GOAL_TITLE && typeof koCtx.$data.GOAL_TITLE === \"function\") {\n        koCtx.$data.GOAL_TITLE(goalTitle);\n      }\n\n      // Fill the description in CKEditor\n      for (const instanceName in iframeCKEDITOR.instances) {\n        const editorInstance = iframeCKEDITOR.instances[instanceName];\n        editorInstance.setData(descriptionMap[groupKey]);\n      }\n\n      filled = true;\n    }\n  });\n\n  setTimeout(() => {\n    BeaconBar.closeChat();\n  }, 12000);\n\n  setTimeout(() => {\n    BeaconBar.showSnackbar(\"If you want to add a goal, please click 'Generate Goal Planning Description' again.\");\n  }, 14000);\n\n  if (filled) {\n    return {\n      message: \"Generated based on the description. Now show actions and measurements suggestions — each description needs a goal title. the chat is collapsed in 12 secs if you want again do that click generate goal Desription show in strong text \"\n    };\n  } else {\n    alert(\"Please click 'Add Goal' first before proceeding.\");\n    return \"No matching goal section found to fill. Prompted user to add goal.\";\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

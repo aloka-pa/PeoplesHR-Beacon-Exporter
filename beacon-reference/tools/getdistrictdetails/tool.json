@@ -1,0 +1,119 @@
+{
+  "id": "690dc56a931a2d61ba0b1a36",
+  "slug": "getdistrictdetails",
+  "name": "getDistrictDetails",
+  "description": "in this tool generate the district name and value. and you get the district details get for country name corresponding value will be take and another get for province name corresponding value will be take. Before calling in this api. first execute for \"getProvinceCodeDetails\" tool to get the Province code.",
+  "instructions": null,
+  "taskName": "Fetching The District Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getDistrictDetails",
+  "createdAt": "2025-06-20T12:48:50.751Z",
+  "updatedAt": "2025-06-20T12:48:50.751Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "e03cbeb2704aedab8d1c6b84910234693fab0729e0213d010cf9b7ac23e07e87",
+  "lastExportedAt": "2026-09-05T19:39:23.548Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56a931a2d61ba0b1a36",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getDistrictDetails",
+      "description": "in this tool generate the district name and value. and you get the district details get for country name corresponding value will be take and another get for province name corresponding value will be take. Before calling in this api. first execute for \"getProvinceCodeDetails\" tool to get the Province code.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getDistrictDetails",
+        "args": [
+          {
+            "name": "countryCode",
+            "type": "string",
+            "description": "to get country name corresponding value will be take example code \"000001\".",
+            "required": true,
+            "_id": "685558b24f4896dd09f82542"
+          },
+          {
+            "name": "provinceCode",
+            "type": "string",
+            "description": "to get province name corresponding value will be take example code \"000001\".",
+            "required": true,
+            "_id": "685558b24f4896dd09f82543"
+          },
+          {
+            "name": "countryName",
+            "type": "string",
+            "description": "to get country name for user prompt.",
+            "required": true,
+            "_id": "6855652d79e79dcd873c9cfc"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "685558b24f4896dd09f82541"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n    if (!BeaconBar.user.metaData.menus.includes(\"EIM/Location.aspx\")) {\n        return \"It seems you don't have access. Please check with the HR Admin\";\n    }\n    const sl = await BeaconBar.getSharedData(\"sl\");\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n    myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n    const formdata = new FormData();\n    formdata.append(\"scrollLeft\", \"0\");\n    formdata.append(\"scrollTop\", \"0\");\n    formdata.append(\"__EVENTTARGET\", \"ctl00$body$ddlProvince\");\n    formdata.append(\"__EVENTARGUMENT\", \"\");\n    formdata.append(\"__LASTFOCUS\", \"\");\n    formdata.append(\"__VIEWSTATE\", window.viewState.viewState);\n    formdata.append(\"__VIEWSTATEGENERATOR\", window.viewState.viewStateGen);\n    formdata.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    formdata.append(\"__EVENTVALIDATION\", window.viewState.eventValidation);\n    formdata.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    formdata.append(\"ctl00$body$hdnIsHead\", \"\");\n    formdata.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n    formdata.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n    formdata.append(\"ctl00$body$txtName\", args.countryName);\n    formdata.append(\"ctl00$body$txtAbbreviation\", \"\");\n    formdata.append(\"ctl00$body$txttp\", \"\");\n    formdata.append(\"ctl00$body$txtFax\", \"\");\n    formdata.append(\"ctl00$body$txtemail\", \"\");\n    formdata.append(\"ctl00$body$txturl\", \"\");\n    formdata.append(\"ctl00$body$txtaddress\", \"\");\n    formdata.append(\"ctl00$body$ddlCountry\", args.countryCode);\n    formdata.append(\"ctl00$body$ddlProvince\", args.provinceCode);\n    formdata.append(\"ctl00$body$cboTimeZone\", \"\");\n    formdata.append(\"ctl00$body$txtHeadName\", \"\");\n    formdata.append(\"ctl00$body$txtHTitle\", \"\");\n    formdata.append(\"ctl00$body$txtAdminName\", \"\");\n    formdata.append(\"ctl00$body$filMyFile\", \"file\");\n    formdata.append(\"ctl00$body$hdnDefCountry\", \"-1\");\n\n    const requestOptions = {\n        method: \"POST\",\n        headers: myHeaders,\n        body: formdata,\n        redirect: \"follow\"\n    };\n\n    const response = await fetch(`${location.origin}/${sl}/EIM/Location.aspx`, requestOptions)\n    const html = await response.text();\n\n    const districtDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html);\n    window.viewState = districtDetails;\n\n    const parser = new DOMParser();\n    const document = parser.parseFromString(html, 'text/html');\n\n    function extractOptions(selectId) {\n        const select = document.getElementById(selectId);\n        if (!select) return [];\n        return Array.from(select.options).map(option => ({\n            value: option.value,\n            label: option.text.trim()\n        }));\n    }\n\n    const district = extractOptions(\"ctl00_body_ddlDistrict\");\n    return district;\n})",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Fetching The District Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-20T12:48:50.751Z",
+      "updatedAt": "2025-06-20T12:48:50.751Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getDistrictDetails",
+      "args": [
+        {
+          "name": "countryCode",
+          "type": "string",
+          "description": "to get country name corresponding value will be take example code \"000001\".",
+          "required": true,
+          "_id": "685558b24f4896dd09f82542"
+        },
+        {
+          "name": "provinceCode",
+          "type": "string",
+          "description": "to get province name corresponding value will be take example code \"000001\".",
+          "required": true,
+          "_id": "685558b24f4896dd09f82543"
+        },
+        {
+          "name": "countryName",
+          "type": "string",
+          "description": "to get country name for user prompt.",
+          "required": true,
+          "_id": "6855652d79e79dcd873c9cfc"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "685558b24f4896dd09f82541"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n    if (!BeaconBar.user.metaData.menus.includes(\"EIM/Location.aspx\")) {\n        return \"It seems you don't have access. Please check with the HR Admin\";\n    }\n    const sl = await BeaconBar.getSharedData(\"sl\");\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n    myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n    const formdata = new FormData();\n    formdata.append(\"scrollLeft\", \"0\");\n    formdata.append(\"scrollTop\", \"0\");\n    formdata.append(\"__EVENTTARGET\", \"ctl00$body$ddlProvince\");\n    formdata.append(\"__EVENTARGUMENT\", \"\");\n    formdata.append(\"__LASTFOCUS\", \"\");\n    formdata.append(\"__VIEWSTATE\", window.viewState.viewState);\n    formdata.append(\"__VIEWSTATEGENERATOR\", window.viewState.viewStateGen);\n    formdata.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    formdata.append(\"__EVENTVALIDATION\", window.viewState.eventValidation);\n    formdata.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    formdata.append(\"ctl00$body$hdnIsHead\", \"\");\n    formdata.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n    formdata.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n    formdata.append(\"ctl00$body$txtName\", args.countryName);\n    formdata.append(\"ctl00$body$txtAbbreviation\", \"\");\n    formdata.append(\"ctl00$body$txttp\", \"\");\n    formdata.append(\"ctl00$body$txtFax\", \"\");\n    formdata.append(\"ctl00$body$txtemail\", \"\");\n    formdata.append(\"ctl00$body$txturl\", \"\");\n    formdata.append(\"ctl00$body$txtaddress\", \"\");\n    formdata.append(\"ctl00$body$ddlCountry\", args.countryCode);\n    formdata.append(\"ctl00$body$ddlProvince\", args.provinceCode);\n    formdata.append(\"ctl00$body$cboTimeZone\", \"\");\n    formdata.append(\"ctl00$body$txtHeadName\", \"\");\n    formdata.append(\"ctl00$body$txtHTitle\", \"\");\n    formdata.append(\"ctl00$body$txtAdminName\", \"\");\n    formdata.append(\"ctl00$body$filMyFile\", \"file\");\n    formdata.append(\"ctl00$body$hdnDefCountry\", \"-1\");\n\n    const requestOptions = {\n        method: \"POST\",\n        headers: myHeaders,\n        body: formdata,\n        redirect: \"follow\"\n    };\n\n    const response = await fetch(`${location.origin}/${sl}/EIM/Location.aspx`, requestOptions)\n    const html = await response.text();\n\n    const districtDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html);\n    window.viewState = districtDetails;\n\n    const parser = new DOMParser();\n    const document = parser.parseFromString(html, 'text/html');\n\n    function extractOptions(selectId) {\n        const select = document.getElementById(selectId);\n        if (!select) return [];\n        return Array.from(select.options).map(option => ({\n            value: option.value,\n            label: option.text.trim()\n        }));\n    }\n\n    const district = extractOptions(\"ctl00_body_ddlDistrict\");\n    return district;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

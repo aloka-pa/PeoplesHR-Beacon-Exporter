@@ -1,0 +1,24 @@
+{
+  "id": "690dc580931a2d61ba0b2753",
+  "slug": "getbudgetdata",
+  "name": "getBudgetData",
+  "status": "live",
+  "createdAt": "2025-05-15T08:11:55.550Z",
+  "updatedAt": "2026-07-17T12:55:52.211Z",
+  "contentHash": "dd0947430fa2a201b1b980a717327a1e63579959e2ebe2058433ea942539e9c5",
+  "lastExportedAt": "2026-09-05T19:41:21.637Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc580931a2d61ba0b2753",
+    "name": "getBudgetData",
+    "status": "live",
+    "code": "(async function getBudgetData(wfmid) {\n    try {\n        const response = await fetch(`https://${location.host}/hr/RecruitmentV9/RecruitmentBudget/GetBudgetData`, {\n            method: 'POST',\n            headers: {\n                'Content-Type': 'application/x-www-form-urlencoded',\n            },\n            body: `wfMainId=${wfmid}`,\n        });\n        if (!response.ok) {\n            throw new Error(`HTTP error! Status: ${response.status}`);\n        }\n        const data = await response.json();\n        return data;\n    } catch (error) {\n    }\n})",
+    "by": "34476",
+    "__v": 1
+  }
+}

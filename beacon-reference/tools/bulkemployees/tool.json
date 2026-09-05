@@ -1,0 +1,91 @@
+{
+  "id": "690dc569931a2d61ba0b1961",
+  "slug": "bulkemployees",
+  "name": "bulkEmployees",
+  "description": "in this tool generate the all employees list.before execute in this first execute for \"getReportingHierarchyDetails\" then after execute in this tool.",
+  "instructions": null,
+  "taskName": "Fetching The All Employess",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "bulkEmployees",
+  "createdAt": "2025-06-04T10:34:07.149Z",
+  "updatedAt": "2025-06-04T10:34:07.149Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "fa7744286c363ffd52c245274bad917977e697345991a8f8534abedc263f774a",
+  "lastExportedAt": "2026-09-05T19:39:23.684Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b1961",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "bulkEmployees",
+      "description": "in this tool generate the all employees list.before execute in this first execute for \"getReportingHierarchyDetails\" then after execute in this tool.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "bulkEmployees",
+        "args": [
+          {
+            "name": "type",
+            "type": "string",
+            "description": "To determine the type of subordinates, there are two options: \"Indirect Subordinates\" and \"Direct Subordinates\".",
+            "required": true,
+            "_id": "684021e9a1ee05e4fa8e854d"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6840211f38647d4b7e68ccad"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Reportsto.aspx?IsShowButtons=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  let url;\n  let digest;\n\n  if (args.type === \"Indirect Subordinates\") {\n    digest = await BeaconBar.executeFunction(\"getDigest\")(\"sid=0&sln=multiple&mode=basic&sm=activeonly&table=false&iv=getSearchResultMultipleIndirect&CloseMethod=getSearchResultMultipleIndirect()\");\n    url = `${reqOptions.sl}/EIM/EmployeeSearch.aspx?sid=0&sln=multiple&mode=basic&sm=activeonly&table=false&iv=getSearchResultMultipleIndirect&CloseMethod=getSearchResultMultipleIndirect()&digest=${digest.digest}`;\n  } else if (args.type === \"Direct Subordinates\") {\n    digest = await BeaconBar.executeFunction(\"getDigest\")(\"sid=0&sln=multiple&mode=basic&sm=activeonly&table=false&iv=getSearchResultMultipleDirect&CloseMethod=getSearchResultMultipleDirect()\");\n    url = `${reqOptions.sl}/EIM/EmployeeSearch.aspx?sid=0&sln=multiple&mode=basic&sm=activeonly&table=false&iv=getSearchResultMultipleDirect&CloseMethod=getSearchResultMultipleDirect()&digest=${digest.digest}`;\n  }\n\n  const response = await fetch(`${location.origin}/${url}`, requestOptions);\n  const text = await response.text();\n\n  const dom = await BeaconBar.executeFunction('getDomExtract')(text);\n\n  const employeeResponse = await BeaconBar.executeFunction('module')({\n    \"__EVENTTARGET\": \"\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": dom.viewState,\n    \"__VIEWSTATEGENERATOR\": dom.viewStateGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": dom.eventValidation,\n    \"RadWindowManager2_ClientState\": \"\",\n    \"EmployeeSearch$ctl05$RadioButtonGroup1\": \"ctl07\",\n    \"EmployeeSearch$ctl05$ctl14\": \"0\",\n    \"EmployeeSearch$ctl05$ctl16\": \"\",\n    \"EmployeeSearch$ctl05$ctl21\": \"\",\n    \"EmployeeSearch$ctl05$ctl37\": \"Search\",\n    \"EmployeeSearch_ctl06_ClientState\": \"\",\n    \"hdnReturnId\": \"\"\n  }, url);\n\n  window.beaurl = {\n    url: url,\n    payload: employeeResponse\n  }\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(employeeResponse.rawData, \"text/html\");\n  const tbody = document.querySelector(\"#EmployeeSearch_ctl06_ctl00 > tbody\");\n  const rows = tbody.querySelectorAll(\"tr\");\n\n  const employees = [];\n\n  rows.forEach((row) => {\n    const cells = row.querySelectorAll(\"td\");\n    const employeeId = cells[1]?.textContent.trim();\n    const name = cells[2]?.textContent.trim();\n    const dateOfJoining = cells[3]?.textContent.trim();\n\n    if (employeeId && name && dateOfJoining && /^\\d+$/.test(employeeId)) {\n      employees.push({\n        index: employees.length,\n        employeeId,\n        name,\n        dateOfJoining\n      });\n    }\n  });\n  return employees;\n});\n",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Fetching The All Employess",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-04T10:34:07.149Z",
+      "updatedAt": "2025-06-04T10:34:07.149Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "bulkEmployees",
+      "args": [
+        {
+          "name": "type",
+          "type": "string",
+          "description": "To determine the type of subordinates, there are two options: \"Indirect Subordinates\" and \"Direct Subordinates\".",
+          "required": true,
+          "_id": "684021e9a1ee05e4fa8e854d"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6840211f38647d4b7e68ccad"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Reportsto.aspx?IsShowButtons=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  let url;\n  let digest;\n\n  if (args.type === \"Indirect Subordinates\") {\n    digest = await BeaconBar.executeFunction(\"getDigest\")(\"sid=0&sln=multiple&mode=basic&sm=activeonly&table=false&iv=getSearchResultMultipleIndirect&CloseMethod=getSearchResultMultipleIndirect()\");\n    url = `${reqOptions.sl}/EIM/EmployeeSearch.aspx?sid=0&sln=multiple&mode=basic&sm=activeonly&table=false&iv=getSearchResultMultipleIndirect&CloseMethod=getSearchResultMultipleIndirect()&digest=${digest.digest}`;\n  } else if (args.type === \"Direct Subordinates\") {\n    digest = await BeaconBar.executeFunction(\"getDigest\")(\"sid=0&sln=multiple&mode=basic&sm=activeonly&table=false&iv=getSearchResultMultipleDirect&CloseMethod=getSearchResultMultipleDirect()\");\n    url = `${reqOptions.sl}/EIM/EmployeeSearch.aspx?sid=0&sln=multiple&mode=basic&sm=activeonly&table=false&iv=getSearchResultMultipleDirect&CloseMethod=getSearchResultMultipleDirect()&digest=${digest.digest}`;\n  }\n\n  const response = await fetch(`${location.origin}/${url}`, requestOptions);\n  const text = await response.text();\n\n  const dom = await BeaconBar.executeFunction('getDomExtract')(text);\n\n  const employeeResponse = await BeaconBar.executeFunction('module')({\n    \"__EVENTTARGET\": \"\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": dom.viewState,\n    \"__VIEWSTATEGENERATOR\": dom.viewStateGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": dom.eventValidation,\n    \"RadWindowManager2_ClientState\": \"\",\n    \"EmployeeSearch$ctl05$RadioButtonGroup1\": \"ctl07\",\n    \"EmployeeSearch$ctl05$ctl14\": \"0\",\n    \"EmployeeSearch$ctl05$ctl16\": \"\",\n    \"EmployeeSearch$ctl05$ctl21\": \"\",\n    \"EmployeeSearch$ctl05$ctl37\": \"Search\",\n    \"EmployeeSearch_ctl06_ClientState\": \"\",\n    \"hdnReturnId\": \"\"\n  }, url);\n\n  window.beaurl = {\n    url: url,\n    payload: employeeResponse\n  }\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(employeeResponse.rawData, \"text/html\");\n  const tbody = document.querySelector(\"#EmployeeSearch_ctl06_ctl00 > tbody\");\n  const rows = tbody.querySelectorAll(\"tr\");\n\n  const employees = [];\n\n  rows.forEach((row) => {\n    const cells = row.querySelectorAll(\"td\");\n    const employeeId = cells[1]?.textContent.trim();\n    const name = cells[2]?.textContent.trim();\n    const dateOfJoining = cells[3]?.textContent.trim();\n\n    if (employeeId && name && dateOfJoining && /^\\d+$/.test(employeeId)) {\n      employees.push({\n        index: employees.length,\n        employeeId,\n        name,\n        dateOfJoining\n      });\n    }\n  });\n  return employees;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

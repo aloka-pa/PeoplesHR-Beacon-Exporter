@@ -1,0 +1,91 @@
+{
+  "id": "69541e980eece7a2ce8da343",
+  "slug": "createrouteinformation",
+  "name": "createRouteInformation",
+  "description": "Creates a new route information record.",
+  "instructions": null,
+  "taskName": "creating new route information record",
+  "tags": [
+    "EIMAdmin",
+    "CensusInformation"
+  ],
+  "status": "live",
+  "signature": "createRouteInformation",
+  "createdAt": "2025-12-30T18:48:56.465Z",
+  "updatedAt": "2025-12-30T18:48:56.465Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "784de145274d5d2014d99f4bf22e8c95c8d2e4a9f5d441fe7241be4b8554b625",
+  "lastExportedAt": "2026-09-05T19:39:23.132Z",
+  "raw": {
+    "basic": {
+      "_id": "69541e980eece7a2ce8da343",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createRouteInformation",
+      "description": "Creates a new route information record.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createRouteInformation",
+        "args": [
+          {
+            "name": "routeName",
+            "type": "string",
+            "description": "The name for the new route (e.g., \"new route\", \"Eastern Highway\")",
+            "required": true,
+            "_id": "69541e980eece7a2ce8da345"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "69541e980eece7a2ce8da344"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* Access validation */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/RoutInfo.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Route Information screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* Input validation */\n    if (!args?.routeName || args.routeName.trim() === \"\") {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: routeName is required\"\n      };\n    }\n\n    if (args.routeName.length > 120) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: routeName must be 120 characters or less\"\n      };\n    }\n\n    /* Initial page state */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"RoutInfo\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/RoutInfo.aspx\");\n\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/RoutInfo.aspx`;\n\n    const parser = new DOMParser();\n\n    /* Step 1: Click New to get the blank form */\n    const newFormData = new FormData();\n    newFormData.append(\"scrollLeft\", \"0\");\n    newFormData.append(\"scrollTop\", \"0\");\n    newFormData.append(\"__EVENTTARGET\", \"\");\n    newFormData.append(\"__EVENTARGUMENT\", \"\");\n    newFormData.append(\"__VIEWSTATE\", details.viewState);\n    newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n    newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"RT_ID\");\n    newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n    newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n    newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n    newFormData.append(\"ctl00$body$butNew\", \"New\");\n\n    const newResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: newFormData\n    });\n\n    const newDoc = parser.parseFromString(await newResponse.text(), \"text/html\");\n\n    /* Extract ViewState after clicking New */\n    const viewState = newDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const eventValidation = newDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const viewStateGen = newDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Step 2: Save with the route name */\n    const saveFormData = new FormData();\n    saveFormData.append(\"scrollLeft\", \"0\");\n    saveFormData.append(\"scrollTop\", \"0\");\n    saveFormData.append(\"__EVENTTARGET\", \"\");\n    saveFormData.append(\"__EVENTARGUMENT\", \"\");\n    saveFormData.append(\"__VIEWSTATE\", viewState);\n    saveFormData.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n    saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    saveFormData.append(\"__EVENTVALIDATION\", eventValidation);\n    saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    saveFormData.append(\"ctl00$body$txtName\", args.routeName.trim());\n    saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n    const saveResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: saveFormData\n    });\n\n    const saveHtml = await saveResponse.text();\n\n    if (saveResponse.status === 200) {\n      const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n      const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n      \n      if (errorMsg) {\n        return {\n          status: \"ERROR\",\n          message: `Save failed: ${errorMsg.trim()}`\n        };\n      }\n\n      // Extract the generated route code from the saved record\n      const routeCode = saveDoc.querySelector(\"#ctl00_body_txtCode\")?.value || \"\";\n\n      return {\n        status: \"SUCCESS\",\n        message: \"Successfully created Route!\",\n        routeName: args.routeName.trim(),\n        routeCode: routeCode\n      };\n    }\n\n    return {\n      status: \"ERROR\",\n      message: \"Failed to create route. Please verify in the UI.\"\n    };\n\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err.message,\n      error: err.toString()\n    };\n  }\n})",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "CensusInformation"
+      ],
+      "taskName": "creating new route information record",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-30T18:48:56.465Z",
+      "updatedAt": "2025-12-30T18:48:56.465Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "createRouteInformation",
+      "args": [
+        {
+          "name": "routeName",
+          "type": "string",
+          "description": "The name for the new route (e.g., \"new route\", \"Eastern Highway\")",
+          "required": true,
+          "_id": "69541e980eece7a2ce8da345"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "69541e980eece7a2ce8da344"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* Access validation */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/RoutInfo.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Route Information screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* Input validation */\n    if (!args?.routeName || args.routeName.trim() === \"\") {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: routeName is required\"\n      };\n    }\n\n    if (args.routeName.length > 120) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: routeName must be 120 characters or less\"\n      };\n    }\n\n    /* Initial page state */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"RoutInfo\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/RoutInfo.aspx\");\n\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/RoutInfo.aspx`;\n\n    const parser = new DOMParser();\n\n    /* Step 1: Click New to get the blank form */\n    const newFormData = new FormData();\n    newFormData.append(\"scrollLeft\", \"0\");\n    newFormData.append(\"scrollTop\", \"0\");\n    newFormData.append(\"__EVENTTARGET\", \"\");\n    newFormData.append(\"__EVENTARGUMENT\", \"\");\n    newFormData.append(\"__VIEWSTATE\", details.viewState);\n    newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n    newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"RT_ID\");\n    newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n    newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n    newFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n    newFormData.append(\"ctl00$body$butNew\", \"New\");\n\n    const newResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: newFormData\n    });\n\n    const newDoc = parser.parseFromString(await newResponse.text(), \"text/html\");\n\n    /* Extract ViewState after clicking New */\n    const viewState = newDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const eventValidation = newDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const viewStateGen = newDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Step 2: Save with the route name */\n    const saveFormData = new FormData();\n    saveFormData.append(\"scrollLeft\", \"0\");\n    saveFormData.append(\"scrollTop\", \"0\");\n    saveFormData.append(\"__EVENTTARGET\", \"\");\n    saveFormData.append(\"__EVENTARGUMENT\", \"\");\n    saveFormData.append(\"__VIEWSTATE\", viewState);\n    saveFormData.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n    saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    saveFormData.append(\"__EVENTVALIDATION\", eventValidation);\n    saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    saveFormData.append(\"ctl00$body$txtName\", args.routeName.trim());\n    saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n    const saveResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: saveFormData\n    });\n\n    const saveHtml = await saveResponse.text();\n\n    if (saveResponse.status === 200) {\n      const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n      const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n      \n      if (errorMsg) {\n        return {\n          status: \"ERROR\",\n          message: `Save failed: ${errorMsg.trim()}`\n        };\n      }\n\n      // Extract the generated route code from the saved record\n      const routeCode = saveDoc.querySelector(\"#ctl00_body_txtCode\")?.value || \"\";\n\n      return {\n        status: \"SUCCESS\",\n        message: \"Successfully created Route!\",\n        routeName: args.routeName.trim(),\n        routeCode: routeCode\n      };\n    }\n\n    return {\n      status: \"ERROR\",\n      message: \"Failed to create route. Please verify in the UI.\"\n    };\n\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err.message,\n      error: err.toString()\n    };\n  }\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

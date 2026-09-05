@@ -1,0 +1,24 @@
+{
+  "id": "690dc577931a2d61ba0b1fa1",
+  "slug": "genaratejd",
+  "name": "GenarateJD",
+  "status": "live",
+  "createdAt": "2025-05-29T10:46:16.881Z",
+  "updatedAt": "2025-05-29T10:46:16.881Z",
+  "contentHash": "0aee14ae3e345e1b3ef9ed062790848b74c3122d5e116122686eb40a4e74a341",
+  "lastExportedAt": "2026-09-05T19:41:38.963Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc577931a2d61ba0b1fa1",
+    "name": "GenarateJD",
+    "status": "live",
+    "code": "(function () {\n  const date = document.querySelector('[data-bind=\"text:DispDate\"]')?.textContent.trim() || \"\";\n  const requester = document.querySelector('[data-bind=\"text: Requester\"]')?.textContent.trim() || \"\";\n  const hiringManagers = document.querySelector('[data-bind=\"text: HirMgrs\"]')?.textContent.trim() || \"\";\n\n  const vacTitleValue = document.querySelector('input[name=\"req-a-VacTitle\"]')?.value || \"\";\n\n  const designationCode = document.querySelector('select[name=\"req-a-DsgCode\"]')?.selectedOptions[0]?.textContent.trim() || \"\";\n  const corporateTitle = document.querySelector('select[name=\"req-a-CtCode\"]')?.selectedOptions[0]?.textContent.trim() || \"\";\n  const salaryGrade = document.querySelector('select[name=\"req-a-SalGrd\"]')?.selectedOptions[0]?.textContent.trim() || \"\";\n  const empType = document.querySelector('select[name=\"req-a-TypeId\"]')?.selectedOptions[0]?.textContent.trim() || \"\";\n\n  const exStartDate = document.querySelector('input[name=\"req-a-ExStartDate\"]')?.value || \"\";\n  const reqDate = document.querySelector('input[name=\"req-a-reqDate\"]')?.value || \"\";\n\n  const statutorySelect = document.querySelector('#rct-requisitions-partial-requisition-120 select');\n  const statutoryItem = statutorySelect?.selectedOptions[0]?.textContent.trim() || \"\";\n\n  const requisitionData = {\n    requisitionDate: date,\n    requester,\n    hiringManagers,\n    vacancyTitle: vacTitleValue,\n    designationCode,\n    corporateTitle,\n    salaryGrade,\n    employmentType: empType,\n    expectedStartDate: exStartDate,\n    requisitionEntryDate: reqDate,\n    statutoryItem\n  };\n\n  return requisitionData;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

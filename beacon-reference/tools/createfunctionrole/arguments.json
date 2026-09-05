@@ -1,0 +1,29 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "ctl00_body_dpcountry",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Selected functional role ID or country code. if the user give the function name correspondong value wiil be take for functionTypes Api. and display the all functionalTypes pick one and corresponding value will be take.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Selected functional role ID or country code. if the user give the function name correspondong value wiil be take for functionTypes Api. and display the all functionalTypes pick one and corresponding value will be take."
+      }
+    },
+    {
+      "name": "ctl00_body_txtName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name or label for the functional role.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The name or label for the functional role."
+      }
+    }
+  ]
+}

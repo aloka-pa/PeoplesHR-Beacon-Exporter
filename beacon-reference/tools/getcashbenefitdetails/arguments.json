@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "cashBenefitCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the cash benefit  Details.give the cashBenefitCode.",
+      "advanced": false,
+      "raw": {
+        "name": "cashBenefitCode",
+        "type": "string",
+        "description": "to get the cash benefit  Details.give the cashBenefitCode.",
+        "required": true,
+        "_id": "68137e5f0c8b721f97e152a9"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

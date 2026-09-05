@@ -1,0 +1,48 @@
+{
+  "id": "690dc572931a2d61ba0b1c4f",
+  "slug": "selectleadershipcandiates",
+  "name": "SelectLeaderShipCandiates",
+  "description": "SelectLeaderShipCandiates",
+  "exportedAt": "2026-09-05T19:41:12.252Z",
+  "raw": {
+    "_id": "690dc572931a2d61ba0b1c4f",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "SelectLeaderShipCandiates",
+    "description": "SelectLeaderShipCandiates",
+    "by": "1927",
+    "prompt": "Filter by criteria – e.g., classification, department, etc\n\nFilter by selected employee list – selected manually",
+    "notes": [],
+    "llmConfig": [],
+    "status": "live",
+    "toolIds": [
+      "690dc569931a2d61ba0b190a",
+      "690dc569931a2d61ba0b191c",
+      "690dc569931a2d61ba0b190d",
+      "690dc569931a2d61ba0b1934",
+      "690dc569931a2d61ba0b1942",
+      "690dc569931a2d61ba0b195a",
+      "690dc569931a2d61ba0b195e"
+    ],
+    "scenarioIds": [],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      }
+    },
+    "vis": false,
+    "createdAt": "2025-06-03T10:58:06.493Z",
+    "updatedAt": "2025-06-03T10:58:06.493Z",
+    "__v": 0
+  }
+}

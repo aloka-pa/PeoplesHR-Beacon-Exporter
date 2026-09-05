@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "fromDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the fromDate Example:-\"2025-05-30\" format date \"YYYY-MM-DD\" in the date format must be use.",
+      "advanced": false,
+      "raw": {
+        "name": "fromDate",
+        "type": "string",
+        "description": "to give the fromDate Example:-\"2025-05-30\" format date \"YYYY-MM-DD\" in the date format must be use.",
+        "required": true,
+        "_id": "68a5a6afaf0a573cb299b80e"
+      }
+    },
+    {
+      "name": "toDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the toDate Example:-\"2025-05-30\" format date \"YYYY-MM-DD\" in the date format must be use.",
+      "advanced": false,
+      "raw": {
+        "name": "toDate",
+        "type": "string",
+        "description": "to give the toDate Example:-\"2025-05-30\" format date \"YYYY-MM-DD\" in the date format must be use.",
+        "required": true,
+        "_id": "68a5a6afaf0a573cb299b80f"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

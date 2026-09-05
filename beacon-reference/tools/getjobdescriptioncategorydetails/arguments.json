@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "jobDescriptionCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get Job Description details to give Job Description Code.",
+      "advanced": false,
+      "raw": {
+        "name": "jobDescriptionCode",
+        "type": "string",
+        "description": "to get Job Description details to give Job Description Code.",
+        "required": true,
+        "_id": "6810e7956a612deb206e3904"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

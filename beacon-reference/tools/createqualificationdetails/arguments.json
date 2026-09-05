@@ -1,0 +1,125 @@
+{
+  "arguments": [
+    {
+      "name": "qualificationName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name of the new qualification (e.g., \"Batch rep\")",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationName",
+        "type": "string",
+        "description": "The name of the new qualification (e.g., \"Batch rep\")",
+        "required": true,
+        "_id": "6954ad8cadcdbcc09d2665ee"
+      }
+    },
+    {
+      "name": "ratingMethodCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The rating method code to assign (e.g., \"000001\")\n",
+      "advanced": false,
+      "raw": {
+        "name": "ratingMethodCode",
+        "type": "string",
+        "description": "The rating method code to assign (e.g., \"000001\")\n",
+        "required": false,
+        "_id": "6954ad8cadcdbcc09d2665ef"
+      }
+    },
+    {
+      "name": "ratingMethodName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The rating method name to assign, alternative to ratingMethodCode (e.g., \"Rating_01\")\nNote: the user must provide either ratingMethodCode OR ratingMethodName (not both)",
+      "advanced": false,
+      "raw": {
+        "name": "ratingMethodName",
+        "type": "string",
+        "description": "The rating method name to assign, alternative to ratingMethodCode (e.g., \"Rating_01\")\nNote: the user must provide either ratingMethodCode OR ratingMethodName (not both)",
+        "required": false,
+        "_id": "6954ad8cadcdbcc09d2665f0"
+      }
+    },
+    {
+      "name": "qualificationTypeCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The qualification type code to assign (e.g., \"000008\")",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationTypeCode",
+        "type": "string",
+        "description": "The qualification type code to assign (e.g., \"000008\")",
+        "required": false,
+        "_id": "6954ad8cadcdbcc09d2665f1"
+      }
+    },
+    {
+      "name": "qualificationTypeName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The qualification type name to assign, alternative to qualificationTypeCode (e.g., \"leadership roles\")\nNote: the user must provide either qualificationTypeCode OR qualificationTypeName (not both)",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationTypeName",
+        "type": "string",
+        "description": "The qualification type name to assign, alternative to qualificationTypeCode (e.g., \"leadership roles\")\nNote: the user must provide either qualificationTypeCode OR qualificationTypeName (not both)",
+        "required": false,
+        "_id": "6954ad8cadcdbcc09d2665f2"
+      }
+    },
+    {
+      "name": "classificationCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The classification code to assign (e.g., \"000006\")",
+      "advanced": false,
+      "raw": {
+        "name": "classificationCode",
+        "type": "string",
+        "description": "The classification code to assign (e.g., \"000006\")",
+        "required": false,
+        "_id": "6954ad8cadcdbcc09d2665f3"
+      }
+    },
+    {
+      "name": "classificationName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The classification name to assign, alternative to classificationCode (e.g., \"Soft skills\")\nNote: the user must provide either classificationCode OR classificationName (not both)",
+      "advanced": false,
+      "raw": {
+        "name": "classificationName",
+        "type": "string",
+        "description": "The classification name to assign, alternative to classificationCode (e.g., \"Soft skills\")\nNote: the user must provide either classificationCode OR classificationName (not both)",
+        "required": false,
+        "_id": "6954ad8cadcdbcc09d2665f4"
+      }
+    },
+    {
+      "name": "hasExpiration",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set expiration status, accepts string \"true\" or \"false\" (default: \"false\")",
+      "advanced": false,
+      "raw": {
+        "name": "hasExpiration",
+        "type": "string",
+        "description": "Set expiration status, accepts string \"true\" or \"false\" (default: \"false\")",
+        "required": false,
+        "_id": "6954ad8cadcdbcc09d2665f5"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

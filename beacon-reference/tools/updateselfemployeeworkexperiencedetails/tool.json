@@ -1,0 +1,80 @@
+{
+  "id": "690dc56c931a2d61ba0b1b5f",
+  "slug": "updateselfemployeeworkexperiencedetails",
+  "name": "updateSelfEmployeeWorkExperienceDetails",
+  "description": "Before calling the updateSelfEmployeeWorkExperienceDetails API, first fetch existing data using the selfEmployeeWorkExperienceDetails API. When updating, only replace the fields modified by the user, while retaining the unchanged values from the previously fetched work experience details.",
+  "instructions": null,
+  "taskName": "Update The Self Employee Work Experience Details",
+  "tags": [
+    "Employee Information",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateSelfEmployeeWorkExperienceDetails",
+  "createdAt": "2025-09-03T14:08:03.926Z",
+  "updatedAt": "2025-11-10T12:17:34.004Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "0d07a305d66abe9cfd91adf2392db52b0623a04e98532e4d1fdf58bb48a81acf",
+  "lastExportedAt": "2026-09-05T19:39:23.327Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56c931a2d61ba0b1b5f",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateSelfEmployeeWorkExperienceDetails",
+      "description": "Before calling the updateSelfEmployeeWorkExperienceDetails API, first fetch existing data using the selfEmployeeWorkExperienceDetails API. When updating, only replace the fields modified by the user, while retaining the unchanged values from the previously fetched work experience details.",
+      "rules": {
+        "ids": [
+          "690dc4b5931a2d61ba0a8085"
+        ],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateSelfEmployeeWorkExperienceDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"WorkExperienceRecords\": {\n      \"title\": \"WorkExperienceRecords\",\n      \"type\": \"array\",\n      \"description\": \"Array of work experience records. All fields are required. If any value is missing during update, the system should use existing values from previously fetched records.\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"Accountabilities\": {\n            \"type\": \"string\",\n            \"description\": \"Key responsibilities or duties handled in this work experience\"\n          },\n          \"Achievments\": {\n            \"type\": \"string\",\n            \"description\": \"Notable accomplishments or achievements in this role\"\n          },\n          \"ActionType\": {\n            \"type\": \"integer\",\n            \"description\": \"Indicates type of action performed (e.g., 1 = Insert, 2 = Update)\"\n          },\n          \"Address1\": {\n            \"type\": \"string\",\n            \"description\": \"First line of company address\"\n          },\n          \"Address2\": {\n            \"type\": \"string\",\n            \"description\": \"Second line of company address\"\n          },\n          \"Address3\": {\n            \"type\": \"string\",\n            \"description\": \"Third line of company address\"\n          },\n          \"BenifitConsiderFlg\": {\n            \"type\": \"boolean\",\n            \"description\": \"Flag to indicate if benefits were considered\"\n          },\n          \"Category\": {\n            \"type\": \"string\",\n            \"description\": \"Employment type (e.g., 'Internal', 'External')\"\n          },\n          \"Company\": {\n            \"type\": \"string\",\n            \"description\": \"Name of the company\"\n          },\n          \"ContactPerson\": {\n            \"type\": \"string\",\n            \"description\": \"Name of HR/Manager reference person\"\n          },\n          \"Department\": {\n            \"type\": \"string\",\n            \"description\": \"Department or division worked in\"\n          },\n          \"DesignationOnLeave\": {\n            \"type\": \"string\",\n            \"description\": \"Designation held when leaving the company\"\n          },\n          \"ExpEmail\": {\n            \"type\": \"string\",\n            \"description\": \"Email address associated with this work experience\"\n          },\n          \"ExpFromDate\": {\n            \"type\": \"string\",\n            \"format\": \"date-time\",\n            \"description\": \"Start date of employment in ISO format\"\n          },\n          \"ExpFromDateStr\": {\n            \"type\": \"string\",\n            \"description\": \"Formatted start date of employment (DD/MM/YYYY)\"\n          },\n          \"ExpMonths\": {\n            \"type\": \"integer\",\n            \"description\": \"Number of months of experience in this role\"\n          },\n          \"ExpTelNo\": {\n            \"type\": \"string\",\n            \"description\": \"Contact telephone number during employment\"\n          },\n          \"ExpToDate\": {\n            \"type\": \"string\",\n            \"format\": \"date-time\",\n            \"description\": \"End date of employment in ISO format\"\n          },\n          \"ExpToDateStr\": {\n            \"type\": \"string\",\n            \"description\": \"Formatted end date of employment (DD/MM/YYYY)\"\n          },\n          \"ExpYears\": {\n            \"type\": \"integer\",\n            \"description\": \"Number of years of experience in this role\"\n          },\n          \"IndustryTypeName\": {\n            \"type\": \"string\",\n            \"description\": \"Name of the industry type\"\n          },\n          \"IsInternalFlg\": {\n            \"type\": \"integer\",\n            \"description\": \"Flag indicating if the role was internal (1 = Yes, 0 = No)\"\n          },\n          \"ReasonForLeave\": {\n            \"type\": \"string\",\n            \"description\": \"Reason for leaving the company\"\n          },\n          \"Sequence\": {\n            \"type\": \"integer\",\n            \"description\": \"Sequence/order number of the work experience entry\"\n          },\n          \"UpdateInsert\": {\n            \"type\": \"integer\",\n            \"description\": \"Indicates update/insert action flag (system field)\"\n          },\n          \"WorkRelatedFlg\": {\n            \"type\": \"boolean\",\n            \"description\": \"Indicates if the work experience is work-related\"\n          }\n        },\n        \"required\": [\n          \"Accountabilities\",\n          \"Achievments\",\n          \"ActionType\",\n          \"Address1\",\n          \"Address2\",\n          \"Address3\",\n          \"BenifitConsiderFlg\",\n          \"Category\",\n          \"Company\",\n          \"ContactPerson\",\n          \"Department\",\n          \"DesignationOnLeave\",\n          \"ExpEmail\",\n          \"ExpFromDate\",\n          \"ExpFromDateStr\",\n          \"ExpMonths\",\n          \"ExpTelNo\",\n          \"ExpToDate\",\n          \"ExpToDateStr\",\n          \"ExpYears\",\n          \"IndustryTypeName\",\n          \"IsInternalFlg\",\n          \"ReasonForLeave\",\n          \"Sequence\",\n          \"UpdateInsert\",\n          \"WorkRelatedFlg\"\n        ]\n      },\n      \"minItems\": 1,\n      \"uniqueItems\": true\n    }\n  },\n  \"required\": [\"WorkExperienceRecords\"]\n}\n",
+        "_id": "68b84bc3eba509c07dc142a5"
+      },
+      "by": "7337",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  let finalData = args.WorkExperienceRecords.map(x => ({\n    ...x,\n    EmpNumber: window.empNumber1\n  }));\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"content-type\", \"application/json\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n\n  const raw = JSON.stringify(finalData);\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${window.origin}/hr/EIMV9/api/WorkExperienceAPI/SaveWorkExperience/`, requestOptions);\n  return await response.json();\n})\n",
+      "groupName": "",
+      "tags": [
+        "Employee Information",
+        "Headers"
+      ],
+      "taskName": "Update The Self Employee Work Experience Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-09-03T14:08:03.926Z",
+      "updatedAt": "2025-11-10T12:17:34.004Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateSelfEmployeeWorkExperienceDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"WorkExperienceRecords\": {\n      \"title\": \"WorkExperienceRecords\",\n      \"type\": \"array\",\n      \"description\": \"Array of work experience records. All fields are required. If any value is missing during update, the system should use existing values from previously fetched records.\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"Accountabilities\": {\n            \"type\": \"string\",\n            \"description\": \"Key responsibilities or duties handled in this work experience\"\n          },\n          \"Achievments\": {\n            \"type\": \"string\",\n            \"description\": \"Notable accomplishments or achievements in this role\"\n          },\n          \"ActionType\": {\n            \"type\": \"integer\",\n            \"description\": \"Indicates type of action performed (e.g., 1 = Insert, 2 = Update)\"\n          },\n          \"Address1\": {\n            \"type\": \"string\",\n            \"description\": \"First line of company address\"\n          },\n          \"Address2\": {\n            \"type\": \"string\",\n            \"description\": \"Second line of company address\"\n          },\n          \"Address3\": {\n            \"type\": \"string\",\n            \"description\": \"Third line of company address\"\n          },\n          \"BenifitConsiderFlg\": {\n            \"type\": \"boolean\",\n            \"description\": \"Flag to indicate if benefits were considered\"\n          },\n          \"Category\": {\n            \"type\": \"string\",\n            \"description\": \"Employment type (e.g., 'Internal', 'External')\"\n          },\n          \"Company\": {\n            \"type\": \"string\",\n            \"description\": \"Name of the company\"\n          },\n          \"ContactPerson\": {\n            \"type\": \"string\",\n            \"description\": \"Name of HR/Manager reference person\"\n          },\n          \"Department\": {\n            \"type\": \"string\",\n            \"description\": \"Department or division worked in\"\n          },\n          \"DesignationOnLeave\": {\n            \"type\": \"string\",\n            \"description\": \"Designation held when leaving the company\"\n          },\n          \"ExpEmail\": {\n            \"type\": \"string\",\n            \"description\": \"Email address associated with this work experience\"\n          },\n          \"ExpFromDate\": {\n            \"type\": \"string\",\n            \"format\": \"date-time\",\n            \"description\": \"Start date of employment in ISO format\"\n          },\n          \"ExpFromDateStr\": {\n            \"type\": \"string\",\n            \"description\": \"Formatted start date of employment (DD/MM/YYYY)\"\n          },\n          \"ExpMonths\": {\n            \"type\": \"integer\",\n            \"description\": \"Number of months of experience in this role\"\n          },\n          \"ExpTelNo\": {\n            \"type\": \"string\",\n            \"description\": \"Contact telephone number during employment\"\n          },\n          \"ExpToDate\": {\n            \"type\": \"string\",\n            \"format\": \"date-time\",\n            \"description\": \"End date of employment in ISO format\"\n          },\n          \"ExpToDateStr\": {\n            \"type\": \"string\",\n            \"description\": \"Formatted end date of employment (DD/MM/YYYY)\"\n          },\n          \"ExpYears\": {\n            \"type\": \"integer\",\n            \"description\": \"Number of years of experience in this role\"\n          },\n          \"IndustryTypeName\": {\n            \"type\": \"string\",\n            \"description\": \"Name of the industry type\"\n          },\n          \"IsInternalFlg\": {\n            \"type\": \"integer\",\n            \"description\": \"Flag indicating if the role was internal (1 = Yes, 0 = No)\"\n          },\n          \"ReasonForLeave\": {\n            \"type\": \"string\",\n            \"description\": \"Reason for leaving the company\"\n          },\n          \"Sequence\": {\n            \"type\": \"integer\",\n            \"description\": \"Sequence/order number of the work experience entry\"\n          },\n          \"UpdateInsert\": {\n            \"type\": \"integer\",\n            \"description\": \"Indicates update/insert action flag (system field)\"\n          },\n          \"WorkRelatedFlg\": {\n            \"type\": \"boolean\",\n            \"description\": \"Indicates if the work experience is work-related\"\n          }\n        },\n        \"required\": [\n          \"Accountabilities\",\n          \"Achievments\",\n          \"ActionType\",\n          \"Address1\",\n          \"Address2\",\n          \"Address3\",\n          \"BenifitConsiderFlg\",\n          \"Category\",\n          \"Company\",\n          \"ContactPerson\",\n          \"Department\",\n          \"DesignationOnLeave\",\n          \"ExpEmail\",\n          \"ExpFromDate\",\n          \"ExpFromDateStr\",\n          \"ExpMonths\",\n          \"ExpTelNo\",\n          \"ExpToDate\",\n          \"ExpToDateStr\",\n          \"ExpYears\",\n          \"IndustryTypeName\",\n          \"IsInternalFlg\",\n          \"ReasonForLeave\",\n          \"Sequence\",\n          \"UpdateInsert\",\n          \"WorkRelatedFlg\"\n        ]\n      },\n      \"minItems\": 1,\n      \"uniqueItems\": true\n    }\n  },\n  \"required\": [\"WorkExperienceRecords\"]\n}\n",
+      "_id": "68b84bc3eba509c07dc142a5"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  let finalData = args.WorkExperienceRecords.map(x => ({\n    ...x,\n    EmpNumber: window.empNumber1\n  }));\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"content-type\", \"application/json\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n\n  const raw = JSON.stringify(finalData);\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${window.origin}/hr/EIMV9/api/WorkExperienceAPI/SaveWorkExperience/`, requestOptions);\n  return await response.json();\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

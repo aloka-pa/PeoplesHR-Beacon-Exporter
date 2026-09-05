@@ -1,0 +1,24 @@
+{
+  "id": "690dc588931a2d61ba0b2fc6",
+  "slug": "searchkey",
+  "name": "searchKey",
+  "status": "live",
+  "createdAt": "2025-07-16T06:49:18.752Z",
+  "updatedAt": "2025-07-16T06:49:18.752Z",
+  "contentHash": "0034a6820855bca693bd0cf90190a8747eda623945419526255453530d3bbd60",
+  "lastExportedAt": "2026-09-05T19:41:31.560Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc588931a2d61ba0b2fc6",
+    "name": "searchKey",
+    "status": "live",
+    "code": "(function (search = '') {\n  if (search.length === 0) {\n    BeaconBar.closeSidePane()\n    return 'search';\n  }\n  if (search.startsWith('movementtype')) {\n    return 'movementtype';\n  }\n  if (search.startsWith('training')) {\n    return 'training';\n  }\n  if (search.startsWith('r/')) {\n    return 'requisition';\n  }\n  return \"search\";\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

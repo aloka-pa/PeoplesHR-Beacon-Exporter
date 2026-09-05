@@ -1,0 +1,24 @@
+{
+  "id": "690dc58c931a2d61ba0b3386",
+  "slug": "summary",
+  "name": "summary",
+  "status": "live",
+  "createdAt": "2025-08-21T11:59:59.575Z",
+  "updatedAt": "2026-07-17T12:56:04.068Z",
+  "contentHash": "e81726b0ab0cd12a844aa20d7433417a8ca9c30baf065213b0ffded11948f87d",
+  "lastExportedAt": "2026-09-05T19:41:14.072Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58c931a2d61ba0b3386",
+    "name": "summary",
+    "status": "live",
+    "code": "(async function () {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n\n  const response = await fetch(`${reqOptions}WorkflowV5/Approval/Summary/?bs=4&ModuleID=1014`, requestOptions);\n  const data = await response.text();\n\n  function extracted(htmlString) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(htmlString, \"text/html\");\n\n    const anchors = doc.querySelectorAll(\"a[onclick]\");\n    const results = Array.from(anchors).map(a => {\n      const onclick = a.getAttribute(\"onclick\");\n      const match = onclick.match(/return\\s+(\\w+)\\(([^)]*)\\)/);\n\n      let fnName = null;\n      let params = [];\n      if (match) {\n        fnName = match[1];\n        params = match[2].split(\",\").map(p => p.trim());\n      }\n\n      return {\n        text: a.textContent.trim(),\n        params: params,\n      };\n    });\n\n    return results; \n  }\n\n  const dats = extracted(data);\n  return dats; \n});",
+    "by": "34476",
+    "__v": 1
+  }
+}

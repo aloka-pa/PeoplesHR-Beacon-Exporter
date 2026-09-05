@@ -1,0 +1,24 @@
+{
+  "id": "690dc581931a2d61ba0b2948",
+  "slug": "getleaveapproval",
+  "name": "getLeaveApproval",
+  "status": "live",
+  "createdAt": "2025-05-15T08:12:57.072Z",
+  "updatedAt": "2026-07-17T12:55:54.907Z",
+  "contentHash": "40e8ce7a1ded6f721e54a32fe2aed90620ed405038cc0b1c6ee0c7830b17d393",
+  "lastExportedAt": "2026-09-05T19:41:20.090Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc581931a2d61ba0b2948",
+    "name": "getLeaveApproval",
+    "status": "live",
+    "code": "(async function getLeaveApproval() {\n  try {\n    const token = await BeaconBar.executeFunction(\"getToken\")();\n    if (!token) {\n      throw new Error(\"Failed to retrieve token.\");\n    }\n\n    const url = `https://${location.host}/hr/AbsenceV9/api/LeaveApplication/GetEntitledLeaveTypes/`;\n    const body = {\n      EmpNumber: \"MAAwADAAMAAwADIA\",\n      LeaveYear: new Date().getFullYear()\n    };\n\n    const response = await fetch(url, {\n      method: 'POST',\n      headers: {\n        'Content-Type': 'application/json',\n        '__cfafvalue': token\n      },\n      body: JSON.stringify(body)\n    });\n\n    if (!response.ok) {\n      throw new Error(`HTTP error! Status: ${response.status}`);\n    }\n\n    const details = await response.json();\n    const annualLeaveDataArray = details.filter(item => item.TypeName === \"Annual Leave\");\n    return annualLeaveDataArray;\n  } catch (error) {\n  }\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

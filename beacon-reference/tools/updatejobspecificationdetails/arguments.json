@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the employee id Example:- \"000001\" etc...",
+      "advanced": false,
+      "raw": {
+        "name": "id",
+        "type": "string",
+        "description": "to give the employee id Example:- \"000001\" etc...",
+        "required": true,
+        "_id": "68284d819a20c440e02a6e43"
+      }
+    },
+    {
+      "name": "updateComment",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the update comment Example.\"text\"",
+      "advanced": false,
+      "raw": {
+        "name": "updateComment",
+        "type": "string",
+        "description": "to give the update comment Example.\"text\"",
+        "required": true,
+        "_id": "682869b651d6fa1109d3f298"
+      }
+    },
+    {
+      "name": "editId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the editId for getJobSpecificationDetails api. Example:-\"ctl00_body_grdEmpJobData_ctl00_ctl04_EditButton\"",
+      "advanced": false,
+      "raw": {
+        "name": "editId",
+        "type": "string",
+        "description": "to get the editId for getJobSpecificationDetails api. Example:-\"ctl00_body_grdEmpJobData_ctl00_ctl04_EditButton\"",
+        "required": true,
+        "_id": "682869b651d6fa1109d3f299"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

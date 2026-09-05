@@ -1,0 +1,24 @@
+{
+  "id": "6a1721aaec57563bbd375236",
+  "slug": "segmentabsence",
+  "name": "segmentAbsence",
+  "status": "live",
+  "createdAt": "2026-05-27T16:54:02.097Z",
+  "updatedAt": "2026-05-28T07:41:14.929Z",
+  "contentHash": "63de5056b18f2e8ad783e84c39469e7af927cd5b8030d7275ff7455fbee6edf2",
+  "lastExportedAt": "2026-09-05T19:41:25.877Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "6a1721aaec57563bbd375236",
+    "name": "segmentAbsence",
+    "status": "live",
+    "code": "(function () {\n    const enabledAgents = JSON.parse(\n        localStorage.getItem('enabledAgents') || '[]'\n    );\n        return enabledAgents\n        .map(agent => String(agent).toLowerCase())\n        .includes('absence'.toLowerCase());\n})",
+    "by": "7829",
+    "__v": 1
+  }
+}

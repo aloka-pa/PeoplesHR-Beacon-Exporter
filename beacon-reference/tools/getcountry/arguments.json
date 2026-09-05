@@ -1,0 +1,95 @@
+{
+  "arguments": [
+    {
+      "name": "countryCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The country code to search for (e.g., \"000001\"). Either countryCode OR countryName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "countryCode",
+        "type": "string",
+        "description": "The country code to search for (e.g., \"000001\"). Either countryCode OR countryName must be provided.",
+        "required": false,
+        "_id": "6952160426cedae9de4bd1ae"
+      }
+    },
+    {
+      "name": "countryName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The country name to search for (e.g., \"Philippines\"). Either countryCode OR countryName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "countryName",
+        "type": "string",
+        "description": "The country name to search for (e.g., \"Philippines\"). Either countryCode OR countryName must be provided.",
+        "required": false,
+        "_id": "69534f22315c86a726a145cc"
+      }
+    },
+    {
+      "name": "includeDetails",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "If true, fetches full details for each matching country (including isBase flag). If false or omitted, returns only basic info (faster). Default: false",
+      "advanced": false,
+      "raw": {
+        "name": "includeDetails",
+        "type": "string",
+        "description": "If true, fetches full details for each matching country (including isBase flag). If false or omitted, returns only basic info (faster). Default: false",
+        "required": false,
+        "_id": "6963ed145f98759a5e144188"
+      }
+    },
+    {
+      "name": "mode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "\"search\" (default) → requires countryCode or countryName\n\"showAll\" → lists all countries page-by-page (can be unfiltered)",
+      "advanced": false,
+      "raw": {
+        "name": "mode",
+        "type": "string",
+        "description": "\"search\" (default) → requires countryCode or countryName\n\"showAll\" → lists all countries page-by-page (can be unfiltered)",
+        "required": false,
+        "_id": "697f886d9b7f0800eaf06c34"
+      }
+    },
+    {
+      "name": "matchType",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "\"partial\" (default) or \"exact\"",
+      "advanced": false,
+      "raw": {
+        "name": "matchType",
+        "type": "string",
+        "description": "\"partial\" (default) or \"exact\"",
+        "required": false,
+        "_id": "697f886d9b7f0800eaf06c35"
+      }
+    },
+    {
+      "name": "page",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "page number to return (default 1). Use page=2, page=3 … to get more.",
+      "advanced": false,
+      "raw": {
+        "name": "page",
+        "type": "string",
+        "description": "page number to return (default 1). Use page=2, page=3 … to get more.",
+        "required": false,
+        "_id": "697f886d9b7f0800eaf06c36"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

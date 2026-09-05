@@ -1,0 +1,81 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "ctl00_body_txtName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Designation name (e.g., 'Human Resources Manager').",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Designation name (e.g., 'Human Resources Manager')."
+      }
+    },
+    {
+      "name": "ctl00_body_chksenior",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "selsect senior management 'on' or 'off'.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on",
+          "off"
+        ],
+        "description": "selsect senior management 'on' or 'off'."
+      }
+    },
+    {
+      "name": "ctl00_body_dpSalary",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Selected Salary Grade code (e.g., '000005').",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Selected Salary Grade code (e.g., '000005')."
+      }
+    },
+    {
+      "name": "ctl00_body_dpNextUpgrade",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Selected Corporate Title or Next Upgrade Level code (e.g., '000001').",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Selected Corporate Title or Next Upgrade Level code (e.g., '000001')."
+      }
+    },
+    {
+      "name": "ctl00_body_dpnextupgradedsg",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Selected Next Designation in Career Progression code (e.g., '000034').if the user missing fields to get data for gradeDetails api.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Selected Next Designation in Career Progression code (e.g., '000034').if the user missing fields to get data for gradeDetails api."
+      }
+    },
+    {
+      "name": "ctl00_body_cbofunctionRole",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Selected Functional Role code (e.g., '000001').if the user missing fields to get data for getTitle api",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Selected Functional Role code (e.g., '000001').if the user missing fields to get data for getTitle api"
+      }
+    }
+  ]
+}

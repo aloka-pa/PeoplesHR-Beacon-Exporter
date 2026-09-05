@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "membershipTitleCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the membership Title details with give membershipTitleCode",
+      "advanced": false,
+      "raw": {
+        "name": "membershipTitleCode",
+        "type": "string",
+        "description": "to get the membership Title details with give membershipTitleCode",
+        "required": true,
+        "_id": "681216b0bf13cf04f231e740"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

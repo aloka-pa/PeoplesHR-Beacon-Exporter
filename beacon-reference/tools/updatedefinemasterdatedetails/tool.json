@@ -1,0 +1,75 @@
+{
+  "id": "690dc566931a2d61ba0b16e6",
+  "slug": "updatedefinemasterdatedetails",
+  "name": "UpdateDefineMasterDateDetails",
+  "description": "In this tool, the Define Master Data details are updated. Initially, the getDefineMasterDataDetails API is executed to retrieve existing data, which provides values for masterDataType and editKey. If any of these fields are missing, the tool re-invokes the getDefineMasterDataDetails API to fetch the necessary information. When a user updates the Define Master Data, the process begins by calling the masterDataTypes API to retrieve the available master data types. Following this, the getDefineMasterDataDetails API is executed to obtain the details for the selected type, including editKey, id, description, and amount. Once this data is retrieved, the update process proceeds accordingly.example format amount will be take Ex:3000,200,30 etc... do not allowed \"3000.000\".",
+  "instructions": null,
+  "taskName": "Update Define Master Date Details",
+  "tags": [
+    "BenefitManagement",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "UpdateDefineMasterDateDetails",
+  "createdAt": "2025-05-13T06:04:41.327Z",
+  "updatedAt": "2025-05-13T06:04:41.327Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be9",
+      "name": "BenefitManagement"
+    }
+  ],
+  "contentHash": "6d4cf56fcc58e49427891c639594c0ebaf5e85f842f2768a863763b66165694c",
+  "lastExportedAt": "2026-09-05T19:39:24.039Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b16e6",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "UpdateDefineMasterDateDetails",
+      "description": "In this tool, the Define Master Data details are updated. Initially, the getDefineMasterDataDetails API is executed to retrieve existing data, which provides values for masterDataType and editKey. If any of these fields are missing, the tool re-invokes the getDefineMasterDataDetails API to fetch the necessary information. When a user updates the Define Master Data, the process begins by calling the masterDataTypes API to retrieve the available master data types. Following this, the getDefineMasterDataDetails API is executed to obtain the details for the selected type, including editKey, id, description, and amount. Once this data is retrieved, the update process proceeds accordingly.example format amount will be take Ex:3000,200,30 etc... do not allowed \"3000.000\".",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "UpdateDefineMasterDateDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"masterDataType\": {\n      \"type\": \"string\",\n      \"description\": \"Specifies the master data type. If not provided, the value will be fetched using the getDefineMasterDateDetails API.\"\n    },\n    \"editKey\": {\n      \"type\": \"string\",\n      \"description\": \"Specifies the edit key for the data. If not provided, it will be retrieved using the getDefineMasterDateDetails API.\"\n    },\n    \"id\": {\n      \"type\": \"string\",\n      \"description\": \"Specifies the ID of the data. If not provided, it will be retrieved using the getDefineMasterDateDetails API.\"\n    },\n    \"description\": {\n      \"type\": \"string\",\n      \"description\": \"Specifies the currency description of the data. If changed, the updated value will be used. If not provided, it will be fetched using the getDefineMasterDateDetails API.\"\n    },\n    \"amount\": {\n      \"type\": \"string\",\n      \"description\": \"Specifies the update amount value. If changed, the updated value will be used. If not provided, it will be fetched using the getDefineMasterDateDetails API.Ex:3000,20,20 etc..\"\n    }\n  },\n  \"required\": [\"masterDataType\", \"editKey\", \"id\", \"description\", \"amount\"]\n}\n",
+        "_id": "6822e0f942e72e1f30f55d2a"
+      },
+      "by": "2414",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const editResponse = await BeaconBar.executeFunction('module')({\n    \"RadScriptManager_HiddenField\": \"\",\n    \"__EVENTTARGET\": args.editKey,\n    \"__EVENTARGUMENT\": \"\",\n    \"__VIEWSTATE\": window.md.viewState,\n    \"__VIEWSTATEGENERATOR\": window.md.viewStateGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": window.md.eventValidation,\n    \"RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$cboMasterDataType_Input\": args.masterDataType,\n    \"body_cboMasterDataType_ClientState\": \"\",\n    \"body_grdSummary_ClientState\": \"\"\n  }, `${reqOptions.sl}/Benefit/DefineMasterData`);\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(editResponse.rawData, \"text/html\");\n\n  const updateButton = doc.querySelector(\"a[id*='UpdateButton']\");\n  const updateKey = updateButton?.getAttribute(\"href\").match(/__doPostBack\\('([^']+)'/)[1] || \"\";\n\n  const savePayload = {\n    \"RadScriptManager_HiddenField\": \"\",\n    \"__EVENTTARGET\": updateKey,\n    \"__EVENTARGUMENT\": \"\",\n    \"__VIEWSTATE\": editResponse.viewState,\n    \"__VIEWSTATEGENERATOR\": editResponse.viewStateGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": editResponse.eventValidation,\n    \"RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$cboMasterDataType_Input\": args.masterDataType,\n    \"body_cboMasterDataType_ClientState\": \"\"\n    // \"body_grdSummary_ClientState\": \"\"\n  };\n\n  const updateIndexMatch = updateKey.match(/ctl00\\$body\\$grdSummary\\$ctl00\\$ctl(\\d{2})\\$UpdateButton/);\n  const updateIndex = updateIndexMatch ? updateIndexMatch[1] : null;\n\n  if (args.masterDataType === \"Medical Claims\" || args.masterDataType === \"Fuel Reimbursement\") {\n    savePayload[`ctl00$body$grdSummary$ctl00$ctl${updateIndex}$txtDtlCode`] = args.id;\n    savePayload[`body_grdSummary_ctl00_ctl${updateIndex}_txtDtlCode_ClientState`] = \"\";\n    savePayload[`ctl00$body$grdSummary$ctl00$ctl${updateIndex}$txtDtlName`] = args.description;\n    savePayload[`body_grdSummary_ctl00_ctl${updateIndex}_txtDtlName_ClientState`] = \"\";\n    savePayload[`ctl00$body$grdSummary$ctl00$ctl${updateIndex}$txtNumValue`] = args.amount;\n    savePayload[`body_grdSummary_ctl00_ctl${updateIndex}_txtNumValue_ClientState`] = \"\";\n    savePayload[\"body_grdSummary_ClientState\"] = \"\"\n  } else {\n    savePayload[`ctl00$body$grdSummary$ctl00$ctl${updateIndex}$txtDtlCode`] = args.id;\n    savePayload[`body_grdSummary_ctl00_ctl${updateIndex}_txtDtlCode_ClientState`] = \"\";\n    savePayload[`ctl00$body$grdSummary$ctl00$ctl${updateIndex}$txtDtlName`] = args.description;\n    savePayload[`body_grdSummary_ctl00_ctl${updateIndex}_txtDtlName_ClientState`] = \"\";\n    savePayload[`ctl00$body$grdSummary$ctl00$ctl${updateIndex}$txtTextValue`] = args.amount;\n    savePayload[`body_grdSummary_ctl00_ctl${updateIndex}_txtTextValue_ClientState`] = \"\";\n    savePayload[\"body_grdSummary_ClientState\"] = \"\"\n  }\n\n  const saveResponse = await BeaconBar.executeFunction('module')(savePayload, `${reqOptions.sl}/Benefit/DefineMasterData`);\n\n  const document = parser.parseFromString(saveResponse.rawData, \"text/html\");\n  const rows = document.querySelectorAll(\"#body_grdSummary tbody tr\");\n  const masterData = [];\n\n  rows.forEach(row => {\n    const id = row.querySelector(\"span[id*='lblDtlCode']\")?.textContent.trim() || \"\";\n    const description = row.querySelector(\"span[id*='lblDtlName']\")?.textContent.trim() || \"\";\n    const amount = args.masterDataType === \"Fuel Reimbursement\"\n      ? row.querySelector(\"span[id*='lblNumValue']\")?.textContent.trim() || \"\"\n      : row.querySelector(\"span[id*='lblTextValue']\")?.textContent.trim() || \"\";\n    const editButton = row.querySelector(\"a[id*='EditButton']\");\n    const editKey = editButton?.getAttribute(\"href\")?.match(/__doPostBack\\('([^']+)'/)?.[1] || \"\";\n    const masterDataType = args.masterDataType || \"Medical Claims\";\n\n    masterData.push({\n      id,\n      description,\n      amount,\n      editKey,\n      masterDataType\n    });\n  });\n\n  return masterData;\n});\n",
+      "groupName": "",
+      "tags": [
+        "BenefitManagement",
+        "Headers"
+      ],
+      "taskName": "Update Define Master Date Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-13T06:04:41.327Z",
+      "updatedAt": "2025-05-13T06:04:41.327Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be9",
+          "name": "BenefitManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "UpdateDefineMasterDateDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"masterDataType\": {\n      \"type\": \"string\",\n      \"description\": \"Specifies the master data type. If not provided, the value will be fetched using the getDefineMasterDateDetails API.\"\n    },\n    \"editKey\": {\n      \"type\": \"string\",\n      \"description\": \"Specifies the edit key for the data. If not provided, it will be retrieved using the getDefineMasterDateDetails API.\"\n    },\n    \"id\": {\n      \"type\": \"string\",\n      \"description\": \"Specifies the ID of the data. If not provided, it will be retrieved using the getDefineMasterDateDetails API.\"\n    },\n    \"description\": {\n      \"type\": \"string\",\n      \"description\": \"Specifies the currency description of the data. If changed, the updated value will be used. If not provided, it will be fetched using the getDefineMasterDateDetails API.\"\n    },\n    \"amount\": {\n      \"type\": \"string\",\n      \"description\": \"Specifies the update amount value. If changed, the updated value will be used. If not provided, it will be fetched using the getDefineMasterDateDetails API.Ex:3000,20,20 etc..\"\n    }\n  },\n  \"required\": [\"masterDataType\", \"editKey\", \"id\", \"description\", \"amount\"]\n}\n",
+      "_id": "6822e0f942e72e1f30f55d2a"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const editResponse = await BeaconBar.executeFunction('module')({\n    \"RadScriptManager_HiddenField\": \"\",\n    \"__EVENTTARGET\": args.editKey,\n    \"__EVENTARGUMENT\": \"\",\n    \"__VIEWSTATE\": window.md.viewState,\n    \"__VIEWSTATEGENERATOR\": window.md.viewStateGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": window.md.eventValidation,\n    \"RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$cboMasterDataType_Input\": args.masterDataType,\n    \"body_cboMasterDataType_ClientState\": \"\",\n    \"body_grdSummary_ClientState\": \"\"\n  }, `${reqOptions.sl}/Benefit/DefineMasterData`);\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(editResponse.rawData, \"text/html\");\n\n  const updateButton = doc.querySelector(\"a[id*='UpdateButton']\");\n  const updateKey = updateButton?.getAttribute(\"href\").match(/__doPostBack\\('([^']+)'/)[1] || \"\";\n\n  const savePayload = {\n    \"RadScriptManager_HiddenField\": \"\",\n    \"__EVENTTARGET\": updateKey,\n    \"__EVENTARGUMENT\": \"\",\n    \"__VIEWSTATE\": editResponse.viewState,\n    \"__VIEWSTATEGENERATOR\": editResponse.viewStateGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": editResponse.eventValidation,\n    \"RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$cboMasterDataType_Input\": args.masterDataType,\n    \"body_cboMasterDataType_ClientState\": \"\"\n    // \"body_grdSummary_ClientState\": \"\"\n  };\n\n  const updateIndexMatch = updateKey.match(/ctl00\\$body\\$grdSummary\\$ctl00\\$ctl(\\d{2})\\$UpdateButton/);\n  const updateIndex = updateIndexMatch ? updateIndexMatch[1] : null;\n\n  if (args.masterDataType === \"Medical Claims\" || args.masterDataType === \"Fuel Reimbursement\") {\n    savePayload[`ctl00$body$grdSummary$ctl00$ctl${updateIndex}$txtDtlCode`] = args.id;\n    savePayload[`body_grdSummary_ctl00_ctl${updateIndex}_txtDtlCode_ClientState`] = \"\";\n    savePayload[`ctl00$body$grdSummary$ctl00$ctl${updateIndex}$txtDtlName`] = args.description;\n    savePayload[`body_grdSummary_ctl00_ctl${updateIndex}_txtDtlName_ClientState`] = \"\";\n    savePayload[`ctl00$body$grdSummary$ctl00$ctl${updateIndex}$txtNumValue`] = args.amount;\n    savePayload[`body_grdSummary_ctl00_ctl${updateIndex}_txtNumValue_ClientState`] = \"\";\n    savePayload[\"body_grdSummary_ClientState\"] = \"\"\n  } else {\n    savePayload[`ctl00$body$grdSummary$ctl00$ctl${updateIndex}$txtDtlCode`] = args.id;\n    savePayload[`body_grdSummary_ctl00_ctl${updateIndex}_txtDtlCode_ClientState`] = \"\";\n    savePayload[`ctl00$body$grdSummary$ctl00$ctl${updateIndex}$txtDtlName`] = args.description;\n    savePayload[`body_grdSummary_ctl00_ctl${updateIndex}_txtDtlName_ClientState`] = \"\";\n    savePayload[`ctl00$body$grdSummary$ctl00$ctl${updateIndex}$txtTextValue`] = args.amount;\n    savePayload[`body_grdSummary_ctl00_ctl${updateIndex}_txtTextValue_ClientState`] = \"\";\n    savePayload[\"body_grdSummary_ClientState\"] = \"\"\n  }\n\n  const saveResponse = await BeaconBar.executeFunction('module')(savePayload, `${reqOptions.sl}/Benefit/DefineMasterData`);\n\n  const document = parser.parseFromString(saveResponse.rawData, \"text/html\");\n  const rows = document.querySelectorAll(\"#body_grdSummary tbody tr\");\n  const masterData = [];\n\n  rows.forEach(row => {\n    const id = row.querySelector(\"span[id*='lblDtlCode']\")?.textContent.trim() || \"\";\n    const description = row.querySelector(\"span[id*='lblDtlName']\")?.textContent.trim() || \"\";\n    const amount = args.masterDataType === \"Fuel Reimbursement\"\n      ? row.querySelector(\"span[id*='lblNumValue']\")?.textContent.trim() || \"\"\n      : row.querySelector(\"span[id*='lblTextValue']\")?.textContent.trim() || \"\";\n    const editButton = row.querySelector(\"a[id*='EditButton']\");\n    const editKey = editButton?.getAttribute(\"href\")?.match(/__doPostBack\\('([^']+)'/)?.[1] || \"\";\n    const masterDataType = args.masterDataType || \"Medical Claims\";\n\n    masterData.push({\n      id,\n      description,\n      amount,\n      editKey,\n      masterDataType\n    });\n  });\n\n  return masterData;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

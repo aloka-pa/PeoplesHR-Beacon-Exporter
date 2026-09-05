@@ -1,0 +1,113 @@
+{
+  "id": "690dc566931a2d61ba0b165a",
+  "slug": "updatebloodgroupdetails",
+  "name": "updateBloodGroupDetails",
+  "description": "In this tool, start by executing the \"getEIMAttributeList\" API to retrieve the existing data. If any required fields are missing from the user input, fetch the corresponding values using the getEIMAttributeList  API to ensure completeness.",
+  "instructions": null,
+  "taskName": "Update Blood Group Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateBloodGroupDetails",
+  "createdAt": "2025-05-04T17:42:50.213Z",
+  "updatedAt": "2026-06-15T07:36:37.535Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "92afeb74d5e10d3202c968080c0912ccbb4d841781893c068c9fa45a3a4e5117",
+  "lastExportedAt": "2026-09-05T19:39:22.314Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b165a",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateBloodGroupDetails",
+      "description": "In this tool, start by executing the \"getEIMAttributeList\" API to retrieve the existing data. If any required fields are missing from the user input, fetch the corresponding values using the getEIMAttributeList  API to ensure completeness.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateBloodGroupDetails",
+        "args": [
+          {
+            "name": "ctl00bodytxtName",
+            "type": "string",
+            "description": "to give the blood group example:-\"A +\",\"A -\",etc..",
+            "required": true,
+            "_id": "6817a71a68ca7396dee7421a"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6817a71a68ca7396dee74219"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/BloodGroup.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/BloodGroup.aspx');\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n  } else {\n    url = \"BloodGroup\"\n  }\n  const editInit = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.bg.viewState,\n    __VIEWSTATEGENERATOR: window.bg.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.bg.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butEdit\": \"Edit\"\n  }, url);\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n    \"ctl00$body$txtName\": args.ctl00bodytxtName,\n    \"ctl00$body$butSave\": \"Save\"\n  }, url);\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const bloodgroup = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n  const resetBtn = doc.querySelector(\"#ctl00_body_butReset\");\n\n  const updatedetails = {\n    code,\n    bloodgroup\n  };\n\n  if (resetBtn.disabled) {\n    return updatedetails\n  } else {\n    return \"Please specify a valid data\"\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update Blood Group Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-04T17:42:50.213Z",
+      "updatedAt": "2026-06-15T07:36:37.535Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateBloodGroupDetails",
+      "args": [
+        {
+          "name": "ctl00bodytxtName",
+          "type": "string",
+          "description": "to give the blood group example:-\"A +\",\"A -\",etc..",
+          "required": true,
+          "_id": "6817a71a68ca7396dee7421a"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6817a71a68ca7396dee74219"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/BloodGroup.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/BloodGroup.aspx');\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n  } else {\n    url = \"BloodGroup\"\n  }\n  const editInit = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.bg.viewState,\n    __VIEWSTATEGENERATOR: window.bg.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.bg.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butEdit\": \"Edit\"\n  }, url);\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n    \"ctl00$body$txtName\": args.ctl00bodytxtName,\n    \"ctl00$body$butSave\": \"Save\"\n  }, url);\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const bloodgroup = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n  const resetBtn = doc.querySelector(\"#ctl00_body_butReset\");\n\n  const updatedetails = {\n    code,\n    bloodgroup\n  };\n\n  if (resetBtn.disabled) {\n    return updatedetails\n  } else {\n    return \"Please specify a valid data\"\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

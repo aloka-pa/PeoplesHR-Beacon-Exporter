@@ -1,0 +1,79 @@
+{
+  "id": "690dc564931a2d61ba0b1548",
+  "slug": "getbenefitclearanceheadsdetails",
+  "name": "getBenefitClearanceHeadsDetails",
+  "description": "in this tool generate the Benefit Clearance Heads Details.",
+  "instructions": null,
+  "taskName": "BenefitClearanceHeads",
+  "tags": [],
+  "status": "unlive",
+  "signature": "getBenefitClearanceHeadsDetails",
+  "createdAt": "2025-05-02T09:38:55.262Z",
+  "updatedAt": "2026-07-17T12:52:11.254Z",
+  "assignedAgents": [],
+  "contentHash": "c011c3b702c42b65d3fd3d089f83aeab5a54724a0734ecb48a1149428a12f356",
+  "lastExportedAt": "2026-09-05T19:39:22.165Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b1548",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getBenefitClearanceHeadsDetails",
+      "description": "in this tool generate the Benefit Clearance Heads Details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getBenefitClearanceHeadsDetails",
+        "args": [],
+        "isAdvanced": false,
+        "_id": "6a5a257b5aa8b43ec1a8216c"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"BenefitClearingHead\");\n\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ctl04\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"100000\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"BenefitClearingHead\");\n\n  const result = Array.from(\n    new DOMParser()\n      .parseFromString(searchResponse.rawData, \"text/html\")\n      .querySelectorAll(\"tbody tr\")\n  ).reduce((acc, row) => {\n    const cells = row.querySelectorAll(\"td\");\n    if (cells.length >= 3) {\n      acc.push({\n        designation: cells[0].textContent.trim(),\n        code: cells[1].textContent.trim(),\n        name: cells[2].textContent.trim()\n      });\n    }\n    return acc;\n  }, []);\n\n  return result;\n});\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "BenefitClearanceHeads",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-02T09:38:55.262Z",
+      "updatedAt": "2026-07-17T12:52:11.254Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getBenefitClearanceHeadsDetails",
+      "args": [],
+      "isAdvanced": false,
+      "_id": "6a5a257b5aa8b43ec1a8216c"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"BenefitClearingHead\");\n\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ctl04\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"100000\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"BenefitClearingHead\");\n\n  const result = Array.from(\n    new DOMParser()\n      .parseFromString(searchResponse.rawData, \"text/html\")\n      .querySelectorAll(\"tbody tr\")\n  ).reduce((acc, row) => {\n    const cells = row.querySelectorAll(\"td\");\n    if (cells.length >= 3) {\n      acc.push({\n        designation: cells[0].textContent.trim(),\n        code: cells[1].textContent.trim(),\n        name: cells[2].textContent.trim()\n      });\n    }\n    return acc;\n  }, []);\n\n  return result;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

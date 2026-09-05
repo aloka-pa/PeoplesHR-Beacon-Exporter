@@ -1,0 +1,159 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "WorkExperienceRecords",
+      "type": "array",
+      "required": true,
+      "defaultValue": null,
+      "description": "Array of work experience records. All fields are required. If any value is missing during update, the system should use existing values from previously fetched records.",
+      "advanced": true,
+      "raw": {
+        "title": "WorkExperienceRecords",
+        "type": "array",
+        "description": "Array of work experience records. All fields are required. If any value is missing during update, the system should use existing values from previously fetched records.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "Accountabilities": {
+              "type": "string",
+              "description": "Key responsibilities or duties handled in this work experience"
+            },
+            "Achievments": {
+              "type": "string",
+              "description": "Notable accomplishments or achievements in this role"
+            },
+            "ActionType": {
+              "type": "integer",
+              "description": "Indicates type of action performed (e.g., 1 = Insert, 2 = Update)"
+            },
+            "Address1": {
+              "type": "string",
+              "description": "First line of company address"
+            },
+            "Address2": {
+              "type": "string",
+              "description": "Second line of company address"
+            },
+            "Address3": {
+              "type": "string",
+              "description": "Third line of company address"
+            },
+            "BenifitConsiderFlg": {
+              "type": "boolean",
+              "description": "Flag to indicate if benefits were considered"
+            },
+            "Category": {
+              "type": "string",
+              "description": "Employment type (e.g., 'Internal', 'External')"
+            },
+            "Company": {
+              "type": "string",
+              "description": "Name of the company"
+            },
+            "ContactPerson": {
+              "type": "string",
+              "description": "Name of HR/Manager reference person"
+            },
+            "Department": {
+              "type": "string",
+              "description": "Department or division worked in"
+            },
+            "DesignationOnLeave": {
+              "type": "string",
+              "description": "Designation held when leaving the company"
+            },
+            "ExpEmail": {
+              "type": "string",
+              "description": "Email address associated with this work experience"
+            },
+            "ExpFromDate": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Start date of employment in ISO format"
+            },
+            "ExpFromDateStr": {
+              "type": "string",
+              "description": "Formatted start date of employment (DD/MM/YYYY)"
+            },
+            "ExpMonths": {
+              "type": "integer",
+              "description": "Number of months of experience in this role"
+            },
+            "ExpTelNo": {
+              "type": "string",
+              "description": "Contact telephone number during employment"
+            },
+            "ExpToDate": {
+              "type": "string",
+              "format": "date-time",
+              "description": "End date of employment in ISO format"
+            },
+            "ExpToDateStr": {
+              "type": "string",
+              "description": "Formatted end date of employment (DD/MM/YYYY)"
+            },
+            "ExpYears": {
+              "type": "integer",
+              "description": "Number of years of experience in this role"
+            },
+            "IndustryTypeName": {
+              "type": "string",
+              "description": "Name of the industry type"
+            },
+            "IsInternalFlg": {
+              "type": "integer",
+              "description": "Flag indicating if the role was internal (1 = Yes, 0 = No)"
+            },
+            "ReasonForLeave": {
+              "type": "string",
+              "description": "Reason for leaving the company"
+            },
+            "Sequence": {
+              "type": "integer",
+              "description": "Sequence/order number of the work experience entry"
+            },
+            "UpdateInsert": {
+              "type": "integer",
+              "description": "Indicates update/insert action flag (system field)"
+            },
+            "WorkRelatedFlg": {
+              "type": "boolean",
+              "description": "Indicates if the work experience is work-related"
+            }
+          },
+          "required": [
+            "Accountabilities",
+            "Achievments",
+            "ActionType",
+            "Address1",
+            "Address2",
+            "Address3",
+            "BenifitConsiderFlg",
+            "Category",
+            "Company",
+            "ContactPerson",
+            "Department",
+            "DesignationOnLeave",
+            "ExpEmail",
+            "ExpFromDate",
+            "ExpFromDateStr",
+            "ExpMonths",
+            "ExpTelNo",
+            "ExpToDate",
+            "ExpToDateStr",
+            "ExpYears",
+            "IndustryTypeName",
+            "IsInternalFlg",
+            "ReasonForLeave",
+            "Sequence",
+            "UpdateInsert",
+            "WorkRelatedFlg"
+          ]
+        },
+        "minItems": 1,
+        "uniqueItems": true
+      }
+    }
+  ]
+}

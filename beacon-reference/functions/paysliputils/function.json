@@ -1,0 +1,24 @@
+{
+  "id": "690dc586931a2d61ba0b2e20",
+  "slug": "paysliputils",
+  "name": "paysliputils",
+  "status": "live",
+  "createdAt": "2025-06-13T12:05:42.664Z",
+  "updatedAt": "2025-06-13T12:05:42.664Z",
+  "contentHash": "dead3c921be1d7b1327a492e17088bce2217450d4793a13cfb8902bbba11f966",
+  "lastExportedAt": "2026-09-05T19:41:35.520Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc586931a2d61ba0b2e20",
+    "name": "paysliputils",
+    "status": "live",
+    "code": "(async function (args) {\n    //done\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n    myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n    const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n    const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n    const userid = BeaconBar.user.metaData.empNo\n    const response = await fetch(`${reqOptions}Widgets/Payslip/RequestPlaySlipQueryString?empNumber=${args.employeeid || userid}&payYear=${args.year}&pfCode=${args.pfCode}&payScheduleId=${args.schedule}&_=${Date.now()}`, requestOptions)\n    const data = await response.json();\n    return data;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "masterDataType",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "if the user select for master data type to get the all master data reimbursement for 'masterDataTypes' api Example 'Basic Plan' etc. ",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "if the user select for master data type to get the all master data reimbursement for 'masterDataTypes' api Example 'Basic Plan' etc. "
+      }
+    },
+    {
+      "name": "masterDataTypeIndex",
+      "type": "integer",
+      "required": true,
+      "defaultValue": null,
+      "description": "if the user select for master data type corresponding type index will be take to get the all master data reimbursement for 'masterDataTypes' api Example '1','2 etc..",
+      "advanced": true,
+      "raw": {
+        "type": "integer",
+        "description": "if the user select for master data type corresponding type index will be take to get the all master data reimbursement for 'masterDataTypes' api Example '1','2 etc.."
+      }
+    },
+    {
+      "name": "masterDataTypeValue",
+      "type": "integer",
+      "required": true,
+      "defaultValue": null,
+      "description": "if the user select for master data type corresponding type index will be take to get the all master data reimbursement for 'masterDataTypes' api Example 'P30003','P30002' etc..",
+      "advanced": true,
+      "raw": {
+        "type": "integer",
+        "description": "if the user select for master data type corresponding type index will be take to get the all master data reimbursement for 'masterDataTypes' api Example 'P30003','P30002' etc.."
+      }
+    }
+  ]
+}

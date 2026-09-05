@@ -1,0 +1,24 @@
+{
+  "id": "690dc578931a2d61ba0b205b",
+  "slug": "movementtype",
+  "name": "MovementType",
+  "status": "live",
+  "createdAt": "2025-05-09T09:33:04.832Z",
+  "updatedAt": "2026-07-17T12:55:58.461Z",
+  "contentHash": "655d0b0ca02820bcd0c19ef4286ace9183d14cba77d9043be84d39e043b7f710",
+  "lastExportedAt": "2026-09-05T19:41:17.379Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc578931a2d61ba0b205b",
+    "name": "MovementType",
+    "status": "live",
+    "code": "(async function (args) {\n    const reqOptions = BeaconBar.executeFunction(\"reqOptions\")();\n    const baseUrl = `${reqOptions}ELC/ElcType/GetElcTypeSummary`;\n    \n    const headers = new Headers({\n        \"accept\": \"application/json, text/javascript, */*; q=0.01\",\n        \"content-type\": \"application/x-www-form-urlencoded; charset=UTF-8\",\n        \"x-requested-with\": \"XMLHttpRequest\"\n    });\n\n    const allResults = [];\n\n    for (let page = 2; page <= args.totalCount; page++) {\n        const params = new URLSearchParams({\n            _search: \"false\",\n            nd: Date.now().toString(),\n            rows: \"100\",\n            page: page.toString(),\n            sidx: \"Name\",\n            sord: \"asc\"\n        });\n\n        try {\n            const response = await fetch(baseUrl, {\n                method: \"POST\",\n                headers: headers,\n                body: params.toString()\n            });\n\n            if (!response.ok) {\n                throw new Error(`HTTP error! status: ${response.status}`);\n            }\n\n            const result = await response.json();\n            allResults.push(result);\n        } catch (err) {\n        }\n    }\n\n    return allResults;\n})",
+    "by": "34476",
+    "__v": 1
+  }
+}

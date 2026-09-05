@@ -1,0 +1,24 @@
+{
+  "id": "690dc589931a2d61ba0b30bf",
+  "slug": "selectedleadership",
+  "name": "selectedLeaderShip",
+  "status": "live",
+  "createdAt": "2025-06-03T10:53:16.671Z",
+  "updatedAt": "2025-06-03T10:53:16.671Z",
+  "contentHash": "a9bb7bacb140b6e62114c0a6a3106783aac2353e776fddf5e215305ada1bd986",
+  "lastExportedAt": "2026-09-05T19:41:38.496Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc589931a2d61ba0b30bf",
+    "name": "selectedLeaderShip",
+    "status": "live",
+    "code": "(async function (args , state) {\n  const myHeaders = new Headers({\n    \"Accept\": \"*/*\",\n    \"Accept-Language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n    \"Cache-Control\": \"no-cache\",\n    \"Content-Type\": \"application/x-www-form-urlencoded; charset=UTF-8\"\n  });\n\n  const formData = new URLSearchParams({\n  \"RadScriptManager1_HiddenField\": \";;Telerik.Web.UI, Version=2008.1.415.35, Culture=neutral, PublicKeyToken=121fae78165ba3d4:en-US:493502ac-fd18-4d2a-b4d2-e3cf218d0d84:fe8d4455:c7991a52:cc662d70:f52b3883:7e0e28a2\",\n    \"ctl00$body$ScriptManager1\": \"ctl00$body$UpdatePanel2|ctl00$body$ucCycleHeader$ddlReviewCycle\",\n    \"__EVENTTARGET\": \"ctl00$body$ucCycleHeader$ddlReviewCycle\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": state.viewState ,\n    \"__VIEWSTATEGENERATOR\": state.viewStateGenerator ,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": state.eventValidation ,\n    \"ctl00$body$ucCycleHeader$ddlReviewCycle\": args.reviewCycle ,\n    \"ctl00$body$hdnTalentCycleID\": \"0\",\n    \"ctl00$body$hdnIspms1\": \"\",\n    \"ctl00$txtCultureDate\": \"m/d/yy\",\n    \"__ASYNCPOST\": \"true\"\n  });\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: formData.toString(),\n    redirect: \"follow\"\n  };\n\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const response = await fetch(`${reqOptions}Talent/SelectLeadershipCandiddates.aspx`, requestOptions);\n  const data = await response.text();\n\n  return data;\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

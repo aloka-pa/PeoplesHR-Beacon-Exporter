@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "positionName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name of the new Benefit Clearance Head position to create (e.g., 'IT Operations Lead', 'Finance Manager', 'HR Coordinator').",
+      "advanced": false,
+      "raw": {
+        "name": "positionName",
+        "type": "string",
+        "description": "The name of the new Benefit Clearance Head position to create (e.g., 'IT Operations Lead', 'Finance Manager', 'HR Coordinator').",
+        "required": true,
+        "_id": "695cb0dc04d83e39952b2766"
+      }
+    },
+    {
+      "name": "employeeId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The employee ID to assign to this position (e.g., '000001', '00000006'). The system will search for this employee and assign them to the new position.",
+      "advanced": false,
+      "raw": {
+        "name": "employeeId",
+        "type": "string",
+        "description": "The employee ID to assign to this position (e.g., '000001', '00000006'). The system will search for this employee and assign them to the new position.",
+        "required": true,
+        "_id": "695cb0dc04d83e39952b2767"
+      }
+    },
+    {
+      "name": "createWorkflowApproval",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Whether to enable workflow approval for this position. Use 'true' to enable or 'false' to disable. Defaults to false if not provided.",
+      "advanced": false,
+      "raw": {
+        "name": "createWorkflowApproval",
+        "type": "string",
+        "description": "Whether to enable workflow approval for this position. Use 'true' to enable or 'false' to disable. Defaults to false if not provided.",
+        "required": true,
+        "_id": "695cb0dc04d83e39952b2768"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

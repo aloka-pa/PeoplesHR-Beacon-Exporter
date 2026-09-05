@@ -1,0 +1,17 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "desc",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "This is the finalized rephrased description that will be used in the critical incident journal entry",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "This is the finalized rephrased description that will be used in the critical incident journal entry"
+      }
+    }
+  ]
+}

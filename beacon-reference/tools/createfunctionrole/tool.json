@@ -1,0 +1,72 @@
+{
+  "id": "690dc565931a2d61ba0b15bd",
+  "slug": "createfunctionrole",
+  "name": "createFunctionRole",
+  "description": "In this tool, to create a functional role, if the user provides a function name, fetch the corresponding value using the functionTypes API. Then, display all available functional types, allow the user to select one, and use the corresponding value for the creation process.",
+  "instructions": null,
+  "taskName": "create Function Role",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createFunctionRole",
+  "createdAt": "2025-05-02T14:15:06.357Z",
+  "updatedAt": "2026-05-15T06:56:33.462Z",
+  "assignedAgents": [],
+  "contentHash": "0ec3fa180b0c8338bc2d880383250c5b7797de750d54451e5494b3d19c812a59",
+  "lastExportedAt": "2026-09-05T19:39:22.668Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc565931a2d61ba0b15bd",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createFunctionRole",
+      "description": "In this tool, to create a functional role, if the user provides a function name, fetch the corresponding value using the functionTypes API. Then, display all available functional types, allow the user to select one, and use the corresponding value for the creation process.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createFunctionRole",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_dpcountry\": {\n      \"type\": \"string\",\n      \"description\": \"Selected functional role ID or country code. if the user give the function name correspondong value wiil be take for functionTypes Api. and display the all functionalTypes pick one and corresponding value will be take.\"\n    },\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"The name or label for the functional role.\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_dpcountry\",\n    \"ctl00_body_txtName\"\n  ]\n}",
+        "_id": "6814d36aea5a48ef0a505b35"
+      },
+      "by": "7829",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\"getEIMApii\")({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.ft.viewState,\n      __VIEWSTATEGENERATOR: window.ft.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.ft.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$dpcountry\":\n        args[\"ctl00_body_dpcountry\"],\n\n      \"ctl00$body$txtName\":\n        args[\"ctl00_body_txtName\"],\n\n      \"ctl00$body$butSave\": \"Save\"\n\n    }, \"FunctionalRole\");\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const code =\n    doc.querySelector(\"#ctl00_body_txtCode\")\n      ?.value?.trim() || \"\";\n\n  const functionRole =\n    doc.querySelector(\"#ctl00_body_txtName\")\n      ?.value?.trim() || \"\";\n\n  const selectElement =\n    doc.querySelector(\"#ctl00_body_dpcountry\");\n\n  let functionSelect = null;\n\n  if (selectElement) {\n    const selected = selectElement.selectedOptions[0];\n\n    functionSelect = {\n      value: selected?.value || \"\",\n      text: selected?.textContent.trim() || \"\"\n    };\n  }\n\n  const result = {\n    code,\n    functionSelect,\n    functionRole\n  };\n\n  return result;\n\n});",
+      "groupName": "",
+      "tags": [],
+      "taskName": "create Function Role",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-02T14:15:06.357Z",
+      "updatedAt": "2026-05-15T06:56:33.462Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createFunctionRole",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_dpcountry\": {\n      \"type\": \"string\",\n      \"description\": \"Selected functional role ID or country code. if the user give the function name correspondong value wiil be take for functionTypes Api. and display the all functionalTypes pick one and corresponding value will be take.\"\n    },\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"The name or label for the functional role.\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_dpcountry\",\n    \"ctl00_body_txtName\"\n  ]\n}",
+      "_id": "6814d36aea5a48ef0a505b35"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\"getEIMApii\")({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.ft.viewState,\n      __VIEWSTATEGENERATOR: window.ft.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.ft.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$dpcountry\":\n        args[\"ctl00_body_dpcountry\"],\n\n      \"ctl00$body$txtName\":\n        args[\"ctl00_body_txtName\"],\n\n      \"ctl00$body$butSave\": \"Save\"\n\n    }, \"FunctionalRole\");\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const code =\n    doc.querySelector(\"#ctl00_body_txtCode\")\n      ?.value?.trim() || \"\";\n\n  const functionRole =\n    doc.querySelector(\"#ctl00_body_txtName\")\n      ?.value?.trim() || \"\";\n\n  const selectElement =\n    doc.querySelector(\"#ctl00_body_dpcountry\");\n\n  let functionSelect = null;\n\n  if (selectElement) {\n    const selected = selectElement.selectedOptions[0];\n\n    functionSelect = {\n      value: selected?.value || \"\",\n      text: selected?.textContent.trim() || \"\"\n    };\n  }\n\n  const result = {\n    code,\n    functionSelect,\n    functionRole\n  };\n\n  return result;\n\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

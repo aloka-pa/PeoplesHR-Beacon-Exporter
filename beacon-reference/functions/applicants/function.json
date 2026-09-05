@@ -1,0 +1,24 @@
+{
+  "id": "690dc57a931a2d61ba0b224b",
+  "slug": "applicants",
+  "name": "applicants",
+  "status": "live",
+  "createdAt": "2025-05-14T07:17:58.422Z",
+  "updatedAt": "2026-07-17T12:55:47.097Z",
+  "contentHash": "19e240afaab22a06f61a15d8c85e6f2eca938eb7ec9fc4a7e58a44be4454017f",
+  "lastExportedAt": "2026-09-05T19:41:23.865Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57a931a2d61ba0b224b",
+    "name": "applicants",
+    "status": "live",
+    "code": "(async function (bodyParams) {\n  const reqOptions = BeaconBar.executeFunction(\"reqOptions\")();\n  const myHeaders = new Headers();\n  myHeaders.append(\"content-type\", \"application/json\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\")\n\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: JSON.stringify(bodyParams),\n    redirect: \"follow\"\n  };\n\n  try {\n    const response = await fetch(`${reqOptions}TNDV9/TrainingEnrollment/GetDetailsForSelectedSchedule`, requestOptions);\n    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);\n    const data = await response.json();\n    return data;\n  } catch (error) {\n    throw error;\n  }\n})\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

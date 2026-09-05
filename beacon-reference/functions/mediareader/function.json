@@ -1,0 +1,24 @@
+{
+  "id": "690dc585931a2d61ba0b2d2f",
+  "slug": "mediareader",
+  "name": "mediaReader",
+  "status": "live",
+  "createdAt": "2025-06-09T11:17:14.307Z",
+  "updatedAt": "2026-07-17T12:55:58.087Z",
+  "contentHash": "2367968d98abd21f3244a1c6a2f22fcac681f51181a46c1edd326457786d3856",
+  "lastExportedAt": "2026-09-05T19:41:17.682Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc585931a2d61ba0b2d2f",
+    "name": "mediaReader",
+    "status": "live",
+    "code": "async function uploadBlobFile(blobFile) {\n  try {\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"*/*\");\n    myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\n    const formdata = new FormData();\n\n    formdata.append(\"files\", blobFile, \"uploaded.pdf\");\n    formdata.append(\"query\", \"extract the data\");\n\n    const requestOptions = {\n      method: \"POST\",\n      headers: myHeaders, \n      body: formdata,\n      redirect: \"follow\"\n    };\n\n    const response = await fetch(\"https://edge.beacon.li/api/v1/user/mediaReader\", requestOptions);\n\n    if (!response.ok) {\n      throw new Error(`HTTP error! Status: ${response.status}`);\n    }\n\n    const result = await response.text();\n    return result;\n\n  } catch (error) {\n    throw error;\n  }\n}\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "id": "690dc56b931a2d61ba0b1b1e",
+  "slug": "selfemployeeinformationdetails",
+  "name": "selfEmployeeInformationDetails",
+  "description": "in this tool generate the employee information details.in this tool return the  \"personal details\", \"employment details\",  \"workstation details\",  \"contact details\" and \"other details\". and if the user employee self or admin related query first execute the \"admin information\" tool. then get employee id then after execute in the tool. \nNote: in the agent tool only provide the self employee information details. If a requested label or field is not found in this tool response or API payload, always execute the getNewEmployeeLabelMappings tool to retrieve the updated label mapping and return the corresponding value from there.",
+  "instructions": null,
+  "taskName": "Fetching The Self Employee Information",
+  "tags": [
+    "Employee Information",
+    "Headers",
+    "Feat"
+  ],
+  "status": "live",
+  "signature": "selfEmployeeInformationDetails",
+  "createdAt": "2025-08-25T12:00:05.333Z",
+  "updatedAt": "2026-07-17T12:55:21.057Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "7eec323a679d5d93c6cf27962be5a47a72609c25a029b6adf825773617dcf735",
+  "lastExportedAt": "2026-09-05T19:39:22.037Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1b1e",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selfEmployeeInformationDetails",
+      "description": "in this tool generate the employee information details.in this tool return the  \"personal details\", \"employment details\",  \"workstation details\",  \"contact details\" and \"other details\". and if the user employee self or admin related query first execute the \"admin information\" tool. then get employee id then after execute in the tool. \nNote: in the agent tool only provide the self employee information details. If a requested label or field is not found in this tool response or API payload, always execute the getNewEmployeeLabelMappings tool to retrieve the updated label mapping and return the corresponding value from there.",
+      "rules": {
+        "ids": [
+          "690dc4b5931a2d61ba0a8085"
+        ],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selfEmployeeInformationDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "self employee id Example:- \"000001\" etc...",
+            "required": true,
+            "_id": "68ac50458a1cd732de113f4f"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a2639b37eae4bf1841d1b"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/AssignBankInformation.aspx');\n  let pageUrl;\n  if (updateurl.updateUrl) {\n    pageUrl = `${location.origin}/${reqOptions.sl}/${updateurl.updateUrl}`;\n  } else {\n    pageUrl = `${location.origin}/${reqOptions.sl}/EIM/AssignBankInformation.aspx`;\n  }\n\n  const getResponse = await fetch(pageUrl, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n\n  const detailsText = await getResponse.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(detailsText, \"text/html\");\n\n  const empNumber = doc.querySelector('input[id=\"ctl00_body_EmpSearch_txtEmpDisplayNumber\"]')?.value || \"\";\n  window.pqn = empNumber;\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n  const urlencoded = new URLSearchParams({\n    scrollLeft: \"\",\n    scrollTop: \"\",\n    __EVENTTARGET: \"GetSearchResult\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: viewState,\n    __VIEWSTATEGENERATOR: viewStateGenerator,\n    __SCROLLPOSITIONX: \"0\",\n    __SCROLLPOSITIONY: \"0\",\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: eventValidation,\n    \"ctl00$hdnDateFormat\": \"m/d/yy\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": empNumber,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00$body$txtAccount\": \"\",\n    \"ctl00$body$txtempnumber\": empNumber,\n    \"ctl00$body$grdEmpBank$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdEmpBank_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdEmpBank$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"2\",\n    \"ctl00_body_grdEmpBank_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdEmpBank_ClientState\": \"\",\n    \"ctl00$body$hdnCurrentAmount\": \"\",\n    \"ctl00$body$hdnAmountType\": \"\",\n    \"ctl00$body$txtEmpNo\": empNumber\n  });\n\n  await fetch(pageUrl, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  // const updateurl1 = await BeaconBar.executeFunction(\"updateUrlParams\")('eimv9/employee/employee?mvc=1');\n  // let url;\n  // let param;\n  // if (updateurl1.updateUrl) {\n  //   param = updateurl.updateParams\n  //   url = updateurl1.updateUrl;\n  // } else {\n  //   url = `eimv9/employee/employee?mvc=1`;\n  //   param = \"mvc=1\";\n  // }\n\n  const digest2 = await BeaconBar.executeFunction('getDigest')(\"mvc=1\");\n\n  const myHeaders2 = new Headers();\n  myHeaders2.append(\"accept\", \"*/*\");\n  myHeaders2.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders2.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const employeeUrl = `${location.origin}/${reqOptions.sl}/eimv9/employee/employee?mvc=1&digest=${digest2.digest}&_=${Date.now()}`;\n\n  const employeeResponse = await fetch(employeeUrl, {\n    method: \"GET\",\n    headers: myHeaders2,\n    redirect: \"follow\"\n  });\n\n  const text = await employeeResponse.text();\n  const doc2 = parser.parseFromString(text, \"text/html\");\n  const scriptTags = doc2.querySelectorAll(\"script\");\n\n  let modelObject = null;\n\n  scriptTags.forEach(script => {\n    if (script.textContent.includes(\"var model = {\")) {\n      const scriptContent = script.textContent;\n      const modelStart = scriptContent.indexOf(\"var model = {\") + 12;\n      const modelEnd = scriptContent.indexOf(\"};\", modelStart) + 1;\n      const modelString = scriptContent.substring(modelStart, modelEnd);\n      try {\n        modelObject = JSON.parse(modelString);\n      } catch (err) {\n      }\n    }\n  });\n\n  const otherDetailsUrl = `${location.origin}/${reqOptions.sl}/EIMV9/OtherDetails/OtherDetailsDataWFEIMAdminSide`;\n\n  const payload = {\n    empNumber: modelObject?.Emp_number || \"\",\n    workflow_id: null\n  };\n\n  const otherDetailsResponse = await fetch(otherDetailsUrl, {\n    method: \"POST\",\n    headers: {\n      \"Accept\": \"*/*\",\n      \"Content-Type\": \"application/json\",\n      \"X-Requested-With\": \"XMLHttpRequest\"\n    },\n    credentials: \"include\",\n    body: JSON.stringify(payload)\n  });\n\n  const result = await otherDetailsResponse.json();\n  const otherDetails = result.AttributesList;\n\n  const details = {\n    personalDetails: modelObject?.EmployeeDetails?.EmployeePersonalInfo,\n    employmentDetails: modelObject?.EmployeeDetails?.EmployeeEmployementInfo,\n    employeeWorkstation: modelObject?.EmpWorkstation,\n    employeeContactDetails: modelObject?.EmployeeDetails?.EmployeeContactInfo,\n    otherDetails: otherDetails\n  };\n\n  BeaconBar.setSharedData(\"EmployeeDetails\", details);\n  return details;\n});\n",
+      "groupName": "",
+      "tags": [
+        "Employee Information",
+        "Headers",
+        "Feat"
+      ],
+      "taskName": "Fetching The Self Employee Information",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-25T12:00:05.333Z",
+      "updatedAt": "2026-07-17T12:55:21.057Z",
+      "__v": 6,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selfEmployeeInformationDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "self employee id Example:- \"000001\" etc...",
+          "required": true,
+          "_id": "68ac50458a1cd732de113f4f"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a2639b37eae4bf1841d1b"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/AssignBankInformation.aspx');\n  let pageUrl;\n  if (updateurl.updateUrl) {\n    pageUrl = `${location.origin}/${reqOptions.sl}/${updateurl.updateUrl}`;\n  } else {\n    pageUrl = `${location.origin}/${reqOptions.sl}/EIM/AssignBankInformation.aspx`;\n  }\n\n  const getResponse = await fetch(pageUrl, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n\n  const detailsText = await getResponse.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(detailsText, \"text/html\");\n\n  const empNumber = doc.querySelector('input[id=\"ctl00_body_EmpSearch_txtEmpDisplayNumber\"]')?.value || \"\";\n  window.pqn = empNumber;\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n  const urlencoded = new URLSearchParams({\n    scrollLeft: \"\",\n    scrollTop: \"\",\n    __EVENTTARGET: \"GetSearchResult\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: viewState,\n    __VIEWSTATEGENERATOR: viewStateGenerator,\n    __SCROLLPOSITIONX: \"0\",\n    __SCROLLPOSITIONY: \"0\",\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: eventValidation,\n    \"ctl00$hdnDateFormat\": \"m/d/yy\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": empNumber,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00$body$txtAccount\": \"\",\n    \"ctl00$body$txtempnumber\": empNumber,\n    \"ctl00$body$grdEmpBank$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdEmpBank_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdEmpBank$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"2\",\n    \"ctl00_body_grdEmpBank_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdEmpBank_ClientState\": \"\",\n    \"ctl00$body$hdnCurrentAmount\": \"\",\n    \"ctl00$body$hdnAmountType\": \"\",\n    \"ctl00$body$txtEmpNo\": empNumber\n  });\n\n  await fetch(pageUrl, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  // const updateurl1 = await BeaconBar.executeFunction(\"updateUrlParams\")('eimv9/employee/employee?mvc=1');\n  // let url;\n  // let param;\n  // if (updateurl1.updateUrl) {\n  //   param = updateurl.updateParams\n  //   url = updateurl1.updateUrl;\n  // } else {\n  //   url = `eimv9/employee/employee?mvc=1`;\n  //   param = \"mvc=1\";\n  // }\n\n  const digest2 = await BeaconBar.executeFunction('getDigest')(\"mvc=1\");\n\n  const myHeaders2 = new Headers();\n  myHeaders2.append(\"accept\", \"*/*\");\n  myHeaders2.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders2.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const employeeUrl = `${location.origin}/${reqOptions.sl}/eimv9/employee/employee?mvc=1&digest=${digest2.digest}&_=${Date.now()}`;\n\n  const employeeResponse = await fetch(employeeUrl, {\n    method: \"GET\",\n    headers: myHeaders2,\n    redirect: \"follow\"\n  });\n\n  const text = await employeeResponse.text();\n  const doc2 = parser.parseFromString(text, \"text/html\");\n  const scriptTags = doc2.querySelectorAll(\"script\");\n\n  let modelObject = null;\n\n  scriptTags.forEach(script => {\n    if (script.textContent.includes(\"var model = {\")) {\n      const scriptContent = script.textContent;\n      const modelStart = scriptContent.indexOf(\"var model = {\") + 12;\n      const modelEnd = scriptContent.indexOf(\"};\", modelStart) + 1;\n      const modelString = scriptContent.substring(modelStart, modelEnd);\n      try {\n        modelObject = JSON.parse(modelString);\n      } catch (err) {\n      }\n    }\n  });\n\n  const otherDetailsUrl = `${location.origin}/${reqOptions.sl}/EIMV9/OtherDetails/OtherDetailsDataWFEIMAdminSide`;\n\n  const payload = {\n    empNumber: modelObject?.Emp_number || \"\",\n    workflow_id: null\n  };\n\n  const otherDetailsResponse = await fetch(otherDetailsUrl, {\n    method: \"POST\",\n    headers: {\n      \"Accept\": \"*/*\",\n      \"Content-Type\": \"application/json\",\n      \"X-Requested-With\": \"XMLHttpRequest\"\n    },\n    credentials: \"include\",\n    body: JSON.stringify(payload)\n  });\n\n  const result = await otherDetailsResponse.json();\n  const otherDetails = result.AttributesList;\n\n  const details = {\n    personalDetails: modelObject?.EmployeeDetails?.EmployeePersonalInfo,\n    employmentDetails: modelObject?.EmployeeDetails?.EmployeeEmployementInfo,\n    employeeWorkstation: modelObject?.EmpWorkstation,\n    employeeContactDetails: modelObject?.EmployeeDetails?.EmployeeContactInfo,\n    otherDetails: otherDetails\n  };\n\n  BeaconBar.setSharedData(\"EmployeeDetails\", details);\n  return details;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

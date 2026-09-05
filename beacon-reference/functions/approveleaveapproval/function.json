@@ -1,0 +1,24 @@
+{
+  "id": "690dc57a931a2d61ba0b2284",
+  "slug": "approveleaveapproval",
+  "name": "approveleaveApproval",
+  "status": "live",
+  "createdAt": "2025-08-11T17:00:47.254Z",
+  "updatedAt": "2025-08-11T17:00:47.254Z",
+  "contentHash": "ac29d06910ad25c7d6b409eb5620c081c2987b59cd840c504e9c5de0031ddd7a",
+  "lastExportedAt": "2026-09-05T19:41:30.686Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57a931a2d61ba0b2284",
+    "name": "approveleaveApproval",
+    "status": "live",
+    "code": "(async function(approverComment) {\n  const token = BeaconBar.getSharedData(\"leaveToken\");\n  const leaveData = BeaconBar.getSharedData(\"approvers\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"__cfafvalue\", token);\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"content-type\", \"application/json\");\n\n  const raw = JSON.stringify({\n    LDetail: {\n      WFMainID: leaveData.LDetail.WFMainID,\n      ApprovalEmpNumber: leaveData.LDetail.ApprovalEmpNumber,\n      Comment: approverComment,\n      EmpNumber: leaveData.EmpNumber,\n      IsInformed: -1,\n      InformedMethod: \"000001\",\n      BreakdownList: leaveData.LDetail.BreakdownList\n    },\n    LeaveCategory: 1,\n    IsMedicalSeen: 0,\n    ApproveAttachments: null\n  });\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw,\n    redirect: \"follow\"\n  };\nconst reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const response = await fetch(\n    `${reqOptions}AbsenceV9/api/LeaveApproval/SubmitLeaveApplicationApproval/`,\n    requestOptions\n  );\n  \n  const data = await response.json();\n  return data;\n\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

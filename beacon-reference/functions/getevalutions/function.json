@@ -1,0 +1,24 @@
+{
+  "id": "690dc581931a2d61ba0b288d",
+  "slug": "getevalutions",
+  "name": "getEvalutions",
+  "status": "live",
+  "createdAt": "2025-08-04T09:10:51.688Z",
+  "updatedAt": "2025-08-04T09:10:51.688Z",
+  "contentHash": "2a49d6e2d8ed2ef56c0fa39f1c3c9463ca660dc86cd13f1fb1006ddaf000d5a8",
+  "lastExportedAt": "2026-09-05T19:41:30.992Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc581931a2d61ba0b288d",
+    "name": "getEvalutions",
+    "status": "live",
+    "code": "(async function(){\n  const myHeaders = new Headers();\nmyHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\nmyHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\nconst requestOptions = {\n  method: \"GET\",\n  headers: myHeaders,\n  redirect: \"follow\"\n};\nconst reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\nconst response  = await fetch(`${reqOptions}PerfV8/api/GoalPlanning/LoadOngoingGoalEvaluations?_=${Date.now()}`, requestOptions)\n  const data = await   response.json();\n  return data ;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

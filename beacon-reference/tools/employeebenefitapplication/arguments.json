@@ -1,0 +1,361 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "dataReimbursement",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "First, execute the 'getApplicationStructure' tool to retrieve and display effective years and months. The user selects a year and month, and their corresponding values (e.g., year '2025' corresponds to '1') are taken from the 'getApplicationStructure' response and used when applying the benefit.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "First, execute the 'getApplicationStructure' tool to retrieve and display effective years and months. The user selects a year and month, and their corresponding values (e.g., year '2025' corresponds to '1') are taken from the 'getApplicationStructure' response and used when applying the benefit.",
+        "properties": {
+          "yearValue": {
+            "type": "string",
+            "description": "The argument will be used to fetch the effect year corresponding to the year value from the 'getApplicationStructure' API. Example: '2025' → '1'."
+          },
+          "monthValue": {
+            "type": "string",
+            "description": "The argument will be used to fetch the effect month corresponding to the month value from the 'getApplicationStructure' API. Example: 'June' → '6'."
+          },
+          "amount": {
+            "type": "string",
+            "description": "The amount entered by the user."
+          },
+          "requestAmount": {
+            "type": "string",
+            "description": "The requested amount entered by the user."
+          },
+          "benComment": {
+            "type": "string",
+            "description": "Optional argument—if a referral is provided, the user can add a benefit comment."
+          }
+        },
+        "required": [
+          "yearValue",
+          "monthValue",
+          "amount",
+          "requestAmount"
+        ]
+      }
+    },
+    {
+      "name": "fuelReimbursements",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "First, execute the 'getApplicationStructure' tool to retrieve related data.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "First, execute the 'getApplicationStructure' tool to retrieve related data.",
+        "properties": {
+          "applDate": {
+            "type": "string",
+            "description": "User-provided application date in 'MM/DD/YYYY' format. Example: '05/21/2025'."
+          },
+          "billAmount": {
+            "type": "string",
+            "description": "User-provided bill amount. Example: '1000'."
+          },
+          "reqAmount": {
+            "type": "string",
+            "description": "User-provided total requested amount. Example: '1000'."
+          },
+          "benComment": {
+            "type": "string",
+            "description": "Optional argument—if a referral is provided, the user can add a benefit comment."
+          }
+        },
+        "required": [
+          "applDate",
+          "billAmount",
+          "reqAmount"
+        ]
+      }
+    },
+    {
+      "name": "medicalReimbursement",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "First, execute the 'getApplicationStructure' tool to retrieve related data.",
+      "advanced": true,
+      "raw": {
+        "title": "Hospital Bill Details",
+        "type": "object",
+        "description": "First, execute the 'getApplicationStructure' tool to retrieve related data.",
+        "properties": {
+          "noOfDaysNormalRoom": {
+            "type": "number",
+            "description": "Number of days stayed in a normal room"
+          },
+          "noOfDaysNICU": {
+            "type": "number",
+            "description": "Number of days stayed in NICU"
+          },
+          "consultation": {
+            "type": "number",
+            "description": "Number of consultation sessions"
+          },
+          "medication": {
+            "type": "number",
+            "description": "Number of days medication was provided"
+          },
+          "theater": {
+            "type": "number",
+            "description": "Number of surgeries or theater usages"
+          },
+          "tests": {
+            "type": "number",
+            "description": "Number of tests performed"
+          },
+          "otherCharges": {
+            "type": "number",
+            "description": "Other miscellaneous charges"
+          },
+          "amountMentionedInBill": {
+            "type": "number",
+            "description": "Total amount mentioned in the bill"
+          },
+          "natureOfIllness": {
+            "type": "string",
+            "description": "Brief description of the illness"
+          },
+          "billedDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Date when the bill was issued"
+          },
+          "accept": {
+            "type": "boolean",
+            "enum": [
+              "1"
+            ],
+            "description": "Whether the bill is accepted if the enable accept return value is 1 other wise 0"
+          },
+          "totalRequest": {
+            "type": "number",
+            "description": "Total number of requests associated"
+          },
+          "applicantComment": {
+            "type": "string",
+            "description": "Comments provided by the applicant"
+          }
+        },
+        "required": [
+          "billedDate",
+          "accept"
+        ]
+      }
+    },
+    {
+      "name": "parkingReimbursement",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": null,
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "properties": {
+          "parkingReimbursement1": {
+            "type": "array",
+            "description": "List of parking reimbursement claims. Each claim must include at least one of the following fields: application date, reason, or claim amount. if the user any format you convert in this format dd/mm/yyy example '27/05/2025' must take in this format",
+            "items": {
+              "title": "Claim Request Details",
+              "type": "object",
+              "properties": {
+                "applicationDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Date when the application was submitted if the user any format you convert in this format dd/mm/yyy example '27/05/2025'"
+                },
+                "reason": {
+                  "type": "string",
+                  "description": "Reason for submitting the claim"
+                },
+                "claimAmount": {
+                  "type": "number",
+                  "description": "Amount requested for the claim"
+                }
+              },
+              "anyOf": [
+                {
+                  "required": [
+                    "applicationDate"
+                  ]
+                },
+                {
+                  "required": [
+                    "reason"
+                  ]
+                },
+                {
+                  "required": [
+                    "claimAmount"
+                  ]
+                }
+              ]
+            }
+          },
+          "applicantComment": {
+            "type": "string",
+            "description": "Comments provided by the applicant"
+          },
+          "totalRequestAmount": {
+            "type": "number",
+            "description": "Total number of requests associated"
+          }
+        },
+        "required": [
+          "parkingReimbursement1"
+        ]
+      }
+    },
+    {
+      "name": "telephoneBillReimbursement",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "First, execute the 'getApplicationStructure' tool to retrieve related data. if the user any format you convert in this format dd/mm/yyy example '27/05/2025'",
+      "advanced": true,
+      "raw": {
+        "title": "Billing and Reimbursement Schema",
+        "type": "object",
+        "description": "First, execute the 'getApplicationStructure' tool to retrieve related data. if the user any format you convert in this format dd/mm/yyy example '27/05/2025'",
+        "properties": {
+          "applicationDate": {
+            "type": "string",
+            "format": "date",
+            "description": "The date when the reimbursement application was submitted. if the user any format you convert in this format dd/mm/yyy example '27/05/2025'"
+          },
+          "amountInBills": {
+            "type": "number",
+            "description": "The total amount mentioned in the submitted bills"
+          },
+          "totalRequestAmount": {
+            "type": "number",
+            "description": "The total amount being requested for reimbursement"
+          },
+          "applicantComment": {
+            "type": "string",
+            "description": "Comments provided by the applicant"
+          }
+        }
+      }
+    },
+    {
+      "name": "vehicleNumberRegistration",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "First, execute the 'getApplicationStructure' tool to retrieve related data. if the user any format you convert in this format dd/mm/yyy example '27/05/2025'",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "First, execute the 'getApplicationStructure' tool to retrieve related data. if the user any format you convert in this format dd/mm/yyy example '27/05/2025'",
+        "properties": {
+          "applicationDate": {
+            "type": "string",
+            "format": "date",
+            "description": "The date when the reimbursement application was submitted. if the user any format you convert in this format dd/mm/yyy example '27/05/2025'"
+          },
+          "vehicleRegistrationNumber": {
+            "type": "number",
+            "description": "The total amount mentioned in the submitted bills"
+          },
+          "applicantComment": {
+            "type": "string",
+            "description": "Comments provided by the applicant"
+          }
+        },
+        "required": [
+          "vehicleRegistrationNumber"
+        ]
+      }
+    },
+    {
+      "name": "healthPlan",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "First, execute the 'healthPlanDependentDetails' tool to retrieve related data.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "First, execute the 'healthPlanDependentDetails' tool to retrieve related data.",
+        "properties": {
+          "enrollments": {
+            "type": "array",
+            "description": "List of dependent health plan enrollment entries.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "healthPlanYear": {
+                  "type": "string",
+                  "description": "Stored plan year value used for API queries (e.g., '0', '1')."
+                },
+                "healthPlanYearName": {
+                  "type": "string",
+                  "description": "Human-readable year label (e.g., '2025')."
+                },
+                "dependent": {
+                  "type": "string",
+                  "description": "Stored dependent ID (e.g., '000001') used in 'healthPlanDependentDetails' tool."
+                },
+                "dependentName": {
+                  "type": "string",
+                  "description": "Display name of the selected dependent (e.g., 'John Doe')."
+                },
+                "planValue": {
+                  "type": "string",
+                  "description": "Stored plan ID value used for the API (e.g., '000001').if the user give paln name you correspoanding plan value get for 'healthPlanDependentDetails' tool."
+                },
+                "planName": {
+                  "type": "string",
+                  "description": "Human-readable plan name (e.g., 'Plan A')."
+                },
+                "dependentDentalEnrollmentValue": {
+                  "type": "string",
+                  "description": "Stored value for dental enrollment status (e.g., 'P30002' or 'P30003')."
+                },
+                "dependentDentalEnrollmentName": {
+                  "type": "string",
+                  "enum": [
+                    "Yes",
+                    "No"
+                  ],
+                  "description": "Human-readable dental enrollment status (must be 'Yes' or 'No')."
+                },
+                "totalRequestAmount": {
+                  "type": "number",
+                  "description": "Total number of requests associated to give the user ammount."
+                }
+              },
+              "required": [
+                "healthPlanYear",
+                "dependent",
+                "planValue",
+                "dependentDentalEnrollmentValue",
+                "dependentName",
+                "planName",
+                "dependentDentalEnrollmentName",
+                "totalRequestAmount"
+              ]
+            }
+          },
+          "applicantComment": {
+            "type": "string",
+            "description": "Optional comments provided by the applicant."
+          }
+        },
+        "required": [
+          "enrollments"
+        ]
+      }
+    }
+  ]
+}

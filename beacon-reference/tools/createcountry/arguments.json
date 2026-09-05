@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "countryName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Name of the country to be created",
+      "advanced": false,
+      "raw": {
+        "name": "countryName",
+        "type": "string",
+        "description": "Name of the country to be created",
+        "required": true,
+        "_id": "6963e60be41922c8c733a96c"
+      }
+    },
+    {
+      "name": "isBase",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Indicates whether this country is a Base Country (accepts \"true/false\". \"yes/no\"",
+      "advanced": false,
+      "raw": {
+        "name": "isBase",
+        "type": "string",
+        "description": "Indicates whether this country is a Base Country (accepts \"true/false\". \"yes/no\"",
+        "required": true,
+        "_id": "6963e60be41922c8c733a96d"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

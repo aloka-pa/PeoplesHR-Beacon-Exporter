@@ -1,0 +1,24 @@
+{
+  "id": "690dc577931a2d61ba0b1f9f",
+  "slug": "downloadjobdescriptionextract",
+  "name": "DownloadJobDescriptionExtract",
+  "status": "live",
+  "createdAt": "2025-06-13T07:12:59.109Z",
+  "updatedAt": "2025-06-13T07:12:59.109Z",
+  "contentHash": "d2478e105257af3daadb510db3a078655e9558a26cfe7ba862e9a8c4c85008e0",
+  "lastExportedAt": "2026-09-05T19:41:35.794Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc577931a2d61ba0b1f9f",
+    "name": "DownloadJobDescriptionExtract",
+    "status": "live",
+    "code": "(async function (args, postData = null) {\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const baseUrl = `${reqOptions}recruitmentv9/Requisitions/DownloadJobDescription`;\n\n  let response;\n\n  if (postData) {\n    response = await fetch(baseUrl, {\n      method: 'POST',\n      headers: {\n        'Content-Type': 'application/json',\n        'Accept': 'application/pdf',\n      },\n      body: JSON.stringify(postData), \n    });\n  } else {\n    const url = new URL(baseUrl);\n    url.searchParams.set(\"hieCode\", args.hieCode);\n    url.searchParams.set(\"salGrdCode\", args.salGrdCode);\n    url.searchParams.set(\"ctCode\", args.ctCode);\n    url.searchParams.set(\"dsgCode\", args.DsgCode);\n    url.searchParams.set(\"_\", Date.now());\n\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"application/pdf\");\n    myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\n    response = await fetch(url.toString(), {\n      method: 'GET',\n      headers: myHeaders,\n    });\n  }\n\n await BeaconBar.executeFunction(\"loadOrGetLibrary\")(\"pdf\");\n\n  if (!response.ok || !response.headers.get(\"Content-Type\").includes(\"application/pdf\")) {\n    throw new Error(\"Failed to fetch a valid PDF response.\");\n  }\n\n  const pdfData = await response.arrayBuffer();\n\n  const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;\n\n  let textContent = '';\n\n  for (let i = 1; i <= pdf.numPages; i++) {\n    const page = await pdf.getPage(i);\n    const content = await page.getTextContent();\n    const pageText = content.items.map(item => item.str).join(' ');\n    textContent += pageText + '\\n';\n  }\n\n  return textContent.trim();\n})\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

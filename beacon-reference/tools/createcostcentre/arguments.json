@@ -1,0 +1,29 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "costCentreName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Name of the cost centre if the user missing the field to ask user prompt to fill the cost centre name then i will create the cost center.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Name of the cost centre if the user missing the field to ask user prompt to fill the cost centre name then i will create the cost center."
+      }
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Short description of the cost centre.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Short description of the cost centre."
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "empId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give employee id example '000001' etc...",
+      "advanced": false,
+      "raw": {
+        "name": "empId",
+        "type": "string",
+        "description": "to give employee id example '000001' etc...",
+        "required": true,
+        "_id": "6846e872c020a759d09da124"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

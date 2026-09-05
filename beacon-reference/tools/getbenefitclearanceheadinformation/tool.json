@@ -1,0 +1,97 @@
+{
+  "id": "6958c883b035270d8526b90b",
+  "slug": "getbenefitclearanceheadinformation",
+  "name": "getBenefitClearanceHeadInformation",
+  "description": "Retrieves all benefit clearance head position assignments, including both assigned and vacant positions. Returns information about which employees are assigned to each clearance head position.",
+  "instructions": null,
+  "taskName": "Fetching Benefit Clearance Head Positions",
+  "tags": [
+    "EIMAdmin",
+    "BenefitsInformation",
+    "phase2"
+  ],
+  "status": "live",
+  "signature": "getBenefitClearanceHeadInformation",
+  "createdAt": "2026-01-03T07:42:59.014Z",
+  "updatedAt": "2026-07-17T12:52:03.480Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "3acf9aa1e7f7b5dce7d54957f956c361d85960936aa201333ce7cccd24128636",
+  "lastExportedAt": "2026-09-05T19:39:22.171Z",
+  "raw": {
+    "basic": {
+      "_id": "6958c883b035270d8526b90b",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getBenefitClearanceHeadInformation",
+      "description": "Retrieves all benefit clearance head position assignments, including both assigned and vacant positions. Returns information about which employees are assigned to each clearance head position.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getBenefitClearanceHeadInformation",
+        "args": [],
+        "isAdvanced": false,
+        "_id": "6a5a25738d9f801446a27977"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/BenefitClearingHead.aspx\")) {\n    return {\n      status: \"NO_ACCESS\",\n      message: \"You do not have access to Benefit Clearance Head screen. Please contact HR Admin.\"\n    };\n  }\n\n  const headers = new Headers();\n  headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/BenefitClearingHead.aspx\");\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/BenefitClearingHead.aspx`;\n\n  const parser = new DOMParser();\n\n  // Get the page with all benefit clearance head data\n  const response = await fetch(url, {\n    method: \"GET\",\n    headers\n  });\n\n  if (!response.ok) {\n    return {\n      status: \"ERROR\",\n      message: `Failed to load Benefit Clearance Head page, status: ${response.status}`\n    };\n  }\n\n  const htmlText = await response.text();\n  const doc = parser.parseFromString(htmlText, \"text/html\");\n\n  // Extract all table rows\n  const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n\n  if (!rows || rows.length === 0) {\n    return {\n      status: \"NOT_FOUND\",\n      message: \"No benefit clearance head assignments found\"\n    };\n  }\n\n  const assignments = [];\n\n  for (const row of rows) {\n    const cells = row.querySelectorAll(\"td\");\n    if (cells.length < 3) continue;\n\n    const positionName = cells[0]?.textContent.trim();\n    const employeeNumber = cells[1]?.textContent.trim();\n    const employeeName = cells[2]?.textContent.trim();\n\n    // Check if position has an assigned employee\n    const isAssigned = employeeNumber !== \"\" && employeeNumber !== \"&nbsp;\" && employeeName !== \"\" && employeeName !== \"&nbsp;\";\n\n    assignments.push({\n      positionName: positionName,\n      employeeNumber: isAssigned ? employeeNumber : null,\n      employeeName: isAssigned ? employeeName : null,\n      isAssigned: isAssigned,\n      status: isAssigned ? \"Assigned\" : \"Vacant\"\n    });\n  }\n\n  // Calculate summary statistics\n  const totalPositions = assignments.length;\n  const assignedPositions = assignments.filter(a => a.isAssigned).length;\n  const vacantPositions = totalPositions - assignedPositions;\n\n  return {\n    status: \"SUCCESS\",\n    message: `Retrieved ${totalPositions} benefit clearance head position(s)`,\n    summary: {\n      totalPositions: totalPositions,\n      assignedPositions: assignedPositions,\n      vacantPositions: vacantPositions\n    },\n    assignments: assignments\n  };\n})",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "BenefitsInformation",
+        "phase2"
+      ],
+      "taskName": "Fetching Benefit Clearance Head Positions",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2026-01-03T07:42:59.014Z",
+      "updatedAt": "2026-07-17T12:52:03.480Z",
+      "__v": 4,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getBenefitClearanceHeadInformation",
+      "args": [],
+      "isAdvanced": false,
+      "_id": "6a5a25738d9f801446a27977"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/BenefitClearingHead.aspx\")) {\n    return {\n      status: \"NO_ACCESS\",\n      message: \"You do not have access to Benefit Clearance Head screen. Please contact HR Admin.\"\n    };\n  }\n\n  const headers = new Headers();\n  headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/BenefitClearingHead.aspx\");\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/BenefitClearingHead.aspx`;\n\n  const parser = new DOMParser();\n\n  // Get the page with all benefit clearance head data\n  const response = await fetch(url, {\n    method: \"GET\",\n    headers\n  });\n\n  if (!response.ok) {\n    return {\n      status: \"ERROR\",\n      message: `Failed to load Benefit Clearance Head page, status: ${response.status}`\n    };\n  }\n\n  const htmlText = await response.text();\n  const doc = parser.parseFromString(htmlText, \"text/html\");\n\n  // Extract all table rows\n  const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n\n  if (!rows || rows.length === 0) {\n    return {\n      status: \"NOT_FOUND\",\n      message: \"No benefit clearance head assignments found\"\n    };\n  }\n\n  const assignments = [];\n\n  for (const row of rows) {\n    const cells = row.querySelectorAll(\"td\");\n    if (cells.length < 3) continue;\n\n    const positionName = cells[0]?.textContent.trim();\n    const employeeNumber = cells[1]?.textContent.trim();\n    const employeeName = cells[2]?.textContent.trim();\n\n    // Check if position has an assigned employee\n    const isAssigned = employeeNumber !== \"\" && employeeNumber !== \"&nbsp;\" && employeeName !== \"\" && employeeName !== \"&nbsp;\";\n\n    assignments.push({\n      positionName: positionName,\n      employeeNumber: isAssigned ? employeeNumber : null,\n      employeeName: isAssigned ? employeeName : null,\n      isAssigned: isAssigned,\n      status: isAssigned ? \"Assigned\" : \"Vacant\"\n    });\n  }\n\n  // Calculate summary statistics\n  const totalPositions = assignments.length;\n  const assignedPositions = assignments.filter(a => a.isAssigned).length;\n  const vacantPositions = totalPositions - assignedPositions;\n\n  return {\n    status: \"SUCCESS\",\n    message: `Retrieved ${totalPositions} benefit clearance head position(s)`,\n    summary: {\n      totalPositions: totalPositions,\n      assignedPositions: assignedPositions,\n      vacantPositions: vacantPositions\n    },\n    assignments: assignments\n  };\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "editId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The edit ID corresponding to the selected work experience. For example: 'ctl00$body$grdGrade1$ctl00$ctl05$ctl00'. This is determined by the backend and not provided by the user. and you get edit id for 'getWorkExperienceDetails' api",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The edit ID corresponding to the selected work experience. For example: 'ctl00$body$grdGrade1$ctl00$ctl05$ctl00'. This is determined by the backend and not provided by the user. and you get edit id for 'getWorkExperienceDetails' api"
+      }
+    },
+    {
+      "name": "empId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The employee ID provided by the user.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The employee ID provided by the user."
+      }
+    },
+    {
+      "name": "fromDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get date for before api date corresponding from data will be take. in this format 'dd/mm/yyyy'",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "to get date for before api date corresponding from data will be take. in this format 'dd/mm/yyyy'"
+      }
+    },
+    {
+      "name": "endDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get date for before api date corresponding end data will be take. 'dd/mm/yyyy'",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "to get date for before api date corresponding end data will be take. 'dd/mm/yyyy'"
+      }
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "690dc58d931a2d61ba0b34ee",
+  "slug": "year",
+  "name": "year",
+  "status": "live",
+  "createdAt": "2025-05-12T06:01:37.289Z",
+  "updatedAt": "2025-05-12T06:01:37.289Z",
+  "contentHash": "d0dc0521146f91464367179d6171a9b6d30fc93025580bce301709c422617d6f",
+  "lastExportedAt": "2026-09-05T19:41:43.017Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58d931a2d61ba0b34ee",
+    "name": "year",
+    "status": "live",
+    "code": "(async function () {\n    //done\n    const sl = await BeaconBar.getSharedData('sl');\n    const myHeaders = new Headers();\n    myHeaders.append(\"__cfafvalue\", window.csrf);\n    myHeaders.append(\"accept\", \"*/*\");\n    myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n    myHeaders.append(\"content-type\", \"application/json\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n    const raw = JSON.stringify({\n        \"EmpNumber\": window.logKey\n    });\n\n    const requestOptions = {\n        method: \"POST\",\n        headers: myHeaders,\n        body: raw,\n        redirect: \"follow\"\n    };\n\n    const response = await fetch(`${location.origin}/${sl}/AbsenceV9/api/LeaveApplication/GetEntitledLeaveYears/`, requestOptions);\n    const year = await response.json();\n    const yearCode = year[0]?.YearCode;\n    return yearCode || \"\";\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

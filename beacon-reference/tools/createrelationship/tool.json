@@ -1,0 +1,127 @@
+{
+  "id": "69576a72ca68a9f2794e81fa",
+  "slug": "createrelationship",
+  "name": "createRelationship",
+  "description": "Creates a new Relationship record in EIM → Relationship (Relationship.aspx).\nThe tool triggers the New action to open a blank record, fills the mandatory Relationship Name field (txtName), optionally fills Anseli Code if the field exists on the page, then clicks Save using the same ASP.NET WebForms postback sequence as the UI.",
+  "instructions": null,
+  "taskName": "Creating New Relationship Record",
+  "tags": [
+    "EIMAdmin",
+    "CensusInformation"
+  ],
+  "status": "live",
+  "signature": "createRelationship",
+  "createdAt": "2026-01-02T06:49:22.987Z",
+  "updatedAt": "2026-06-15T07:35:23.443Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "6a994e508919e9127adc1a66796b0f412aea0c23f7e76078fe5d500f6397d180",
+  "lastExportedAt": "2026-09-05T19:39:22.330Z",
+  "raw": {
+    "basic": {
+      "_id": "69576a72ca68a9f2794e81fa",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createRelationship",
+      "description": "Creates a new Relationship record in EIM → Relationship (Relationship.aspx).\nThe tool triggers the New action to open a blank record, fills the mandatory Relationship Name field (txtName), optionally fills Anseli Code if the field exists on the page, then clicks Save using the same ASP.NET WebForms postback sequence as the UI.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createRelationship",
+        "args": [
+          {
+            "name": "relationshipName",
+            "type": "string",
+            "description": "The name for the new relationship (e.g., \"Wife\", \"Husband\", \"Father\", \"Mother\", \"Sibling\")",
+            "required": true,
+            "_id": "69576a72ca68a9f2794e81fc"
+          },
+          {
+            "name": "anseliCode",
+            "type": "string",
+            "description": "Optional reference/Anseli code (max 10 chars).\nIf the page contains ctl00$body$txtrefcode, the tool fills it; otherwise it skips it safely.",
+            "required": false,
+            "_id": "697e503b32be68838ce36dec"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "69576a72ca68a9f2794e81fb"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Relationship.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Relationship screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Args validation (strings only)\n     * ------------------------------------------------- */\n    const relationshipName = (args?.relationshipName || \"\").toString().trim();\n    const anseliCode = (args?.anseliCode || \"\").toString().trim();\n\n    if (!relationshipName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: relationshipName is required\"\n      };\n    }\n\n    if (relationshipName.length > 20) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: relationshipName must be 20 characters or less\"\n      };\n    }\n\n    if (anseliCode && anseliCode.length > 10) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: anseliCode must be 10 characters or less\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Initial page state\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"Relationship\");\n\n    const headers = new Headers();\n    headers.append(\n      \"Accept\",\n      \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\"\n    );\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Relationship.aspx\");\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Relationship.aspx`;\n\n    const parser = new DOMParser();\n\n    /* -------------------------------------------------\n     * 4) Click NEW (mirror your network payload)\n     * ------------------------------------------------- */\n    const newFormData = new FormData();\n    newFormData.append(\"scrollLeft\", \"0\");\n    newFormData.append(\"scrollTop\", \"0\");\n    newFormData.append(\"__EVENTTARGET\", \"\");\n    newFormData.append(\"__EVENTARGUMENT\", \"\");\n    newFormData.append(\"__VIEWSTATE\", details.viewState);\n    newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n    newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    newFormData.append(\"ctl00$body$hdnIsHead\", \"\");\n    newFormData.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n    newFormData.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n\n    // These appear in your New request\n    newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"REL_ID\");\n    newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n    newFormData.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    newFormData.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"9\");\n    newFormData.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00_body_grdSummary_ClientState\", \"\");\n\n    newFormData.append(\"ctl00$body$butNew\", \"New\");\n    newFormData.append(\"ctl00$body$hdnDefCountry\", \"\");\n\n    const newResp = await fetch(url, { method: \"POST\", headers, body: newFormData });\n    const newHtml = await newResp.text();\n    const newDoc = parser.parseFromString(newHtml, \"text/html\");\n\n    const viewState = newDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const eventValidation = newDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const viewStateGen = newDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    if (!viewState || !eventValidation || !viewStateGen) {\n      return {\n        status: \"ERROR\",\n        message: \"Failed to enter New mode (missing VIEWSTATE/EVENTVALIDATION).\"\n      };\n    }\n\n    // IMPORTANT: carry these forward from NEW response (don’t keep them blank)\n    const hdnIsHead = newDoc.querySelector(\"#ctl00_body_hdnIsHead\")?.value || \"\";\n    const hdnEditItemIndex = newDoc.querySelector(\"#ctl00_body_hdnEditItemIndex\")?.value || \"\";\n    const radWinState = newDoc.querySelector(\"#ctl00_body_RadWindowManager1_ClientState\")?.value || \"\";\n    const hdnDefCountry = newDoc.querySelector(\"#ctl00_body_hdnDefCountry\")?.value || \"\";\n\n    // Optional field existence check (some tenants show it, some don’t)\n    const hasRefCodeField = !!newDoc.querySelector(\"#ctl00_body_txtrefcode\");\n\n    /* -------------------------------------------------\n     * 5) SAVE (mirror your network payload)\n     * ------------------------------------------------- */\n    const saveFormData = new FormData();\n    saveFormData.append(\"scrollLeft\", \"0\");\n    saveFormData.append(\"scrollTop\", \"0\");\n    saveFormData.append(\"__EVENTTARGET\", \"\");\n    saveFormData.append(\"__EVENTARGUMENT\", \"\");\n    saveFormData.append(\"__VIEWSTATE\", viewState);\n    saveFormData.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n    saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    saveFormData.append(\"__EVENTVALIDATION\", eventValidation);\n\n    saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    saveFormData.append(\"ctl00$body$hdnIsHead\", hdnIsHead);\n    saveFormData.append(\"ctl00$body$hdnEditItemIndex\", hdnEditItemIndex);\n    saveFormData.append(\"ctl00_body_RadWindowManager1_ClientState\", radWinState);\n\n    // Mandatory field (matches your request)\n    saveFormData.append(\"ctl00$body$txtName\", relationshipName);\n\n    // Optional field (only if present)\n    if (hasRefCodeField) {\n      saveFormData.append(\"ctl00$body$txtrefcode\", anseliCode);\n    }\n\n    saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n    saveFormData.append(\"ctl00$body$hdnDefCountry\", hdnDefCountry);\n\n    const saveResp = await fetch(url, { method: \"POST\", headers, body: saveFormData });\n    const saveHtml = await saveResp.text();\n    const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n\n    // Most EIM pages show server messages here\n    const serverMsg =\n      saveDoc.querySelector(\"#ctl00_body_lblMessage\")?.textContent?.trim() ||\n      saveDoc.querySelector(\".alert-danger, .error\")?.textContent?.trim() ||\n      \"\";\n\n    if (serverMsg) {\n      return {\n        status: \"ERROR\",\n        message: `Save failed: ${serverMsg}`\n      };\n    }\n\n    // Try to read created code after save\n    const relationshipCode =\n      saveDoc.querySelector(\"#ctl00_body_txtCode\")?.value ||\n      saveDoc.querySelector(\"#ctl00_body_txtcode\")?.value ||\n      \"\";\n\n    return {\n      status: \"SUCCESS\",\n      message: \"Successfully created Relationship!\",\n      relationshipCode: relationshipCode || null,\n      relationshipName: relationshipName,\n      anseliCode: hasRefCodeField ? (anseliCode || null) : null\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unexpected error\",\n      error: err?.toString?.() || String(err)\n    };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "CensusInformation"
+      ],
+      "taskName": "Creating New Relationship Record",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2026-01-02T06:49:22.987Z",
+      "updatedAt": "2026-06-15T07:35:23.443Z",
+      "__v": 4,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "createRelationship",
+      "args": [
+        {
+          "name": "relationshipName",
+          "type": "string",
+          "description": "The name for the new relationship (e.g., \"Wife\", \"Husband\", \"Father\", \"Mother\", \"Sibling\")",
+          "required": true,
+          "_id": "69576a72ca68a9f2794e81fc"
+        },
+        {
+          "name": "anseliCode",
+          "type": "string",
+          "description": "Optional reference/Anseli code (max 10 chars).\nIf the page contains ctl00$body$txtrefcode, the tool fills it; otherwise it skips it safely.",
+          "required": false,
+          "_id": "697e503b32be68838ce36dec"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "69576a72ca68a9f2794e81fb"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Relationship.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Relationship screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Args validation (strings only)\n     * ------------------------------------------------- */\n    const relationshipName = (args?.relationshipName || \"\").toString().trim();\n    const anseliCode = (args?.anseliCode || \"\").toString().trim();\n\n    if (!relationshipName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: relationshipName is required\"\n      };\n    }\n\n    if (relationshipName.length > 20) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: relationshipName must be 20 characters or less\"\n      };\n    }\n\n    if (anseliCode && anseliCode.length > 10) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: anseliCode must be 10 characters or less\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Initial page state\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"Relationship\");\n\n    const headers = new Headers();\n    headers.append(\n      \"Accept\",\n      \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\"\n    );\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Relationship.aspx\");\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Relationship.aspx`;\n\n    const parser = new DOMParser();\n\n    /* -------------------------------------------------\n     * 4) Click NEW (mirror your network payload)\n     * ------------------------------------------------- */\n    const newFormData = new FormData();\n    newFormData.append(\"scrollLeft\", \"0\");\n    newFormData.append(\"scrollTop\", \"0\");\n    newFormData.append(\"__EVENTTARGET\", \"\");\n    newFormData.append(\"__EVENTARGUMENT\", \"\");\n    newFormData.append(\"__VIEWSTATE\", details.viewState);\n    newFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    newFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    newFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n    newFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    newFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    newFormData.append(\"ctl00$body$hdnIsHead\", \"\");\n    newFormData.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n    newFormData.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n\n    // These appear in your New request\n    newFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"REL_ID\");\n    newFormData.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n    newFormData.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    newFormData.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"9\");\n    newFormData.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    newFormData.append(\"ctl00_body_grdSummary_ClientState\", \"\");\n\n    newFormData.append(\"ctl00$body$butNew\", \"New\");\n    newFormData.append(\"ctl00$body$hdnDefCountry\", \"\");\n\n    const newResp = await fetch(url, { method: \"POST\", headers, body: newFormData });\n    const newHtml = await newResp.text();\n    const newDoc = parser.parseFromString(newHtml, \"text/html\");\n\n    const viewState = newDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const eventValidation = newDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const viewStateGen = newDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    if (!viewState || !eventValidation || !viewStateGen) {\n      return {\n        status: \"ERROR\",\n        message: \"Failed to enter New mode (missing VIEWSTATE/EVENTVALIDATION).\"\n      };\n    }\n\n    // IMPORTANT: carry these forward from NEW response (don’t keep them blank)\n    const hdnIsHead = newDoc.querySelector(\"#ctl00_body_hdnIsHead\")?.value || \"\";\n    const hdnEditItemIndex = newDoc.querySelector(\"#ctl00_body_hdnEditItemIndex\")?.value || \"\";\n    const radWinState = newDoc.querySelector(\"#ctl00_body_RadWindowManager1_ClientState\")?.value || \"\";\n    const hdnDefCountry = newDoc.querySelector(\"#ctl00_body_hdnDefCountry\")?.value || \"\";\n\n    // Optional field existence check (some tenants show it, some don’t)\n    const hasRefCodeField = !!newDoc.querySelector(\"#ctl00_body_txtrefcode\");\n\n    /* -------------------------------------------------\n     * 5) SAVE (mirror your network payload)\n     * ------------------------------------------------- */\n    const saveFormData = new FormData();\n    saveFormData.append(\"scrollLeft\", \"0\");\n    saveFormData.append(\"scrollTop\", \"0\");\n    saveFormData.append(\"__EVENTTARGET\", \"\");\n    saveFormData.append(\"__EVENTARGUMENT\", \"\");\n    saveFormData.append(\"__VIEWSTATE\", viewState);\n    saveFormData.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n    saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    saveFormData.append(\"__EVENTVALIDATION\", eventValidation);\n\n    saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    saveFormData.append(\"ctl00$body$hdnIsHead\", hdnIsHead);\n    saveFormData.append(\"ctl00$body$hdnEditItemIndex\", hdnEditItemIndex);\n    saveFormData.append(\"ctl00_body_RadWindowManager1_ClientState\", radWinState);\n\n    // Mandatory field (matches your request)\n    saveFormData.append(\"ctl00$body$txtName\", relationshipName);\n\n    // Optional field (only if present)\n    if (hasRefCodeField) {\n      saveFormData.append(\"ctl00$body$txtrefcode\", anseliCode);\n    }\n\n    saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n    saveFormData.append(\"ctl00$body$hdnDefCountry\", hdnDefCountry);\n\n    const saveResp = await fetch(url, { method: \"POST\", headers, body: saveFormData });\n    const saveHtml = await saveResp.text();\n    const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n\n    // Most EIM pages show server messages here\n    const serverMsg =\n      saveDoc.querySelector(\"#ctl00_body_lblMessage\")?.textContent?.trim() ||\n      saveDoc.querySelector(\".alert-danger, .error\")?.textContent?.trim() ||\n      \"\";\n\n    if (serverMsg) {\n      return {\n        status: \"ERROR\",\n        message: `Save failed: ${serverMsg}`\n      };\n    }\n\n    // Try to read created code after save\n    const relationshipCode =\n      saveDoc.querySelector(\"#ctl00_body_txtCode\")?.value ||\n      saveDoc.querySelector(\"#ctl00_body_txtcode\")?.value ||\n      \"\";\n\n    return {\n      status: \"SUCCESS\",\n      message: \"Successfully created Relationship!\",\n      relationshipCode: relationshipCode || null,\n      relationshipName: relationshipName,\n      anseliCode: hasRefCodeField ? (anseliCode || null) : null\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unexpected error\",\n      error: err?.toString?.() || String(err)\n    };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "gradeCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to search the for salary grade.Ex:-\"000001\"",
+      "advanced": false,
+      "raw": {
+        "name": "gradeCode",
+        "type": "string",
+        "description": "to search the for salary grade.Ex:-\"000001\"",
+        "required": true,
+        "_id": "680f6b71f6ef15e61646dbf5"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

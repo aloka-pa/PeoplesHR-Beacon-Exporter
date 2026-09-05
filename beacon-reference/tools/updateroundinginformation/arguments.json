@@ -1,0 +1,107 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "roundingPatternName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name of the rounding pattern (e.g., 'Beacon')",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The name of the rounding pattern (e.g., 'Beacon')"
+      }
+    },
+    {
+      "name": "pattern",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The rounding pattern type",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "General",
+          "Range"
+        ],
+        "description": "The rounding pattern type"
+      }
+    },
+    {
+      "name": "method",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Specifies the rounding method: Roundup (1), RoundDown (2), or Nearest (3). Only these values are accepted.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "1",
+          "2",
+          "3"
+        ],
+        "description": "Specifies the rounding method: Roundup (1), RoundDown (2), or Nearest (3). Only these values are accepted.",
+        "examples": [
+          "1",
+          "2",
+          "3"
+        ]
+      }
+    },
+    {
+      "name": "numVal",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The rounding value time (used in General pattern) if the change the genral compulsary take this value ask user consent and does not take user special characters ",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The rounding value time (used in General pattern) if the change the genral compulsary take this value ask user consent and does not take user special characters ",
+        "pattern": "^\\d{2}:\\d{2}$"
+      }
+    },
+    {
+      "name": "numFrom",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The start time of the range (used in Range pattern) Range value must be a value between From and To values and must not be the same value and does not take user special characters.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The start time of the range (used in Range pattern) Range value must be a value between From and To values and must not be the same value and does not take user special characters.",
+        "pattern": "^\\d{2}:\\d{2}$"
+      }
+    },
+    {
+      "name": "numTo",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The end time of the range (used in Range pattern) Range value must be a value between From and To values and must not be the same value and does not take user special characters.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The end time of the range (used in Range pattern) Range value must be a value between From and To values and must not be the same value and does not take user special characters.",
+        "pattern": "^\\d{2}:\\d{2}$"
+      }
+    },
+    {
+      "name": "textnumValue",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The value applied for the range (used in Range pattern) and does not take user special characters and be text numValue in between start time of the range to end time of the range",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The value applied for the range (used in Range pattern) and does not take user special characters and be text numValue in between start time of the range to end time of the range",
+        "pattern": "^\\d{2}:\\d{2}$"
+      }
+    }
+  ]
+}

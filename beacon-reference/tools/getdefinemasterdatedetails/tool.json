@@ -1,0 +1,78 @@
+{
+  "id": "690dc566931a2d61ba0b16e3",
+  "slug": "getdefinemasterdatedetails",
+  "name": "getDefineMasterDateDetails",
+  "description": "Before executing in this tool, first call the \"masterDataTypes\" API to retrieve the available data types. Then extract the values for masterDataType, masterDataTypeIndex, and masterDataTypeValue. If the user attempts to update a master data type or any thing, check if any data types are available. If none are found, display a message stating, \"No available data types.\"",
+  "instructions": null,
+  "taskName": "Define Master DateDetails",
+  "tags": [
+    "BenefitManagement",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getDefineMasterDateDetails",
+  "createdAt": "2025-05-12T13:49:26.757Z",
+  "updatedAt": "2025-11-12T11:51:59.552Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be9",
+      "name": "BenefitManagement"
+    }
+  ],
+  "contentHash": "c61801ff8ed96471266d8a0b7f2bc6378dc85f40275c902b4a42d62db153a66b",
+  "lastExportedAt": "2026-09-05T19:39:23.268Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b16e3",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getDefineMasterDateDetails",
+      "description": "Before executing in this tool, first call the \"masterDataTypes\" API to retrieve the available data types. Then extract the values for masterDataType, masterDataTypeIndex, and masterDataTypeValue. If the user attempts to update a master data type or any thing, check if any data types are available. If none are found, display a message stating, \"No available data types.\"",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getDefineMasterDateDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"masterDataType\": {\n      \"type\": \"string\",\n      \"description\": \"if the user select for master data type to get the all master data reimbursement for 'masterDataTypes' api Example 'Basic Plan' etc. \"\n    },\n    \"masterDataTypeIndex\": {\n      \"type\": \"integer\",\n      \"description\": \"if the user select for master data type corresponding type index will be take to get the all master data reimbursement for 'masterDataTypes' api Example '1','2 etc..\"\n    },\n    \"masterDataTypeValue\":{\n      \"type\": \"integer\",\n      \"description\": \"if the user select for master data type corresponding type index will be take to get the all master data reimbursement for 'masterDataTypes' api Example 'P30003','P30002' etc..\"\n    }\n  },\n  \"required\": [\"masterDataType\", \"masterDataTypeIndex\",\"masterDataTypeValue\"]\n}\n",
+        "_id": "6821fc66360c85060e97f470"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"Benefit/DefineMasterData.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('Benefit/DefineMasterData.aspx');\n  const response = await BeaconBar.executeFunction('module')({\n    \"RadScriptManager_HiddenField\": \"\",\n    \"__EVENTTARGET\": \"ctl00$body$cboMasterDataType\",\n    \"__EVENTARGUMENT\": `{\"Command\":\"Select\",\"Index\":${args.masterDataTypeIndex}}`,\n    \"__VIEWSTATE\": window.details.viewState,\n    \"__VIEWSTATEGENERATOR\": window.details.viewStateGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": window.details.eventValidation,\n    \"RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$cboMasterDataType_Input\": args.masterDataType,\n    \"body_cboMasterDataType_ClientState\": JSON.stringify({ \"logEntries\": [], \"value\": `${args.masterDataTypeValue}`, \"text\": `${args.masterDataType}`, \"enabled\": true }),\n    \"body_grdSummary_ClientState\": \"\"\n  }, `${reqOptions.sl}/${updateurl.updateUrl}`);\n\n  window.md = response;\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(response.rawData, \"text/html\");\n\n  const rows = document.querySelectorAll(\"#body_grdSummary tbody tr\");\n  const masterData = [];\n  const uniqueEntries = new Set();\n\n  rows.forEach(row => {\n    const id = row.querySelector(\"span[id*='lblDtlCode']\")?.textContent.trim() || \"\";\n    const description = row.querySelector(\"span[id*='lblDtlName']\")?.textContent.trim() || \"\";\n    const amount = (args.masterDataType === \"Fuel Reimbursement\" || args.masterDataType === \"Parking Entitlment\")\n      ? row.querySelector(\"span[id*='lblNumValue']\")?.textContent.trim() || \"\"\n      : row.querySelector(\"span[id*='lblTextValue']\")?.textContent.trim() || \"\";\n    // const amount = row.querySelector(\"span[id*='lblNumValue']\")?.textContent.trim() || \"\"\n    const editButton = row.querySelector(\"a[id*='EditButton']\");\n    const editKey = editButton?.getAttribute(\"href\")?.match(/__doPostBack\\('([^']+)'/)?.[1] || \"\";\n    const masterDataType = args.masterDataType || \"Medical Claims\";\n    const uniqueKey = `${id}_${description}_${amount}_${editKey}`;\n\n    if (id && !uniqueEntries.has(uniqueKey)) {\n      uniqueEntries.add(uniqueKey);\n      masterData.push({\n        id,\n        description,\n        amount,\n        editKey,\n        masterDataType\n      });\n    }\n  });\n  return masterData;\n});\n",
+      "groupName": "",
+      "tags": [
+        "BenefitManagement",
+        "Headers"
+      ],
+      "taskName": "Define Master DateDetails",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-12T13:49:26.757Z",
+      "updatedAt": "2025-11-12T11:51:59.552Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be9",
+          "name": "BenefitManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getDefineMasterDateDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"masterDataType\": {\n      \"type\": \"string\",\n      \"description\": \"if the user select for master data type to get the all master data reimbursement for 'masterDataTypes' api Example 'Basic Plan' etc. \"\n    },\n    \"masterDataTypeIndex\": {\n      \"type\": \"integer\",\n      \"description\": \"if the user select for master data type corresponding type index will be take to get the all master data reimbursement for 'masterDataTypes' api Example '1','2 etc..\"\n    },\n    \"masterDataTypeValue\":{\n      \"type\": \"integer\",\n      \"description\": \"if the user select for master data type corresponding type index will be take to get the all master data reimbursement for 'masterDataTypes' api Example 'P30003','P30002' etc..\"\n    }\n  },\n  \"required\": [\"masterDataType\", \"masterDataTypeIndex\",\"masterDataTypeValue\"]\n}\n",
+      "_id": "6821fc66360c85060e97f470"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"Benefit/DefineMasterData.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('Benefit/DefineMasterData.aspx');\n  const response = await BeaconBar.executeFunction('module')({\n    \"RadScriptManager_HiddenField\": \"\",\n    \"__EVENTTARGET\": \"ctl00$body$cboMasterDataType\",\n    \"__EVENTARGUMENT\": `{\"Command\":\"Select\",\"Index\":${args.masterDataTypeIndex}}`,\n    \"__VIEWSTATE\": window.details.viewState,\n    \"__VIEWSTATEGENERATOR\": window.details.viewStateGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": window.details.eventValidation,\n    \"RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$cboMasterDataType_Input\": args.masterDataType,\n    \"body_cboMasterDataType_ClientState\": JSON.stringify({ \"logEntries\": [], \"value\": `${args.masterDataTypeValue}`, \"text\": `${args.masterDataType}`, \"enabled\": true }),\n    \"body_grdSummary_ClientState\": \"\"\n  }, `${reqOptions.sl}/${updateurl.updateUrl}`);\n\n  window.md = response;\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(response.rawData, \"text/html\");\n\n  const rows = document.querySelectorAll(\"#body_grdSummary tbody tr\");\n  const masterData = [];\n  const uniqueEntries = new Set();\n\n  rows.forEach(row => {\n    const id = row.querySelector(\"span[id*='lblDtlCode']\")?.textContent.trim() || \"\";\n    const description = row.querySelector(\"span[id*='lblDtlName']\")?.textContent.trim() || \"\";\n    const amount = (args.masterDataType === \"Fuel Reimbursement\" || args.masterDataType === \"Parking Entitlment\")\n      ? row.querySelector(\"span[id*='lblNumValue']\")?.textContent.trim() || \"\"\n      : row.querySelector(\"span[id*='lblTextValue']\")?.textContent.trim() || \"\";\n    // const amount = row.querySelector(\"span[id*='lblNumValue']\")?.textContent.trim() || \"\"\n    const editButton = row.querySelector(\"a[id*='EditButton']\");\n    const editKey = editButton?.getAttribute(\"href\")?.match(/__doPostBack\\('([^']+)'/)?.[1] || \"\";\n    const masterDataType = args.masterDataType || \"Medical Claims\";\n    const uniqueKey = `${id}_${description}_${amount}_${editKey}`;\n\n    if (id && !uniqueEntries.has(uniqueKey)) {\n      uniqueEntries.add(uniqueKey);\n      masterData.push({\n        id,\n        description,\n        amount,\n        editKey,\n        masterDataType\n      });\n    }\n  });\n  return masterData;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

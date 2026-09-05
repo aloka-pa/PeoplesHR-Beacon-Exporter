@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-09-05T19:41:54.991Z",
+  "agentsDiscovered": 28,
+  "toolsDiscovered": 356,
+  "toolsExportedFull": 355,
+  "toolsExportedPartial": 1,
+  "toolsFailed": [],
+  "missingSectionsByTool": {
+    "6a7d63c39e5e6b8f7e82381a": [
+      "fetcher.js",
+      "transformer.js",
+      "source.js"
+    ]
+  },
+  "functionsDiscovered": 180,
+  "functionsExportedFull": 180,
+  "functionsExportedPartial": 0,
+  "functionsFailed": [],
+  "missingSectionsByFunction": {},
+  "totalRedactedFields": 0
+}

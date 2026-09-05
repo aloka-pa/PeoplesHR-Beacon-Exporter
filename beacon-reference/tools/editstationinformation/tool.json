@@ -1,0 +1,211 @@
+{
+  "id": "69545179ec34eb2090d6c4d8",
+  "slug": "editstationinformation",
+  "name": "editStationInformation",
+  "description": "Updates station information including name, transport cost, and route assignment in the system.\nUser must provide ONE identification field and at least ONE update field. When updating the route, user can use either newRouteCode or newRouteName.",
+  "instructions": null,
+  "taskName": "Editing Station Details",
+  "tags": [
+    "EIMAdmin",
+    "CensusInformation"
+  ],
+  "status": "live",
+  "signature": "editStationInformation",
+  "createdAt": "2025-12-30T22:26:01.658Z",
+  "updatedAt": "2026-06-15T07:34:01.685Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "849b4aebc5140ec2ea759cf3792dffbd58fa5a1484aeab9d42c17245e276ef11",
+  "lastExportedAt": "2026-09-05T19:39:22.351Z",
+  "raw": {
+    "basic": {
+      "_id": "69545179ec34eb2090d6c4d8",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "editStationInformation",
+      "description": "Updates station information including name, transport cost, and route assignment in the system.\nUser must provide ONE identification field and at least ONE update field. When updating the route, user can use either newRouteCode or newRouteName.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "editStationInformation",
+        "args": [
+          {
+            "name": "stationCode",
+            "type": "string",
+            "description": "The unique code identifier for the station to update (e.g., \"000004\")",
+            "required": false,
+            "_id": "69545179ec34eb2090d6c4da"
+          },
+          {
+            "name": "stationName",
+            "type": "string",
+            "description": "The current name of the station to update (e.g., \"Kottawa\")",
+            "required": false,
+            "_id": "69545179ec34eb2090d6c4db"
+          },
+          {
+            "name": "transportCost",
+            "type": "string",
+            "description": "The current transport cost to identify the station (e.g., \"150.00\")",
+            "required": false,
+            "_id": "69545179ec34eb2090d6c4dc"
+          },
+          {
+            "name": "routeName",
+            "type": "string",
+            "description": "The current route name to identify stations on that route (e.g., \"Central Expressway\")",
+            "required": false,
+            "_id": "69545179ec34eb2090d6c4dd"
+          },
+          {
+            "name": "newStationName",
+            "type": "string",
+            "description": "The new name for the station (e.g., \"Kottawa-updated\")",
+            "required": false,
+            "_id": "69545179ec34eb2090d6c4de"
+          },
+          {
+            "name": "newTransportCost",
+            "type": "string",
+            "description": "The new transport cost value (e.g., \"175.50\")",
+            "required": false,
+            "_id": "69545179ec34eb2090d6c4df"
+          },
+          {
+            "name": "newRouteCode",
+            "type": "string",
+            "description": "The new route code to assign (e.g., \"000004\")",
+            "required": false,
+            "_id": "69545179ec34eb2090d6c4e0"
+          },
+          {
+            "name": "newRouteName",
+            "type": "string",
+            "description": "The new route name to assign (e.g., \"Outer Circular Highway\")",
+            "required": false,
+            "_id": "69545179ec34eb2090d6c4e1"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"identification\": {\n    \"description\": \"Provide ONE of these to identify the station\",\n    \"required\": \"one_of\",\n    \"options\": {\n      \"stationCode\": {\n        \"type\": \"string\",\n        \"description\": \"The unique code identifier for the station to update\",\n        \"example\": \"000004\"\n      },\n      \"stationName\": {\n        \"type\": \"string\",\n        \"description\": \"The current name of the station to update\",\n        \"example\": \"Kottawa\"\n      },\n      \"transportCost\": {\n        \"type\": \"string\",\n        \"description\": \"The current transport cost to identify the station\",\n        \"example\": \"150.00\"\n      },\n      \"routeName\": {\n        \"type\": \"string\",\n        \"description\": \"The current route name to identify stations on that route\",\n        \"example\": \"Central Expressway\"\n      }\n    }\n  },\n  \"updateFields\": {\n    \"description\": \"Provide at least ONE field to update\",\n    \"required\": \"at_least_one\",\n    \"options\": {\n      \"newStationName\": {\n        \"type\": \"string\",\n        \"description\": \"The new name for the station\",\n        \"example\": \"Kottawa-updated\"\n      },\n      \"newTransportCost\": {\n        \"type\": \"string\",\n        \"description\": \"The new transport cost value\",\n        \"example\": \"175.50\"\n      },\n      \"newRouteCode\": {\n        \"type\": \"string\",\n        \"description\": \"The new route code to assign\",\n        \"example\": \"000004\"\n      },\n      \"newRouteName\": {\n        \"type\": \"string\",\n        \"description\": \"The new route name to assign (alternative to newRouteCode)\",\n        \"example\": \"Outer Circular Highway\"\n      }\n    }\n  }\n}",
+        "_id": "69545179ec34eb2090d6c4d9"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/StationInformation.aspx\")) {\n    return {\n      status: \"NO_ACCESS\",\n      message: \"You do not have access to Station Information screen. Please contact HR Admin.\"\n    };\n  }\n\n  // Validate input - user must provide one of the four search criteria to identify the record\n  if (!args.stationCode && !args.stationName && !args.transportCost && !args.routeName) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"Either stationCode, stationName, transportCost, or routeName is required to identify the station\"\n    };\n  }\n\n  // Validate that at least one update field is provided\n  if (args.newStationName === undefined && args.newTransportCost === undefined && \n      args.newRouteCode === undefined && args.newRouteName === undefined) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"At least one field to update must be provided: newStationName, newTransportCost, newRouteCode, or newRouteName\"\n    };\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"StationInformation\");\n\n  const headers = new Headers();\n  headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n  headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/StationInformation.aspx\");\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/StationInformation.aspx`;\n\n  const parser = new DOMParser();\n\n  // Determine search criteria based on what user provided\n  let searchCriteria, searchValue;\n  if (args.stationCode) {\n    searchCriteria = \"STATION_CODE\";\n    searchValue = args.stationCode;\n  } else if (args.stationName) {\n    searchCriteria = \"STATION_NAME\";\n    searchValue = args.stationName;\n  } else if (args.transportCost) {\n    searchCriteria = \"STATION_COST\";\n    searchValue = args.transportCost;\n  } else {\n    searchCriteria = \"R.RT_NAME\";\n    searchValue = args.routeName;\n  }\n\n  // Search for the Station\n  const searchFormData = new FormData();\n  searchFormData.append(\"scrollLeft\", \"0\");\n  searchFormData.append(\"scrollTop\", \"0\");\n  searchFormData.append(\"__EVENTTARGET\", \"\");\n  searchFormData.append(\"__EVENTARGUMENT\", \"\");\n  searchFormData.append(\"__VIEWSTATE\", details.viewState);\n  searchFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  searchFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  searchFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n  searchFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  searchFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  searchFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n  searchFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n  searchFormData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n  searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  searchFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const searchResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: searchFormData\n  });\n\n  const searchDoc = parser.parseFromString(await searchResponse.text(), \"text/html\");\n\n  const searchViewState = searchDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const searchEventValidation = searchDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const searchViewStateGen = searchDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // Find the matching row\n  let row = null;\n  let currentRoute = null;\n  const allTableRows = searchDoc.querySelectorAll(\"tbody tr\");\n  \n  for (const r of allTableRows) {\n    // Track group headers for route\n    if (r.classList.contains(\"GroupHeader_Default\")) {\n      const routeText = r.querySelector(\"p\")?.textContent.trim();\n      if (routeText && routeText.startsWith(\"Route :\")) {\n        currentRoute = routeText.replace(\"Route :\", \"\").trim();\n      }\n      continue;\n    }\n    \n    // Check data rows\n    if (r.id && r.id.startsWith(\"ctl00_body_grdsummary_ctl00__\")) {\n      const cells = r.querySelectorAll(\"td\");\n      const rowCode = cells[1]?.textContent.trim();\n      const rowName = cells[2]?.textContent.trim();\n      const rowCost = cells[3]?.querySelector(\"span\")?.textContent.trim() || cells[3]?.textContent.trim();\n      \n      if (args.stationCode && rowCode === args.stationCode) {\n        row = r;\n        break;\n      } else if (args.stationName && rowName === args.stationName) {\n        row = r;\n        break;\n      } else if (args.transportCost && rowCost === args.transportCost) {\n        row = r;\n        break;\n      } else if (args.routeName && currentRoute && currentRoute.toLowerCase().includes(args.routeName.toLowerCase())) {\n        row = r;\n        break;\n      }\n    }\n  }\n\n  if (!row) {\n    return {\n      status: \"NOT_FOUND\",\n      message: \"Station not found. Please verify the station code, name, transport cost, or route name.\"\n    };\n  }\n\n  // Get the edit link\n  const editKey = row\n    .querySelector(\"a\")\n    ?.getAttribute(\"href\")\n    ?.match(/__doPostBack\\('([^']+)'/)?.[1];\n\n  if (!editKey) {\n    return {\n      status: \"ERROR\",\n      message: \"Unable to open Station record.\"\n    };\n  }\n\n  // Click on the row to open detail view\n  const rowClickFormData = new FormData();\n  rowClickFormData.append(\"scrollLeft\", \"0\");\n  rowClickFormData.append(\"scrollTop\", \"0\");\n  rowClickFormData.append(\"__EVENTTARGET\", editKey);\n  rowClickFormData.append(\"__EVENTARGUMENT\", \"\");\n  rowClickFormData.append(\"__VIEWSTATE\", searchViewState);\n  rowClickFormData.append(\"__VIEWSTATEGENERATOR\", searchViewStateGen);\n  rowClickFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  rowClickFormData.append(\"__EVENTVALIDATION\", searchEventValidation);\n  rowClickFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  rowClickFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  rowClickFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n  rowClickFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n  rowClickFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  rowClickFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  rowClickFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n  rowClickFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  rowClickFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const detailResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: rowClickFormData\n  });\n\n  const detailDoc = parser.parseFromString(await detailResponse.text(), \"text/html\");\n\n  // Extract current values from detail view\n  const currentCode = detailDoc.querySelector(\"#ctl00_body_txtCode\")?.value || \"\";\n  const currentStation = detailDoc.querySelector(\"#ctl00_body_txtStation\")?.value || \"\";\n  const currentCost = detailDoc.querySelector(\"#ctl00_body_txtCost\")?.value || \"\";\n  const currentRouteCode = detailDoc.querySelector(\"#ctl00_body_dpRoute\")?.value || \"\";\n\n  // Determine route code to use - with flexible input handling\n  let updatedRouteCode = currentRouteCode;\n  \n  // If newRouteCode is provided, use it directly\n  if (args.newRouteCode !== undefined) {\n    updatedRouteCode = args.newRouteCode;\n  }\n  // If newRouteName is provided, look it up in the dropdown\n  else if (args.newRouteName !== undefined) {\n    const routeDropdown = detailDoc.querySelector(\"#ctl00_body_dpRoute\");\n    const options = routeDropdown?.querySelectorAll(\"option\") || [];\n    \n    let foundRouteCode = null;\n    for (const option of options) {\n      const optionText = option.textContent.trim();\n      const optionValue = option.value;\n      \n      if (optionText.toLowerCase().includes(args.newRouteName.toLowerCase()) && optionValue !== \"-1\") {\n        foundRouteCode = optionValue;\n        break;\n      }\n    }\n    \n    if (foundRouteCode) {\n      updatedRouteCode = foundRouteCode;\n    } else if (args.newRouteName !== \"\") {\n      return {\n        status: \"INVALID_ARGS\",\n        message: `Route \"${args.newRouteName}\" not found in the dropdown. Please verify the route name.`\n      };\n    }\n  }\n\n  // Merge with updates (only update fields that are provided)\n  const updatedStation = args.newStationName !== undefined ? args.newStationName : currentStation;\n  const updatedCost = args.newTransportCost !== undefined ? args.newTransportCost : currentCost;\n\n  const detailViewState = detailDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const detailEventValidation = detailDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const detailViewStateGen = detailDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // Click Edit button to enter edit mode\n  const editFormData = new FormData();\n  editFormData.append(\"scrollLeft\", \"0\");\n  editFormData.append(\"scrollTop\", \"0\");\n  editFormData.append(\"__EVENTTARGET\", \"\");\n  editFormData.append(\"__EVENTARGUMENT\", \"\");\n  editFormData.append(\"__VIEWSTATE\", detailViewState);\n  editFormData.append(\"__VIEWSTATEGENERATOR\", detailViewStateGen);\n  editFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  editFormData.append(\"__EVENTVALIDATION\", detailEventValidation);\n  editFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  editFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  editFormData.append(\"ctl00$body$butEdit\", \"Edit\");\n\n  const editModeResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: editFormData\n  });\n\n  const editModeDoc = parser.parseFromString(await editModeResponse.text(), \"text/html\");\n\n  const saveViewState = editModeDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const saveEventValidation = editModeDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const saveViewStateGen = editModeDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // Save the changes\n  const saveFormData = new FormData();\n  saveFormData.append(\"scrollLeft\", \"0\");\n  saveFormData.append(\"scrollTop\", \"0\");\n  saveFormData.append(\"__EVENTTARGET\", \"\");\n  saveFormData.append(\"__EVENTARGUMENT\", \"\");\n  saveFormData.append(\"__VIEWSTATE\", saveViewState);\n  saveFormData.append(\"__VIEWSTATEGENERATOR\", saveViewStateGen);\n  saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  saveFormData.append(\"__EVENTVALIDATION\", saveEventValidation);\n  saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  saveFormData.append(\"ctl00$body$txtStation\", updatedStation);\n  saveFormData.append(\"ctl00$body$txtCost\", updatedCost);\n  saveFormData.append(\"ctl00$body$dpRoute\", updatedRouteCode);\n  saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n  const finalResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: saveFormData\n  });\n\n  const saveHtml = await finalResponse.text();\n\n  if (finalResponse.status === 200) {\n    const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n    const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n    \n    if (errorMsg) {\n      return {\n        status: \"ERROR\",\n        message: `Save failed: ${errorMsg.trim()}`\n      };\n    }\n\n    // Get route name from the dropdown for response\n    let routeName = null;\n    if (updatedRouteCode) {\n      const routeOption = editModeDoc.querySelector(`#ctl00_body_dpRoute option[value=\"${updatedRouteCode}\"]`);\n      routeName = routeOption?.textContent.trim() || null;\n    }\n\n    return {\n      status: \"SUCCESS\",\n      message: `Successfully updated Station Information (${currentCode})`,\n      stationCode: currentCode,\n      stationName: updatedStation,\n      transportCost: updatedCost,\n      routeCode: updatedRouteCode,\n      routeName: routeName\n    };\n  }\n\n  return {\n    status: \"ERROR\",\n    message: \"Failed to update Station Information. Please verify in the UI.\"\n  };\n})",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "CensusInformation"
+      ],
+      "taskName": "Editing Station Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-30T22:26:01.658Z",
+      "updatedAt": "2026-06-15T07:34:01.685Z",
+      "__v": 3,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "editStationInformation",
+      "args": [
+        {
+          "name": "stationCode",
+          "type": "string",
+          "description": "The unique code identifier for the station to update (e.g., \"000004\")",
+          "required": false,
+          "_id": "69545179ec34eb2090d6c4da"
+        },
+        {
+          "name": "stationName",
+          "type": "string",
+          "description": "The current name of the station to update (e.g., \"Kottawa\")",
+          "required": false,
+          "_id": "69545179ec34eb2090d6c4db"
+        },
+        {
+          "name": "transportCost",
+          "type": "string",
+          "description": "The current transport cost to identify the station (e.g., \"150.00\")",
+          "required": false,
+          "_id": "69545179ec34eb2090d6c4dc"
+        },
+        {
+          "name": "routeName",
+          "type": "string",
+          "description": "The current route name to identify stations on that route (e.g., \"Central Expressway\")",
+          "required": false,
+          "_id": "69545179ec34eb2090d6c4dd"
+        },
+        {
+          "name": "newStationName",
+          "type": "string",
+          "description": "The new name for the station (e.g., \"Kottawa-updated\")",
+          "required": false,
+          "_id": "69545179ec34eb2090d6c4de"
+        },
+        {
+          "name": "newTransportCost",
+          "type": "string",
+          "description": "The new transport cost value (e.g., \"175.50\")",
+          "required": false,
+          "_id": "69545179ec34eb2090d6c4df"
+        },
+        {
+          "name": "newRouteCode",
+          "type": "string",
+          "description": "The new route code to assign (e.g., \"000004\")",
+          "required": false,
+          "_id": "69545179ec34eb2090d6c4e0"
+        },
+        {
+          "name": "newRouteName",
+          "type": "string",
+          "description": "The new route name to assign (e.g., \"Outer Circular Highway\")",
+          "required": false,
+          "_id": "69545179ec34eb2090d6c4e1"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"identification\": {\n    \"description\": \"Provide ONE of these to identify the station\",\n    \"required\": \"one_of\",\n    \"options\": {\n      \"stationCode\": {\n        \"type\": \"string\",\n        \"description\": \"The unique code identifier for the station to update\",\n        \"example\": \"000004\"\n      },\n      \"stationName\": {\n        \"type\": \"string\",\n        \"description\": \"The current name of the station to update\",\n        \"example\": \"Kottawa\"\n      },\n      \"transportCost\": {\n        \"type\": \"string\",\n        \"description\": \"The current transport cost to identify the station\",\n        \"example\": \"150.00\"\n      },\n      \"routeName\": {\n        \"type\": \"string\",\n        \"description\": \"The current route name to identify stations on that route\",\n        \"example\": \"Central Expressway\"\n      }\n    }\n  },\n  \"updateFields\": {\n    \"description\": \"Provide at least ONE field to update\",\n    \"required\": \"at_least_one\",\n    \"options\": {\n      \"newStationName\": {\n        \"type\": \"string\",\n        \"description\": \"The new name for the station\",\n        \"example\": \"Kottawa-updated\"\n      },\n      \"newTransportCost\": {\n        \"type\": \"string\",\n        \"description\": \"The new transport cost value\",\n        \"example\": \"175.50\"\n      },\n      \"newRouteCode\": {\n        \"type\": \"string\",\n        \"description\": \"The new route code to assign\",\n        \"example\": \"000004\"\n      },\n      \"newRouteName\": {\n        \"type\": \"string\",\n        \"description\": \"The new route name to assign (alternative to newRouteCode)\",\n        \"example\": \"Outer Circular Highway\"\n      }\n    }\n  }\n}",
+      "_id": "69545179ec34eb2090d6c4d9"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/StationInformation.aspx\")) {\n    return {\n      status: \"NO_ACCESS\",\n      message: \"You do not have access to Station Information screen. Please contact HR Admin.\"\n    };\n  }\n\n  // Validate input - user must provide one of the four search criteria to identify the record\n  if (!args.stationCode && !args.stationName && !args.transportCost && !args.routeName) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"Either stationCode, stationName, transportCost, or routeName is required to identify the station\"\n    };\n  }\n\n  // Validate that at least one update field is provided\n  if (args.newStationName === undefined && args.newTransportCost === undefined && \n      args.newRouteCode === undefined && args.newRouteName === undefined) {\n    return {\n      status: \"INVALID_ARGS\",\n      message: \"At least one field to update must be provided: newStationName, newTransportCost, newRouteCode, or newRouteName\"\n    };\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"StationInformation\");\n\n  const headers = new Headers();\n  headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n  headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/StationInformation.aspx\");\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/StationInformation.aspx`;\n\n  const parser = new DOMParser();\n\n  // Determine search criteria based on what user provided\n  let searchCriteria, searchValue;\n  if (args.stationCode) {\n    searchCriteria = \"STATION_CODE\";\n    searchValue = args.stationCode;\n  } else if (args.stationName) {\n    searchCriteria = \"STATION_NAME\";\n    searchValue = args.stationName;\n  } else if (args.transportCost) {\n    searchCriteria = \"STATION_COST\";\n    searchValue = args.transportCost;\n  } else {\n    searchCriteria = \"R.RT_NAME\";\n    searchValue = args.routeName;\n  }\n\n  // Search for the Station\n  const searchFormData = new FormData();\n  searchFormData.append(\"scrollLeft\", \"0\");\n  searchFormData.append(\"scrollTop\", \"0\");\n  searchFormData.append(\"__EVENTTARGET\", \"\");\n  searchFormData.append(\"__EVENTARGUMENT\", \"\");\n  searchFormData.append(\"__VIEWSTATE\", details.viewState);\n  searchFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  searchFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  searchFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n  searchFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  searchFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  searchFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n  searchFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n  searchFormData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n  searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  searchFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const searchResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: searchFormData\n  });\n\n  const searchDoc = parser.parseFromString(await searchResponse.text(), \"text/html\");\n\n  const searchViewState = searchDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const searchEventValidation = searchDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const searchViewStateGen = searchDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // Find the matching row\n  let row = null;\n  let currentRoute = null;\n  const allTableRows = searchDoc.querySelectorAll(\"tbody tr\");\n  \n  for (const r of allTableRows) {\n    // Track group headers for route\n    if (r.classList.contains(\"GroupHeader_Default\")) {\n      const routeText = r.querySelector(\"p\")?.textContent.trim();\n      if (routeText && routeText.startsWith(\"Route :\")) {\n        currentRoute = routeText.replace(\"Route :\", \"\").trim();\n      }\n      continue;\n    }\n    \n    // Check data rows\n    if (r.id && r.id.startsWith(\"ctl00_body_grdsummary_ctl00__\")) {\n      const cells = r.querySelectorAll(\"td\");\n      const rowCode = cells[1]?.textContent.trim();\n      const rowName = cells[2]?.textContent.trim();\n      const rowCost = cells[3]?.querySelector(\"span\")?.textContent.trim() || cells[3]?.textContent.trim();\n      \n      if (args.stationCode && rowCode === args.stationCode) {\n        row = r;\n        break;\n      } else if (args.stationName && rowName === args.stationName) {\n        row = r;\n        break;\n      } else if (args.transportCost && rowCost === args.transportCost) {\n        row = r;\n        break;\n      } else if (args.routeName && currentRoute && currentRoute.toLowerCase().includes(args.routeName.toLowerCase())) {\n        row = r;\n        break;\n      }\n    }\n  }\n\n  if (!row) {\n    return {\n      status: \"NOT_FOUND\",\n      message: \"Station not found. Please verify the station code, name, transport cost, or route name.\"\n    };\n  }\n\n  // Get the edit link\n  const editKey = row\n    .querySelector(\"a\")\n    ?.getAttribute(\"href\")\n    ?.match(/__doPostBack\\('([^']+)'/)?.[1];\n\n  if (!editKey) {\n    return {\n      status: \"ERROR\",\n      message: \"Unable to open Station record.\"\n    };\n  }\n\n  // Click on the row to open detail view\n  const rowClickFormData = new FormData();\n  rowClickFormData.append(\"scrollLeft\", \"0\");\n  rowClickFormData.append(\"scrollTop\", \"0\");\n  rowClickFormData.append(\"__EVENTTARGET\", editKey);\n  rowClickFormData.append(\"__EVENTARGUMENT\", \"\");\n  rowClickFormData.append(\"__VIEWSTATE\", searchViewState);\n  rowClickFormData.append(\"__VIEWSTATEGENERATOR\", searchViewStateGen);\n  rowClickFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  rowClickFormData.append(\"__EVENTVALIDATION\", searchEventValidation);\n  rowClickFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  rowClickFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  rowClickFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n  rowClickFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n  rowClickFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  rowClickFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  rowClickFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n  rowClickFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  rowClickFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const detailResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: rowClickFormData\n  });\n\n  const detailDoc = parser.parseFromString(await detailResponse.text(), \"text/html\");\n\n  // Extract current values from detail view\n  const currentCode = detailDoc.querySelector(\"#ctl00_body_txtCode\")?.value || \"\";\n  const currentStation = detailDoc.querySelector(\"#ctl00_body_txtStation\")?.value || \"\";\n  const currentCost = detailDoc.querySelector(\"#ctl00_body_txtCost\")?.value || \"\";\n  const currentRouteCode = detailDoc.querySelector(\"#ctl00_body_dpRoute\")?.value || \"\";\n\n  // Determine route code to use - with flexible input handling\n  let updatedRouteCode = currentRouteCode;\n  \n  // If newRouteCode is provided, use it directly\n  if (args.newRouteCode !== undefined) {\n    updatedRouteCode = args.newRouteCode;\n  }\n  // If newRouteName is provided, look it up in the dropdown\n  else if (args.newRouteName !== undefined) {\n    const routeDropdown = detailDoc.querySelector(\"#ctl00_body_dpRoute\");\n    const options = routeDropdown?.querySelectorAll(\"option\") || [];\n    \n    let foundRouteCode = null;\n    for (const option of options) {\n      const optionText = option.textContent.trim();\n      const optionValue = option.value;\n      \n      if (optionText.toLowerCase().includes(args.newRouteName.toLowerCase()) && optionValue !== \"-1\") {\n        foundRouteCode = optionValue;\n        break;\n      }\n    }\n    \n    if (foundRouteCode) {\n      updatedRouteCode = foundRouteCode;\n    } else if (args.newRouteName !== \"\") {\n      return {\n        status: \"INVALID_ARGS\",\n        message: `Route \"${args.newRouteName}\" not found in the dropdown. Please verify the route name.`\n      };\n    }\n  }\n\n  // Merge with updates (only update fields that are provided)\n  const updatedStation = args.newStationName !== undefined ? args.newStationName : currentStation;\n  const updatedCost = args.newTransportCost !== undefined ? args.newTransportCost : currentCost;\n\n  const detailViewState = detailDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const detailEventValidation = detailDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const detailViewStateGen = detailDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // Click Edit button to enter edit mode\n  const editFormData = new FormData();\n  editFormData.append(\"scrollLeft\", \"0\");\n  editFormData.append(\"scrollTop\", \"0\");\n  editFormData.append(\"__EVENTTARGET\", \"\");\n  editFormData.append(\"__EVENTARGUMENT\", \"\");\n  editFormData.append(\"__VIEWSTATE\", detailViewState);\n  editFormData.append(\"__VIEWSTATEGENERATOR\", detailViewStateGen);\n  editFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  editFormData.append(\"__EVENTVALIDATION\", detailEventValidation);\n  editFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  editFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  editFormData.append(\"ctl00$body$butEdit\", \"Edit\");\n\n  const editModeResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: editFormData\n  });\n\n  const editModeDoc = parser.parseFromString(await editModeResponse.text(), \"text/html\");\n\n  const saveViewState = editModeDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const saveEventValidation = editModeDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const saveViewStateGen = editModeDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  // Save the changes\n  const saveFormData = new FormData();\n  saveFormData.append(\"scrollLeft\", \"0\");\n  saveFormData.append(\"scrollTop\", \"0\");\n  saveFormData.append(\"__EVENTTARGET\", \"\");\n  saveFormData.append(\"__EVENTARGUMENT\", \"\");\n  saveFormData.append(\"__VIEWSTATE\", saveViewState);\n  saveFormData.append(\"__VIEWSTATEGENERATOR\", saveViewStateGen);\n  saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  saveFormData.append(\"__EVENTVALIDATION\", saveEventValidation);\n  saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n  saveFormData.append(\"ctl00$body$txtStation\", updatedStation);\n  saveFormData.append(\"ctl00$body$txtCost\", updatedCost);\n  saveFormData.append(\"ctl00$body$dpRoute\", updatedRouteCode);\n  saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n  const finalResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: saveFormData\n  });\n\n  const saveHtml = await finalResponse.text();\n\n  if (finalResponse.status === 200) {\n    const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n    const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n    \n    if (errorMsg) {\n      return {\n        status: \"ERROR\",\n        message: `Save failed: ${errorMsg.trim()}`\n      };\n    }\n\n    // Get route name from the dropdown for response\n    let routeName = null;\n    if (updatedRouteCode) {\n      const routeOption = editModeDoc.querySelector(`#ctl00_body_dpRoute option[value=\"${updatedRouteCode}\"]`);\n      routeName = routeOption?.textContent.trim() || null;\n    }\n\n    return {\n      status: \"SUCCESS\",\n      message: `Successfully updated Station Information (${currentCode})`,\n      stationCode: currentCode,\n      stationName: updatedStation,\n      transportCost: updatedCost,\n      routeCode: updatedRouteCode,\n      routeName: routeName\n    };\n  }\n\n  return {\n    status: \"ERROR\",\n    message: \"Failed to update Station Information. Please verify in the UI.\"\n  };\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

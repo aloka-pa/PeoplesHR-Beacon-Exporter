@@ -1,0 +1,99 @@
+{
+  "id": "6945281ea9f8deb448400bf9",
+  "slug": "criticalincidentjournaldescfilling",
+  "name": "criticalIncidentJournalDescFilling",
+  "description": "The AI tool assists users in creating critical incident journal entries by guiding them through context-specific questions, automatically generating a clear and structured summary of the incident, and enabling the user to review, edit, and confirm the content before it is saved.",
+  "instructions": null,
+  "taskName": "",
+  "tags": [
+    "Performance",
+    "Critical Incident Journal",
+    "phase2"
+  ],
+  "status": "live",
+  "signature": "criticalIncidentJournalDescFilling",
+  "createdAt": "2025-12-19T10:25:34.811Z",
+  "updatedAt": "2026-07-17T12:50:30.318Z",
+  "assignedAgents": [
+    {
+      "id": "696baf3fc2b2c4c21130c789",
+      "name": "Performance Assessment | Phase 2 | Agent"
+    }
+  ],
+  "contentHash": "ae4cb321a362ff0ed00e64a43b48d676beb5ae77ea689ef8ab3498f78a6ed50d",
+  "lastExportedAt": "2026-09-05T19:39:22.233Z",
+  "raw": {
+    "basic": {
+      "_id": "6945281ea9f8deb448400bf9",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "criticalIncidentJournalDescFilling",
+      "description": "The AI tool assists users in creating critical incident journal entries by guiding them through context-specific questions, automatically generating a clear and structured summary of the incident, and enabling the user to review, edit, and confirm the content before it is saved.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "criticalIncidentJournalDescFilling",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"desc\": {\n      \"type\": \"string\",\n      \"description\": \"This is the finalized rephrased description that will be used in the critical incident journal entry\"\n    }\n  }\n}",
+        "_id": "6a5a25167323f4d75d1107a1"
+      },
+      "by": "34476",
+      "fetcher": "(function(args){\n    return{\n        code:`(function(){\n            return {}\n        })`\n    }\n});\n",
+      "transformer": "(function (_data, args, reqOptions) {\n  const iframe = document.querySelector(\"#ifrmPage\");\n  const doc = iframe.contentDocument;\n\n  if (!iframe || !iframe.contentDocument) {\n    return { success: false, message: \"Iframe not found.\" };\n  }\n\n  const setText = (element, value) => {\n    if (element && value && value !== '\"\"' && value !== \"Not Specified\") {\n      element.innerText = value;\n\n      const parentEditor = element.closest('.longTextEditor');\n      if (parentEditor) {\n        const ckeIframe = parentEditor.querySelector('.cke_wysiwyg_frame');\n        const textarea = parentEditor.querySelector('textarea');\n\n        if (ckeIframe?.contentDocument?.body) {\n          try {\n            ckeIframe.contentDocument.body.innerHTML = `<p>${value}</p>`;\n          } catch (e) {\n          }\n        }\n\n        if (textarea && window.CKEDITOR && CKEDITOR.instances[textarea.id]) {\n          try {\n            const editorInstance = CKEDITOR.instances[textarea.id];\n            editorInstance.setData(value);\n            editorInstance.updateElement();\n            editorInstance.fire('change');\n          } catch (e) {\n          }\n        }\n      }\n\n      return true;\n    }\n    return false;\n  };\n\n\n  if (args.desc) {\n    const descriptionSpan = doc.querySelector(\n      '[data-bind=\"html: IncidentDescription\"]'\n    );\n\n    if (descriptionSpan) {\n      setText(descriptionSpan, args.desc);\n    }\n  }\n\n  return {\n    success: true,\n    message: `Successfully applied critical incident description field update.`\n  };\n});\n",
+      "groupName": "",
+      "tags": [
+        "Performance",
+        "Critical Incident Journal",
+        "phase2"
+      ],
+      "taskName": "",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-19T10:25:34.811Z",
+      "updatedAt": "2026-07-17T12:50:30.318Z",
+      "__v": 12,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "696baf3fc2b2c4c21130c789",
+          "name": "Performance Assessment | Phase 2 | Agent"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "criticalIncidentJournalDescFilling",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"desc\": {\n      \"type\": \"string\",\n      \"description\": \"This is the finalized rephrased description that will be used in the critical incident journal entry\"\n    }\n  }\n}",
+      "_id": "6a5a25167323f4d75d1107a1"
+    },
+    "fetcher": "(function(args){\n    return{\n        code:`(function(){\n            return {}\n        })`\n    }\n});\n",
+    "transformer": "(function (_data, args, reqOptions) {\n  const iframe = document.querySelector(\"#ifrmPage\");\n  const doc = iframe.contentDocument;\n\n  if (!iframe || !iframe.contentDocument) {\n    return { success: false, message: \"Iframe not found.\" };\n  }\n\n  const setText = (element, value) => {\n    if (element && value && value !== '\"\"' && value !== \"Not Specified\") {\n      element.innerText = value;\n\n      const parentEditor = element.closest('.longTextEditor');\n      if (parentEditor) {\n        const ckeIframe = parentEditor.querySelector('.cke_wysiwyg_frame');\n        const textarea = parentEditor.querySelector('textarea');\n\n        if (ckeIframe?.contentDocument?.body) {\n          try {\n            ckeIframe.contentDocument.body.innerHTML = `<p>${value}</p>`;\n          } catch (e) {\n          }\n        }\n\n        if (textarea && window.CKEDITOR && CKEDITOR.instances[textarea.id]) {\n          try {\n            const editorInstance = CKEDITOR.instances[textarea.id];\n            editorInstance.setData(value);\n            editorInstance.updateElement();\n            editorInstance.fire('change');\n          } catch (e) {\n          }\n        }\n      }\n\n      return true;\n    }\n    return false;\n  };\n\n\n  if (args.desc) {\n    const descriptionSpan = doc.querySelector(\n      '[data-bind=\"html: IncidentDescription\"]'\n    );\n\n    if (descriptionSpan) {\n      setText(descriptionSpan, args.desc);\n    }\n  }\n\n  return {\n    success: true,\n    message: `Successfully applied critical incident description field update.`\n  };\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

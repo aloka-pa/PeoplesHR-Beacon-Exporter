@@ -1,0 +1,24 @@
+{
+  "id": "690dc587931a2d61ba0b2f52",
+  "slug": "searchbycreteriaclassification",
+  "name": "searchByCreteriaClassification",
+  "status": "live",
+  "createdAt": "2025-06-03T16:46:20.209Z",
+  "updatedAt": "2025-06-03T16:46:20.209Z",
+  "contentHash": "7cf62c39e9981bd447233b41c9d72d012c89d8e474f12a0896f90812461a435a",
+  "lastExportedAt": "2026-09-05T19:41:38.199Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc587931a2d61ba0b2f52",
+    "name": "searchByCreteriaClassification",
+    "status": "live",
+    "code": "(async function (args) {\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n    myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n    myHeaders.append(\"cache-control\", \"max-age=0\");\n    myHeaders.append(\"content-type\", \"application/x-www-form-urlencoded\");\n\n    const state = BeaconBar.getSharedData(\"searchBycreteria\");\n    const selectedCreteria = BeaconBar.getSharedData(\"selectedCreteria\");\n    const eligibility = BeaconBar.getSharedData(\"eligibility\");\n\n    const urlencoded = new URLSearchParams();\n    urlencoded.append(\"RadScriptManager1_HiddenField\", \";;Telerik.Web.UI, Version=2008.1.415.35, Culture=neutral, PublicKeyToken=121fae78165ba3d4:en-US:493502ac-fd18-4d2a-b4d2-e3cf218d0d84:fe8d4455:c7991a52:cc662d70:f52b3883:7e0e28a2\");\n    urlencoded.append(\"__EVENTTARGET\", \"\");\n    urlencoded.append(\"__EVENTARGUMENT\", \"\");\n    urlencoded.append(\"__LASTFOCUS\", \"\");\n    urlencoded.append(\"__VIEWSTATE\", state.viewState);\n    urlencoded.append(\"__VIEWSTATEGENERATOR\", state.viewStateGenerator);\n    urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    urlencoded.append(\"__EVENTVALIDATION\", state.eventValidation);\n    urlencoded.append(\"RadWindowManager1_ClientState\", \"\");\n    urlencoded.append(\"TalentEmployeeSearch$ctl05$ctl14\", \"0\");\n    urlencoded.append(\"TalentEmployeeSearch$ctl05$ctl16\", \"\");\n    urlencoded.append(\"TalentEmployeeSearch$ctl05$RadioButtonGroup1\", state.searchCreteria);\n    urlencoded.append(\"TalentEmployeeSearch$ctl05$ctl21\", selectedCreteria);\n    urlencoded.append(\"TalentEmployeeSearch$ctl05$ctl23\", args.selectedClassification || \"\");\n    urlencoded.append(\"TalentEmployeeSearch$ctl05$ctl35\", \"Search\");\n    urlencoded.append(\"TalentEmployeeSearch$ctl06$ctl00$ctl02$ctl01$colMultiEmpCheckSelectCheckBox\", \"on\");\n    urlencoded.append(\"TalentEmployeeSearch_ctl06_ClientState\", \"\");\n\n    const requestOptions = {\n        method: \"POST\",\n        headers: myHeaders,\n        body: urlencoded,\n        redirect: \"follow\"\n    };\n\n    const digest = await BeaconBar.executeFunction(\"getDigest\")(eligibility);\n    const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n\n    const response = await fetch(`${reqOptions}Talent/SearchDialog.aspx?${eligibility}&digest=${digest.digest}`, requestOptions);\n    const htmlString = await response.text();\n     function extractViewState(html) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(html, \"text/html\");\n\n    const SupervisorEmpNumber = doc.querySelector(\"#body_hdnSupervisorEmpNumber\")?.value || \"\";\n\n    const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n    const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const comapanydetails = doc.querySelector(\"#body_hdnIsCompanyDetail\")?.value || \"\";\n    const eventarguement = doc.querySelector(\"#__EVENTARGUMENT\")?.value || \"\";\n    const employeeSearch = doc.querySelector(\"label[for='TalentEmployeeSearch_ctl05_ctl07']\").innerText;\n    const talentemployee = doc.querySelector(\"#TalentEmployeeSearch_ctl05_ctl07\")?.value || \"\";\n    const searchCreteria = doc.querySelector('#TalentEmployeeSearch_ctl05_ctl19')?.value || \"\" ;\n    const totalSubmit = doc.querySelector('#TalentEmployeeSearch_ctl05_ctl07')?.value || \"\" ;\n    return {\n      viewState, viewStateGenerator, eventValidation, SupervisorEmpNumber, comapanydetails, eventarguement, employeeSearch\n      , talentemployee , searchCreteria , totalSubmit\n    }\n  }\n  const finaloutputViewState = extractViewState(htmlString);\n  BeaconBar.setSharedData(\"finaloutputViewState\", finaloutputViewState)\n    return htmlString; \n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

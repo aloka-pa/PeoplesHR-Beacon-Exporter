@@ -1,0 +1,24 @@
+{
+  "id": "690dc58b931a2d61ba0b329d",
+  "slug": "shortlisting",
+  "name": "shortListing",
+  "status": "live",
+  "createdAt": "2025-05-26T09:03:03.256Z",
+  "updatedAt": "2025-05-26T09:03:03.256Z",
+  "contentHash": "5aa8fa15daae1f0b3e5677cfa999b407ff048609fea08223a5fa8a508b79213e",
+  "lastExportedAt": "2026-09-05T19:41:40.916Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58b931a2d61ba0b329d",
+    "name": "shortListing",
+    "status": "live",
+    "code": "(function (candidate) {\n    // BeaconBar.executeCommand(\"6808bef7dc16a0e2ff3ce0d8\");\n    function RctShowCandidateComparision(html, divId) {\n    $(divId).empty();\n    $(divId).append(html);\n    $(divId).show();\n}\nfunction RctGetCandidateComparision(reqappId, appId, reqId, processId, appIntProfId, impersonated) {\n    appIntProfId = appIntProfId || -1;\n    impersonated = impersonated || 0;\n\n    //Enable Interview Candidate Comparison if Process Id = Reference Check\n    var isReferenceCheck = processId == 7 ? true : false;\n    processId = processId == 7 ? 4 : processId;\n\n    var param = \"?reqappId=\" + reqappId + \"&\" + \"appId=\" + appId + \"&\" + \"reqId=\" + reqId + \"&\" + \"processId=\" + processId + \"&\" + \"appIntProfId=\" + appIntProfId + \"&\" + \"impersonated=\" + impersonated + \"&\" + \"isReferenceCheck=\" + isReferenceCheck;\n\n    $.ajax({\n        type: \"GET\",\n        async: false,\n        url: window.$RCT_ROOT + 'Common/GetCandidateComparision' + param\n    }).done(function(data) {\n        text = data;\n    }).fail(function(xhr) {\n        var status = xhr.status;\n        var responseText = xhr.responseText;\n        bootbox.alert(responseText);\n    });\n\n    return text;\n}\n    function showCandidateComparison(candidate) {\n        var html = RctGetCandidateComparision(\n            candidate.ReqAppId,\n            candidate.AppId,\n            candidate.ReqId,\n            // ShrtLstngComparision.ProcessId,\n            0\n        );\n\n        RctShowCandidateComparision(html, \"#SLCandidateComparision\");\n        // ShrtLstngComparision.ShowHideComparision(true);\n    }\n\n    showCandidateComparison(candidate);\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

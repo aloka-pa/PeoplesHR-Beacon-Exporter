@@ -1,0 +1,95 @@
+{
+  "id": "690dc561931a2d61ba0b11cb",
+  "slug": "getcostcentredetails",
+  "name": "getCostCentreDetails",
+  "description": "in this tool generate the cost centre details.",
+  "instructions": null,
+  "taskName": "Cost Centre Information",
+  "tags": [],
+  "status": "unlive",
+  "signature": "getCostCentreDetails",
+  "createdAt": "2025-04-27T06:40:50.106Z",
+  "updatedAt": "2026-07-17T12:52:50.650Z",
+  "assignedAgents": [],
+  "contentHash": "5f9f7b43cccc34a217fa84ce63ac6112a90565b3f1ece48d6c312c2b587a0e4d",
+  "lastExportedAt": "2026-09-05T19:39:22.137Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc561931a2d61ba0b11cb",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getCostCentreDetails",
+      "description": "in this tool generate the cost centre details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getCostCentreDetails",
+        "args": [
+          {
+            "name": "searchCode",
+            "type": "string",
+            "description": "to get the Cost Center details for user prompt for cost Center Code.",
+            "required": true,
+            "_id": "680dd51186df9af1abb3f0cc"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a25a2ac96d1c943ad2bf2"
+      },
+      "by": "34476",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Coscentre\");\n  window.cc = details;\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", window.cc.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", window.cc.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", window.cc.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"CENTRE_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", args.searchCode);\n  urlencoded1.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/hr/EIM/Coscentre.aspx`, requestOptions1);\n  const html1 = await response1.text();\n  const viewDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html1);\n  const parser = new DOMParser();\n  const document1 = parser.parseFromString(html1, 'text/html');\n  const anchor = document1.querySelector('tr[id^=\"ctl00_body_grdsummary_ctl00__\"] a[href^=\"javascript:__doPostBack\"]');\n  const postBackId = anchor?.getAttribute('href')?.match(/__doPostBack\\('([^']+)'/)?.[1] || null;\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", postBackId);\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewDetails.viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewDetails.viewStateGen);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", viewDetails.eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$cboCriteria\", \"CENTRE_CODE\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$txtContent\", args.searchCode);\n  urlencoded2.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(`${location.origin}/hr/EIM/Coscentre.aspx`, requestOptions2);\n  const html2 = await response2.text();\n\n  const costDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html2);\n  window.cd = costDetails;\n  const document2 = parser.parseFromString(html2, 'text/html');\n\n  const getValue = (selector) => document2.querySelector(selector)?.value?.trim() || \"\";\n\n  const extractedData = {\n    code: getValue(\"#ctl00_body_txtCode\"),\n    costCentreName: getValue(\"#ctl00_body_txtName\"),\n    briefDescription: getValue(\"#ctl00_body_txtbriefDesc\")\n  };\n\n  return extractedData;\n})\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Cost Centre Information",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-27T06:40:50.106Z",
+      "updatedAt": "2026-07-17T12:52:50.650Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getCostCentreDetails",
+      "args": [
+        {
+          "name": "searchCode",
+          "type": "string",
+          "description": "to get the Cost Center details for user prompt for cost Center Code.",
+          "required": true,
+          "_id": "680dd51186df9af1abb3f0cc"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a25a2ac96d1c943ad2bf2"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Coscentre\");\n  window.cc = details;\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", window.cc.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", window.cc.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", window.cc.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"CENTRE_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", args.searchCode);\n  urlencoded1.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/hr/EIM/Coscentre.aspx`, requestOptions1);\n  const html1 = await response1.text();\n  const viewDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html1);\n  const parser = new DOMParser();\n  const document1 = parser.parseFromString(html1, 'text/html');\n  const anchor = document1.querySelector('tr[id^=\"ctl00_body_grdsummary_ctl00__\"] a[href^=\"javascript:__doPostBack\"]');\n  const postBackId = anchor?.getAttribute('href')?.match(/__doPostBack\\('([^']+)'/)?.[1] || null;\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", postBackId);\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewDetails.viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewDetails.viewStateGen);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", viewDetails.eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$cboCriteria\", \"CENTRE_CODE\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$txtContent\", args.searchCode);\n  urlencoded2.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(`${location.origin}/hr/EIM/Coscentre.aspx`, requestOptions2);\n  const html2 = await response2.text();\n\n  const costDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html2);\n  window.cd = costDetails;\n  const document2 = parser.parseFromString(html2, 'text/html');\n\n  const getValue = (selector) => document2.querySelector(selector)?.value?.trim() || \"\";\n\n  const extractedData = {\n    code: getValue(\"#ctl00_body_txtCode\"),\n    costCentreName: getValue(\"#ctl00_body_txtName\"),\n    briefDescription: getValue(\"#ctl00_body_txtbriefDesc\")\n  };\n\n  return extractedData;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

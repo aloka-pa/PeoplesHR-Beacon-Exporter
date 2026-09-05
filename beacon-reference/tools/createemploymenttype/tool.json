@@ -1,0 +1,72 @@
+{
+  "id": "690dc565931a2d61ba0b160b",
+  "slug": "createemploymenttype",
+  "name": "createEmploymentType",
+  "description": "To create Employee Type details using this tool, first check if the \"Date Limited\" checkbox is enabled. If it is, prompt the user to enter both the employment duration and the corresponding duration type, chosen from the predefined list: \"Years\" (\"000001\"), \"Months\" (\"000002\"), \"Weeks\" (\"000003\"), \"Days\" (\"000004\"), and \"Hours\" (\"000005\"). Similarly, if the \"Retirement Age\" option is selected, request both male and female retirement age inputs. The \"Employment Category\" field is optional, but if the user provides it, follow up by ensuring the input is either \"Full-Time\" or \"Part-Time\".",
+  "instructions": null,
+  "taskName": "Create Employment Type",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createEmploymentType",
+  "createdAt": "2025-05-03T18:16:34.013Z",
+  "updatedAt": "2026-05-15T06:55:54.115Z",
+  "assignedAgents": [],
+  "contentHash": "09308767ef04a5ac44dcb990d2d04ad235b29e4f72db32d0e7781127f870e983",
+  "lastExportedAt": "2026-09-05T19:39:22.676Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc565931a2d61ba0b160b",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createEmploymentType",
+      "description": "To create Employee Type details using this tool, first check if the \"Date Limited\" checkbox is enabled. If it is, prompt the user to enter both the employment duration and the corresponding duration type, chosen from the predefined list: \"Years\" (\"000001\"), \"Months\" (\"000002\"), \"Weeks\" (\"000003\"), \"Days\" (\"000004\"), and \"Hours\" (\"000005\"). Similarly, if the \"Retirement Age\" option is selected, request both male and female retirement age inputs. The \"Employment Category\" field is optional, but if the user provides it, follow up by ensuring the input is either \"Full-Time\" or \"Part-Time\".",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createEmploymentType",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtempdesc\": {\n      \"type\": \"string\",\n      \"description\": \"Name or label of the Employment Type (e.g., Permanent, Contractual).\"\n    },\n    \"ctl00_body_cbisdatelimit\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Indicates if the employment has a date limit (checkbox).\"\n    },\n    \"ctl00_body_nuDuration\": {\n      \"type\": \"string\",\n      \"description\": \"Duration of employment (only required if Date Limited is enabled).\"\n    },\n    \"ctl00_body_dpDurationType\": {\n      \"type\": \"string\",\n      \"description\": \"Duration unit (e.g., Months, Years) (only required if Date Limited is enabled).\"\n    },\n    \"ctl00_body_chkRetirementAge\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Indicates if retirement age is applicable (checkbox).\"\n    },\n    \"ctl00_body_nuAgeofMale\": {\n      \"type\": \"string\",\n      \"description\": \"Retirement age for males (required if Retirement Age is enabled).\"\n    },\n    \"ctl00_body_nuAgeofFemale\": {\n      \"type\": \"string\",\n      \"description\": \"Retirement age for females (required if Retirement Age is enabled).\"\n    },\n    \"ctl00_body_dpempcat\": {\n      \"type\": \"string\",\n      \"description\": \"Employment category (e.g., Full-Time, Part-Time).\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtempdesc\"\n  ],\n  \"dependencies\": {\n    \"ctl00_body_cbisdatelimit\": {\n      \"required\": [\n        \"ctl00_body_cbisdatelimit\",\n        \"ctl00_body_nuDuration\",\n        \"ctl00_body_dpDurationType\"\n      ]\n    },\n    \"ctl00_body_chkRetirementAge\": {\n      \"required\": [\n        \"ctl00_body_chkRetirementAge\",\n        \"ctl00_body_nuAgeofMale\",\n        \"ctl00_body_nuAgeofFemale\"\n      ]\n    }\n  }\n}",
+        "_id": "68165d82cfbd25ce9c178fd3"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"EmployeementType\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"EmployeementType\");\n\n  const payload = {\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: newInt.viewState,\n    __VIEWSTATEGENERATOR: newInt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: newInt.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtempdesc\": args[\"ctl00_body_txtempdesc\"] || \"\",\n    \"ctl00$body$dpempcat\": args[\"ctl00_body_dpempcat\"] || \"\",\n    \"ctl00$body$butSave\": \"Save\"\n  };\n\n  if (args[\"ctl00_body_cbisdatelimit\"] === \"on\") {\n    payload[\"ctl00$body$cbisdatelimit\"] = \"on\";\n    payload[\"ctl00$body$nuDuration\"] =\n      args[\"ctl00_body_nuDuration\"] || \"\";\n\n    payload[\"ctl00$body$dpDurationType\"] =\n      args[\"ctl00_body_dpDurationType\"] || \"\";\n  }\n\n  if (args[\"ctl00_body_chkRetirementAge\"] === \"on\") {\n    payload[\"ctl00$body$chkRetirementAge\"] = \"on\";\n\n    payload[\"ctl00$body$nuAgeofMale\"] =\n      args[\"ctl00_body_nuAgeofMale\"] || \"\";\n\n    payload[\"ctl00$body$nuAgeofFemale\"] =\n      args[\"ctl00_body_nuAgeofFemale\"] || \"\";\n  }\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\"getEIMApii\")(\n      payload,\n      \"EmployeementType\"\n    );\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const updateemployeeTypeDetails = {\n    code:\n      doc.querySelector(\"#ctl00_body_txtempcode\")\n        ?.value?.trim() || \"\",\n\n    employmentType:\n      doc.querySelector(\"#ctl00_body_txtempdesc\")\n        ?.value?.trim() || \"\",\n\n    dateLimited:\n      doc.querySelector(\"#ctl00_body_cbisdatelimit\")\n        ?.checked || false,\n\n    duration:\n      doc.querySelector(\"#ctl00_body_nuDuration\")\n        ?.value?.trim() || \"\",\n\n    durationUnit:\n      doc.querySelector(\n        \"#ctl00_body_dpDurationType option:checked\"\n      )?.textContent.trim() || \"\",\n\n    retirementAgeRequired:\n      doc.querySelector(\"#ctl00_body_chkRetirementAge\")\n        ?.checked || false,\n\n    retirementAgeMale:\n      doc.querySelector(\"#ctl00_body_nuAgeofMale\")\n        ?.value?.trim() || \"\",\n\n    retirementAgeFemale:\n      doc.querySelector(\"#ctl00_body_nuAgeofFemale\")\n        ?.value?.trim() || \"\",\n\n    employmentCategory:\n      doc.querySelector(\n        \"#ctl00_body_dpempcat option:checked\"\n      )?.textContent.trim() || \"\"\n  };\n\n  return updateemployeeTypeDetails;\n})",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create Employment Type",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-03T18:16:34.013Z",
+      "updatedAt": "2026-05-15T06:55:54.115Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createEmploymentType",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtempdesc\": {\n      \"type\": \"string\",\n      \"description\": \"Name or label of the Employment Type (e.g., Permanent, Contractual).\"\n    },\n    \"ctl00_body_cbisdatelimit\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Indicates if the employment has a date limit (checkbox).\"\n    },\n    \"ctl00_body_nuDuration\": {\n      \"type\": \"string\",\n      \"description\": \"Duration of employment (only required if Date Limited is enabled).\"\n    },\n    \"ctl00_body_dpDurationType\": {\n      \"type\": \"string\",\n      \"description\": \"Duration unit (e.g., Months, Years) (only required if Date Limited is enabled).\"\n    },\n    \"ctl00_body_chkRetirementAge\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Indicates if retirement age is applicable (checkbox).\"\n    },\n    \"ctl00_body_nuAgeofMale\": {\n      \"type\": \"string\",\n      \"description\": \"Retirement age for males (required if Retirement Age is enabled).\"\n    },\n    \"ctl00_body_nuAgeofFemale\": {\n      \"type\": \"string\",\n      \"description\": \"Retirement age for females (required if Retirement Age is enabled).\"\n    },\n    \"ctl00_body_dpempcat\": {\n      \"type\": \"string\",\n      \"description\": \"Employment category (e.g., Full-Time, Part-Time).\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtempdesc\"\n  ],\n  \"dependencies\": {\n    \"ctl00_body_cbisdatelimit\": {\n      \"required\": [\n        \"ctl00_body_cbisdatelimit\",\n        \"ctl00_body_nuDuration\",\n        \"ctl00_body_dpDurationType\"\n      ]\n    },\n    \"ctl00_body_chkRetirementAge\": {\n      \"required\": [\n        \"ctl00_body_chkRetirementAge\",\n        \"ctl00_body_nuAgeofMale\",\n        \"ctl00_body_nuAgeofFemale\"\n      ]\n    }\n  }\n}",
+      "_id": "68165d82cfbd25ce9c178fd3"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"EmployeementType\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"EmployeementType\");\n\n  const payload = {\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: newInt.viewState,\n    __VIEWSTATEGENERATOR: newInt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: newInt.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtempdesc\": args[\"ctl00_body_txtempdesc\"] || \"\",\n    \"ctl00$body$dpempcat\": args[\"ctl00_body_dpempcat\"] || \"\",\n    \"ctl00$body$butSave\": \"Save\"\n  };\n\n  if (args[\"ctl00_body_cbisdatelimit\"] === \"on\") {\n    payload[\"ctl00$body$cbisdatelimit\"] = \"on\";\n    payload[\"ctl00$body$nuDuration\"] =\n      args[\"ctl00_body_nuDuration\"] || \"\";\n\n    payload[\"ctl00$body$dpDurationType\"] =\n      args[\"ctl00_body_dpDurationType\"] || \"\";\n  }\n\n  if (args[\"ctl00_body_chkRetirementAge\"] === \"on\") {\n    payload[\"ctl00$body$chkRetirementAge\"] = \"on\";\n\n    payload[\"ctl00$body$nuAgeofMale\"] =\n      args[\"ctl00_body_nuAgeofMale\"] || \"\";\n\n    payload[\"ctl00$body$nuAgeofFemale\"] =\n      args[\"ctl00_body_nuAgeofFemale\"] || \"\";\n  }\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\"getEIMApii\")(\n      payload,\n      \"EmployeementType\"\n    );\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const updateemployeeTypeDetails = {\n    code:\n      doc.querySelector(\"#ctl00_body_txtempcode\")\n        ?.value?.trim() || \"\",\n\n    employmentType:\n      doc.querySelector(\"#ctl00_body_txtempdesc\")\n        ?.value?.trim() || \"\",\n\n    dateLimited:\n      doc.querySelector(\"#ctl00_body_cbisdatelimit\")\n        ?.checked || false,\n\n    duration:\n      doc.querySelector(\"#ctl00_body_nuDuration\")\n        ?.value?.trim() || \"\",\n\n    durationUnit:\n      doc.querySelector(\n        \"#ctl00_body_dpDurationType option:checked\"\n      )?.textContent.trim() || \"\",\n\n    retirementAgeRequired:\n      doc.querySelector(\"#ctl00_body_chkRetirementAge\")\n        ?.checked || false,\n\n    retirementAgeMale:\n      doc.querySelector(\"#ctl00_body_nuAgeofMale\")\n        ?.value?.trim() || \"\",\n\n    retirementAgeFemale:\n      doc.querySelector(\"#ctl00_body_nuAgeofFemale\")\n        ?.value?.trim() || \"\",\n\n    employmentCategory:\n      doc.querySelector(\n        \"#ctl00_body_dpempcat option:checked\"\n      )?.textContent.trim() || \"\"\n  };\n\n  return updateemployeeTypeDetails;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

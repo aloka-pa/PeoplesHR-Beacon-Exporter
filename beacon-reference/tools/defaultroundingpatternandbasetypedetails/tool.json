@@ -1,0 +1,75 @@
+{
+  "id": "690dc566931a2d61ba0b169a",
+  "slug": "defaultroundingpatternandbasetypedetails",
+  "name": "defaultRoundingPatternandBaseTypeDetails",
+  "description": "in this tool generate the default Rounding Pattern and Base Type details.",
+  "instructions": null,
+  "taskName": "Default Rounding Pattern And Base Type Details",
+  "tags": [
+    "Attendance",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "defaultRoundingPatternandBaseTypeDetails",
+  "createdAt": "2025-05-08T11:40:45.591Z",
+  "updatedAt": "2025-05-08T11:40:45.591Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "2e3f401b11b725c2ca845a5d2f505363f025649c410e0a08b7d1839499b53aee",
+  "lastExportedAt": "2026-09-05T19:39:24.090Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b169a",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "defaultRoundingPatternandBaseTypeDetails",
+      "description": "in this tool generate the default Rounding Pattern and Base Type details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "defaultRoundingPatternandBaseTypeDetails",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "681c983d4dd11bb3279d760c"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  // const details = await BeaconBar.executeFunction('getmodule')(`${reqOptions.sl}/TNA/OvertimeDefintion`);\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('TNA/OvertimeDefintion.aspx');\n\n  let details;\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n    details = await BeaconBar.executeFunction('getmodule')(url);\n  } else {\n    url = \"TNA/OvertimeDefintion\"\n    details = await BeaconBar.executeFunction('getmodule')(`${reqOptions.sl}/TNA/OvertimeDefintion`);\n  }\n\n  const response = await BeaconBar.executeFunction('module')({\n    \"ctl00$main$RadScriptManager\": \"ctl00$action$UpdatePanel3|ctl00$action$ButtonPanel$butNew$imgbtnSave\",\n    \"ctl00_main_RadScriptManager_HiddenField\": \"\",\n    \"__EVENTTARGET\": \"\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": details.viewState,\n    \"__VIEWSTATEGENERATOR\": details.viewStateGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": details.eventValidation,\n    \"ctl00_main_RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl02$ctl02$FilterTextBox_OT Type Name\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl02$ctl02$FilterTextBox_Multiplier\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"9\",\n    \"ctl00$body$grdsummary$ctl00$ctl04$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl04$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl06$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl06$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl08$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl08$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl10$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl10$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl12$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl12$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl14$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl14$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl16$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl16$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl18$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl18$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl20$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl20$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00_body_grdsummary_rfltMenu_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\",\n    \"ctl00$action$ButtonPanel$butNew$isControlEnabled\": \"True\",\n    \"ctl00$hdnCulturDateFormat\": \"M/d/yyyy\",\n    \"__ASYNCPOST\": \"true\",\n    \"ctl00$action$ButtonPanel$butNew$imgbtnSave\": \"New\"\n  }, `${reqOptions.sl}/${url}`);\n\n  const viewStateRegex = /\\|hiddenField\\|__VIEWSTATE\\|([^|]*)/;\n  const viewStateGeneratorRegex = /\\|hiddenField\\|__VIEWSTATEGENERATOR\\|([^|]*)/;\n  const eventValidationRegex = /\\|hiddenField\\|__EVENTVALIDATION\\|([^|]*)/;\n\n  const viewStateMatch = response.rawData.match(viewStateRegex);\n  const viewStateGeneratorMatch = response.rawData.match(viewStateGeneratorRegex);\n  const eventValidationMatch = response.rawData.match(eventValidationRegex);\n\n  const viewdetails = {\n    viewState: viewStateMatch ? viewStateMatch[1] : null,\n    viewStateGenerator: viewStateGeneratorMatch ? viewStateGeneratorMatch[1] : null,\n    eventValidation: eventValidationMatch ? eventValidationMatch[1] : null\n  };\n\n  window.ot = viewdetails;\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(response.rawData, 'text/html');\n\n  const roundingPatternOptions = Array.from(document.querySelectorAll(\"#ctl00_body_ddlOTRoundingPattern option\")).map(option => ({\n    text: option.textContent.trim(),\n    value: option.value\n  }));\n\n  const baseTypeOptions = Array.from(document.querySelectorAll(\"#ctl00_body_ddlBaseType option\")).map(option => ({\n    text: option.textContent.trim(),\n    value: option.value\n  }));\n\n  return {\n    \"Default Rounding Pattern Options\": roundingPatternOptions,\n    \"Base Type Options\": baseTypeOptions\n  };\n});\n",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "Headers"
+      ],
+      "taskName": "Default Rounding Pattern And Base Type Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-08T11:40:45.591Z",
+      "updatedAt": "2025-05-08T11:40:45.591Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "defaultRoundingPatternandBaseTypeDetails",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "681c983d4dd11bb3279d760c"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  // const details = await BeaconBar.executeFunction('getmodule')(`${reqOptions.sl}/TNA/OvertimeDefintion`);\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('TNA/OvertimeDefintion.aspx');\n\n  let details;\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n    details = await BeaconBar.executeFunction('getmodule')(url);\n  } else {\n    url = \"TNA/OvertimeDefintion\"\n    details = await BeaconBar.executeFunction('getmodule')(`${reqOptions.sl}/TNA/OvertimeDefintion`);\n  }\n\n  const response = await BeaconBar.executeFunction('module')({\n    \"ctl00$main$RadScriptManager\": \"ctl00$action$UpdatePanel3|ctl00$action$ButtonPanel$butNew$imgbtnSave\",\n    \"ctl00_main_RadScriptManager_HiddenField\": \"\",\n    \"__EVENTTARGET\": \"\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": details.viewState,\n    \"__VIEWSTATEGENERATOR\": details.viewStateGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": details.eventValidation,\n    \"ctl00_main_RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl02$ctl02$FilterTextBox_OT Type Name\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl02$ctl02$FilterTextBox_Multiplier\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"9\",\n    \"ctl00$body$grdsummary$ctl00$ctl04$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl04$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl06$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl06$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl08$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl08$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl10$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl10$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl12$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl12$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl14$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl14$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl16$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl16$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl18$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl18$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl20$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl20$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00_body_grdsummary_rfltMenu_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\",\n    \"ctl00$action$ButtonPanel$butNew$isControlEnabled\": \"True\",\n    \"ctl00$hdnCulturDateFormat\": \"M/d/yyyy\",\n    \"__ASYNCPOST\": \"true\",\n    \"ctl00$action$ButtonPanel$butNew$imgbtnSave\": \"New\"\n  }, `${reqOptions.sl}/${url}`);\n\n  const viewStateRegex = /\\|hiddenField\\|__VIEWSTATE\\|([^|]*)/;\n  const viewStateGeneratorRegex = /\\|hiddenField\\|__VIEWSTATEGENERATOR\\|([^|]*)/;\n  const eventValidationRegex = /\\|hiddenField\\|__EVENTVALIDATION\\|([^|]*)/;\n\n  const viewStateMatch = response.rawData.match(viewStateRegex);\n  const viewStateGeneratorMatch = response.rawData.match(viewStateGeneratorRegex);\n  const eventValidationMatch = response.rawData.match(eventValidationRegex);\n\n  const viewdetails = {\n    viewState: viewStateMatch ? viewStateMatch[1] : null,\n    viewStateGenerator: viewStateGeneratorMatch ? viewStateGeneratorMatch[1] : null,\n    eventValidation: eventValidationMatch ? eventValidationMatch[1] : null\n  };\n\n  window.ot = viewdetails;\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(response.rawData, 'text/html');\n\n  const roundingPatternOptions = Array.from(document.querySelectorAll(\"#ctl00_body_ddlOTRoundingPattern option\")).map(option => ({\n    text: option.textContent.trim(),\n    value: option.value\n  }));\n\n  const baseTypeOptions = Array.from(document.querySelectorAll(\"#ctl00_body_ddlBaseType option\")).map(option => ({\n    text: option.textContent.trim(),\n    value: option.value\n  }));\n\n  return {\n    \"Default Rounding Pattern Options\": roundingPatternOptions,\n    \"Base Type Options\": baseTypeOptions\n  };\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

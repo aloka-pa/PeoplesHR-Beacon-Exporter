@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "empId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the employee id for \"employeeDetails\" Api.only before api response employee will be take other api response no read",
+      "advanced": false,
+      "raw": {
+        "name": "empId",
+        "type": "string",
+        "description": "to get the employee id for \"employeeDetails\" Api.only before api response employee will be take other api response no read",
+        "required": true,
+        "_id": "68208054f10f8920b40308dc"
+      }
+    },
+    {
+      "name": "empName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the employee name for \"employeeDetails\" Api. only before api response employee will be take other api response no read",
+      "advanced": false,
+      "raw": {
+        "name": "empName",
+        "type": "string",
+        "description": "to get the employee name for \"employeeDetails\" Api. only before api response employee will be take other api response no read",
+        "required": true,
+        "_id": "68208054f10f8920b40308dd"
+      }
+    },
+    {
+      "name": "empDOB",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the employee data of birth  for \"employeeDetails\" Api.only before api response employee will be take other api response no read",
+      "advanced": false,
+      "raw": {
+        "name": "empDOB",
+        "type": "string",
+        "description": "to get the employee data of birth  for \"employeeDetails\" Api.only before api response employee will be take other api response no read",
+        "required": true,
+        "_id": "68208054f10f8920b40308de"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

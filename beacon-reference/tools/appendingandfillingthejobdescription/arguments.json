@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "description",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Generate the Job description only limit is 300 characters of description. 300 chars only take",
+      "advanced": false,
+      "raw": {
+        "name": "description",
+        "type": "string",
+        "description": "Generate the Job description only limit is 300 characters of description. 300 chars only take",
+        "required": true,
+        "_id": "68384e850646ef6bf1544dea"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

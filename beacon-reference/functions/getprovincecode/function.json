@@ -1,0 +1,24 @@
+{
+  "id": "690dc582931a2d61ba0b298d",
+  "slug": "getprovincecode",
+  "name": "getProvinceCode",
+  "status": "live",
+  "createdAt": "2025-04-25T13:58:38.810Z",
+  "updatedAt": "2026-07-17T12:55:55.471Z",
+  "contentHash": "541a1375aba8f495c3926d5aad6a576bc928d9e89fbc097ae8063087e78ba570",
+  "lastExportedAt": "2026-09-05T19:41:19.015Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc582931a2d61ba0b298d",
+    "name": "getProvinceCode",
+    "status": "live",
+    "code": "(async function (code) {\n  const sl = await BeaconBar.getSharedData(\"sl\");\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const formdata = new FormData();\n  formdata.append(\"scrollLeft\", \"0\");\n  formdata.append(\"scrollTop\", \"0\");\n  formdata.append(\"__EVENTTARGET\", \"ctl00$body$ddlCountry\");\n  formdata.append(\"__EVENTARGUMENT\", \"\");\n  formdata.append(\"__LASTFOCUS\", \"\");\n  formdata.append(\"__VIEWSTATE\", window.countryCode.viewState);\n  formdata.append(\"__VIEWSTATEGENERATOR\", window.countryCode.viewStateGen);\n  formdata.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  formdata.append(\"__EVENTVALIDATION\", window.countryCode.eventValidation);\n  formdata.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  formdata.append(\"ctl00$body$hdnIsHead\", \"\");\n  formdata.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n  formdata.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  formdata.append(\"ctl00$body$txtName\", \"\");\n  formdata.append(\"ctl00$body$txtAbbreviation\", \"\");\n  formdata.append(\"ctl00$body$txttp\", \"\");\n  formdata.append(\"ctl00$body$txtFax\", \"\");\n  formdata.append(\"ctl00$body$txtemail\", \"\");\n  formdata.append(\"ctl00$body$txturl\", \"\");\n  formdata.append(\"ctl00$body$txtaddress\", \"\");\n  formdata.append(\"ctl00$body$ddlCountry\", code);\n  // formdata.append(\"ctl00$body$ddlProvince\", \"-1\");\n  // formdata.append(\"ctl00$body$ddlDistrict\", \"-1\");\n  formdata.append(\"ctl00$body$cboTimeZone\", \"\");\n  formdata.append(\"ctl00$body$txtHeadName\", \"\");\n  formdata.append(\"ctl00$body$txtHTitle\", \"\");\n  formdata.append(\"ctl00$body$txtAdminName\", \"\");\n  formdata.append(\"ctl00$body$filMyFile\", \"file\");\n  formdata.append(\"ctl00$body$hdnDefCountry\", \"-1\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: formdata,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${sl}/EIM/Location.aspx`, requestOptions)\n  const html = await response.text();\n\n  const provinceDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html);\n  window.provinceCode = provinceDetails;\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(html, 'text/html');\n\n  function extractOptions(selectId) {\n    const select = document.getElementById(selectId);\n    if (!select) return [];\n    return Array.from(select.options).map(option => ({\n      value: option.value,\n      label: option.text.trim()\n    }));\n  }\n\n  const province = extractOptions(\"ctl00_body_ddlProvince\");\n\n\n  return province;\n});",
+    "by": "34476",
+    "__v": 1
+  }
+}

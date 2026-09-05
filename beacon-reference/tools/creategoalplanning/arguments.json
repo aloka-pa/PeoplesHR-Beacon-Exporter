@@ -1,0 +1,80 @@
+{
+  "arguments": [
+    {
+      "name": "goalDesc",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "goalDesc , Ex:- ",
+      "advanced": false,
+      "raw": {
+        "name": "goalDesc",
+        "type": "string",
+        "description": "goalDesc , Ex:- ",
+        "required": true,
+        "_id": "6891900a80da037b25e7170b"
+      }
+    },
+    {
+      "name": "goalTitle",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "goalTitle",
+      "advanced": false,
+      "raw": {
+        "name": "goalTitle",
+        "type": "string",
+        "description": "goalTitle",
+        "required": true,
+        "_id": "6891900a80da037b25e7170c"
+      }
+    },
+    {
+      "name": "targetDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "targetDate, Ex:- format date is this \"2025-08-04T00:00:00\",\n",
+      "advanced": false,
+      "raw": {
+        "name": "targetDate",
+        "type": "string",
+        "description": "targetDate, Ex:- format date is this \"2025-08-04T00:00:00\",\n",
+        "required": true,
+        "_id": "6891918160d8b2f05e760baf"
+      }
+    },
+    {
+      "name": "GGRP_ID",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "GGRP_ID . Ex:- 1  select which goal group is selected ",
+      "advanced": false,
+      "raw": {
+        "name": "GGRP_ID",
+        "type": "string",
+        "description": "GGRP_ID . Ex:- 1  select which goal group is selected ",
+        "required": true,
+        "_id": "689194bc0497b640ed26bac4"
+      }
+    },
+    {
+      "name": "EVAL_ID",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "EVAL_ID , takes from the selected EVAL_ID",
+      "advanced": false,
+      "raw": {
+        "name": "EVAL_ID",
+        "type": "string",
+        "description": "EVAL_ID , takes from the selected EVAL_ID",
+        "required": true,
+        "_id": "6891a98a6c9516b8d414d09f"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

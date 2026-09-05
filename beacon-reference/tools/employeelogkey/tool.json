@@ -1,0 +1,119 @@
+{
+  "id": "690dc566931a2d61ba0b16cb",
+  "slug": "employeelogkey",
+  "name": "employeeLogKey",
+  "description": "Before awaiting and executing the \"employeeLogKey\" tool, ensure that it depends exclusively on the empId, empName, and empDOB values obtained from the \"employeeDetails\" tool.\nThe date of birth must ai not be auto-generated or inferred — it should be directly taken from the \"employeeDetails\" tool’s response.\n\"employeeDetails\" api execute complete then start execute \"employeeLogKey\" because before api need dependancy.\n\nNote : No response data from the getGlobalEmployeeSearch API should be accessed or used as input arguments.",
+  "instructions": null,
+  "taskName": "Employee Logs",
+  "tags": [
+    "Absence Management",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "employeeLogKey",
+  "createdAt": "2025-05-11T10:47:48.433Z",
+  "updatedAt": "2025-05-11T10:47:48.433Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be3",
+      "name": "AbsenceManagement"
+    }
+  ],
+  "contentHash": "0d9acce54fb7c3fa2112a9ca4086329db76ef2de847a018d74cd8da7e708969a",
+  "lastExportedAt": "2026-09-05T19:39:24.056Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b16cb",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "employeeLogKey",
+      "description": "Before awaiting and executing the \"employeeLogKey\" tool, ensure that it depends exclusively on the empId, empName, and empDOB values obtained from the \"employeeDetails\" tool.\nThe date of birth must ai not be auto-generated or inferred — it should be directly taken from the \"employeeDetails\" tool’s response.\n\"employeeDetails\" api execute complete then start execute \"employeeLogKey\" because before api need dependancy.\n\nNote : No response data from the getGlobalEmployeeSearch API should be accessed or used as input arguments.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "employeeLogKey",
+        "args": [
+          {
+            "name": "empId",
+            "type": "string",
+            "description": "to get the employee id for \"employeeDetails\" Api.only before api response employee will be take other api response no read",
+            "required": true,
+            "_id": "68208054f10f8920b40308dc"
+          },
+          {
+            "name": "empName",
+            "type": "string",
+            "description": "to get the employee name for \"employeeDetails\" Api. only before api response employee will be take other api response no read",
+            "required": true,
+            "_id": "68208054f10f8920b40308dd"
+          },
+          {
+            "name": "empDOB",
+            "type": "string",
+            "description": "to get the employee data of birth  for \"employeeDetails\" Api.only before api response employee will be take other api response no read",
+            "required": true,
+            "_id": "68208054f10f8920b40308de"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68208054f10f8920b40308db"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    url: `${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumber/`,\n    method: 'GET',\n    headers: {\n      \"Accept\": \"*/*\",\n      \"Accept-Language\": \"en-US,en;q=0.9\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\" : \"XMLHttpRequest\"\n    },\n    params: {\n      loggedEmpNumber: window.logs.empNumber2,\n      empNumber: args.empId,\n      empDisplayName: decodeURIComponent(args.empName),\n      empDateJoined: decodeURIComponent(args.empDOB),\n      key: window.logs.keyValue,\n      _: Date.now()\n    }\n  };\n});\n",
+      "transformer": "(function(data, args, reqOptions) {\n  window.logKey = data.Message;\n  return \"sucessdully!!\";\n})",
+      "groupName": "",
+      "tags": [
+        "Absence Management",
+        "Headers"
+      ],
+      "taskName": "Employee Logs",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-11T10:47:48.433Z",
+      "updatedAt": "2025-05-11T10:47:48.433Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be3",
+          "name": "AbsenceManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "employeeLogKey",
+      "args": [
+        {
+          "name": "empId",
+          "type": "string",
+          "description": "to get the employee id for \"employeeDetails\" Api.only before api response employee will be take other api response no read",
+          "required": true,
+          "_id": "68208054f10f8920b40308dc"
+        },
+        {
+          "name": "empName",
+          "type": "string",
+          "description": "to get the employee name for \"employeeDetails\" Api. only before api response employee will be take other api response no read",
+          "required": true,
+          "_id": "68208054f10f8920b40308dd"
+        },
+        {
+          "name": "empDOB",
+          "type": "string",
+          "description": "to get the employee data of birth  for \"employeeDetails\" Api.only before api response employee will be take other api response no read",
+          "required": true,
+          "_id": "68208054f10f8920b40308de"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68208054f10f8920b40308db"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    url: `${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumber/`,\n    method: 'GET',\n    headers: {\n      \"Accept\": \"*/*\",\n      \"Accept-Language\": \"en-US,en;q=0.9\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\" : \"XMLHttpRequest\"\n    },\n    params: {\n      loggedEmpNumber: window.logs.empNumber2,\n      empNumber: args.empId,\n      empDisplayName: decodeURIComponent(args.empName),\n      empDateJoined: decodeURIComponent(args.empDOB),\n      key: window.logs.keyValue,\n      _: Date.now()\n    }\n  };\n});\n",
+    "transformer": "(function(data, args, reqOptions) {\n  window.logKey = data.Message;\n  return \"sucessdully!!\";\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

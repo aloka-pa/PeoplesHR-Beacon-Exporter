@@ -1,0 +1,95 @@
+{
+  "arguments": [
+    {
+      "name": "ENCRYPT_EMP_NUMBER",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "based before api benefit history Benefit_Type corresponding ENCRYPT_EMP_NUMBER will be take",
+      "advanced": false,
+      "raw": {
+        "name": "ENCRYPT_EMP_NUMBER",
+        "type": "string",
+        "description": "based before api benefit history Benefit_Type corresponding ENCRYPT_EMP_NUMBER will be take",
+        "required": true,
+        "_id": "68fe611815a2021ab1026817"
+      }
+    },
+    {
+      "name": "BET_APP_ID",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "based before api benefit history Benefit_Type corresponding BET_APP_ID will be take ex : 20, 17 etc..",
+      "advanced": false,
+      "raw": {
+        "name": "BET_APP_ID",
+        "type": "string",
+        "description": "based before api benefit history Benefit_Type corresponding BET_APP_ID will be take ex : 20, 17 etc..",
+        "required": true,
+        "_id": "68fe611815a2021ab1026818"
+      }
+    },
+    {
+      "name": "BET_CODE",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "based before api benefit history Benefit_Type corresponding BET_CODE will be take ex : '200000'",
+      "advanced": false,
+      "raw": {
+        "name": "BET_CODE",
+        "type": "string",
+        "description": "based before api benefit history Benefit_Type corresponding BET_CODE will be take ex : '200000'",
+        "required": true,
+        "_id": "68fe611815a2021ab1026819"
+      }
+    },
+    {
+      "name": "fromDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "before user given from date.",
+      "advanced": false,
+      "raw": {
+        "name": "fromDate",
+        "type": "string",
+        "description": "before user given from date.",
+        "required": true,
+        "_id": "68fe611815a2021ab102681a"
+      }
+    },
+    {
+      "name": "toDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "before user given to date will be take.",
+      "advanced": false,
+      "raw": {
+        "name": "toDate",
+        "type": "string",
+        "description": "before user given to date will be take.",
+        "required": true,
+        "_id": "68fe611815a2021ab102681b"
+      }
+    },
+    {
+      "name": "BET_APPY_DATE",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "based before api benefit history Applied Date Benefit_Type corresponding BET_APPY_DATE will be take. ",
+      "advanced": false,
+      "raw": {
+        "name": "BET_APPY_DATE",
+        "type": "string",
+        "description": "based before api benefit history Applied Date Benefit_Type corresponding BET_APPY_DATE will be take. ",
+        "required": true,
+        "_id": "68fe611815a2021ab102681c"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

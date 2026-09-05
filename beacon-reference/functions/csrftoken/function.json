@@ -1,0 +1,24 @@
+{
+  "id": "690dc57b931a2d61ba0b23c3",
+  "slug": "csrftoken",
+  "name": "csrftoken",
+  "status": "live",
+  "createdAt": "2025-05-27T13:01:33.412Z",
+  "updatedAt": "2025-05-27T13:01:33.412Z",
+  "contentHash": "5eadd316c4befca60107c9e178db6e03039247870b8efaa68d41ffa29b2970b5",
+  "lastExportedAt": "2026-09-05T19:41:39.422Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57b931a2d61ba0b23c3",
+    "name": "csrftoken",
+    "status": "live",
+    "code": "(async function () {\n  //done\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"priority\", \"u=1, i\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n  const digest = await BeaconBar.executeFunction(\"getDigest\")(\"mvc=1&bs=4\");\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const response = await fetch(`${reqOptions}AbsenceV9/ShortLeaveApplication/ShortLeaveApplication?mvc=1&bs=4&digest=${digest.digest}`, requestOptions)\n  const data = await response.text();\n  function extractViewState(html) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(html, \"text/html\");\n\n    const token = doc.querySelector(\"#hdbAbsenceV9AFToken\")?.value || \"\";\n\n    const scripts = Array.from(doc.querySelectorAll(\"script\"));\n    let match = null;\n\n    for (const script of scripts) {\n      const scriptText = script.textContent || \"\";\n      const result = scriptText.match(/var\\s+modelShortLeave\\s*=\\s*'([^']*)';/);\n      if (result) {\n        match = result[1]; // Get the actual JSON string\n        break;\n      }\n    }\n\n    return {\n      token,\n      match: JSON.parse(match)\n    };\n  }\n\n  const datatoken = extractViewState(data);\n\n  return datatoken;\n})",
+    "by": "2414",
+    "__v": 0
+  }
+}

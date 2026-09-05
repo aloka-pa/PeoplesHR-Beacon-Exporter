@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "classificationName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "new qualification classification's name",
+      "advanced": false,
+      "raw": {
+        "name": "classificationName",
+        "type": "string",
+        "description": "new qualification classification's name",
+        "required": true,
+        "_id": "6952a5d6fbe9c497d06bff5a"
+      }
+    },
+    {
+      "name": "rank",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "A numeric value that defines the ordering or priority of the qualification classification. Each classification must have a unique rank. \nIf the user-provided rank already exists, the user must be prompted to enter a different numeric rank.",
+      "advanced": false,
+      "raw": {
+        "name": "rank",
+        "type": "string",
+        "description": "A numeric value that defines the ordering or priority of the qualification classification. Each classification must have a unique rank. \nIf the user-provided rank already exists, the user must be prompted to enter a different numeric rank.",
+        "required": true,
+        "_id": "6952a5d6fbe9c497d06bff5b"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

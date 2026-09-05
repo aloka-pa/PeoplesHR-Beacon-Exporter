@@ -1,0 +1,95 @@
+{
+  "arguments": [
+    {
+      "name": "fromDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Start date for attendance approval period (format: DD/MM/YYYY)",
+      "advanced": false,
+      "raw": {
+        "name": "fromDate",
+        "type": "string",
+        "description": "Start date for attendance approval period (format: DD/MM/YYYY)",
+        "required": true,
+        "_id": "695f36f52c9ba44772ded134"
+      }
+    },
+    {
+      "name": "toDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "End date for attendance approval period (format: DD/MM/YYYY)",
+      "advanced": false,
+      "raw": {
+        "name": "toDate",
+        "type": "string",
+        "description": "End date for attendance approval period (format: DD/MM/YYYY)",
+        "required": true,
+        "_id": "695f36f52c9ba44772ded135"
+      }
+    },
+    {
+      "name": "empNumber",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "to get the employee id for \"getPaginatedTypeaheadList\" api. Example:-\"000006\" or \"00001\" etc...",
+      "advanced": false,
+      "raw": {
+        "name": "empNumber",
+        "type": "string",
+        "description": "to get the employee id for \"getPaginatedTypeaheadList\" api. Example:-\"000006\" or \"00001\" etc...",
+        "required": false,
+        "_id": "695f36f52c9ba44772ded136"
+      }
+    },
+    {
+      "name": "rosterCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Roster code filter. Default: \"\" (all rosters)",
+      "advanced": false,
+      "raw": {
+        "name": "rosterCode",
+        "type": "string",
+        "description": "Roster code filter. Default: \"\" (all rosters)",
+        "required": false,
+        "_id": "696bb79c8d4e88b9a7b5699d"
+      }
+    },
+    {
+      "name": "isGroupByEmployee",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Group results by employee. Default: false",
+      "advanced": false,
+      "raw": {
+        "name": "isGroupByEmployee",
+        "type": "string",
+        "description": "Group results by employee. Default: false",
+        "required": false,
+        "_id": "696bb79c8d4e88b9a7b5699e"
+      }
+    },
+    {
+      "name": "filterMode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Filter mode. Default: \"1\"",
+      "advanced": false,
+      "raw": {
+        "name": "filterMode",
+        "type": "string",
+        "description": "Filter mode. Default: \"1\"",
+        "required": false,
+        "_id": "696bb79c8d4e88b9a7b5699f"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

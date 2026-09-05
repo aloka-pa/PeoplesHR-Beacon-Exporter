@@ -1,0 +1,75 @@
+{
+  "id": "690dc564931a2d61ba0b14d4",
+  "slug": "createmembershiptitle",
+  "name": "createMembershipTitle",
+  "description": "in this tool create the membership title.",
+  "instructions": null,
+  "taskName": "Create Membership Title",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createMembershipTitle",
+  "createdAt": "2025-04-30T13:19:37.200Z",
+  "updatedAt": "2025-04-30T13:19:37.200Z",
+  "assignedAgents": [],
+  "contentHash": "c942bb9bd1c3edc64e05ceb446d647e4ad7b3e03a176f7bc38b555fe830f5397",
+  "lastExportedAt": "2026-09-05T19:39:24.349Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b14d4",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createMembershipTitle",
+      "description": "in this tool create the membership title.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createMembershipTitle",
+        "args": [
+          {
+            "name": "membershipTitleName",
+            "type": "string",
+            "description": "to create the membership title give the membership title name.",
+            "required": true,
+            "_id": "681223698f0c9af526c59690"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "681223698f0c9af526c5968f"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"MemberShipTitles\");\n\n  const create = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"MEMBTITLE_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"4\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"MemberShipTitles\");\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: create.viewState,\n    __VIEWSTATEGENERATOR: create.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: create.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtName\": args.membershipTitleName,\n    \"ctl00$body$butSave\": \"Save\"\n  }, \"MemberShipTitles\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const getValue = (id) => {\n    const el = doc.getElementById(id);\n    return el ? el.value.trim() : \"\";\n  };\n\n  const createMembershipTitleDetails = {\n    code: getValue(\"ctl00_body_txtCode\"),\n    membershipTitle: getValue(\"ctl00_body_txtName\")\n  };\n\n  return createMembershipTitleDetails;\n})\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create Membership Title",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-30T13:19:37.200Z",
+      "updatedAt": "2025-04-30T13:19:37.200Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createMembershipTitle",
+      "args": [
+        {
+          "name": "membershipTitleName",
+          "type": "string",
+          "description": "to create the membership title give the membership title name.",
+          "required": true,
+          "_id": "681223698f0c9af526c59690"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "681223698f0c9af526c5968f"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"MemberShipTitles\");\n\n  const create = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"MEMBTITLE_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"4\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"MemberShipTitles\");\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: create.viewState,\n    __VIEWSTATEGENERATOR: create.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: create.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtName\": args.membershipTitleName,\n    \"ctl00$body$butSave\": \"Save\"\n  }, \"MemberShipTitles\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const getValue = (id) => {\n    const el = doc.getElementById(id);\n    return el ? el.value.trim() : \"\";\n  };\n\n  const createMembershipTitleDetails = {\n    code: getValue(\"ctl00_body_txtCode\"),\n    membershipTitle: getValue(\"ctl00_body_txtName\")\n  };\n\n  return createMembershipTitleDetails;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

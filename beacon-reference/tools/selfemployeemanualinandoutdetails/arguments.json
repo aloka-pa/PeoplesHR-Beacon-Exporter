@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "fromDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the fromDate Example:-\"12/1/2023\"",
+      "advanced": false,
+      "raw": {
+        "name": "fromDate",
+        "type": "string",
+        "description": "to give the fromDate Example:-\"12/1/2023\"",
+        "required": true,
+        "_id": "68a5c36d724e84ba6c1b6f7b"
+      }
+    },
+    {
+      "name": "toDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the toDate Example:-\"12/1/2024\"",
+      "advanced": false,
+      "raw": {
+        "name": "toDate",
+        "type": "string",
+        "description": "to give the toDate Example:-\"12/1/2024\"",
+        "required": true,
+        "_id": "68a5c36d724e84ba6c1b6f7c"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,155 @@
+{
+  "id": "690dc568931a2d61ba0b17fb",
+  "slug": "getpriorovertimeapplicationdetails",
+  "name": "getPriorOvertimeApplicationDetails",
+  "description": "To generate prior overtime application details using this tool, the user must filter by either \"Employee ID\" or \"Roster Name\". If \"Employee ID\" is provided, it must first be validated using the \"getPaginatedTypeaheadList\" API. If multiple matches are found, a list of employee names should be shown for the user to select the correct one. The selected ID is then used to execute the required API calls as per the workflow. If \"Roster Name\" is provided instead, the corresponding \"rosterCode\" (e.g., \"000030\") must be retrieved and used to call the \"rostersDetails\" API. If a date is included, it must first be formatted using the \"dateFormat\" API before being used in any other API calls. Results should be displayed in a tabular format categorized by status like \"Approved\", \"Pending\", or \"Unsubmitted\". The user must provide either \"Employee ID\" or \"Roster Name\"—not both—as input to proceed with the query. to get the date format must and should be execute date format api, then format will be take.",
+  "instructions": null,
+  "taskName": "Fetching Prior Overtime Application Details",
+  "tags": [
+    "Attendance",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getPriorOvertimeApplicationDetails",
+  "createdAt": "2025-05-19T12:39:34.035Z",
+  "updatedAt": "2026-07-09T13:17:13.380Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "e7b22fb973f6acdb616245d2263c7c0d0758b154abb130bea1cfcc498d215c99",
+  "lastExportedAt": "2026-09-05T19:39:22.250Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b17fb",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getPriorOvertimeApplicationDetails",
+      "description": "To generate prior overtime application details using this tool, the user must filter by either \"Employee ID\" or \"Roster Name\". If \"Employee ID\" is provided, it must first be validated using the \"getPaginatedTypeaheadList\" API. If multiple matches are found, a list of employee names should be shown for the user to select the correct one. The selected ID is then used to execute the required API calls as per the workflow. If \"Roster Name\" is provided instead, the corresponding \"rosterCode\" (e.g., \"000030\") must be retrieved and used to call the \"rostersDetails\" API. If a date is included, it must first be formatted using the \"dateFormat\" API before being used in any other API calls. Results should be displayed in a tabular format categorized by status like \"Approved\", \"Pending\", or \"Unsubmitted\". The user must provide either \"Employee ID\" or \"Roster Name\"—not both—as input to proceed with the query. to get the date format must and should be execute date format api, then format will be take.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getPriorOvertimeApplicationDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to get the employee id for \"getPaginatedTypeaheadList\" api. Example:-\"000006\" or \"00001\" etc...",
+            "required": true,
+            "_id": "682b268616fa29d4b460c308"
+          },
+          {
+            "name": "fromDate",
+            "type": "string",
+            "description": "to give the fromDate Example:-\"02/1/2023\" format date DD/MM/YYYY",
+            "required": true,
+            "_id": "682b268616fa29d4b460c309"
+          },
+          {
+            "name": "toDate",
+            "type": "string",
+            "description": "to give the toDate Example:-\"02/1/2024\" format date DD/MM/YYYY",
+            "required": true,
+            "_id": "682b268616fa29d4b460c30a"
+          },
+          {
+            "name": "rosterCode",
+            "type": "string",
+            "description": "to get the user select roster corresponding id will be take roster CodeExample '000030' execute for \"rosetersDetails\" tool.",
+            "required": false,
+            "_id": "68419dee17c1fb4070073a44"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6a4f9f59d10bd48027fcbf93"
+      },
+      "by": "7854",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  \n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  let rawPayload;\n\n  if (args.rosterCode) {\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"2\",\n      RosterCode: args.rosterCode,\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0,\n    };\n  } else {\n    const requestOptions = {\n      method: \"GET\",\n      headers: myHeaders,\n      redirect: \"follow\"\n    };\n\n    const response1 = await fetch(\n      `${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`,\n      requestOptions\n    );\n\n    const details = await response1.json();\n    const empNumber = details?.Message || \"\";\n\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"1\",\n      EmpNumber: empNumber,\n      RosterCode: \"\",\n      callBackId: 2,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n    };\n  }\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      accept: \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\n   `${location.origin}/${reqOptions.sl}/tnav9/api/PriorOT/GetGridDataByCriteria/`,\n    requestOptions1\n  );\n  const details1 = await response2.json();\n  BeaconBar.setSharedData(\"employeedata\", details1.EmployeeList[0])\n\n\n  const priorOvertimeDetails = details1.PriorOTDetailList.map((entry) => ({\n    employeeName:entry.EmpDisplayNumber || \"\",\n    employeeId : entry.EmpDisplayName || \"\",\n    employeeHeaderName : entry.EmpHeaderName || \"\",\n    Date: entry.InDateText || \"\",\n    \"Shift Name\": entry.ShiftAbbreviation || \"OFF\",\n    \"In Date\": entry.InDateText || \"-\",\n    \"In Time\": entry.InTime >= 0 ? formatTime(entry.InTime) : \"-\",\n    \"Out Date\": entry.OutDateText || \"-\",\n    \"Out Time\": entry.OutTime >= 0 ? formatTime(entry.OutTime) : \"-\",\n    \"Max Pre OT\": entry.PriorDetail.MaxPreOT ? formatTime(entry.PriorDetail.MaxPreOT) : \"-\",\n    \"Max Post OT\": entry.PriorDetail.MaxPostOT ? formatTime(entry.PriorDetail.MaxPostOT) : \"-\",\n    \"Pre OT\": entry.PreOTHrsText || \"\",\n    \"Post OT\": entry.PostOTHrsText || \"\",\n    Reason: entry.ReasonCode === \"\" ? \"Select a reason\" : entry.Reason || \"\",\n    Comment: entry.Comment || \"\",\n    Status: entry.RecordStatusText || \"\"\n  }));\n\n  function formatTime(decimalTime) {\n    if (decimalTime < 0) return \"-\";\n    const hours = Math.floor(decimalTime);\n    const minutes = Math.round((decimalTime - hours) * 60);\n    return `${String(hours).padStart(2, \"0\")}:${String(minutes).padStart(2, \"0\")}`;\n  }\n\n  // const updateDetails = details1.PriorOTDetailList.filter(x => x.PostOTHrsText === \"\");\n  window.updatePrior = details1.PriorOTDetailList;\n  if(priorOvertimeDetails.length>=10){\n    await BeaconBar.executeFunction(\"downloadcsv\")(priorOvertimeDetails);\n    return priorOvertimeDetails.slice(0,10);\n  }\n\n  return priorOvertimeDetails;\n});",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "Headers"
+      ],
+      "taskName": "Fetching Prior Overtime Application Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-19T12:39:34.035Z",
+      "updatedAt": "2026-07-09T13:17:13.380Z",
+      "__v": 2,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getPriorOvertimeApplicationDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to get the employee id for \"getPaginatedTypeaheadList\" api. Example:-\"000006\" or \"00001\" etc...",
+          "required": true,
+          "_id": "682b268616fa29d4b460c308"
+        },
+        {
+          "name": "fromDate",
+          "type": "string",
+          "description": "to give the fromDate Example:-\"02/1/2023\" format date DD/MM/YYYY",
+          "required": true,
+          "_id": "682b268616fa29d4b460c309"
+        },
+        {
+          "name": "toDate",
+          "type": "string",
+          "description": "to give the toDate Example:-\"02/1/2024\" format date DD/MM/YYYY",
+          "required": true,
+          "_id": "682b268616fa29d4b460c30a"
+        },
+        {
+          "name": "rosterCode",
+          "type": "string",
+          "description": "to get the user select roster corresponding id will be take roster CodeExample '000030' execute for \"rosetersDetails\" tool.",
+          "required": false,
+          "_id": "68419dee17c1fb4070073a44"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6a4f9f59d10bd48027fcbf93"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  \n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  let rawPayload;\n\n  if (args.rosterCode) {\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"2\",\n      RosterCode: args.rosterCode,\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0,\n    };\n  } else {\n    const requestOptions = {\n      method: \"GET\",\n      headers: myHeaders,\n      redirect: \"follow\"\n    };\n\n    const response1 = await fetch(\n      `${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`,\n      requestOptions\n    );\n\n    const details = await response1.json();\n    const empNumber = details?.Message || \"\";\n\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"1\",\n      EmpNumber: empNumber,\n      RosterCode: \"\",\n      callBackId: 2,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n    };\n  }\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      accept: \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\n   `${location.origin}/${reqOptions.sl}/tnav9/api/PriorOT/GetGridDataByCriteria/`,\n    requestOptions1\n  );\n  const details1 = await response2.json();\n  BeaconBar.setSharedData(\"employeedata\", details1.EmployeeList[0])\n\n\n  const priorOvertimeDetails = details1.PriorOTDetailList.map((entry) => ({\n    employeeName:entry.EmpDisplayNumber || \"\",\n    employeeId : entry.EmpDisplayName || \"\",\n    employeeHeaderName : entry.EmpHeaderName || \"\",\n    Date: entry.InDateText || \"\",\n    \"Shift Name\": entry.ShiftAbbreviation || \"OFF\",\n    \"In Date\": entry.InDateText || \"-\",\n    \"In Time\": entry.InTime >= 0 ? formatTime(entry.InTime) : \"-\",\n    \"Out Date\": entry.OutDateText || \"-\",\n    \"Out Time\": entry.OutTime >= 0 ? formatTime(entry.OutTime) : \"-\",\n    \"Max Pre OT\": entry.PriorDetail.MaxPreOT ? formatTime(entry.PriorDetail.MaxPreOT) : \"-\",\n    \"Max Post OT\": entry.PriorDetail.MaxPostOT ? formatTime(entry.PriorDetail.MaxPostOT) : \"-\",\n    \"Pre OT\": entry.PreOTHrsText || \"\",\n    \"Post OT\": entry.PostOTHrsText || \"\",\n    Reason: entry.ReasonCode === \"\" ? \"Select a reason\" : entry.Reason || \"\",\n    Comment: entry.Comment || \"\",\n    Status: entry.RecordStatusText || \"\"\n  }));\n\n  function formatTime(decimalTime) {\n    if (decimalTime < 0) return \"-\";\n    const hours = Math.floor(decimalTime);\n    const minutes = Math.round((decimalTime - hours) * 60);\n    return `${String(hours).padStart(2, \"0\")}:${String(minutes).padStart(2, \"0\")}`;\n  }\n\n  // const updateDetails = details1.PriorOTDetailList.filter(x => x.PostOTHrsText === \"\");\n  window.updatePrior = details1.PriorOTDetailList;\n  if(priorOvertimeDetails.length>=10){\n    await BeaconBar.executeFunction(\"downloadcsv\")(priorOvertimeDetails);\n    return priorOvertimeDetails.slice(0,10);\n  }\n\n  return priorOvertimeDetails;\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

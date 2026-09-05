@@ -1,0 +1,75 @@
+{
+  "id": "690dc565931a2d61ba0b1607",
+  "slug": "getemployeetitledetails",
+  "name": "getEmployeeTitleDetails",
+  "description": "in this tool generate the getEmployeeTitleDetails.",
+  "instructions": null,
+  "taskName": "Employee Title Details",
+  "tags": [],
+  "status": "unlive",
+  "signature": "getEmployeeTitleDetails",
+  "createdAt": "2025-05-04T14:23:44.616Z",
+  "updatedAt": "2025-05-04T14:23:44.616Z",
+  "assignedAgents": [],
+  "contentHash": "eb956fe60ac6d700a2c52c2313949310b96faa2d33c86c05044963657e79f0f4",
+  "lastExportedAt": "2026-09-05T19:39:24.159Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc565931a2d61ba0b1607",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getEmployeeTitleDetails",
+      "description": "in this tool generate the getEmployeeTitleDetails.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getEmployeeTitleDetails",
+        "args": [
+          {
+            "name": "empTitleCode",
+            "type": "string",
+            "description": "to give the employee Title Code.",
+            "required": true,
+            "_id": "68177870ea5a48ef0a517b58"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68177870ea5a48ef0a517b57"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Salutation\");\n\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"SALU_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": args.empTitleCode,\n    \"ctl00$body$ContentSearch$butSearch\": \"Search\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"9\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"Salutation\");\n\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: searchResponse.postBackCode,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: searchResponse.viewState,\n    __VIEWSTATEGENERATOR: searchResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: searchResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"SALU_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": args.empTitleCode,\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"Salutation\");\n\n  window.eti = postBackResponse;\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(postBackResponse.rawData, \"text/html\");\n\n  const employeetypeDetails = {\n    code: doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\",\n    employeeTitle: doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\",\n    genderValidate: doc.querySelector(\"#ctl00_body_chkGenderValid\")?.checked || false,\n    gender: (() => {\n      const selected = doc.querySelector(\"#ctl00_body_cboGender\")?.selectedOptions?.[0];\n      return selected ? selected.textContent.trim() : \"\";\n    })(),\n    maritalStatusLabel: doc.querySelector(\"#ctl00_body_lblMAritalStatus\")?.textContent.trim() || \"\",\n    maritalStatuses: []\n  };\n\n  const maritalTable = doc.querySelector(\"#ctl00_body_chkMaritalStatus\");\n  if (maritalTable) {\n    const checkboxes = maritalTable.querySelectorAll(\"input[type='checkbox']\");\n    checkboxes.forEach((checkbox) => {\n      const label = maritalTable.querySelector(`label[for=\"${checkbox.id}\"]`);\n      employeetypeDetails.maritalStatuses.push({\n        label: label ? label.textContent.trim() : \"\",\n        checked: checkbox.checked\n      });\n    });\n  }\n\n  return employeetypeDetails;\n});\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Employee Title Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-04T14:23:44.616Z",
+      "updatedAt": "2025-05-04T14:23:44.616Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getEmployeeTitleDetails",
+      "args": [
+        {
+          "name": "empTitleCode",
+          "type": "string",
+          "description": "to give the employee Title Code.",
+          "required": true,
+          "_id": "68177870ea5a48ef0a517b58"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68177870ea5a48ef0a517b57"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Salutation\");\n\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"SALU_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": args.empTitleCode,\n    \"ctl00$body$ContentSearch$butSearch\": \"Search\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"9\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"Salutation\");\n\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: searchResponse.postBackCode,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: searchResponse.viewState,\n    __VIEWSTATEGENERATOR: searchResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: searchResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"SALU_ID\",\n    \"ctl00$body$ContentSearch$txtContent\": args.empTitleCode,\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"Salutation\");\n\n  window.eti = postBackResponse;\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(postBackResponse.rawData, \"text/html\");\n\n  const employeetypeDetails = {\n    code: doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\",\n    employeeTitle: doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\",\n    genderValidate: doc.querySelector(\"#ctl00_body_chkGenderValid\")?.checked || false,\n    gender: (() => {\n      const selected = doc.querySelector(\"#ctl00_body_cboGender\")?.selectedOptions?.[0];\n      return selected ? selected.textContent.trim() : \"\";\n    })(),\n    maritalStatusLabel: doc.querySelector(\"#ctl00_body_lblMAritalStatus\")?.textContent.trim() || \"\",\n    maritalStatuses: []\n  };\n\n  const maritalTable = doc.querySelector(\"#ctl00_body_chkMaritalStatus\");\n  if (maritalTable) {\n    const checkboxes = maritalTable.querySelectorAll(\"input[type='checkbox']\");\n    checkboxes.forEach((checkbox) => {\n      const label = maritalTable.querySelector(`label[for=\"${checkbox.id}\"]`);\n      employeetypeDetails.maritalStatuses.push({\n        label: label ? label.textContent.trim() : \"\",\n        checked: checkbox.checked\n      });\n    });\n  }\n\n  return employeetypeDetails;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

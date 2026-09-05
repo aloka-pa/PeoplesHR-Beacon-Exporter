@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    {
+      "name": "ratingMethod",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "ratingMethod , Ex:- SkillRatingMethod",
+      "advanced": false,
+      "raw": {
+        "name": "ratingMethod",
+        "type": "string",
+        "description": "ratingMethod , Ex:- SkillRatingMethod",
+        "required": true,
+        "_id": "68107997095a85d40a9fe44f"
+      }
+    },
+    {
+      "name": "grade",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "grade , Ex:- \"A\" or \"1\"",
+      "advanced": false,
+      "raw": {
+        "name": "grade",
+        "type": "string",
+        "description": "grade , Ex:- \"A\" or \"1\"",
+        "required": true,
+        "_id": "68107997095a85d40a9fe450"
+      }
+    },
+    {
+      "name": "minimumMarks",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "minimumMarks , Ex:-\"10\"",
+      "advanced": false,
+      "raw": {
+        "name": "minimumMarks",
+        "type": "string",
+        "description": "minimumMarks , Ex:-\"10\"",
+        "required": true,
+        "_id": "68107997095a85d40a9fe451"
+      }
+    },
+    {
+      "name": "maximumMarks",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "maximumMarks , Ex:- \"100\"",
+      "advanced": false,
+      "raw": {
+        "name": "maximumMarks",
+        "type": "string",
+        "description": "maximumMarks , Ex:- \"100\"",
+        "required": true,
+        "_id": "681081ab9031d6e4b3dde1fc"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

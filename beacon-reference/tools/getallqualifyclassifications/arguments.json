@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "classificatioCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "classificatioCode , Ex:- \"000001\"",
+      "advanced": false,
+      "raw": {
+        "name": "classificatioCode",
+        "type": "string",
+        "description": "classificatioCode , Ex:- \"000001\"",
+        "required": true,
+        "_id": "681084ca8363f608426e170b"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

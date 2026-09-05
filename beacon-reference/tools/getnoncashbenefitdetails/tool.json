@@ -1,0 +1,75 @@
+{
+  "id": "690dc564931a2d61ba0b152a",
+  "slug": "getnoncashbenefitdetails",
+  "name": "getNonCashBenefitDetails",
+  "description": "in this tool generate the NonCash Benefit Details.",
+  "instructions": null,
+  "taskName": "NonCash Benefit Details",
+  "tags": [],
+  "status": "unlive",
+  "signature": "getNonCashBenefitDetails",
+  "createdAt": "2025-05-02T06:06:34.760Z",
+  "updatedAt": "2025-05-02T06:06:34.760Z",
+  "assignedAgents": [],
+  "contentHash": "9d3b07af2c730e8b3fe02bd3d590b556c557dc60b5838e00dee765820a1e721c",
+  "lastExportedAt": "2026-09-05T19:39:24.313Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b152a",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getNonCashBenefitDetails",
+      "description": "in this tool generate the NonCash Benefit Details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getNonCashBenefitDetails",
+        "args": [
+          {
+            "name": "nonCashBenefitCode",
+            "type": "string",
+            "description": "to get the non cash benefit  Details.give the nonCashBenefitCode.",
+            "required": true,
+            "_id": "681460eafc879b0ec3811e9c"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "681460eafc879b0ec3811e9b"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"NonCashBenifit\");\n\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"B.NBEN_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": args.nonCashBenefitCode,\n    \"ctl00$body$ContentSearch$butSearch\": \"Search\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"7\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"NonCashBenifit\");\n\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: searchResponse.postBackCode,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: searchResponse.viewState,\n    __VIEWSTATEGENERATOR: searchResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: searchResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"B.NBEN_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": args.nonCashBenefitCode,\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"NonCashBenifit\");\n\n  window.cda = postBackResponse;\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(postBackResponse.rawData, \"text/html\");\n\n  const categorySelect = doc.getElementById(\"ctl00_body_dpCategory\");\n  const categories = [];\n\n  if (categorySelect) {\n    for (const option of categorySelect.options) {\n      categories.push({\n        value: option.value,\n        text: option.text.trim()\n      });\n    }\n  }\n\n  const code = doc.getElementById(\"ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const description = doc.getElementById(\"ctl00_body_txtName\")?.value?.trim() || \"\";\n  const selectedCategory = categorySelect?.options[categorySelect.selectedIndex]?.text?.trim() || \"\";\n\n  return {\n    code,\n    description,\n    category: selectedCategory,\n    categories\n  };\n});\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "NonCash Benefit Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-02T06:06:34.760Z",
+      "updatedAt": "2025-05-02T06:06:34.760Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getNonCashBenefitDetails",
+      "args": [
+        {
+          "name": "nonCashBenefitCode",
+          "type": "string",
+          "description": "to get the non cash benefit  Details.give the nonCashBenefitCode.",
+          "required": true,
+          "_id": "681460eafc879b0ec3811e9c"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "681460eafc879b0ec3811e9b"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"NonCashBenifit\");\n\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"B.NBEN_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": args.nonCashBenefitCode,\n    \"ctl00$body$ContentSearch$butSearch\": \"Search\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"7\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"NonCashBenifit\");\n\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: searchResponse.postBackCode,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: searchResponse.viewState,\n    __VIEWSTATEGENERATOR: searchResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: searchResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"B.NBEN_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": args.nonCashBenefitCode,\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"NonCashBenifit\");\n\n  window.cda = postBackResponse;\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(postBackResponse.rawData, \"text/html\");\n\n  const categorySelect = doc.getElementById(\"ctl00_body_dpCategory\");\n  const categories = [];\n\n  if (categorySelect) {\n    for (const option of categorySelect.options) {\n      categories.push({\n        value: option.value,\n        text: option.text.trim()\n      });\n    }\n  }\n\n  const code = doc.getElementById(\"ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const description = doc.getElementById(\"ctl00_body_txtName\")?.value?.trim() || \"\";\n  const selectedCategory = categorySelect?.options[categorySelect.selectedIndex]?.text?.trim() || \"\";\n\n  return {\n    code,\n    description,\n    category: selectedCategory,\n    categories\n  };\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

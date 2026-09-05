@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "description",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "description , Ex:- \"sampathBank\"",
+      "advanced": false,
+      "raw": {
+        "name": "description",
+        "type": "string",
+        "description": "description , Ex:- \"sampathBank\"",
+        "required": true,
+        "_id": "683f346e0b31dbd99b04bc7d"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

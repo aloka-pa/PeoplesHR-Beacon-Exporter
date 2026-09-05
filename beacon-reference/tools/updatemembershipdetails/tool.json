@@ -1,0 +1,88 @@
+{
+  "id": "690dc564931a2d61ba0b14aa",
+  "slug": "updatemembershipdetails",
+  "name": "updateMembershipDetails",
+  "description": "in this tool update the Membership Details.if the user any missing fields to get the getEIMAttributeList Api and member ship type value will be take.Example:-(000001).",
+  "instructions": null,
+  "taskName": "Update Membership Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateMembershipDetails",
+  "createdAt": "2025-04-30T08:23:09.856Z",
+  "updatedAt": "2026-05-15T07:12:00.140Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "c6cb9d2daaa34ef2cda88a856642d12c3e03020ca36b559291f9c94793d13df0",
+  "lastExportedAt": "2026-09-05T19:39:22.502Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b14aa",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateMembershipDetails",
+      "description": "in this tool update the Membership Details.if the user any missing fields to get the getEIMAttributeList Api and member ship type value will be take.Example:-(000001).",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateMembershipDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"The name of the membership.\"\n    },\n    \"ctl00_body_dpcountry\": {\n      \"type\": \"string\",\n      \"description\": \"The code corresponding to the selected membership type. if the user not update to get corresponsding data for getMembershipDetails api. and corresponding value wiil be take Example:-'000001'\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_dpcountry\"\n  ]\n}",
+        "_id": "6811dded1fa8066d7b089d6e"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/Membership.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n\n  myHeaders.append(\n    \"accept\",\n    \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\"\n  );\n\n  myHeaders.append(\n    \"accept-language\",\n    \"en-US,en;q=0.9\"\n  );\n\n  myHeaders.append(\n    \"x-requested-with\",\n    \"XMLHttpRequest\"\n  );\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/Membership.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url =\n      `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`;\n  } else {\n    url =\n      `${window.origin}/${reqOptions.sl}/EIM/Membership.aspx`;\n  }\n\n  const urlencoded1 = new URLSearchParams();\n\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n\n  urlencoded1.append(\n    \"__VIEWSTATE\",\n    window.md.viewState\n  );\n\n  urlencoded1.append(\n    \"__VIEWSTATEGENERATOR\",\n    window.md.viewStateGen\n  );\n\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n\n  urlencoded1.append(\n    \"__EVENTVALIDATION\",\n    window.md.eventValidation\n  );\n\n  urlencoded1.append(\n    \"ctl00$hdnDateFormat\",\n    \"dd/mm/yy\"\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$butEdit\",\n    \"Edit\"\n  );\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  return fetch(url, requestOptions1)\n\n    .then(response => response.text())\n\n    .then(html1 => {\n\n      const parser1 = new DOMParser();\n\n      const doc1 = parser1.parseFromString(\n        html1,\n        \"text/html\"\n      );\n\n      const viewState =\n        doc1.querySelector(\"#__VIEWSTATE\")\n          ?.value || \"\";\n\n      const eventValidation =\n        doc1.querySelector(\"#__EVENTVALIDATION\")\n          ?.value || \"\";\n\n      const viewStateGen =\n        doc1.querySelector(\"#__VIEWSTATEGENERATOR\")\n          ?.value || \"\";\n\n      const urlencoded2 =\n        new URLSearchParams();\n\n      urlencoded2.append(\"scrollLeft\", \"0\");\n      urlencoded2.append(\"scrollTop\", \"0\");\n      urlencoded2.append(\"__EVENTTARGET\", \"\");\n      urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n\n      urlencoded2.append(\n        \"__VIEWSTATE\",\n        viewState\n      );\n\n      urlencoded2.append(\n        \"__VIEWSTATEGENERATOR\",\n        viewStateGen\n      );\n\n      urlencoded2.append(\n        \"__VIEWSTATEENCRYPTED\",\n        \"\"\n      );\n\n      urlencoded2.append(\n        \"__EVENTVALIDATION\",\n        eventValidation\n      );\n\n      urlencoded2.append(\n        \"ctl00$hdnDateFormat\",\n        \"dd/mm/yy\"\n      );\n\n      urlencoded2.append(\n        \"ctl00$body$txtName\",\n        args[\"ctl00_body_txtName\"]\n      );\n\n      urlencoded2.append(\n        \"ctl00$body$dpcountry\",\n        args[\"ctl00_body_dpcountry\"]\n      );\n\n      urlencoded2.append(\n        \"ctl00$body$butSave\",\n        \"Save\"\n      );\n\n      const requestOptions2 = {\n        method: \"POST\",\n        headers: myHeaders,\n        body: urlencoded2,\n        redirect: \"follow\"\n      };\n\n      return fetch(url, requestOptions2)\n\n        .then(response => response.text())\n\n        .then(html2 => {\n\n          const parser2 = new DOMParser();\n\n          const doc2 = parser2.parseFromString(\n            html2,\n            \"text/html\"\n          );\n\n          const getElementValue = (id) =>\n            doc2.getElementById(id)\n              ?.value?.trim() || \"\";\n\n          const getSelectedOption = (id) => {\n\n            const select =\n              doc2.getElementById(id);\n\n            const selected =\n              select?.selectedOptions?.[0];\n\n            return selected\n              ? {\n                  value: selected.value,\n                  text: selected.text.trim()\n                }\n              : {\n                  value: \"\",\n                  text: \"\"\n                };\n\n          };\n\n          return {\n\n            code:\n              getElementValue(\n                \"ctl00_body_txtCode\"\n              ),\n\n            membership:\n              getElementValue(\n                \"ctl00_body_txtName\"\n              ),\n\n            selectedMembershipType:\n              getSelectedOption(\n                \"ctl00_body_dpcountry\"\n              )\n\n          };\n\n        });\n\n    });\n\n})",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update Membership Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-30T08:23:09.856Z",
+      "updatedAt": "2026-05-15T07:12:00.140Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateMembershipDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"The name of the membership.\"\n    },\n    \"ctl00_body_dpcountry\": {\n      \"type\": \"string\",\n      \"description\": \"The code corresponding to the selected membership type. if the user not update to get corresponsding data for getMembershipDetails api. and corresponding value wiil be take Example:-'000001'\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_dpcountry\"\n  ]\n}",
+      "_id": "6811dded1fa8066d7b089d6e"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/Membership.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n\n  myHeaders.append(\n    \"accept\",\n    \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\"\n  );\n\n  myHeaders.append(\n    \"accept-language\",\n    \"en-US,en;q=0.9\"\n  );\n\n  myHeaders.append(\n    \"x-requested-with\",\n    \"XMLHttpRequest\"\n  );\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/Membership.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url =\n      `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`;\n  } else {\n    url =\n      `${window.origin}/${reqOptions.sl}/EIM/Membership.aspx`;\n  }\n\n  const urlencoded1 = new URLSearchParams();\n\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n\n  urlencoded1.append(\n    \"__VIEWSTATE\",\n    window.md.viewState\n  );\n\n  urlencoded1.append(\n    \"__VIEWSTATEGENERATOR\",\n    window.md.viewStateGen\n  );\n\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n\n  urlencoded1.append(\n    \"__EVENTVALIDATION\",\n    window.md.eventValidation\n  );\n\n  urlencoded1.append(\n    \"ctl00$hdnDateFormat\",\n    \"dd/mm/yy\"\n  );\n\n  urlencoded1.append(\n    \"ctl00$body$butEdit\",\n    \"Edit\"\n  );\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  return fetch(url, requestOptions1)\n\n    .then(response => response.text())\n\n    .then(html1 => {\n\n      const parser1 = new DOMParser();\n\n      const doc1 = parser1.parseFromString(\n        html1,\n        \"text/html\"\n      );\n\n      const viewState =\n        doc1.querySelector(\"#__VIEWSTATE\")\n          ?.value || \"\";\n\n      const eventValidation =\n        doc1.querySelector(\"#__EVENTVALIDATION\")\n          ?.value || \"\";\n\n      const viewStateGen =\n        doc1.querySelector(\"#__VIEWSTATEGENERATOR\")\n          ?.value || \"\";\n\n      const urlencoded2 =\n        new URLSearchParams();\n\n      urlencoded2.append(\"scrollLeft\", \"0\");\n      urlencoded2.append(\"scrollTop\", \"0\");\n      urlencoded2.append(\"__EVENTTARGET\", \"\");\n      urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n\n      urlencoded2.append(\n        \"__VIEWSTATE\",\n        viewState\n      );\n\n      urlencoded2.append(\n        \"__VIEWSTATEGENERATOR\",\n        viewStateGen\n      );\n\n      urlencoded2.append(\n        \"__VIEWSTATEENCRYPTED\",\n        \"\"\n      );\n\n      urlencoded2.append(\n        \"__EVENTVALIDATION\",\n        eventValidation\n      );\n\n      urlencoded2.append(\n        \"ctl00$hdnDateFormat\",\n        \"dd/mm/yy\"\n      );\n\n      urlencoded2.append(\n        \"ctl00$body$txtName\",\n        args[\"ctl00_body_txtName\"]\n      );\n\n      urlencoded2.append(\n        \"ctl00$body$dpcountry\",\n        args[\"ctl00_body_dpcountry\"]\n      );\n\n      urlencoded2.append(\n        \"ctl00$body$butSave\",\n        \"Save\"\n      );\n\n      const requestOptions2 = {\n        method: \"POST\",\n        headers: myHeaders,\n        body: urlencoded2,\n        redirect: \"follow\"\n      };\n\n      return fetch(url, requestOptions2)\n\n        .then(response => response.text())\n\n        .then(html2 => {\n\n          const parser2 = new DOMParser();\n\n          const doc2 = parser2.parseFromString(\n            html2,\n            \"text/html\"\n          );\n\n          const getElementValue = (id) =>\n            doc2.getElementById(id)\n              ?.value?.trim() || \"\";\n\n          const getSelectedOption = (id) => {\n\n            const select =\n              doc2.getElementById(id);\n\n            const selected =\n              select?.selectedOptions?.[0];\n\n            return selected\n              ? {\n                  value: selected.value,\n                  text: selected.text.trim()\n                }\n              : {\n                  value: \"\",\n                  text: \"\"\n                };\n\n          };\n\n          return {\n\n            code:\n              getElementValue(\n                \"ctl00_body_txtCode\"\n              ),\n\n            membership:\n              getElementValue(\n                \"ctl00_body_txtName\"\n              ),\n\n            selectedMembershipType:\n              getSelectedOption(\n                \"ctl00_body_dpcountry\"\n              )\n\n          };\n\n        });\n\n    });\n\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

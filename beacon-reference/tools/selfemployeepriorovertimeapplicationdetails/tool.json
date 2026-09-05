@@ -1,0 +1,119 @@
+{
+  "id": "690dc56b931a2d61ba0b1aef",
+  "slug": "selfemployeepriorovertimeapplicationdetails",
+  "name": "selfEmployeePriorOvertimeApplicationDetails",
+  "description": "Before execute the selfPriorOvertimeApplicationDetails api, below following steps must be following:\n1.Input Validation:\nIf the user’s query includes an employee ID or uses terms like “my”, “myself”, or “self”, first execute the adminInformation API to retrieve the employee ID of the logged-in user.\nThe user must provide either self Employee ID or Roster Name — not both.\n2.Filter Mode Check:\nIf the filter is by Roster Name, retrieve the corresponding rosterCode (e.g., \"000030\") and then call the rostersDetails API.\n3.Date Handling:\nIf a date is included in the query, execute the dateFormat API first.\nUse the formatted date returned by the dateFormat API in subsequent API calls.\n4.API Workflow Execution:\nUse the selected Employee ID or retrieved rosterCode to execute the required API calls according to the workflow.\n5.Result Presentation\nDisplay the results in a tabular format, categorized by status\n\nabove steps must be following, if the any step skip final api fail.",
+  "instructions": null,
+  "taskName": "Fetching The Employee Prior Overtime Application Details",
+  "tags": [
+    "Attendance",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "selfEmployeePriorOvertimeApplicationDetails",
+  "createdAt": "2025-08-20T06:28:38.090Z",
+  "updatedAt": "2025-08-20T06:28:38.090Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "9ed9d16f87b7417314eb2ec83f3a8a9b2f539f50c52412219dfe96629dcfdd4a",
+  "lastExportedAt": "2026-09-05T19:39:23.455Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1aef",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selfEmployeePriorOvertimeApplicationDetails",
+      "description": "Before execute the selfPriorOvertimeApplicationDetails api, below following steps must be following:\n1.Input Validation:\nIf the user’s query includes an employee ID or uses terms like “my”, “myself”, or “self”, first execute the adminInformation API to retrieve the employee ID of the logged-in user.\nThe user must provide either self Employee ID or Roster Name — not both.\n2.Filter Mode Check:\nIf the filter is by Roster Name, retrieve the corresponding rosterCode (e.g., \"000030\") and then call the rostersDetails API.\n3.Date Handling:\nIf a date is included in the query, execute the dateFormat API first.\nUse the formatted date returned by the dateFormat API in subsequent API calls.\n4.API Workflow Execution:\nUse the selected Employee ID or retrieved rosterCode to execute the required API calls according to the workflow.\n5.Result Presentation\nDisplay the results in a tabular format, categorized by status\n\nabove steps must be following, if the any step skip final api fail.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selfEmployeePriorOvertimeApplicationDetails",
+        "args": [
+          {
+            "name": "fromDate",
+            "type": "string",
+            "description": "to give the fromDate Example:-\"02/1/2023\" format date DD/MM/YYYY",
+            "required": true,
+            "_id": "68a56b16e8928f1d59ea6424"
+          },
+          {
+            "name": "toDate",
+            "type": "string",
+            "description": "to give the toDate Example:-\"02/1/2024\" format date DD/MM/YYYY",
+            "required": true,
+            "_id": "68a56b16e8928f1d59ea6425"
+          },
+          {
+            "name": "rosterCode",
+            "type": "string",
+            "description": "to get the user select roster corresponding id will be take roster CodeExample '000030' execute for \"rosetersDetails\" tool.",
+            "required": false,
+            "_id": "68a56b16e8928f1d59ea6426"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68a56b16e8928f1d59ea6423"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"TNAV9/PriorOT/PriorOT/2?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  let rawPayload;\n\n  if (args.rosterCode) {\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"2\",\n      RosterCode: args.rosterCode,\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0,\n    };\n  } else {\n    const empNumber = await BeaconBar.executeFunction(\"selfEmployeePriorOvertimeApplicationDetails\")();\n\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"1\",\n      EmpNumber: empNumber,\n      RosterCode: \"\",\n      callBackId: 2,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n    };\n  }\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      accept: \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/${reqOptions.sl}/TNAV9/api/PriorOT/GetGridDataByCriteria/`,\n    requestOptions1\n  );\n  const details1 = await response2.json();\n  BeaconBar.setSharedData(\"employeedata\", details1.EmployeeList[0])\n\n  window.updatePrior = details1.PriorOTDetailList\n  const priorOvertimeDetails = details1.PriorOTDetailList.map((entry) => ({\n    employeeName: entry.EmpDisplayNumber || \"\",\n    employeeId: entry.EmpDisplayName || \"\",\n    employeeHeaderName: entry.EmpHeaderName || \"\",\n    Date: entry.InDateText || \"\",\n    \"Shift Name\": entry.ShiftAbbreviation || \"OFF\",\n    \"In Date\": entry.InDateText || \"-\",\n    \"In Time\": entry.InTime >= 0 ? formatTime(entry.InTime) : \"-\",\n    \"Out Date\": entry.OutDateText || \"-\",\n    \"Out Time\": entry.OutTime >= 0 ? formatTime(entry.OutTime) : \"-\",\n    \"Max Pre OT\": entry.PriorDetail.MaxPreOT ? formatTime(entry.PriorDetail.MaxPreOT) : \"-\",\n    \"Max Post OT\": entry.PriorDetail.MaxPostOT ? formatTime(entry.PriorDetail.MaxPostOT) : \"-\",\n    \"Pre OT\": entry.PreOTHrsText || \"\",\n    \"Post OT\": entry.PostOTHrsText || \"\",\n    Reason: entry.ReasonCode === \"\" ? \"Select a reason\" : entry.Reason || \"\",\n    Comment: entry.Comment || \"\",\n    Status: entry.RecordStatusText || \"\"\n  }));\n\n  function formatTime(decimalTime) {\n    if (decimalTime < 0) return \"-\";\n    const hours = Math.floor(decimalTime);\n    const minutes = Math.round((decimalTime - hours) * 60);\n    return `${String(hours).padStart(2, \"0\")}:${String(minutes).padStart(2, \"0\")}`;\n  }\n\n  if (priorOvertimeDetails.length >= 10) {\n    await BeaconBar.executeFunction(\"downloadcsv\")(priorOvertimeDetails);\n    return priorOvertimeDetails.slice(0, 10);\n  }\n\n  return priorOvertimeDetails;\n});",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "Headers"
+      ],
+      "taskName": "Fetching The Employee Prior Overtime Application Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-08-20T06:28:38.090Z",
+      "updatedAt": "2025-08-20T06:28:38.090Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selfEmployeePriorOvertimeApplicationDetails",
+      "args": [
+        {
+          "name": "fromDate",
+          "type": "string",
+          "description": "to give the fromDate Example:-\"02/1/2023\" format date DD/MM/YYYY",
+          "required": true,
+          "_id": "68a56b16e8928f1d59ea6424"
+        },
+        {
+          "name": "toDate",
+          "type": "string",
+          "description": "to give the toDate Example:-\"02/1/2024\" format date DD/MM/YYYY",
+          "required": true,
+          "_id": "68a56b16e8928f1d59ea6425"
+        },
+        {
+          "name": "rosterCode",
+          "type": "string",
+          "description": "to get the user select roster corresponding id will be take roster CodeExample '000030' execute for \"rosetersDetails\" tool.",
+          "required": false,
+          "_id": "68a56b16e8928f1d59ea6426"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68a56b16e8928f1d59ea6423"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"TNAV9/PriorOT/PriorOT/2?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  let rawPayload;\n\n  if (args.rosterCode) {\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"2\",\n      RosterCode: args.rosterCode,\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0,\n    };\n  } else {\n    const empNumber = await BeaconBar.executeFunction(\"selfEmployeePriorOvertimeApplicationDetails\")();\n\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"1\",\n      EmpNumber: empNumber,\n      RosterCode: \"\",\n      callBackId: 2,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n    };\n  }\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      accept: \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/${reqOptions.sl}/TNAV9/api/PriorOT/GetGridDataByCriteria/`,\n    requestOptions1\n  );\n  const details1 = await response2.json();\n  BeaconBar.setSharedData(\"employeedata\", details1.EmployeeList[0])\n\n  window.updatePrior = details1.PriorOTDetailList\n  const priorOvertimeDetails = details1.PriorOTDetailList.map((entry) => ({\n    employeeName: entry.EmpDisplayNumber || \"\",\n    employeeId: entry.EmpDisplayName || \"\",\n    employeeHeaderName: entry.EmpHeaderName || \"\",\n    Date: entry.InDateText || \"\",\n    \"Shift Name\": entry.ShiftAbbreviation || \"OFF\",\n    \"In Date\": entry.InDateText || \"-\",\n    \"In Time\": entry.InTime >= 0 ? formatTime(entry.InTime) : \"-\",\n    \"Out Date\": entry.OutDateText || \"-\",\n    \"Out Time\": entry.OutTime >= 0 ? formatTime(entry.OutTime) : \"-\",\n    \"Max Pre OT\": entry.PriorDetail.MaxPreOT ? formatTime(entry.PriorDetail.MaxPreOT) : \"-\",\n    \"Max Post OT\": entry.PriorDetail.MaxPostOT ? formatTime(entry.PriorDetail.MaxPostOT) : \"-\",\n    \"Pre OT\": entry.PreOTHrsText || \"\",\n    \"Post OT\": entry.PostOTHrsText || \"\",\n    Reason: entry.ReasonCode === \"\" ? \"Select a reason\" : entry.Reason || \"\",\n    Comment: entry.Comment || \"\",\n    Status: entry.RecordStatusText || \"\"\n  }));\n\n  function formatTime(decimalTime) {\n    if (decimalTime < 0) return \"-\";\n    const hours = Math.floor(decimalTime);\n    const minutes = Math.round((decimalTime - hours) * 60);\n    return `${String(hours).padStart(2, \"0\")}:${String(minutes).padStart(2, \"0\")}`;\n  }\n\n  if (priorOvertimeDetails.length >= 10) {\n    await BeaconBar.executeFunction(\"downloadcsv\")(priorOvertimeDetails);\n    return priorOvertimeDetails.slice(0, 10);\n  }\n\n  return priorOvertimeDetails;\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

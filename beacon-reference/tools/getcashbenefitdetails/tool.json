@@ -1,0 +1,75 @@
+{
+  "id": "690dc564931a2d61ba0b1503",
+  "slug": "getcashbenefitdetails",
+  "name": "getCashBenefitDetails",
+  "description": "in this tool generate the Cash Benefit Details.",
+  "instructions": null,
+  "taskName": "Cash Benefit Details",
+  "tags": [],
+  "status": "unlive",
+  "signature": "getCashBenefitDetails",
+  "createdAt": "2025-05-01T13:59:59.484Z",
+  "updatedAt": "2025-05-01T13:59:59.484Z",
+  "assignedAgents": [],
+  "contentHash": "06878b6192914e5c192826ef7af3b2d11013183c714de0d56794bb7ae4f9a191",
+  "lastExportedAt": "2026-09-05T19:39:24.332Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b1503",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getCashBenefitDetails",
+      "description": "in this tool generate the Cash Benefit Details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getCashBenefitDetails",
+        "args": [
+          {
+            "name": "cashBenefitCode",
+            "type": "string",
+            "description": "to get the cash benefit  Details.give the cashBenefitCode.",
+            "required": true,
+            "_id": "68137e5f0c8b721f97e152a9"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68137e5f0c8b721f97e152a8"
+      },
+      "by": "1927",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"CashBenifit\");\n\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"DATA.BEN_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": args.cashBenefitCode,\n    \"ctl00$body$ContentSearch$butSearch\": \"Search\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"8\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"CashBenifit\");\n\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: searchResponse.postBackCode,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: searchResponse.viewState,\n    __VIEWSTATEGENERATOR: searchResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: searchResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"DATA.BEN_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": args.cashBenefitCode,\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"CashBenifit\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(postBackResponse.rawData, \"text/html\");\n\n  window.cb = postBackResponse;\n\n  const getValue = (id) => doc.getElementById(id)?.value?.trim() || \"\";\n  const getSelectedText = (id) => {\n    const el = doc.getElementById(id);\n    return el ? el.options[el.selectedIndex]?.text.trim() || \"\" : \"\";\n  };\n\n  const cashbenefitdetails = {\n    code: getValue(\"ctl00_body_txtCode\"),\n    description: getValue(\"ctl00_body_txtName\"),\n    amount: getValue(\"ctl00_body_nuamount\"),\n    currency: getSelectedText(\"ctl00_body_cboCurrency\"),\n    rateEffectiveDate: getValue(\"ctl00_body_dtRateEffDate_txtDate\")\n  };\n\n  const select = doc.getElementById(\"ctl00_body_cboCurrency\");\n  if (!select) return [];\n\n  const allcurrencies = Array.from(select.options)\n    .filter(opt => opt.value && opt.value !== \"-1\")\n    .map(opt => ({\n      value: opt.value,\n      text: opt.text.trim()\n    }));\n\n  return {cashbenefitdetails,allcurrencies};\n})\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Cash Benefit Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-01T13:59:59.484Z",
+      "updatedAt": "2025-05-01T13:59:59.484Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getCashBenefitDetails",
+      "args": [
+        {
+          "name": "cashBenefitCode",
+          "type": "string",
+          "description": "to get the cash benefit  Details.give the cashBenefitCode.",
+          "required": true,
+          "_id": "68137e5f0c8b721f97e152a9"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68137e5f0c8b721f97e152a8"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"CashBenifit\");\n\n  const searchResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"DATA.BEN_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": args.cashBenefitCode,\n    \"ctl00$body$ContentSearch$butSearch\": \"Search\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"8\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"CashBenifit\");\n\n  const postBackResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: searchResponse.postBackCode,\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: searchResponse.viewState,\n    __VIEWSTATEGENERATOR: searchResponse.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: searchResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"DATA.BEN_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": args.cashBenefitCode,\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\"\n  }, \"CashBenifit\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(postBackResponse.rawData, \"text/html\");\n\n  window.cb = postBackResponse;\n\n  const getValue = (id) => doc.getElementById(id)?.value?.trim() || \"\";\n  const getSelectedText = (id) => {\n    const el = doc.getElementById(id);\n    return el ? el.options[el.selectedIndex]?.text.trim() || \"\" : \"\";\n  };\n\n  const cashbenefitdetails = {\n    code: getValue(\"ctl00_body_txtCode\"),\n    description: getValue(\"ctl00_body_txtName\"),\n    amount: getValue(\"ctl00_body_nuamount\"),\n    currency: getSelectedText(\"ctl00_body_cboCurrency\"),\n    rateEffectiveDate: getValue(\"ctl00_body_dtRateEffDate_txtDate\")\n  };\n\n  const select = doc.getElementById(\"ctl00_body_cboCurrency\");\n  if (!select) return [];\n\n  const allcurrencies = Array.from(select.options)\n    .filter(opt => opt.value && opt.value !== \"-1\")\n    .map(opt => ({\n      value: opt.value,\n      text: opt.text.trim()\n    }));\n\n  return {cashbenefitdetails,allcurrencies};\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

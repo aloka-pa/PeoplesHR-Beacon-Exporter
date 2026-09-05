@@ -1,0 +1,166 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "entity",
+      "type": null,
+      "required": true,
+      "defaultValue": null,
+      "description": "Specifies the entity based on the query.",
+      "advanced": true,
+      "raw": {
+        "enum": [
+          "systemParameters",
+          "rosterInformation",
+          "roundingInformation"
+        ],
+        "description": "Specifies the entity based on the query."
+      }
+    },
+    {
+      "name": "systemParameters",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Before updating the system parameters, first show a confirmation message: 'Editing the selected information will cause major changes in the system. Are you sure you want to edit this record?'. Once confirmed, proceed with the update. If the user triggers an update through this API, first execute the getAttendanceModule tool to fetch the existing data and obtain the edit name ID provided by the user. If any schema key is missing, automatically use the corresponding value retrieved from the getAttendanceModule tool.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Before updating the system parameters, first show a confirmation message: 'Editing the selected information will cause major changes in the system. Are you sure you want to edit this record?'. Once confirmed, proceed with the update. If the user triggers an update through this API, first execute the getAttendanceModule tool to fetch the existing data and obtain the edit name ID provided by the user. If any schema key is missing, automatically use the corresponding value retrieved from the getAttendanceModule tool.",
+        "properties": {
+          "parameterName": {
+            "type": "string",
+            "description": "The user search key for the parameter name. Examples include 'Attachment Allowed Types', 'Attachment Maximum Size', 'Advanced', etc."
+          },
+          "editNameId": {
+            "type": "string",
+            "description": "The edit name ID used for the getAttendanceModule tool. Example: 'ctl00$body$RadGrid1$ctl00$ctl06$btnEdit'."
+          },
+          "updateParameterValue": {
+            "type": "string",
+            "description": "The new parameter value provided by the user to update. This may be any value, without restricting its range."
+          }
+        },
+        "required": [
+          "updateParameterValue"
+        ]
+      }
+    },
+    {
+      "name": "rosterInformation",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": null,
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "properties": {
+          "humanUpdateActive": {
+            "description": "if the user human message is active is enable to return the keyword is 'active' in this field is 'active'."
+          },
+          "ctl00_body_txtRosterDisplayCode": {
+            "type": "string",
+            "description": "The roster display code. in this user update take with user update value.in this field is roster code."
+          },
+          "ctl00_body_txtRosterName": {
+            "type": "string",
+            "description": "The roster name"
+          },
+          "ctl00_body_cboRosterGroup": {
+            "type": "string",
+            "description": "The selected roster group name corresponding value will be take example '1','2'etc.."
+          },
+          "ctl00_body_chkActive": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "in this key name is 'active'"
+          },
+          "ctl00_body_chkDefaultRoster": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "in this key name is default roster"
+          },
+          "assignedEmployeeTypes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "on",
+                    "off"
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "value",
+                "status"
+              ]
+            }
+          }
+        },
+        "required": [
+          "ctl00_body_txtRosterDisplayCode",
+          "ctl00_body_txtRosterName",
+          "ctl00_body_cboRosterGroup",
+          "ctl00_body_chkActive",
+          "ctl00_body_chkDefaultRoster",
+          "assignedEmployeeTypes"
+        ]
+      }
+    },
+    {
+      "name": "roundingInformation",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "API to update rounding information. Execute the 'getAttendanceModule' API first to retrieve the corresponding values required for this API.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "API to update rounding information. Execute the 'getAttendanceModule' API first to retrieve the corresponding values required for this API.",
+        "properties": {
+          "roundingPatternType": {
+            "type": "string",
+            "description": "If not provided, retrieve the corresponding value from the 'getAttendanceModule' API. For example, if the type is 'General', the corresponding value is 'rbtnGeneral'. If the type is 'Range', the value is 'rbtnRange'.",
+            "enum": [
+              "rbtnGeneral",
+              "rbtnRange"
+            ]
+          },
+          "roundingPatternName": {
+            "type": "string",
+            "description": "If not provided, retrieve the rounding pattern name from the 'getAttendanceModule' API."
+          },
+          "methodOption": {
+            "type": "string",
+            "description": "If not provided, retrieve the corresponding method option from the 'getAttendanceModule' API. For example, 'None' = '0', 'Round Up' = '2', 'Round Down' = '1', 'Nearest' = '3'."
+          },
+          "timeDurationValue": {
+            "type": "string",
+            "description": "Time duration in HH:MM format. If not provided, retrieve the value from the 'getAttendanceModule' API. For example: '00:10', '00:00'."
+          }
+        },
+        "required": [
+          "roundingPatternType",
+          "roundingPatternName",
+          "methodOption",
+          "timeDurationValue"
+        ]
+      }
+    }
+  ]
+}

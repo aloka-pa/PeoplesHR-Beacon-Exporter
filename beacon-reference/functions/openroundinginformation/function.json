@@ -1,0 +1,24 @@
+{
+  "id": "690dc586931a2d61ba0b2e1a",
+  "slug": "openroundinginformation",
+  "name": "openRoundingInformation",
+  "status": "live",
+  "createdAt": "2025-06-05T12:21:27.983Z",
+  "updatedAt": "2026-07-17T12:55:58.705Z",
+  "contentHash": "4f7d677cb253c9b03d7230c88be4b48f45dbb891e99fa1445e35b6fcffd70914",
+  "lastExportedAt": "2026-09-05T19:41:17.221Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc586931a2d61ba0b2e1a",
+    "name": "openRoundingInformation",
+    "status": "live",
+    "code": "(async function (args) {\n  //done\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"content-type\", \"application/x-www-form-urlencoded; charset=UTF-8\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const randomX = Math.floor(Math.random() * 10).toString();\n  const randomY = Math.floor(Math.random() * 90 + 10).toString();\n\n  const rawObject = {\n    \"ctl00$main$RadScriptManager\": `ctl00$body$upPnlBody|${args.eventKey}`,\n    \"ctl00_main_RadScriptManager_HiddenField\": \"\",\n    \"__EVENTTARGET\": \"\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": args.viewState,\n    \"__VIEWSTATEGENERATOR\": args.viewStateGenerator,\n    \"__SCROLLPOSITIONX\": \"0\",\n    \"__SCROLLPOSITIONY\": \"0\",\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": args.eventValidation,\n\n    \"ctl00$body$grdsummary$ctl00$ctl02$ctl02$FilterTextBox_ROUND_RULE_ID\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl02$ctl02$FilterTextBox_ROUND_RULE_NAME\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl02$ctl02$FilterTextBox_ROUND_TYPE\": \"\",\n\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"7\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n\n    \"ctl00$body$grdsummary$ctl00$ctl04$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl04$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl06$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl06$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl08$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl08$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl10$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl10$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl12$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl12$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl14$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl14$butDeleteGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl16$butEditGrid$isControlEnabled\": \"True\",\n    \"ctl00$body$grdsummary$ctl00$ctl16$butDeleteGrid$isControlEnabled\": \"True\",\n\n    \"ctl00_body_grdsummary_rfltMenu_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\",\n\n    \"ctl00$body$tpTest$txtTime\": \"\",\n    \"ctl00$action$ButtonPanel$butNew$isControlEnabled\": \"True\",\n    \"ctl00$hdnCulturDateFormat\": \"M/d/yyyy\",\n    \"__ASYNCPOST\": \"true\",\n\n    [`${args.eventKey}.x`]: randomX,\n    [`${args.eventKey}.y`]: randomY\n  };\n\n  // Proper URL-encoding\n  const body = new URLSearchParams(rawObject).toString();\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body,\n    redirect: \"follow\"\n  };\n\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const response = await fetch(`${reqOptions}TNA/RoundingInformation.aspx`, requestOptions);\n  const data = await response.text();\n  function extractViewState(htmlText) {\n  const data = {};\n\n  const regexMap = {\n    viewState: /__VIEWSTATE\\|([^|]+)/,\n    viewStateGenerator: /__VIEWSTATEGENERATOR\\|([^|]+)/,\n    eventValidation: /__EVENTVALIDATION\\|([^|]+)/,\n    eventTarget: /postBackControlIDs\\|\\|([^|,\\n]+)/ // First one from list\n  };\n\n  for (const [key, regex] of Object.entries(regexMap)) {\n    const match = htmlText.match(regex);\n    if (match) {\n      data[key] = decodeURIComponent(match[1]);\n    } else {\n    }\n  }\n\n  return data;\n}\n\n\nconst extractViewStates = extractViewState(data);\nBeaconBar.setSharedData(\"extractViewStates\", extractViewStates)\n  return data;\n\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

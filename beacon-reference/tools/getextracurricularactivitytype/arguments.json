@@ -1,0 +1,80 @@
+{
+  "arguments": [
+    {
+      "name": "code",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The activity type code to search for (e.g., \"000001\"). If provided, searches by EATYPE_CODE field.",
+      "advanced": false,
+      "raw": {
+        "name": "code",
+        "type": "string",
+        "description": "The activity type code to search for (e.g., \"000001\"). If provided, searches by EATYPE_CODE field.",
+        "required": false,
+        "_id": "6953af48fbe9c497d06f92b3"
+      }
+    },
+    {
+      "name": "typeName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The activity type name to search for (e.g., \"Theatre\", \"Olympiad\"). If provided, searches by EATYPE_NAME field. Either code or typeName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "typeName",
+        "type": "string",
+        "description": "The activity type name to search for (e.g., \"Theatre\", \"Olympiad\"). If provided, searches by EATYPE_NAME field. Either code or typeName must be provided.",
+        "required": false,
+        "_id": "6953af48fbe9c497d06f92b4"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "If user asks show all / list / available / existing / return all, set this to that phrase to trigger Show All mode.",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "If user asks show all / list / available / existing / return all, set this to that phrase to trigger Show All mode.",
+        "required": false,
+        "_id": "697fa8f083883b1ad554f01a"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Page size used while paging (string). Default \"10\" (UI default).",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "Page size used while paging (string). Default \"10\" (UI default).",
+        "required": false,
+        "_id": "697fa8f083883b1ad554f01c"
+      }
+    },
+    {
+      "name": "maxPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Safety cap when collecting search results across pages (search mode). String number. Default: \"50\"",
+      "advanced": false,
+      "raw": {
+        "name": "maxPages",
+        "type": "string",
+        "description": "Safety cap when collecting search results across pages (search mode). String number. Default: \"50\"",
+        "required": false,
+        "_id": "697fa8f083883b1ad554f01d"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

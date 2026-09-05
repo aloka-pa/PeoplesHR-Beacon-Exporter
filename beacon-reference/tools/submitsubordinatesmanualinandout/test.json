@@ -1,0 +1,8 @@
+{
+  "sampleRequest": {
+    "empNumber": "00002"
+  },
+  "sanity": {
+    "apiResponse": []
+  }
+}

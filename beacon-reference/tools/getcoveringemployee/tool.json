@@ -1,0 +1,123 @@
+{
+  "id": "690dc561931a2d61ba0b11c3",
+  "slug": "getcoveringemployee",
+  "name": "getCoveringEmployee",
+  "description": "in this to generate the Covering Employee details.",
+  "instructions": null,
+  "taskName": "Employee Information",
+  "tags": [
+    "EmployeeInformation",
+    "Attendance",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getCoveringEmployee",
+  "createdAt": "2025-04-26T16:44:19.718Z",
+  "updatedAt": "2026-06-30T11:02:07.733Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    },
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "41992022673cdd70266f65aab6c1b705407cec3533dd346a1f9a8a44dd36de3c",
+  "lastExportedAt": "2026-09-05T19:39:22.299Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc561931a2d61ba0b11c3",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getCoveringEmployee",
+      "description": "in this to generate the Covering Employee details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getCoveringEmployee",
+        "args": [
+          {
+            "name": "searchKey",
+            "type": "string",
+            "description": "to search for employee name or Id to get the employee information.",
+            "required": true,
+            "_id": "680d0d63c4a1b2535b9c4f30"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "680d0d63c4a1b2535b9c4f2f"
+      },
+      "by": "27739",
+      "fetcher": "(function (args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n  return {\n    url: `${location.origin}/${reqOptions.sl}/Widgets/EmployeeDirectory/GetEmployeeDetails`,\n    method: \"GET\",\n    headers: myHeaders,\n    params:{\n      \"searchText\":args.searchKey\n    }\n  };\n})",
+      "transformer": "(function(data, args, reqOptions) {\n  return data;\n})",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Attendance",
+        "Headers"
+      ],
+      "taskName": "Employee Information",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-26T16:44:19.718Z",
+      "updatedAt": "2026-06-30T11:02:07.733Z",
+      "__v": 3,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "toolType": "code",
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "sanity": {
+        "apiResponse": []
+      },
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        },
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 2
+    },
+    "arguments": {
+      "name": "getCoveringEmployee",
+      "args": [
+        {
+          "name": "searchKey",
+          "type": "string",
+          "description": "to search for employee name or Id to get the employee information.",
+          "required": true,
+          "_id": "680d0d63c4a1b2535b9c4f30"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "680d0d63c4a1b2535b9c4f2f"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n  return {\n    url: `${location.origin}/${reqOptions.sl}/Widgets/EmployeeDirectory/GetEmployeeDetails`,\n    method: \"GET\",\n    headers: myHeaders,\n    params:{\n      \"searchText\":args.searchKey\n    }\n  };\n})",
+    "transformer": "(function(data, args, reqOptions) {\n  return data;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

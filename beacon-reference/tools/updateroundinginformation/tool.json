@@ -1,0 +1,75 @@
+{
+  "id": "690dc569931a2d61ba0b19af",
+  "slug": "updateroundinginformation",
+  "name": "updateRoundingInformation",
+  "description": "\"Before calling the \"updateRoundingInformation\" api, ensure that you first call the \"getRoundingInformation\" api. If the user intends to update the rounding information, begin by asking for their consent using the follow-up pattern code. Additionally, if the user provides the pattern name and pattern type for the update, prompt them to provide the pattern code first.\"",
+  "instructions": null,
+  "taskName": "updateRoundingInformation",
+  "tags": [
+    "Attendance",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateRoundingInformation",
+  "createdAt": "2025-06-05T14:43:58.528Z",
+  "updatedAt": "2025-06-05T14:43:58.528Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "726785a4df736dde6fb2a21097a48936f735389b6dffc0c742073c6b7469a3e3",
+  "lastExportedAt": "2026-09-05T19:39:23.635Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b19af",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateRoundingInformation",
+      "description": "\"Before calling the \"updateRoundingInformation\" api, ensure that you first call the \"getRoundingInformation\" api. If the user intends to update the rounding information, begin by asking for their consent using the follow-up pattern code. Additionally, if the user provides the pattern name and pattern type for the update, prompt them to provide the pattern code first.\"",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateRoundingInformation",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"roundingPatternName\": {\n      \"type\": \"string\",\n      \"description\": \"The name of the rounding pattern (e.g., 'Beacon')\"\n    },\n    \"pattern\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"General\",\n        \"Range\"\n      ],\n      \"description\": \"The rounding pattern type\"\n    },\n    \"method\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"1\",\n        \"2\",\n        \"3\"\n      ],\n      \"description\": \"Specifies the rounding method: Roundup (1), RoundDown (2), or Nearest (3). Only these values are accepted.\",\n      \"examples\": [\n        \"1\",\n        \"2\",\n        \"3\"\n      ]\n    },\n    \"numVal\": {\n      \"type\": \"string\",\n      \"description\": \"The rounding value time (used in General pattern) if the change the genral compulsary take this value ask user consent and does not take user special characters \",\n      \"pattern\": \"^\\\\d{2}:\\\\d{2}$\"\n    },\n    \"numFrom\": {\n      \"type\": \"string\",\n      \"description\": \"The start time of the range (used in Range pattern) Range value must be a value between From and To values and must not be the same value and does not take user special characters.\",\n      \"pattern\": \"^\\\\d{2}:\\\\d{2}$\"\n    },\n    \"numTo\": {\n      \"type\": \"string\",\n      \"description\": \"The end time of the range (used in Range pattern) Range value must be a value between From and To values and must not be the same value and does not take user special characters.\",\n      \"pattern\": \"^\\\\d{2}:\\\\d{2}$\"\n    },\n    \"textnumValue\": {\n      \"type\": \"string\",\n      \"description\": \"The value applied for the range (used in Range pattern) and does not take user special characters and be text numValue in between start time of the range to end time of the range\",\n      \"pattern\": \"^\\\\d{2}:\\\\d{2}$\"\n    }\n  },\n  \"required\": [\n    \"roundingPatternName\",\n    \"pattern\"\n  ],\n  \"if\": {\n    \"properties\": {\n      \"pattern\": {\n        \"const\": \"General\"\n      }\n    }\n  },\n  \"then\": {\n    \"required\": [\n      \"method\",\n      \"numVal\"\n    ]\n  },\n  \"else\": {\n    \"required\": [\n      \"numFrom\",\n      \"numTo\",\n      \"numValue\"\n    ]\n  }\n}",
+        "_id": "6841ad2e1ed253048a7683c3"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n    const dats = await BeaconBar.executeFunction(\"saveRoundinginformation\")(args);\n    return { message: \"successfully updated\" }\n})",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "Headers"
+      ],
+      "taskName": "updateRoundingInformation",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-05T14:43:58.528Z",
+      "updatedAt": "2025-06-05T14:43:58.528Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateRoundingInformation",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"roundingPatternName\": {\n      \"type\": \"string\",\n      \"description\": \"The name of the rounding pattern (e.g., 'Beacon')\"\n    },\n    \"pattern\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"General\",\n        \"Range\"\n      ],\n      \"description\": \"The rounding pattern type\"\n    },\n    \"method\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"1\",\n        \"2\",\n        \"3\"\n      ],\n      \"description\": \"Specifies the rounding method: Roundup (1), RoundDown (2), or Nearest (3). Only these values are accepted.\",\n      \"examples\": [\n        \"1\",\n        \"2\",\n        \"3\"\n      ]\n    },\n    \"numVal\": {\n      \"type\": \"string\",\n      \"description\": \"The rounding value time (used in General pattern) if the change the genral compulsary take this value ask user consent and does not take user special characters \",\n      \"pattern\": \"^\\\\d{2}:\\\\d{2}$\"\n    },\n    \"numFrom\": {\n      \"type\": \"string\",\n      \"description\": \"The start time of the range (used in Range pattern) Range value must be a value between From and To values and must not be the same value and does not take user special characters.\",\n      \"pattern\": \"^\\\\d{2}:\\\\d{2}$\"\n    },\n    \"numTo\": {\n      \"type\": \"string\",\n      \"description\": \"The end time of the range (used in Range pattern) Range value must be a value between From and To values and must not be the same value and does not take user special characters.\",\n      \"pattern\": \"^\\\\d{2}:\\\\d{2}$\"\n    },\n    \"textnumValue\": {\n      \"type\": \"string\",\n      \"description\": \"The value applied for the range (used in Range pattern) and does not take user special characters and be text numValue in between start time of the range to end time of the range\",\n      \"pattern\": \"^\\\\d{2}:\\\\d{2}$\"\n    }\n  },\n  \"required\": [\n    \"roundingPatternName\",\n    \"pattern\"\n  ],\n  \"if\": {\n    \"properties\": {\n      \"pattern\": {\n        \"const\": \"General\"\n      }\n    }\n  },\n  \"then\": {\n    \"required\": [\n      \"method\",\n      \"numVal\"\n    ]\n  },\n  \"else\": {\n    \"required\": [\n      \"numFrom\",\n      \"numTo\",\n      \"numValue\"\n    ]\n  }\n}",
+      "_id": "6841ad2e1ed253048a7683c3"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n    const dats = await BeaconBar.executeFunction(\"saveRoundinginformation\")(args);\n    return { message: \"successfully updated\" }\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

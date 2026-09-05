@@ -1,0 +1,110 @@
+{
+  "arguments": [
+    {
+      "name": "electorateCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The electorate code to search for (e.g.: \"000002\")",
+      "advanced": false,
+      "raw": {
+        "name": "electorateCode",
+        "type": "string",
+        "description": "The electorate code to search for (e.g.: \"000002\")",
+        "required": false,
+        "_id": "6953574c802e449bd3234132"
+      }
+    },
+    {
+      "name": "electorateName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The electorate name to search for (e.g.: \"hSenid\")",
+      "advanced": false,
+      "raw": {
+        "name": "electorateName",
+        "type": "string",
+        "description": "The electorate name to search for (e.g.: \"hSenid\")",
+        "required": false,
+        "_id": "6953574c802e449bd3234133"
+      }
+    },
+    {
+      "name": "districtName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "District name to search for. Uses criteria D.DISTRICT_NAME. Partial match, case-insensitive.",
+      "advanced": false,
+      "raw": {
+        "name": "districtName",
+        "type": "string",
+        "description": "District name to search for. Uses criteria D.DISTRICT_NAME. Partial match, case-insensitive.",
+        "required": false,
+        "_id": "697f74e25aa7e9f908a2f02f"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "\"yes\" to return all electorates (uses Show All).\nAlso auto-triggers when electorateCode / electorateName / districtName is: \"all\", \"available\", \"existing\", \"list\", \"show all\".",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "\"yes\" to return all electorates (uses Show All).\nAlso auto-triggers when electorateCode / electorateName / districtName is: \"all\", \"available\", \"existing\", \"list\", \"show all\".",
+        "required": false,
+        "_id": "697f74e25aa7e9f908a2f030"
+      }
+    },
+    {
+      "name": "fetchDetails",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "\"yes\" / \"no\" (default \"yes\").\nIf exactly 1 result and \"yes\", opens record and returns detailed values.",
+      "advanced": false,
+      "raw": {
+        "name": "fetchDetails",
+        "type": "string",
+        "description": "\"yes\" / \"no\" (default \"yes\").\nIf exactly 1 result and \"yes\", opens record and returns detailed values.",
+        "required": false,
+        "_id": "697f74e25aa7e9f908a2f031"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Page size used during initial grid load/search (example: \"10\", \"50\").\nThe tool will still adapt to UI page size after the first response.",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "Page size used during initial grid load/search (example: \"10\", \"50\").\nThe tool will still adapt to UI page size after the first response.",
+        "required": false,
+        "_id": "69817986357f0d24964f48b7"
+      }
+    },
+    {
+      "name": "matchMode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Name matching behavior when searching by electorateName or districtName:\n\"contains\" (default) → partial match\n\"exact\" → exact match only",
+      "advanced": false,
+      "raw": {
+        "name": "matchMode",
+        "type": "string",
+        "description": "Name matching behavior when searching by electorateName or districtName:\n\"contains\" (default) → partial match\n\"exact\" → exact match only",
+        "required": false,
+        "_id": "69817986357f0d24964f48b8"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    {
+      "name": "positionName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The name of the Benefit Clearance Head position to edit (e.g., 'Admin Officer', 'Finance Head'). If not provided, the transformer will list all available positions for the user to choose from.",
+      "advanced": false,
+      "raw": {
+        "name": "positionName",
+        "type": "string",
+        "description": "The name of the Benefit Clearance Head position to edit (e.g., 'Admin Officer', 'Finance Head'). If not provided, the transformer will list all available positions for the user to choose from.",
+        "required": false,
+        "_id": "695c97dd276885022de6eb4b"
+      }
+    },
+    {
+      "name": "employeeId",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The employee ID to assign to this position (e.g., '000001', '000010'). The system will search for this employee ID and validate if the employee exists and is active.",
+      "advanced": false,
+      "raw": {
+        "name": "employeeId",
+        "type": "string",
+        "description": "The employee ID to assign to this position (e.g., '000001', '000010'). The system will search for this employee ID and validate if the employee exists and is active.",
+        "required": false,
+        "_id": "695c97dd276885022de6eb4c"
+      }
+    },
+    {
+      "name": "newPositionName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The new name for the position if you want to rename it. If not provided, the position name stays the same.",
+      "advanced": false,
+      "raw": {
+        "name": "newPositionName",
+        "type": "string",
+        "description": "The new name for the position if you want to rename it. If not provided, the position name stays the same.",
+        "required": false,
+        "_id": "695c97dd276885022de6eb4d"
+      }
+    },
+    {
+      "name": "createWorkflowApproval",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Whether to enable workflow approval for this position. Use 'true' to enable or 'false' to disable. If not provided, the checkbox remains unchanged.",
+      "advanced": false,
+      "raw": {
+        "name": "createWorkflowApproval",
+        "type": "string",
+        "description": "Whether to enable workflow approval for this position. Use 'true' to enable or 'false' to disable. If not provided, the checkbox remains unchanged.",
+        "required": false,
+        "_id": "695c97dd276885022de6eb4e"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

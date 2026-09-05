@@ -1,0 +1,88 @@
+{
+  "id": "690dc564931a2d61ba0b14fa",
+  "slug": "updatecashbenefitdetails",
+  "name": "updateCashBenefitDetails",
+  "description": "To update the Cash Benefit details in this tool, first execute for \"getEIMAttributeList\" API before proceeding with the update. and if the user update the currency field display the all currency country codes and corresponding value take.",
+  "instructions": null,
+  "taskName": "update CashBenefit Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateCashBenefitDetails",
+  "createdAt": "2025-05-01T14:20:41.259Z",
+  "updatedAt": "2026-05-15T07:08:12.437Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "7ec180c7935bb6eb7b179d33b4d97230b34a4dd1e12dcf99f6363629a750786d",
+  "lastExportedAt": "2026-09-05T19:39:22.534Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b14fa",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateCashBenefitDetails",
+      "description": "To update the Cash Benefit details in this tool, first execute for \"getEIMAttributeList\" API before proceeding with the update. and if the user update the currency field display the all currency country codes and corresponding value take.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateCashBenefitDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"Description of the cash benefit\"\n    },\n    \"ctl00_body_nuamount\": {\n      \"type\": \"number\",\n      \"description\": \"Amount of the cash benefit\"\n    },\n    \"ctl00_body_cboCurrency\": {\n      \"type\": \"string\",\n      \"description\": \"Selected currency code (e.g., 000146 for USD) if the user currency name corresponding value take.\"\n    },\n    \"ctl00_body_dtRateEffDate_txtDate\": {\n      \"type\": \"string\",\n      \"format\": \"date\",\n      \"description\": \"Rate effective date in dd/mm/yyyy format\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_nuamount\",\n    \"ctl00_body_cboCurrency\",\n    \"ctl00_body_dtRateEffDate_txtDate\"\n  ]\n}",
+        "_id": "68138339034b00ace617e4c3"
+      },
+      "by": "7829",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/CashBenifit.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/CashBenifit.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"CashBenifit\";\n  }\n\n  const editInit =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.cb.viewState,\n      __VIEWSTATEGENERATOR: window.cb.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.cb.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$dtRateEffDate$hdnDateFormat\":\n        \"dd/mm/yy\",\n\n      \"ctl00$body$butEdit\": \"Edit\"\n\n    }, url);\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: editInit.viewState,\n      __VIEWSTATEGENERATOR: editInit.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: editInit.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$txtName\":\n        args[\"ctl00_body_txtName\"] || \"\",\n\n      \"ctl00$body$nuamount\":\n        args[\"ctl00_body_nuamount\"] || \"\",\n\n      \"ctl00$body$cboCurrency\":\n        args[\"ctl00_body_cboCurrency\"] || \"\",\n\n      \"ctl00$body$dtRateEffDate$txtDate\":\n        args[\"ctl00_body_dtRateEffDate_txtDate\"] || \"\",\n\n      \"ctl00$body$dtRateEffDate$hdnDateFormat\":\n        \"dd/mm/yy\",\n\n      \"ctl00$body$butSave\": \"Save\"\n\n    }, url);\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const getValue = (id) =>\n    doc.getElementById(id)?.value?.trim() || \"\";\n\n  const getSelectedText = (id) => {\n    const el = doc.getElementById(id);\n\n    return el\n      ? el.options[el.selectedIndex]?.text.trim() || \"\"\n      : \"\";\n  };\n\n  const updateCashBenefitDetails = {\n    code:\n      getValue(\"ctl00_body_txtCode\"),\n\n    description:\n      getValue(\"ctl00_body_txtName\"),\n\n    amount:\n      getValue(\"ctl00_body_nuamount\"),\n\n    currency:\n      getSelectedText(\"ctl00_body_cboCurrency\"),\n\n    rateEffectiveDate:\n      getValue(\"ctl00_body_dtRateEffDate_txtDate\")\n  };\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\";\n  } else {\n    return updateCashBenefitDetails;\n  }\n\n})",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "update CashBenefit Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-01T14:20:41.259Z",
+      "updatedAt": "2026-05-15T07:08:12.437Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateCashBenefitDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"Description of the cash benefit\"\n    },\n    \"ctl00_body_nuamount\": {\n      \"type\": \"number\",\n      \"description\": \"Amount of the cash benefit\"\n    },\n    \"ctl00_body_cboCurrency\": {\n      \"type\": \"string\",\n      \"description\": \"Selected currency code (e.g., 000146 for USD) if the user currency name corresponding value take.\"\n    },\n    \"ctl00_body_dtRateEffDate_txtDate\": {\n      \"type\": \"string\",\n      \"format\": \"date\",\n      \"description\": \"Rate effective date in dd/mm/yyyy format\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_nuamount\",\n    \"ctl00_body_cboCurrency\",\n    \"ctl00_body_dtRateEffDate_txtDate\"\n  ]\n}",
+      "_id": "68138339034b00ace617e4c3"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/CashBenifit.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/CashBenifit.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"CashBenifit\";\n  }\n\n  const editInit =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.cb.viewState,\n      __VIEWSTATEGENERATOR: window.cb.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.cb.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$dtRateEffDate$hdnDateFormat\":\n        \"dd/mm/yy\",\n\n      \"ctl00$body$butEdit\": \"Edit\"\n\n    }, url);\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: editInit.viewState,\n      __VIEWSTATEGENERATOR: editInit.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: editInit.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$txtName\":\n        args[\"ctl00_body_txtName\"] || \"\",\n\n      \"ctl00$body$nuamount\":\n        args[\"ctl00_body_nuamount\"] || \"\",\n\n      \"ctl00$body$cboCurrency\":\n        args[\"ctl00_body_cboCurrency\"] || \"\",\n\n      \"ctl00$body$dtRateEffDate$txtDate\":\n        args[\"ctl00_body_dtRateEffDate_txtDate\"] || \"\",\n\n      \"ctl00$body$dtRateEffDate$hdnDateFormat\":\n        \"dd/mm/yy\",\n\n      \"ctl00$body$butSave\": \"Save\"\n\n    }, url);\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const getValue = (id) =>\n    doc.getElementById(id)?.value?.trim() || \"\";\n\n  const getSelectedText = (id) => {\n    const el = doc.getElementById(id);\n\n    return el\n      ? el.options[el.selectedIndex]?.text.trim() || \"\"\n      : \"\";\n  };\n\n  const updateCashBenefitDetails = {\n    code:\n      getValue(\"ctl00_body_txtCode\"),\n\n    description:\n      getValue(\"ctl00_body_txtName\"),\n\n    amount:\n      getValue(\"ctl00_body_nuamount\"),\n\n    currency:\n      getSelectedText(\"ctl00_body_cboCurrency\"),\n\n    rateEffectiveDate:\n      getValue(\"ctl00_body_dtRateEffDate_txtDate\")\n  };\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\";\n  } else {\n    return updateCashBenefitDetails;\n  }\n\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

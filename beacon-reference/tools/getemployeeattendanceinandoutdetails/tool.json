@@ -1,0 +1,133 @@
+{
+  "id": "690dc567931a2d61ba0b171c",
+  "slug": "getemployeeattendanceinandoutdetails",
+  "name": "getEmployeeAttendanceInAndOutDetails",
+  "description": "Before executing the \"getEmployeeAttendanceInAndOutDetails\" API to retrieve employee attendance data, the following validation steps must be performed in sequence for successful execution.\n1.If the user’s query includes an employee ID or uses terms like “my”, “myself”, or “self”, first execute the adminInformation API to get the employee ID of the logged-in user. Then, must and should be execute \"getPaginatedTypeaheadList\" API  will be current employee id to ensure it maps to a valid employee. Only after this should the \"getEmployeeAttendanceInAndOutDetails\" API be executed.\n2.If the query includes a roster filter (e.g., a roster name is mentioned without any employee ID), execute the \"rosetersDetails\" API to  display available  user selected get the corresponding roster ID. In this case, do not call the getPaginatedTypeaheadList API.\n3. then after must be execute \"dateFormat\" API using the date format.\nabove following steps must execute, if the any step missing  final API execution will fail.",
+  "instructions": null,
+  "taskName": "Employee Adttendance In And Out Details",
+  "tags": [
+    "\t Attendance",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getEmployeeAttendanceInAndOutDetails",
+  "createdAt": "2025-05-14T08:04:51.914Z",
+  "updatedAt": "2025-05-14T08:04:51.914Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "f0215f7ff276093d3558b5e9ca36daefaeac037fd610d81bd21ac1bdb3d6b106",
+  "lastExportedAt": "2026-09-05T19:39:24.016Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc567931a2d61ba0b171c",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getEmployeeAttendanceInAndOutDetails",
+      "description": "Before executing the \"getEmployeeAttendanceInAndOutDetails\" API to retrieve employee attendance data, the following validation steps must be performed in sequence for successful execution.\n1.If the user’s query includes an employee ID or uses terms like “my”, “myself”, or “self”, first execute the adminInformation API to get the employee ID of the logged-in user. Then, must and should be execute \"getPaginatedTypeaheadList\" API  will be current employee id to ensure it maps to a valid employee. Only after this should the \"getEmployeeAttendanceInAndOutDetails\" API be executed.\n2.If the query includes a roster filter (e.g., a roster name is mentioned without any employee ID), execute the \"rosetersDetails\" API to  display available  user selected get the corresponding roster ID. In this case, do not call the getPaginatedTypeaheadList API.\n3. then after must be execute \"dateFormat\" API using the date format.\nabove following steps must execute, if the any step missing  final API execution will fail.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getEmployeeAttendanceInAndOutDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to get the employee id for getBenefitEmployeeInformation api. Example:-\"000006\" or \"00001\" etc...",
+            "required": true,
+            "_id": "68244ea35666bd76202b4720"
+          },
+          {
+            "name": "fromDate",
+            "type": "string",
+            "description": "to give the fromDate Example:-\"12/1/2023\" format date DD/MM/YYYY",
+            "required": true,
+            "_id": "68244ea35666bd76202b4721"
+          },
+          {
+            "name": "toDate",
+            "type": "string",
+            "description": "to give the toDate Example:-\"12/1/2024\" format date DD/MM/YYYY",
+            "required": true,
+            "_id": "68244ea35666bd76202b4722"
+          },
+          {
+            "name": "rosterCode",
+            "type": "string",
+            "description": "to get the user select roster corresponding id will be take roster CodeExample '000030' execute for \"rosetersDetails\" tool.",
+            "required": false,
+            "_id": "6841e02486c7dabc78b37724"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68244ea35666bd76202b471f"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"TNAV9/ManualInOut/ManualInOut/0?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  let rawPayload;\n\n  if (args.rosterCode) {\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: false,\n      FilterMode: \"2\",\n      RosterCode: args.rosterCode,\n      callBackId: 1,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0\n    };\n  } else {\n    const requestOptions = {\n      method: \"GET\",\n      headers: myHeaders,\n      redirect: \"follow\"\n    };\n\n    const response1 = await fetch(\n      `${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`,\n      requestOptions\n    );\n    const details = await response1.json();\n    const empNumber = details?.Message || \"\";\n\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: false,\n      FilterMode: \"1\",\n      EmpNumber: empNumber,\n      RosterCode: \"\",\n      callBackId: 1,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0\n    };\n  }\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/${reqOptions.sl}/tnav9/api/ManualInOut/GetGridDataByCriteria/`,\n    requestOptions1\n  );\n\n  const details1 = await response2.json();\n  return details1.ManualInOutDetailList.map(item => ({\n    Date: item.DatInDate,\n    Shift: item.ShiftAbbreviation,\n    \"In Date\": item.InDateText,\n    \"In Time\": item.InTimeText || \"\",\n    \"Out Date\": item.OutDateText,\n    \"Out Time\": item.OutTimeText || \"\",\n    Breaks: item.BreakCount,\n    Comment: item.Comment || \"\",\n    Status: item.RecordStatusText,\n    Leave: item.LeaveType || \"\"\n  }));\n});\n",
+      "groupName": "",
+      "tags": [
+        "\t Attendance",
+        "Headers"
+      ],
+      "taskName": "Employee Adttendance In And Out Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-14T08:04:51.914Z",
+      "updatedAt": "2025-05-14T08:04:51.914Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getEmployeeAttendanceInAndOutDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to get the employee id for getBenefitEmployeeInformation api. Example:-\"000006\" or \"00001\" etc...",
+          "required": true,
+          "_id": "68244ea35666bd76202b4720"
+        },
+        {
+          "name": "fromDate",
+          "type": "string",
+          "description": "to give the fromDate Example:-\"12/1/2023\" format date DD/MM/YYYY",
+          "required": true,
+          "_id": "68244ea35666bd76202b4721"
+        },
+        {
+          "name": "toDate",
+          "type": "string",
+          "description": "to give the toDate Example:-\"12/1/2024\" format date DD/MM/YYYY",
+          "required": true,
+          "_id": "68244ea35666bd76202b4722"
+        },
+        {
+          "name": "rosterCode",
+          "type": "string",
+          "description": "to get the user select roster corresponding id will be take roster CodeExample '000030' execute for \"rosetersDetails\" tool.",
+          "required": false,
+          "_id": "6841e02486c7dabc78b37724"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68244ea35666bd76202b471f"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"TNAV9/ManualInOut/ManualInOut/0?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  let rawPayload;\n\n  if (args.rosterCode) {\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: false,\n      FilterMode: \"2\",\n      RosterCode: args.rosterCode,\n      callBackId: 1,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0\n    };\n  } else {\n    const requestOptions = {\n      method: \"GET\",\n      headers: myHeaders,\n      redirect: \"follow\"\n    };\n\n    const response1 = await fetch(\n      `${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`,\n      requestOptions\n    );\n    const details = await response1.json();\n    const empNumber = details?.Message || \"\";\n\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: false,\n      FilterMode: \"1\",\n      EmpNumber: empNumber,\n      RosterCode: \"\",\n      callBackId: 1,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0\n    };\n  }\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/${reqOptions.sl}/tnav9/api/ManualInOut/GetGridDataByCriteria/`,\n    requestOptions1\n  );\n\n  const details1 = await response2.json();\n  return details1.ManualInOutDetailList.map(item => ({\n    Date: item.DatInDate,\n    Shift: item.ShiftAbbreviation,\n    \"In Date\": item.InDateText,\n    \"In Time\": item.InTimeText || \"\",\n    \"Out Date\": item.OutDateText,\n    \"Out Time\": item.OutTimeText || \"\",\n    Breaks: item.BreakCount,\n    Comment: item.Comment || \"\",\n    Status: item.RecordStatusText,\n    Leave: item.LeaveType || \"\"\n  }));\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

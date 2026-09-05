@@ -1,0 +1,78 @@
+{
+  "id": "690dc566931a2d61ba0b16be",
+  "slug": "getemployeeleavebalance",
+  "name": "getEmployeeLeaveBalance",
+  "description": "Before executing in the tool, \n->first execute the \"employeeDetails\" API, to get the data then \n->after execute \"employeeLogKey\" API, and \n->then final execute in the api. and final response give the table format. display available leave types and proceed. \nIMPORTANT : must and should following order to execute the apis if any missing then final in the api not execute.\nexecute flow : employeeDetails - > employeeLogKey -> getEmployeeLeaveBalance\n\n\n\n\n\n\n",
+  "instructions": null,
+  "taskName": "Employee Leave Balance",
+  "tags": [
+    "Absence Management",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getEmployeeLeaveBalance",
+  "createdAt": "2025-05-12T06:27:51.272Z",
+  "updatedAt": "2025-11-12T11:51:13.846Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be3",
+      "name": "AbsenceManagement"
+    }
+  ],
+  "contentHash": "7c6f45e3632f850e57b0437e83bde7a30a76cd390dad1c9c45be0b5103631b8c",
+  "lastExportedAt": "2026-09-05T19:39:23.277Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b16be",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getEmployeeLeaveBalance",
+      "description": "Before executing in the tool, \n->first execute the \"employeeDetails\" API, to get the data then \n->after execute \"employeeLogKey\" API, and \n->then final execute in the api. and final response give the table format. display available leave types and proceed. \nIMPORTANT : must and should following order to execute the apis if any missing then final in the api not execute.\nexecute flow : employeeDetails - > employeeLogKey -> getEmployeeLeaveBalance\n\n\n\n\n\n\n",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getEmployeeLeaveBalance",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "682194e7fbd7e863eba8ce15"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.some(menu => menu.includes(\"AbsenceV9/LeaveApplication/LeaveApplication?mvc=1&isAllEmployee=1\"))) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const year = await BeaconBar.executeFunction(\"year\")();\n\n  if (!year) {\n    return  \"No leave year configuration.\";\n  }\n\n  const raw = JSON.stringify({\n    \"EmpNumber\": window.logKey,\n    \"LeaveYear\": year,\n    \"ApplicationPage\": 1\n  });\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/json\",\n      \"accept\": \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"__cfafvalue\": window.csrf,\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: raw,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/GetEntitledLeaveTypes/`, requestOptions);\n  const data1 = await response.json();\n\n  const leaveBalanceDetails = data1.map((leave) => ({\n    leaveTypeName: leave.TypeName,\n    leaveTypeCode: leave.TypeCode,\n    yearCode: leave.YearCode,\n    leaveGroupCode: leave.LGCode,\n    calendarCode: leave.CalendarCode,\n    entitlement: leave.Entitlement.EntitlementDV,\n    utilized: leave.Entitlement.UtilizedDV,\n    balance: leave.Entitlement.BalanceDV,\n    pendingApproval: leave.Entitlement.PendingDV\n  }));\n\n  return leaveBalanceDetails;\n});\n",
+      "groupName": "",
+      "tags": [
+        "Absence Management",
+        "Headers"
+      ],
+      "taskName": "Employee Leave Balance",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-12T06:27:51.272Z",
+      "updatedAt": "2025-11-12T11:51:13.846Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be3",
+          "name": "AbsenceManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getEmployeeLeaveBalance",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "682194e7fbd7e863eba8ce15"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.some(menu => menu.includes(\"AbsenceV9/LeaveApplication/LeaveApplication?mvc=1&isAllEmployee=1\"))) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const year = await BeaconBar.executeFunction(\"year\")();\n\n  if (!year) {\n    return  \"No leave year configuration.\";\n  }\n\n  const raw = JSON.stringify({\n    \"EmpNumber\": window.logKey,\n    \"LeaveYear\": year,\n    \"ApplicationPage\": 1\n  });\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/json\",\n      \"accept\": \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"__cfafvalue\": window.csrf,\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: raw,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/GetEntitledLeaveTypes/`, requestOptions);\n  const data1 = await response.json();\n\n  const leaveBalanceDetails = data1.map((leave) => ({\n    leaveTypeName: leave.TypeName,\n    leaveTypeCode: leave.TypeCode,\n    yearCode: leave.YearCode,\n    leaveGroupCode: leave.LGCode,\n    calendarCode: leave.CalendarCode,\n    entitlement: leave.Entitlement.EntitlementDV,\n    utilized: leave.Entitlement.UtilizedDV,\n    balance: leave.Entitlement.BalanceDV,\n    pendingApproval: leave.Entitlement.PendingDV\n  }));\n\n  return leaveBalanceDetails;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

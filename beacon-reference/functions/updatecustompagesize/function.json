@@ -1,0 +1,24 @@
+{
+  "id": "690dc58c931a2d61ba0b3407",
+  "slug": "updatecustompagesize",
+  "name": "updateCustomPageSize",
+  "status": "live",
+  "createdAt": "2025-10-27T07:20:01.673Z",
+  "updatedAt": "2026-07-17T12:56:04.462Z",
+  "contentHash": "a9d3c673d0d54cb5463772c5cf0c4fb6f2096b11bb166446dc9d144d3b24580d",
+  "lastExportedAt": "2026-09-05T19:41:13.616Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58c931a2d61ba0b3407",
+    "name": "updateCustomPageSize",
+    "status": "live",
+    "code": "(async function () {\n  //done\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const url = `${reqOptions}CommonComponents/Search/UpdateCustemPageSize`;\n\n  try {\n    const response = await fetch(url, {\n      method: \"POST\",\n      headers: {\n        \"Content-Type\": \"application/json; charset=UTF-8\",\n        \"X-Requested-With\": \"XMLHttpRequest\",\n      },\n      body: JSON.stringify({\n        PageZize: \"1000\"\n      }),\n    });\n\n    if (!response.ok) {\n      throw new Error(`❌ Request failed: ${response.status} ${response.statusText}`);\n    }\n\n    const data = await response.json();\n    return data;\n  } catch (error) {\n    throw error;\n  }\n})\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

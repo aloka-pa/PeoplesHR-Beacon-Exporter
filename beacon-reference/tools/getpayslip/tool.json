@@ -1,0 +1,157 @@
+{
+  "id": "690dc56a931a2d61ba0b1a13",
+  "slug": "getpayslip",
+  "name": "getPayslip",
+  "description": "getPayslipforEmployee , show the particular currency symbol of that payslip data amount\n-> call the getPaySlipInitialData agent to get the year, schedule, pfcode\n-> if the user query mention to download the payslip to return key is \"Download\" other wise do not mention download return null",
+  "instructions": null,
+  "taskName": "getPayslipforEmployee",
+  "tags": [
+    "Payroll",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getPayslip",
+  "createdAt": "2025-06-13T12:41:39.044Z",
+  "updatedAt": "2026-04-16T08:25:43.180Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c51",
+      "name": "PayRoll"
+    }
+  ],
+  "contentHash": "ccccb61ca8b2de3548d2778811974bee8a8dcfc5cde0bb8181a176df355ab95e",
+  "lastExportedAt": "2026-09-05T19:39:22.735Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56a931a2d61ba0b1a13",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getPayslip",
+      "description": "getPayslipforEmployee , show the particular currency symbol of that payslip data amount\n-> call the getPaySlipInitialData agent to get the year, schedule, pfcode\n-> if the user query mention to download the payslip to return key is \"Download\" other wise do not mention download return null",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getPayslip",
+        "args": [
+          {
+            "name": "employeeid",
+            "type": "string",
+            "description": "employeeid , (optional) dont ask user for employee id,Ex:- employeeid  is like \"000003\"",
+            "required": false,
+            "_id": "684c1c8393aa0a6500d7363d"
+          },
+          {
+            "name": "year",
+            "type": "string",
+            "description": "year , Ex:- \"2025\", takes user consent for this ",
+            "required": true,
+            "_id": "684c1c8393aa0a6500d7363e"
+          },
+          {
+            "name": "schedule",
+            "type": "string",
+            "description": "month , Ex:- \"12\", takes user consent for this ",
+            "required": true,
+            "_id": "684c1c8393aa0a6500d7363f"
+          },
+          {
+            "name": "type",
+            "type": "string",
+            "description": "if the user ask download payslip to return key is \"Download\" other wise do not mention download return null and dont ask type for user",
+            "required": false,
+            "_id": "6887bb084ca762f9c23d4263"
+          },
+          {
+            "name": "pfCode",
+            "type": "integer",
+            "description": "PFCode , Ex:- 1 ",
+            "required": true,
+            "_id": "690317ef96175ced819891a1"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "684c1c8393aa0a6500d7363c"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  debugger;\n\n  if (BeaconBar.user.metaData.empNo !== args.employeeid) {\n    return `Showing details only for the logged-in employee. Current employee: ${BeaconBar.user.metaData.empNo} - ${BeaconBar.user.metaData.empName}`;\n  }\n\n\n  const paysliputil = await BeaconBar.executeFunction(\"paysliputils\")(args);\n  const params = new URLSearchParams(paysliputil.query);\n  const extracted = Object.fromEntries(params.entries());\n\n  const payslipHTML = await BeaconBar.executeFunction(\"payslipDownload\")(extracted , args);\n\n  function extractPayslipDetailsFromHTML(htmlString) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(htmlString, 'text/html');\n\n    const employeeName = doc.querySelector('#txtName')?.value?.trim() || '';\n    const payPeriod = doc.querySelector('#txtPayPeriod')?.value?.trim() || '';\n\n    const rows = doc.querySelectorAll('#grdSummary_ctl00 tbody tr');\n    const summary = {};\n\n    rows.forEach(row => {\n      const cells = row.querySelectorAll('td');\n      if (cells.length === 2) {\n        const key = cells[0].textContent.trim();\n        const value = cells[1].textContent.trim();\n        summary[key] = parseFloat(value.replace(/,/g, '')) || 0;\n      }\n    });\n\n    return { employeeName, payPeriod, payslipDetails: summary };\n  }\n\n  const payslipData = extractPayslipDetailsFromHTML(payslipHTML);\n\n  // PDF generation is kept here if you need in future\n  /*\n  async function loadScriptOnce(src) { ... }\n  async function generatePayslipPDFBlob(data) { ... }\n  */\n\n  if (\n    payslipData &&\n    payslipData.payslipDetails &&\n    Object.keys(payslipData.payslipDetails).length > 0\n  ) {\n    // --- COMMENTED OUT download confirmation + PDF creation ---\n    /*\n    const userWantsDownload = confirm(\n      `Payslip for ${payslipData.employeeName} (${payslipData.payPeriod}) is ready.\\n\\nDo you want to download it as a PDF?`\n    );\n    if (userWantsDownload) {\n      try {\n        const blob = await generatePayslipPDFBlob(payslipData);\n        ...\n      } catch (err) {\n        return { payslipData, message: err.message };\n      }\n    } else {\n      return { payslipData, message: \"Download cancelled by user.\" };\n    }\n    */\n\n    // Just return the parsed data\n    return {\n      payslipData,\n      message: \"Payslip parsed successfully (download skipped).\"\n    };\n  } else {\n    return {\n      payslipData,\n      message: \"No payslip data found.\"\n    };\n  }\n})\n",
+      "groupName": "",
+      "tags": [
+        "Payroll",
+        "Headers"
+      ],
+      "taskName": "getPayslipforEmployee",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-13T12:41:39.044Z",
+      "updatedAt": "2026-04-16T08:25:43.180Z",
+      "__v": 3,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c51",
+          "name": "PayRoll"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getPayslip",
+      "args": [
+        {
+          "name": "employeeid",
+          "type": "string",
+          "description": "employeeid , (optional) dont ask user for employee id,Ex:- employeeid  is like \"000003\"",
+          "required": false,
+          "_id": "684c1c8393aa0a6500d7363d"
+        },
+        {
+          "name": "year",
+          "type": "string",
+          "description": "year , Ex:- \"2025\", takes user consent for this ",
+          "required": true,
+          "_id": "684c1c8393aa0a6500d7363e"
+        },
+        {
+          "name": "schedule",
+          "type": "string",
+          "description": "month , Ex:- \"12\", takes user consent for this ",
+          "required": true,
+          "_id": "684c1c8393aa0a6500d7363f"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "description": "if the user ask download payslip to return key is \"Download\" other wise do not mention download return null and dont ask type for user",
+          "required": false,
+          "_id": "6887bb084ca762f9c23d4263"
+        },
+        {
+          "name": "pfCode",
+          "type": "integer",
+          "description": "PFCode , Ex:- 1 ",
+          "required": true,
+          "_id": "690317ef96175ced819891a1"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "684c1c8393aa0a6500d7363c"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  debugger;\n\n  if (BeaconBar.user.metaData.empNo !== args.employeeid) {\n    return `Showing details only for the logged-in employee. Current employee: ${BeaconBar.user.metaData.empNo} - ${BeaconBar.user.metaData.empName}`;\n  }\n\n\n  const paysliputil = await BeaconBar.executeFunction(\"paysliputils\")(args);\n  const params = new URLSearchParams(paysliputil.query);\n  const extracted = Object.fromEntries(params.entries());\n\n  const payslipHTML = await BeaconBar.executeFunction(\"payslipDownload\")(extracted , args);\n\n  function extractPayslipDetailsFromHTML(htmlString) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(htmlString, 'text/html');\n\n    const employeeName = doc.querySelector('#txtName')?.value?.trim() || '';\n    const payPeriod = doc.querySelector('#txtPayPeriod')?.value?.trim() || '';\n\n    const rows = doc.querySelectorAll('#grdSummary_ctl00 tbody tr');\n    const summary = {};\n\n    rows.forEach(row => {\n      const cells = row.querySelectorAll('td');\n      if (cells.length === 2) {\n        const key = cells[0].textContent.trim();\n        const value = cells[1].textContent.trim();\n        summary[key] = parseFloat(value.replace(/,/g, '')) || 0;\n      }\n    });\n\n    return { employeeName, payPeriod, payslipDetails: summary };\n  }\n\n  const payslipData = extractPayslipDetailsFromHTML(payslipHTML);\n\n  // PDF generation is kept here if you need in future\n  /*\n  async function loadScriptOnce(src) { ... }\n  async function generatePayslipPDFBlob(data) { ... }\n  */\n\n  if (\n    payslipData &&\n    payslipData.payslipDetails &&\n    Object.keys(payslipData.payslipDetails).length > 0\n  ) {\n    // --- COMMENTED OUT download confirmation + PDF creation ---\n    /*\n    const userWantsDownload = confirm(\n      `Payslip for ${payslipData.employeeName} (${payslipData.payPeriod}) is ready.\\n\\nDo you want to download it as a PDF?`\n    );\n    if (userWantsDownload) {\n      try {\n        const blob = await generatePayslipPDFBlob(payslipData);\n        ...\n      } catch (err) {\n        return { payslipData, message: err.message };\n      }\n    } else {\n      return { payslipData, message: \"Download cancelled by user.\" };\n    }\n    */\n\n    // Just return the parsed data\n    return {\n      payslipData,\n      message: \"Payslip parsed successfully (download skipped).\"\n    };\n  } else {\n    return {\n      payslipData,\n      message: \"No payslip data found.\"\n    };\n  }\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

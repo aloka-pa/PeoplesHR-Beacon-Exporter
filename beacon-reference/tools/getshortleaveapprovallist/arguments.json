@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "employeeId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "employeeId , ex:- \"000002\"",
+      "advanced": false,
+      "raw": {
+        "name": "employeeId",
+        "type": "string",
+        "description": "employeeId , ex:- \"000002\"",
+        "required": true,
+        "_id": "68367db2a9dc599680facf1b"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

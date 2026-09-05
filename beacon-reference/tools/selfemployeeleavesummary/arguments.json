@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "year",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the year of the summary details.",
+      "advanced": false,
+      "raw": {
+        "name": "year",
+        "type": "string",
+        "description": "to give the year of the summary details.",
+        "required": true,
+        "_id": "68a2e3314b46c47085f72960"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

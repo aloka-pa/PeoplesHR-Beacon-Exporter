@@ -1,0 +1,24 @@
+{
+  "id": "6a171d5b17220dc72372e6c6",
+  "slug": "segmentprodhelp",
+  "name": "segmentProdHelp",
+  "status": "live",
+  "createdAt": "2026-05-27T16:35:39.154Z",
+  "updatedAt": "2026-05-28T07:39:32.973Z",
+  "contentHash": "d99fa098c28908ba86ba298776d914bf8c175648a87b389236a61dfc43b5192a",
+  "lastExportedAt": "2026-09-05T19:41:26.429Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "6a171d5b17220dc72372e6c6",
+    "name": "segmentProdHelp",
+    "status": "live",
+    "code": "(function () {\n    const enabledAgents = JSON.parse(\n        localStorage.getItem('enabledAgents') || '[]'\n    );\n    return enabledAgents\n        .map(agent => String(agent).toLowerCase())\n        .includes('prodhelp'.toLowerCase());\n})",
+    "by": "7829",
+    "__v": 1
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "id": "695524daa4e4f389f90f1d7a",
+  "slug": "gettrainingbudgetallocation",
+  "name": "getTrainingBudgetAllocation",
+  "description": "Retrieves training budget allocation details for the active financial year, including hierarchical budget breakdown by organizational levels.",
+  "instructions": null,
+  "taskName": "Fetching Training Budget Allocation Details",
+  "tags": [
+    "Training&Development",
+    "TrainingServices-Budget",
+    "BudgetAllocation",
+    "phase2"
+  ],
+  "status": "live",
+  "signature": "getTrainingBudgetAllocation",
+  "createdAt": "2025-12-31T13:27:54.389Z",
+  "updatedAt": "2026-06-15T07:26:49.261Z",
+  "assignedAgents": [
+    {
+      "id": "6955261cad06de92910e10aa",
+      "name": "Training & Development | Phase 2 | Agent"
+    }
+  ],
+  "contentHash": "41119c8de1228ba86d462194487cfd9c656cc8d0914f908ccae1b38b62bd73b3",
+  "lastExportedAt": "2026-09-05T19:39:22.454Z",
+  "raw": {
+    "basic": {
+      "_id": "695524daa4e4f389f90f1d7a",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getTrainingBudgetAllocation",
+      "description": "Retrieves training budget allocation details for the active financial year, including hierarchical budget breakdown by organizational levels.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getTrainingBudgetAllocation",
+        "args": [
+          {
+            "name": "loadtype",
+            "type": "string",
+            "description": "The type of budget data to load (default: \"0\" for active year). Accepts string value \"0\", \"1\", etc.",
+            "required": false,
+            "_id": "695524daa4e4f389f90f1d7c"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "695524daa4e4f389f90f1d7b"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    // Optional: Allow user to specify loadtype (defaults to \"0\" for active year)\n    const loadtype = args.loadtype || \"0\";\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"*/*\");\n    headers.append(\"Content-Type\", \"application/json\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const url = `${window.origin}/${reqOptions.sl}/TNDV9/TrainingBudget/GetActiveYearBudgetDetails`;\n\n    const response = await fetch(url, {\n      method: \"POST\",\n      headers: headers,\n      body: JSON.stringify({ loadtype: loadtype })\n    });\n\n    if (!response.ok) {\n      return {\n        status: \"ERROR\",\n        message: `API request failed with status ${response.status}`\n      };\n    }\n\n    const data = await response.json();\n\n    // Check if request was successful\n    if (!data.Status || !data.Status.IsSuccessfull) {\n      return {\n        status: \"ERROR\",\n        message: data.Status?.Message || \"Failed to retrieve budget details\"\n      };\n    }\n\n    // Extract key information\n    const year = data.year;\n    const period = data.period;\n    const baseCurrency = data.basecurr;\n    const totalBudget = data.totalbudget;\n    const budgetItems = data.budget || [];\n\n    // Organize budget by hierarchy levels\n    const budgetByLevel = {};\n    budgetItems.forEach(item => {\n      const level = item.deflevel;\n      if (!budgetByLevel[level]) {\n        budgetByLevel[level] = [];\n      }\n      budgetByLevel[level].push({\n        code: item.hiecode,\n        name: item.hiename,\n        levelName: item.defname,\n        parentCode: item.rel_hiecode,\n        parentName: item.rel_hiename,\n        amount: item.amount,\n        currency: item.currname,\n        exchangeRate: item.exrate,\n        baseAmount: item.baseamount,\n        supplementaryAmount: item.supamount,\n        supplementaryCurrency: item.supcurrname,\n        totalAmount: item.totalamount,\n        approved: item.appapproved === \"1\",\n        workflowId: item.wfmainid,\n        hasSupplementary: item.supbudget === 1\n      });\n    });\n\n    // Calculate summary statistics\n    const totalAllocated = budgetItems.reduce((sum, item) => sum + (item.amount || 0), 0);\n    const totalBaseAmount = budgetItems.reduce((sum, item) => sum + (item.baseamount || 0), 0);\n    const approvedCount = budgetItems.filter(item => item.appapproved === \"1\").length;\n    const pendingCount = budgetItems.filter(item => item.appapproved === \"0\").length;\n\n    return {\n      status: \"SUCCESS\",\n      message: `Budget details retrieved for ${year}`,\n      summary: {\n        year: year,\n        period: period,\n        baseCurrency: baseCurrency,\n        totalBudget: totalBudget,\n        totalAllocated: totalAllocated,\n        totalBaseAmount: totalBaseAmount,\n        approvedItems: approvedCount,\n        pendingItems: pendingCount,\n        totalItems: budgetItems.length\n      },\n      budgetByLevel: budgetByLevel,\n      rawBudgetItems: budgetItems,\n      availableCurrencies: data.currlst?.map(c => ({ code: c.currcode, name: c.currname })) || []\n    };\n\n  } catch (error) {\n    return {\n      status: \"ERROR\",\n      message: `Failed to retrieve budget details: ${error.message}`,\n      error: error.toString()\n    };\n  }\n})",
+      "groupName": "",
+      "tags": [
+        "Training&Development",
+        "TrainingServices-Budget",
+        "BudgetAllocation",
+        "phase2"
+      ],
+      "taskName": "Fetching Training Budget Allocation Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-31T13:27:54.389Z",
+      "updatedAt": "2026-06-15T07:26:49.261Z",
+      "__v": 3,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "6955261cad06de92910e10aa",
+          "name": "Training & Development | Phase 2 | Agent"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getTrainingBudgetAllocation",
+      "args": [
+        {
+          "name": "loadtype",
+          "type": "string",
+          "description": "The type of budget data to load (default: \"0\" for active year). Accepts string value \"0\", \"1\", etc.",
+          "required": false,
+          "_id": "695524daa4e4f389f90f1d7c"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "695524daa4e4f389f90f1d7b"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    // Optional: Allow user to specify loadtype (defaults to \"0\" for active year)\n    const loadtype = args.loadtype || \"0\";\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"*/*\");\n    headers.append(\"Content-Type\", \"application/json\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const url = `${window.origin}/${reqOptions.sl}/TNDV9/TrainingBudget/GetActiveYearBudgetDetails`;\n\n    const response = await fetch(url, {\n      method: \"POST\",\n      headers: headers,\n      body: JSON.stringify({ loadtype: loadtype })\n    });\n\n    if (!response.ok) {\n      return {\n        status: \"ERROR\",\n        message: `API request failed with status ${response.status}`\n      };\n    }\n\n    const data = await response.json();\n\n    // Check if request was successful\n    if (!data.Status || !data.Status.IsSuccessfull) {\n      return {\n        status: \"ERROR\",\n        message: data.Status?.Message || \"Failed to retrieve budget details\"\n      };\n    }\n\n    // Extract key information\n    const year = data.year;\n    const period = data.period;\n    const baseCurrency = data.basecurr;\n    const totalBudget = data.totalbudget;\n    const budgetItems = data.budget || [];\n\n    // Organize budget by hierarchy levels\n    const budgetByLevel = {};\n    budgetItems.forEach(item => {\n      const level = item.deflevel;\n      if (!budgetByLevel[level]) {\n        budgetByLevel[level] = [];\n      }\n      budgetByLevel[level].push({\n        code: item.hiecode,\n        name: item.hiename,\n        levelName: item.defname,\n        parentCode: item.rel_hiecode,\n        parentName: item.rel_hiename,\n        amount: item.amount,\n        currency: item.currname,\n        exchangeRate: item.exrate,\n        baseAmount: item.baseamount,\n        supplementaryAmount: item.supamount,\n        supplementaryCurrency: item.supcurrname,\n        totalAmount: item.totalamount,\n        approved: item.appapproved === \"1\",\n        workflowId: item.wfmainid,\n        hasSupplementary: item.supbudget === 1\n      });\n    });\n\n    // Calculate summary statistics\n    const totalAllocated = budgetItems.reduce((sum, item) => sum + (item.amount || 0), 0);\n    const totalBaseAmount = budgetItems.reduce((sum, item) => sum + (item.baseamount || 0), 0);\n    const approvedCount = budgetItems.filter(item => item.appapproved === \"1\").length;\n    const pendingCount = budgetItems.filter(item => item.appapproved === \"0\").length;\n\n    return {\n      status: \"SUCCESS\",\n      message: `Budget details retrieved for ${year}`,\n      summary: {\n        year: year,\n        period: period,\n        baseCurrency: baseCurrency,\n        totalBudget: totalBudget,\n        totalAllocated: totalAllocated,\n        totalBaseAmount: totalBaseAmount,\n        approvedItems: approvedCount,\n        pendingItems: pendingCount,\n        totalItems: budgetItems.length\n      },\n      budgetByLevel: budgetByLevel,\n      rawBudgetItems: budgetItems,\n      availableCurrencies: data.currlst?.map(c => ({ code: c.currcode, name: c.currname })) || []\n    };\n\n  } catch (error) {\n    return {\n      status: \"ERROR\",\n      message: `Failed to retrieve budget details: ${error.message}`,\n      error: error.toString()\n    };\n  }\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

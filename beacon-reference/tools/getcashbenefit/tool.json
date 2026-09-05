@@ -1,0 +1,89 @@
+{
+  "id": "69491e924cad1a5e61f2e6a1",
+  "slug": "getcashbenefit",
+  "name": "getCashBenefit",
+  "description": "Before calling this tool, please call \"getSalaryGradeCode\" with the salary grade name to get the salary grade code. This tool will be used to get a cash benefit assigned to a salary grade.  We will be able to get the available and allocated cash benefits, as well as the quantity. The user must provide the salary grade name.",
+  "instructions": null,
+  "taskName": "",
+  "tags": [
+    "EIM",
+    "Cash Benefits",
+    "DummyL"
+  ],
+  "status": "live",
+  "signature": "getCashBenefit",
+  "createdAt": "2025-12-22T10:33:54.154Z",
+  "updatedAt": "2026-07-17T12:52:18.116Z",
+  "assignedAgents": [],
+  "contentHash": "c4e09f8b4613c6f2da42a81b890b91f8e76f9ad099ee6fea7026b66922eec755",
+  "lastExportedAt": "2026-09-05T19:39:22.159Z",
+  "raw": {
+    "basic": {
+      "_id": "69491e924cad1a5e61f2e6a1",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getCashBenefit",
+      "description": "Before calling this tool, please call \"getSalaryGradeCode\" with the salary grade name to get the salary grade code. This tool will be used to get a cash benefit assigned to a salary grade.  We will be able to get the available and allocated cash benefits, as well as the quantity. The user must provide the salary grade name.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getCashBenefit",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"salaryGradeName\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"80,000\",\n        \"Engineers\",\n        \"BarbadosDollar\"\n      ],\n      \"description\": \"The salary grade name\"\n    },\n    \"salaryGradeCode\": {\n      \"type\": \"string\",\n      \"description\": \"Call 'getSalaryGradeCode' with the salary grade name to get the salary grade code.\"\n    }\n  },\n  \"required\": [\n    \"salaryGradeName\",\n    \"salaryGradeCode\"\n  ]\n}",
+        "_id": "6a5a25828d9f801446a27ecc"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n    return {\n      code: `(function(){\n          return [];\n        })`\n    };\n  })\n\n",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  debugger;\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignCashBenifit.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  if (!args.salaryGradeCode) {\n    return \"The salary grade code was not found\"\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"AssignCashBenifit\");\n  const myHeaders = new Headers();\n  myHeaders.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"Accept-Language\", \"en-GB,en;q=0.9,en-US;q=0.8\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/AssignCashBenifit.aspx');\n  let url;\n  if (updateurl.updateUrl) {\n    url = `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`;\n  } else {\n    url = `${window.origin}/${reqOptions.sl}/EIM/AssignCashBenifit.aspx`;\n  }\n\n  const formData = new FormData();\n\n  // Required WebForms fields\n  formData.append(\"scrollLeft\", \"0\");\n  formData.append(\"scrollTop\", \"0\");\n  formData.append(\"__EVENTTARGET\", \"ctl00$body$dpsalGrsade\");\n  formData.append(\"__EVENTARGUMENT\", \"\");\n  formData.append(\"__VIEWSTATE\", details.viewState);\n  formData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  formData.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n  // Page-level hidden fields\n  formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n  // 🔥 Salary Grade dropdown (THIS is the important one)\n  formData.append(\n    \"ctl00$body$dpsalGrsade\",\n    args.salaryGradeCode\n  );\n\n  const response = await fetch(url, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: formData,\n    redirect: \"follow\"\n  });\n\n\n  const htmlText = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(htmlText, \"text/html\");\n\n  // Helper function to parse a table by its ID\n  function parseBenefitsTable(tableId) {\n    const table = doc.querySelector(`#${tableId} tbody`);\n    if (!table) return [];\n\n    const rows = table.querySelectorAll(\"tr\");\n    const benefits = [];\n\n    // Skip the header row\n    for (let i = 1; i < rows.length; i++) {\n      const cells = rows[i].querySelectorAll(\"td\");\n      if (cells.length < 2) continue;\n\n      const benefitName = cells[0].textContent.trim();\n\n      // Some tables have <span> inside the 2nd cell\n      const quantityCell = cells[1].querySelector(\"span\");\n      const quantity = quantityCell\n        ? quantityCell.textContent.trim()\n        : cells[1].textContent.trim();\n\n      benefits.push({ benefitName, quantity });\n    }\n\n    return benefits;\n  }\n\n  // Get available and allocated benefits\n  const availableBenefits = parseBenefitsTable(\"ctl00_body_grdavailable\");\n  const allocatedBenefits = parseBenefitsTable(\"ctl00_body_grdallocated\");\n\n\n  return {\n    availableBenefits,\n    allocatedBenefits\n  }\n})\n\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Cash Benefits",
+        "DummyL"
+      ],
+      "taskName": "",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-22T10:33:54.154Z",
+      "updatedAt": "2026-07-17T12:52:18.116Z",
+      "__v": 2,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getCashBenefit",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"salaryGradeName\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"80,000\",\n        \"Engineers\",\n        \"BarbadosDollar\"\n      ],\n      \"description\": \"The salary grade name\"\n    },\n    \"salaryGradeCode\": {\n      \"type\": \"string\",\n      \"description\": \"Call 'getSalaryGradeCode' with the salary grade name to get the salary grade code.\"\n    }\n  },\n  \"required\": [\n    \"salaryGradeName\",\n    \"salaryGradeCode\"\n  ]\n}",
+      "_id": "6a5a25828d9f801446a27ecc"
+    },
+    "fetcher": "(function (args, reqOptions) {\n    return {\n      code: `(function(){\n          return [];\n        })`\n    };\n  })\n\n",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  debugger;\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignCashBenifit.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  if (!args.salaryGradeCode) {\n    return \"The salary grade code was not found\"\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"AssignCashBenifit\");\n  const myHeaders = new Headers();\n  myHeaders.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"Accept-Language\", \"en-GB,en;q=0.9,en-US;q=0.8\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/AssignCashBenifit.aspx');\n  let url;\n  if (updateurl.updateUrl) {\n    url = `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`;\n  } else {\n    url = `${window.origin}/${reqOptions.sl}/EIM/AssignCashBenifit.aspx`;\n  }\n\n  const formData = new FormData();\n\n  // Required WebForms fields\n  formData.append(\"scrollLeft\", \"0\");\n  formData.append(\"scrollTop\", \"0\");\n  formData.append(\"__EVENTTARGET\", \"ctl00$body$dpsalGrsade\");\n  formData.append(\"__EVENTARGUMENT\", \"\");\n  formData.append(\"__VIEWSTATE\", details.viewState);\n  formData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  formData.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n  // Page-level hidden fields\n  formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n  // 🔥 Salary Grade dropdown (THIS is the important one)\n  formData.append(\n    \"ctl00$body$dpsalGrsade\",\n    args.salaryGradeCode\n  );\n\n  const response = await fetch(url, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: formData,\n    redirect: \"follow\"\n  });\n\n\n  const htmlText = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(htmlText, \"text/html\");\n\n  // Helper function to parse a table by its ID\n  function parseBenefitsTable(tableId) {\n    const table = doc.querySelector(`#${tableId} tbody`);\n    if (!table) return [];\n\n    const rows = table.querySelectorAll(\"tr\");\n    const benefits = [];\n\n    // Skip the header row\n    for (let i = 1; i < rows.length; i++) {\n      const cells = rows[i].querySelectorAll(\"td\");\n      if (cells.length < 2) continue;\n\n      const benefitName = cells[0].textContent.trim();\n\n      // Some tables have <span> inside the 2nd cell\n      const quantityCell = cells[1].querySelector(\"span\");\n      const quantity = quantityCell\n        ? quantityCell.textContent.trim()\n        : cells[1].textContent.trim();\n\n      benefits.push({ benefitName, quantity });\n    }\n\n    return benefits;\n  }\n\n  // Get available and allocated benefits\n  const availableBenefits = parseBenefitsTable(\"ctl00_body_grdavailable\");\n  const allocatedBenefits = parseBenefitsTable(\"ctl00_body_grdallocated\");\n\n\n  return {\n    availableBenefits,\n    allocatedBenefits\n  }\n})\n\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

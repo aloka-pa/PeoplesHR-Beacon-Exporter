@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "year",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "user give the year, if the user not given current year will be take.Example \"2025\"",
+      "advanced": false,
+      "raw": {
+        "name": "year",
+        "type": "string",
+        "description": "user give the year, if the user not given current year will be take.Example \"2025\"",
+        "required": true,
+        "_id": "68a6f6dc4c5ed0fe36bfb816"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "corporateCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to search details give the user prompt corporateCode.",
+      "advanced": false,
+      "raw": {
+        "name": "corporateCode",
+        "type": "string",
+        "description": "to search details give the user prompt corporateCode.",
+        "required": true,
+        "_id": "68107964da79d330175fc58c"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

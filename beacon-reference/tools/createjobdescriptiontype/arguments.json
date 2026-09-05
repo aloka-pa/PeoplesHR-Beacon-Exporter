@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "jobDescriptionTypeName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the  Job Description Type Name then will be create the Job Description Type",
+      "advanced": false,
+      "raw": {
+        "name": "jobDescriptionTypeName",
+        "type": "string",
+        "description": "to give the  Job Description Type Name then will be create the Job Description Type",
+        "required": true,
+        "_id": "6811c2747b792c31fa89df69"
+      }
+    },
+    {
+      "name": "jobDescriptionCategory",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to create job Description Category display the all job Description Category then select one corresponding value will be take. data available for getJdCategory Api . Example:-\"000001\"",
+      "advanced": false,
+      "raw": {
+        "name": "jobDescriptionCategory",
+        "type": "string",
+        "description": "to create job Description Category display the all job Description Category then select one corresponding value will be take. data available for getJdCategory Api . Example:-\"000001\"",
+        "required": true,
+        "_id": "6811c2747b792c31fa89df6a"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

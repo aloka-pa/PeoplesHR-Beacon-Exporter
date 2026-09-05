@@ -1,0 +1,87 @@
+[
+  {
+    "toolId": "690dc567931a2d61ba0b1718",
+    "toolName": "getBenefitEmployeeInformation",
+    "path": "tools/getbenefitemployeeinformation"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b16f7",
+    "toolName": "getSingleEmployeeBenefitHistory",
+    "path": "tools/getsingleemployeebenefithistory"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1b18",
+    "toolName": "selfEmployeeBenefitApllication",
+    "path": "tools/selfemployeebenefitapllication"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b17f2",
+    "toolName": "getApplicationStructure",
+    "path": "tools/getapplicationstructure"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b1822",
+    "toolName": "employeeBenefitApplication",
+    "path": "tools/employeebenefitapplication"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b1869",
+    "toolName": "getAdminInformationDetails",
+    "path": "tools/getadmininformationdetails"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a67",
+    "toolName": "getGlobalEmployeeSearch",
+    "path": "tools/getglobalemployeesearch"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b1848",
+    "toolName": "masterDataTypes",
+    "path": "tools/masterdatatypes"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b16e3",
+    "toolName": "getDefineMasterDateDetails",
+    "path": "tools/getdefinemasterdatedetails"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b92",
+    "toolName": "moreDetailsBenefitApplicationHistoryDetails",
+    "path": "tools/moredetailsbenefitapplicationhistorydetails"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1b12",
+    "toolName": "selfBenefitApplicationTypes",
+    "path": "tools/selfbenefitapplicationtypes"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1afa",
+    "toolName": "selfEmployeeBenefitHistory",
+    "path": "tools/selfemployeebenefithistory"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a5f",
+    "toolName": "dateFormat",
+    "path": "tools/dateformat"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b189a",
+    "toolName": "getAllEmployeeBenefitHistoryDateRange",
+    "path": "tools/getallemployeebenefithistorydaterange"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b1890",
+    "toolName": "healthPlanDependentDetails",
+    "path": "tools/healthplandependentdetails"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b17f7",
+    "toolName": "getBenefitApplicationTypesDetails",
+    "path": "tools/getbenefitapplicationtypesdetails"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b16e6",
+    "toolName": "UpdateDefineMasterDateDetails",
+    "path": "tools/updatedefinemasterdatedetails"
+  }
+]

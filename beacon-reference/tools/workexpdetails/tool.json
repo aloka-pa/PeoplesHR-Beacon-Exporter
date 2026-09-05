@@ -1,0 +1,75 @@
+{
+  "id": "690dc568931a2d61ba0b1845",
+  "slug": "workexpdetails",
+  "name": "workExpDetails",
+  "description": "Before executing this tool, the \"getWorkExperienceDetails\" tool must be run first to retrieve the list of available work experience entries along with their corresponding editIds. Once the details are displayed, the user selects the work experience entry they want to edit. The editId for the selected entry is then used as input to this tool to generate and update the specific work experience details. then after calling for \"updateEmployeeInformationDetails\" api.",
+  "instructions": null,
+  "taskName": "Fetching The Employee Working Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "workExpDetails",
+  "createdAt": "2025-05-25T16:41:10.550Z",
+  "updatedAt": "2025-05-25T16:41:10.550Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "b4c2dfbecaae2843d78a98e6cf8f05a0e2d0ce2cd888527d9632d6dea45960f3",
+  "lastExportedAt": "2026-09-05T19:39:23.849Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b1845",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "workExpDetails",
+      "description": "Before executing this tool, the \"getWorkExperienceDetails\" tool must be run first to retrieve the list of available work experience entries along with their corresponding editIds. Once the details are displayed, the user selects the work experience entry they want to edit. The editId for the selected entry is then used as input to this tool to generate and update the specific work experience details. then after calling for \"updateEmployeeInformationDetails\" api.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "workExpDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"editId\": {\n      \"type\": \"string\",\n      \"description\": \"The edit ID corresponding to the selected work experience. For example: 'ctl00$body$grdGrade1$ctl00$ctl05$ctl00'. This is determined by the backend and not provided by the user. and you get edit id for 'getWorkExperienceDetails' api\"\n    },\n    \"empId\": {\n      \"type\": \"string\",\n      \"description\": \"The employee ID provided by the user.\"\n    },\n    \"fromDate\":{\n      \"type\": \"string\",\n      \"description\": \"to get date for before api date corresponding from data will be take. in this format 'dd/mm/yyyy'\"\n    },\n    \"endDate\":{\n      \"type\": \"string\",\n      \"description\": \"to get date for before api date corresponding end data will be take. 'dd/mm/yyyy'\"\n    }\n  },\n  \"required\": [\"editId\", \"empId\",\"fromDate\",\"endDate\"]\n}",
+        "_id": "68334826c916734e659be3b6"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/WorkExperience.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const today = new Date();\n  const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;\n\n  const editResponse = await BeaconBar.executeFunction('module')({\n    \"scrollLeft\": \"0\",\n    \"scrollTop\": \"0\",\n    \"__EVENTTARGET\": args.editId,\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": window.view.editResponse.viewState,\n    \"__VIEWSTATEGENERATOR\": window.view.editResponse.viewStateGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": window.view.editResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$hdnQuickmenu\": \"\",\n    \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": args.empId,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00$body$radInternal\": \"0\",\n    \"ctl00$body$txtPublicKey\": window.view.editResponse.publicKey,\n    \"ctl00$body$txtempNo\": window.view.empEncId,\n    \"ctl00$body$txtperemail\": \"\",\n    \"ctl00$body$txtconpname\": \"\",\n    \"ctl00$body$hdncompname\": \"PeoplesHR\",\n    \"ctl00$body$txtStartDate\": args.fromDate || formattedDate,\n    \"ctl00$body$txtEndDate\": args.endDate || formattedDate,\n    \"ctl00$body$txtconfDate\": \"\",\n    \"ctl00$body$txtcontact\": \"\",\n    \"ctl00$body$txtDept\": \"\",\n    \"ctl00$body$txtposition\": \"\",\n    \"ctl00$body$txtreason\": \"\",\n    \"ctl00$body$txtSalaryonleave\": \"\",\n    \"ctl00$body$txtbenifitesonleave\": \"\",\n    \"ctl00$body$txtaddress\": \"\",\n    \"ctl00$body$nutel\": \"\",\n    \"ctl00$body$txtemail\": \"\",\n    \"ctl00$body$txtresp\": \"\",\n    \"ctl00$body$txtachv\": \"\",\n    \"ctl00$body$grdGrade1$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdGrade1_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdGrade1$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdGrade1_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdGrade1_ClientState\": \"\",\n    \"ctl00$body$hdnDateFormate\": \"dd/mm/yyyy\"\n  }, `${reqOptions.sl}/EIM/WorkExperience.aspx`);\n\n  window.view1 = editResponse\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(editResponse.rawData, \"text/html\");\n\n  window.emailId = document.getElementById('ctl00_body_txtemail').value\n\n  const checkedInput = document.querySelector('input[name=\"ctl00$body$radInternal\"]:checked');\n\n  const userselectedCategoryType = {\n    value: checkedInput?.value || \"\",\n    label: checkedInput\n      ? document.querySelector(`label[for=\"${checkedInput.id}\"]`)?.textContent.trim()\n      : \"\"\n  };\n\n  const userSelectWorkExperienceDetails = {\n    EmploymentType: document.querySelector('input[name=\"ctl00$body$radInternal\"]:checked')?.nextSibling.textContent.trim(), // Internal or External\n    FromDate: document.querySelector('#ctl00_body_txtStartDate')?.value,\n    ToDate: document.querySelector('#ctl00_body_txtEndDate')?.value,\n    DateOfConfirmation: document.querySelector('#ctl00_body_txtconfDate')?.value,\n    DepartmentDivision: document.querySelector('#ctl00_body_txtDept')?.value,\n    CompanyName: document.querySelector('#ctl00_body_txtconpname')?.value,\n    WorkRelated: document.querySelector('#ctl00_body_chkworkrelated')?.checked ? 'Yes' : 'No',\n    ContactPerson: document.querySelector('#ctl00_body_txtcontact')?.value,\n    FunctionalTitle: document.querySelector('#ctl00_body_txtposition')?.value,\n    ReasonForLeaving: document.querySelector('#ctl00_body_txtreason')?.value,\n    Address: document.querySelector('#ctl00_body_txtaddress')?.value.trim(),\n    Telephone: document.querySelector('#ctl00_body_nutel')?.value,\n    Email: document.querySelector('#ctl00_body_txtemail')?.value,\n    Accountabilities: document.querySelector('#ctl00_body_txtresp')?.value.trim(),\n    Achievements: document.querySelector('#ctl00_body_txtachv')?.value.trim(),\n    NoOfYears: document.querySelector('#ctl00_body_nurears')?.value,\n    NoOfMonths: document.querySelector('#ctl00_body_numonth')?.value,\n    BenefitConsideration: document.querySelector('#ctl00_body_chkBenefit')?.checked ? 'Yes' : 'No',\n    BenefitsofLiving: document.querySelector('#ctl00_body_txtbenifitesonleave').textContent.trim()\n  };\n  return { userSelectWorkExperienceDetails, userselectedCategoryType }\n})",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Fetching The Employee Working Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-25T16:41:10.550Z",
+      "updatedAt": "2025-05-25T16:41:10.550Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "workExpDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"editId\": {\n      \"type\": \"string\",\n      \"description\": \"The edit ID corresponding to the selected work experience. For example: 'ctl00$body$grdGrade1$ctl00$ctl05$ctl00'. This is determined by the backend and not provided by the user. and you get edit id for 'getWorkExperienceDetails' api\"\n    },\n    \"empId\": {\n      \"type\": \"string\",\n      \"description\": \"The employee ID provided by the user.\"\n    },\n    \"fromDate\":{\n      \"type\": \"string\",\n      \"description\": \"to get date for before api date corresponding from data will be take. in this format 'dd/mm/yyyy'\"\n    },\n    \"endDate\":{\n      \"type\": \"string\",\n      \"description\": \"to get date for before api date corresponding end data will be take. 'dd/mm/yyyy'\"\n    }\n  },\n  \"required\": [\"editId\", \"empId\",\"fromDate\",\"endDate\"]\n}",
+      "_id": "68334826c916734e659be3b6"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/WorkExperience.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const today = new Date();\n  const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;\n\n  const editResponse = await BeaconBar.executeFunction('module')({\n    \"scrollLeft\": \"0\",\n    \"scrollTop\": \"0\",\n    \"__EVENTTARGET\": args.editId,\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": window.view.editResponse.viewState,\n    \"__VIEWSTATEGENERATOR\": window.view.editResponse.viewStateGen,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": window.view.editResponse.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$hdnQuickmenu\": \"\",\n    \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": args.empId,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00$body$radInternal\": \"0\",\n    \"ctl00$body$txtPublicKey\": window.view.editResponse.publicKey,\n    \"ctl00$body$txtempNo\": window.view.empEncId,\n    \"ctl00$body$txtperemail\": \"\",\n    \"ctl00$body$txtconpname\": \"\",\n    \"ctl00$body$hdncompname\": \"PeoplesHR\",\n    \"ctl00$body$txtStartDate\": args.fromDate || formattedDate,\n    \"ctl00$body$txtEndDate\": args.endDate || formattedDate,\n    \"ctl00$body$txtconfDate\": \"\",\n    \"ctl00$body$txtcontact\": \"\",\n    \"ctl00$body$txtDept\": \"\",\n    \"ctl00$body$txtposition\": \"\",\n    \"ctl00$body$txtreason\": \"\",\n    \"ctl00$body$txtSalaryonleave\": \"\",\n    \"ctl00$body$txtbenifitesonleave\": \"\",\n    \"ctl00$body$txtaddress\": \"\",\n    \"ctl00$body$nutel\": \"\",\n    \"ctl00$body$txtemail\": \"\",\n    \"ctl00$body$txtresp\": \"\",\n    \"ctl00$body$txtachv\": \"\",\n    \"ctl00$body$grdGrade1$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdGrade1_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdGrade1$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"1\",\n    \"ctl00_body_grdGrade1_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdGrade1_ClientState\": \"\",\n    \"ctl00$body$hdnDateFormate\": \"dd/mm/yyyy\"\n  }, `${reqOptions.sl}/EIM/WorkExperience.aspx`);\n\n  window.view1 = editResponse\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(editResponse.rawData, \"text/html\");\n\n  window.emailId = document.getElementById('ctl00_body_txtemail').value\n\n  const checkedInput = document.querySelector('input[name=\"ctl00$body$radInternal\"]:checked');\n\n  const userselectedCategoryType = {\n    value: checkedInput?.value || \"\",\n    label: checkedInput\n      ? document.querySelector(`label[for=\"${checkedInput.id}\"]`)?.textContent.trim()\n      : \"\"\n  };\n\n  const userSelectWorkExperienceDetails = {\n    EmploymentType: document.querySelector('input[name=\"ctl00$body$radInternal\"]:checked')?.nextSibling.textContent.trim(), // Internal or External\n    FromDate: document.querySelector('#ctl00_body_txtStartDate')?.value,\n    ToDate: document.querySelector('#ctl00_body_txtEndDate')?.value,\n    DateOfConfirmation: document.querySelector('#ctl00_body_txtconfDate')?.value,\n    DepartmentDivision: document.querySelector('#ctl00_body_txtDept')?.value,\n    CompanyName: document.querySelector('#ctl00_body_txtconpname')?.value,\n    WorkRelated: document.querySelector('#ctl00_body_chkworkrelated')?.checked ? 'Yes' : 'No',\n    ContactPerson: document.querySelector('#ctl00_body_txtcontact')?.value,\n    FunctionalTitle: document.querySelector('#ctl00_body_txtposition')?.value,\n    ReasonForLeaving: document.querySelector('#ctl00_body_txtreason')?.value,\n    Address: document.querySelector('#ctl00_body_txtaddress')?.value.trim(),\n    Telephone: document.querySelector('#ctl00_body_nutel')?.value,\n    Email: document.querySelector('#ctl00_body_txtemail')?.value,\n    Accountabilities: document.querySelector('#ctl00_body_txtresp')?.value.trim(),\n    Achievements: document.querySelector('#ctl00_body_txtachv')?.value.trim(),\n    NoOfYears: document.querySelector('#ctl00_body_nurears')?.value,\n    NoOfMonths: document.querySelector('#ctl00_body_numonth')?.value,\n    BenefitConsideration: document.querySelector('#ctl00_body_chkBenefit')?.checked ? 'Yes' : 'No',\n    BenefitsofLiving: document.querySelector('#ctl00_body_txtbenifitesonleave').textContent.trim()\n  };\n  return { userSelectWorkExperienceDetails, userselectedCategoryType }\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

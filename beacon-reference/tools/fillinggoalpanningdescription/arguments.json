@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "GoalPlaningDescriptions",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "GoalPlaningDescriptions  are send as  separated by Semicolons  ; And no need the description in no need 1 serial numbers  minimum characters 400 characters maximum 2000characters and just onlytakes the  categoryof the key value is the description",
+      "advanced": false,
+      "raw": {
+        "name": "GoalPlaningDescriptions",
+        "type": "string",
+        "description": "GoalPlaningDescriptions  are send as  separated by Semicolons  ; And no need the description in no need 1 serial numbers  minimum characters 400 characters maximum 2000characters and just onlytakes the  categoryof the key value is the description",
+        "required": true,
+        "_id": "684aa766480bb76c50bc0122"
+      }
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "title , this is 4 words title and best words take by ai generated title",
+      "advanced": false,
+      "raw": {
+        "name": "title",
+        "type": "string",
+        "description": "title , this is 4 words title and best words take by ai generated title",
+        "required": true,
+        "_id": "68526f0b27141f694a366f0c"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

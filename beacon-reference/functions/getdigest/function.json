@@ -1,0 +1,24 @@
+{
+  "id": "690dc580931a2d61ba0b2759",
+  "slug": "getdigest",
+  "name": "getDigest",
+  "status": "live",
+  "createdAt": "2025-05-09T15:44:42.417Z",
+  "updatedAt": "2025-05-09T15:44:42.417Z",
+  "contentHash": "521749e29694d63b7def8ca6e251dee1ca760babe220b8fc66ad39daea29ea06",
+  "lastExportedAt": "2026-09-05T19:41:43.158Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc580931a2d61ba0b2759",
+    "name": "getDigest",
+    "status": "live",
+    "code": "(async function (params) {\n    //done\n    const sl = await BeaconBar.getSharedData(\"sl\");\n    const myHeaders = new Headers();\n    myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\")\n    const urlencoded = new URLSearchParams();\n    urlencoded.append(\"para\", params);\n\n    const requestOptions = {\n        method: \"POST\",\n        headers: myHeaders,\n        body: urlencoded,\n        redirect: \"follow\"\n    };\n\n    const res = await fetch(`${location.origin}/${sl}/home/beaconutil`, requestOptions);\n    return res.json();\n});",
+    "by": "1927",
+    "__v": 0
+  }
+}

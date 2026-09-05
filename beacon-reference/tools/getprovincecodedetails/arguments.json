@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "countryCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the country code first display the country names user to select for country name corresponding value will be take example code \"000001\".",
+      "advanced": false,
+      "raw": {
+        "name": "countryCode",
+        "type": "string",
+        "description": "to get the country code first display the country names user to select for country name corresponding value will be take example code \"000001\".",
+        "required": true,
+        "_id": "68556410ef52e8a1a65e52f7"
+      }
+    },
+    {
+      "name": "locationName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "user give the location name example \"india\"",
+      "advanced": false,
+      "raw": {
+        "name": "locationName",
+        "type": "string",
+        "description": "user give the location name example \"india\"",
+        "required": true,
+        "_id": "68556410ef52e8a1a65e52f8"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

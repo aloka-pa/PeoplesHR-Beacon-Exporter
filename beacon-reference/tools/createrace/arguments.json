@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "raceName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name of the race to create",
+      "advanced": false,
+      "raw": {
+        "name": "raceName",
+        "type": "string",
+        "description": "The name of the race to create",
+        "required": true,
+        "_id": "6952518493aca2b06fa4f494"
+      }
+    },
+    {
+      "name": "raceDescription",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Description of the race (defaults to empty string if not provided)",
+      "advanced": false,
+      "raw": {
+        "name": "raceDescription",
+        "type": "string",
+        "description": "Description of the race (defaults to empty string if not provided)",
+        "required": false,
+        "_id": "6952518493aca2b06fa4f495"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

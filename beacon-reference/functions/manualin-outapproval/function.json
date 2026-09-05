@@ -1,0 +1,24 @@
+{
+  "id": "690dc578931a2d61ba0b2059",
+  "slug": "manualin-outapproval",
+  "name": "ManualIn&OutApproval",
+  "status": "live",
+  "createdAt": "2025-06-11T09:14:36.254Z",
+  "updatedAt": "2025-06-11T09:14:36.254Z",
+  "contentHash": "57f1522d96a4d33428cc2fb43f476f5a49f5106a7247ca56a3757e8093cdb1ff",
+  "lastExportedAt": "2026-09-05T19:41:36.562Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc578931a2d61ba0b2059",
+    "name": "ManualIn&OutApproval",
+    "status": "live",
+    "code": "(async function(args , matched){\nconst matchedObjectArgs = args.EmployeeList.find(x => x.EmpDisplayName === matched);\n\n    \n    const myHeaders = new Headers();\nmyHeaders.append(\"accept\", \"*/*\");\nmyHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\nmyHeaders.append(\"content-type\", \"application/json\");\n\nconst raw = JSON.stringify({\n  \"EmpNumber\": matchedObjectArgs.EmpNumber,\n  \"EmpDisplayNumber\": matchedObjectArgs.EmpDisplayNumber,\n  \"EmpDisplayName\": matchedObjectArgs.EmpDisplayName,\n  \"EmpCompleteName\": matchedObjectArgs.EmpCompleteName,\n  \"WfTypeCode\": matchedObjectArgs.WfTypeCode,\n  \"SearchMode\": matchedObjectArgs.SearchMode,\n  \"InitialWfmainId\": matchedObjectArgs.InitialWfmainId,\n  \"FromDate\": matchedObjectArgs.FromDate,\n  \"ToDate\": matchedObjectArgs.ToDate,\n  \"FromDateText\": matchedObjectArgs.FromDateText,\n  \"ToDateText\": matchedObjectArgs.ToDateText,\n  \"IsSelected\": false\n});\n\nconst requestOptions = {\n  method: \"POST\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\nconst reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\nconst response = await fetch(`${reqOptions}tnav9/api/ManualInOut/GetApprovalGridData/`, requestOptions)\n  const data = await  response.text();\n  return data ;\n  })",
+    "by": "1927",
+    "__v": 0
+  }
+}

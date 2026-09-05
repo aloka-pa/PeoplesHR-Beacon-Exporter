@@ -1,0 +1,95 @@
+{
+  "id": "690dc562931a2d61ba0b1320",
+  "slug": "getallratingmethods",
+  "name": "getAllRatingMethods",
+  "description": "get All Rating Methods",
+  "instructions": null,
+  "taskName": "fetching Rating Methods",
+  "tags": [],
+  "status": "unlive",
+  "signature": "getAllRatingMethods",
+  "createdAt": "2025-04-28T10:45:43.230Z",
+  "updatedAt": "2026-07-17T12:51:28.667Z",
+  "assignedAgents": [],
+  "contentHash": "88c175794b7640d0f5885ddfdd3442947db9fdf1a9346236c8181211e544e5c7",
+  "lastExportedAt": "2026-09-05T19:39:22.192Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc562931a2d61ba0b1320",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getAllRatingMethods",
+      "description": "get All Rating Methods",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getAllRatingMethods",
+        "args": [
+          {
+            "name": "ratingMethodSearch",
+            "type": "string",
+            "description": "ratingMethodSearch, Ex:- \"000001\"",
+            "required": false,
+            "_id": "680f5c57c45ce9e90583b0ff"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a255073573ddf3972e05c"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"RatingMethods\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$hdnIsHead\", \"\");\n  urlencoded1.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"RATING_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", args.ratingMethodSearch || \"\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  urlencoded1.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"6\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\",\n  };\n\n  const response1 = await fetch(\"/hr/EIM/RatingMethods.aspx\", requestOptions1);\n  const html1 = await response1.text();\n\n  const viewDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html1);\n  const parser1 = new DOMParser();\n  const doc1 = parser1.parseFromString(html1, \"text/html\");\n\n\n  const row = doc1.querySelector(\"#ctl00_body_grdsummary_ctl00__0\");\n  const key = row?.querySelector(\"a\")?.getAttribute(\"href\")?.match(/__doPostBack\\('([^']+)'/)?.[1] || null;\n\n  if (!key) {\n    throw new Error(\"Unable to find the key for postback.\");\n  }\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", key);\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewDetails.viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewDetails.viewStateGen);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", viewDetails.eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$cboCriteria\", \"RATING_CODE\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$txtContent\", args.ratingMethodSearch || \"\");\n  urlencoded2.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\",\n  };\n\n  const response2 = await fetch(`${location.origin}/hr/EIM/RatingMethods.aspx`, requestOptions2);\n  const html2 = await response2.text();\n  const finalDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html2);\n\n  window.rm = finalDetails;\n\n function extractSkillRatingData(html) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(html, 'text/html');\n    const grades = [];\n\n    const ratingCodeElement = doc.querySelector(\"#ctl00_body_txtCode\");\n    const ratingMethodElement = doc.querySelector(\"#ctl00_body_txtName\");\n\n    const ratingCode = ratingCodeElement ? ratingCodeElement.value.trim() : \"\";\n    const ratingMethod = ratingMethodElement ? ratingMethodElement.value.trim() : \"\";\n\n    const gradeRows = doc.querySelectorAll('#ctl00_body_grdgrade_ctl00 tbody tr');\n\n    gradeRows.forEach(row => {\n      const cells = row.querySelectorAll('td');\n      if (cells.length >= 4) {\n        grades.push({\n          grade: cells[0].textContent.trim(),\n          minimumMarks: parseFloat(cells[1].textContent.trim()) || 0,\n          maximumMarks: parseFloat(cells[2].textContent.trim()) || 0,\n          averageMarks: parseFloat(cells[3].textContent.trim()) || 0\n        });\n      }\n    });\n\n    return {\n      code: ratingCode,\n      ratingMethod: ratingMethod,\n      grades: grades\n    };\n  }\n\n\n  const extractedData = extractSkillRatingData(html2);\n\n  return extractedData;\n});\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "fetching Rating Methods",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-28T10:45:43.230Z",
+      "updatedAt": "2026-07-17T12:51:28.667Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getAllRatingMethods",
+      "args": [
+        {
+          "name": "ratingMethodSearch",
+          "type": "string",
+          "description": "ratingMethodSearch, Ex:- \"000001\"",
+          "required": false,
+          "_id": "680f5c57c45ce9e90583b0ff"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a255073573ddf3972e05c"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"RatingMethods\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$hdnIsHead\", \"\");\n  urlencoded1.append(\"ctl00$body$hdnEditItemIndex\", \"\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"RATING_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", args.ratingMethodSearch || \"\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  urlencoded1.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"6\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\",\n  };\n\n  const response1 = await fetch(\"/hr/EIM/RatingMethods.aspx\", requestOptions1);\n  const html1 = await response1.text();\n\n  const viewDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html1);\n  const parser1 = new DOMParser();\n  const doc1 = parser1.parseFromString(html1, \"text/html\");\n\n\n  const row = doc1.querySelector(\"#ctl00_body_grdsummary_ctl00__0\");\n  const key = row?.querySelector(\"a\")?.getAttribute(\"href\")?.match(/__doPostBack\\('([^']+)'/)?.[1] || null;\n\n  if (!key) {\n    throw new Error(\"Unable to find the key for postback.\");\n  }\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", key);\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewDetails.viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewDetails.viewStateGen);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", viewDetails.eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$cboCriteria\", \"RATING_CODE\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$txtContent\", args.ratingMethodSearch || \"\");\n  urlencoded2.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\",\n  };\n\n  const response2 = await fetch(`${location.origin}/hr/EIM/RatingMethods.aspx`, requestOptions2);\n  const html2 = await response2.text();\n  const finalDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html2);\n\n  window.rm = finalDetails;\n\n function extractSkillRatingData(html) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(html, 'text/html');\n    const grades = [];\n\n    const ratingCodeElement = doc.querySelector(\"#ctl00_body_txtCode\");\n    const ratingMethodElement = doc.querySelector(\"#ctl00_body_txtName\");\n\n    const ratingCode = ratingCodeElement ? ratingCodeElement.value.trim() : \"\";\n    const ratingMethod = ratingMethodElement ? ratingMethodElement.value.trim() : \"\";\n\n    const gradeRows = doc.querySelectorAll('#ctl00_body_grdgrade_ctl00 tbody tr');\n\n    gradeRows.forEach(row => {\n      const cells = row.querySelectorAll('td');\n      if (cells.length >= 4) {\n        grades.push({\n          grade: cells[0].textContent.trim(),\n          minimumMarks: parseFloat(cells[1].textContent.trim()) || 0,\n          maximumMarks: parseFloat(cells[2].textContent.trim()) || 0,\n          averageMarks: parseFloat(cells[3].textContent.trim()) || 0\n        });\n      }\n    });\n\n    return {\n      code: ratingCode,\n      ratingMethod: ratingMethod,\n      grades: grades\n    };\n  }\n\n\n  const extractedData = extractSkillRatingData(html2);\n\n  return extractedData;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

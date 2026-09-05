@@ -1,0 +1,32 @@
+[
+  {
+    "toolId": "690dc568931a2d61ba0b18e2",
+    "toolName": "getWorkFlowTypes",
+    "path": "tools/getworkflowtypes"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b18e5",
+    "toolName": "getWorkFlowGroups",
+    "path": "tools/getworkflowgroups"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a67",
+    "toolName": "getGlobalEmployeeSearch",
+    "path": "tools/getglobalemployeesearch"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a5f",
+    "toolName": "dateFormat",
+    "path": "tools/dateformat"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b193e",
+    "toolName": "getWorkFlowTypeDetails",
+    "path": "tools/getworkflowtypedetails"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b193a",
+    "toolName": "getWorkFlowGroupDetails",
+    "path": "tools/getworkflowgroupdetails"
+  }
+]

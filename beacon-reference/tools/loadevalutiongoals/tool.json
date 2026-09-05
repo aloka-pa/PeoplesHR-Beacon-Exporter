@@ -1,0 +1,89 @@
+{
+  "id": "690dc56b931a2d61ba0b1a9a",
+  "slug": "loadevalutiongoals",
+  "name": "loadEvalutionGoals",
+  "description": "loadEvalutionGoal",
+  "instructions": null,
+  "taskName": "loadEvalutionGoals",
+  "tags": [
+    "Goals"
+  ],
+  "status": "unlive",
+  "signature": "loadEvalutionGoals",
+  "createdAt": "2025-08-05T04:34:31.884Z",
+  "updatedAt": "2025-08-05T04:34:31.884Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c5a",
+      "name": "GoalPanning(API)"
+    }
+  ],
+  "contentHash": "4165400ee8236d3147b15213709af1d10db9485d64cac6ecd735d9df0d4bf31e",
+  "lastExportedAt": "2026-09-05T19:39:23.479Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56b931a2d61ba0b1a9a",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "loadEvalutionGoals",
+      "description": "loadEvalutionGoal",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "loadEvalutionGoals",
+        "args": [
+          {
+            "name": "evalutionID",
+            "type": "string",
+            "description": "evalutionID , Ex:- 5",
+            "required": true,
+            "_id": "689189d7ef3ef68ac0d47828"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "689189d7ef3ef68ac0d47827"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function(data, args, reqOptions) {\nconst datas = await BeaconBar.executeFunction(\"loadEvalutions\")(args.evalutionID)\n   BeaconBar.setSharedData(\"SubordinateAssessments\", datas.SubordinateAssessments);\n  return datas.SubordinateAssessments.map(item => ({\n  EvaluationId: item.EvaluationId,\n  //EmployeeNumber: item.EmployeeNumber,\n  EmployeeDisplayName: item.EmployeeDisplayName,\n  //AppraiserDisplayName: item.AppraiserDisplayName,\n  Type: item.Type,\n  EmployeeEvaluatedStatusText: item.EmployeeEvaluatedStatusText,\n  AppraiserEvaluatedStatusText: item.AppraiserEvaluatedStatusText\n}));;\n})",
+      "groupName": "",
+      "tags": [
+        "Goals"
+      ],
+      "taskName": "loadEvalutionGoals",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-08-05T04:34:31.884Z",
+      "updatedAt": "2025-08-05T04:34:31.884Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c5a",
+          "name": "GoalPanning(API)"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "loadEvalutionGoals",
+      "args": [
+        {
+          "name": "evalutionID",
+          "type": "string",
+          "description": "evalutionID , Ex:- 5",
+          "required": true,
+          "_id": "689189d7ef3ef68ac0d47828"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "689189d7ef3ef68ac0d47827"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function(data, args, reqOptions) {\nconst datas = await BeaconBar.executeFunction(\"loadEvalutions\")(args.evalutionID)\n   BeaconBar.setSharedData(\"SubordinateAssessments\", datas.SubordinateAssessments);\n  return datas.SubordinateAssessments.map(item => ({\n  EvaluationId: item.EvaluationId,\n  //EmployeeNumber: item.EmployeeNumber,\n  EmployeeDisplayName: item.EmployeeDisplayName,\n  //AppraiserDisplayName: item.AppraiserDisplayName,\n  Type: item.Type,\n  EmployeeEvaluatedStatusText: item.EmployeeEvaluatedStatusText,\n  AppraiserEvaluatedStatusText: item.AppraiserEvaluatedStatusText\n}));;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

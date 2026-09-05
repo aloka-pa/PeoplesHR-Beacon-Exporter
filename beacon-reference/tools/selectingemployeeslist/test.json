@@ -1,0 +1,8 @@
+{
+  "sampleRequest": {
+    "reviewCycle": "2"
+  },
+  "sanity": {
+    "apiResponse": []
+  }
+}

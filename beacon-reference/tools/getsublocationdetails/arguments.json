@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "sublocationCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get sub location details to give the prompt sub location code",
+      "advanced": false,
+      "raw": {
+        "name": "sublocationCode",
+        "type": "string",
+        "description": "to get sub location details to give the prompt sub location code",
+        "required": true,
+        "_id": "680e431039076bbb628a26c7"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,81 @@
+{
+  "id": "69491c1a5eb411adb9eeb495",
+  "slug": "getsalarygradecode",
+  "name": "getSalaryGradeCode",
+  "description": "This tool will be provide the salary grade code for the given salary grade name",
+  "instructions": null,
+  "taskName": "",
+  "tags": [
+    "EIM",
+    "DummyL"
+  ],
+  "status": "live",
+  "signature": "getSalaryGradeCode",
+  "createdAt": "2025-12-22T10:23:22.367Z",
+  "updatedAt": "2025-12-22T10:23:22.367Z",
+  "assignedAgents": [],
+  "contentHash": "5803b775e58aca50f9c54f4117d3f6daf72cc3b5aa812410cb7ea3b500a98e5b",
+  "lastExportedAt": "2026-09-05T19:39:23.159Z",
+  "raw": {
+    "basic": {
+      "_id": "69491c1a5eb411adb9eeb495",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getSalaryGradeCode",
+      "description": "This tool will be provide the salary grade code for the given salary grade name",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getSalaryGradeCode",
+        "args": [
+          {
+            "name": "salaryGradeName",
+            "type": "string",
+            "description": "The salary grade name",
+            "required": true,
+            "_id": "69491c1a5eb411adb9eeb497"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "69491c1a5eb411adb9eeb496"
+      },
+      "by": "10329",
+      "fetcher": "(function (args, reqOptions) {\n    return {\n      code: `(function(){\n          return [];\n        })`\n    };\n  })\n\n",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/SalaryGradeInfo.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"SalaryGradeInfo\");\n  const myHeaders = new Headers();\n  myHeaders.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/SalaryGradeInfo.aspx');\n  let url;\n  if (updateurl.updateUrl) {\n    url = `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`;\n  } else {\n    url = `${window.origin}/${reqOptions.sl}/EIM/SalaryGradeInfo.aspx`;\n  }\n\n  // Search Salary Grade\n  const searchFormData = new FormData();\n\n  // mandatory ASP.NET fields\n  searchFormData.append(\"scrollLeft\", \"0\");\n  searchFormData.append(\"scrollTop\", \"0\");\n  searchFormData.append(\"__EVENTTARGET\", \"\");\n  searchFormData.append(\"__EVENTARGUMENT\", \"\");\n  searchFormData.append(\"__VIEWSTATE\", details.viewState);\n  searchFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  searchFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  searchFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n  // page-specific hidden fields\n  searchFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  searchFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n  // 🔍 Search criteria\n  searchFormData.append(\n    \"ctl00$body$ContentSearch$cboCriteria\",\n    \"SAGRD.SAL_GRD_NAME\" // or SAGRD.SAL_GRD_CODE\n  );\n  searchFormData.append(\n    \"ctl00$body$ContentSearch$txtContent\",\n    args.salaryGradeName // search text\n  );\n  searchFormData.append(\n    \"ctl00$body$ContentSearch$butSearch\",\n    \"Search\"\n  );\n\n  // Telerik RadGrid paging (grdsummary1)\n  searchFormData.append(\n    \"ctl00$body$grdsummary1$ctl00$ctl03$ctl01$GoToPageTextBox\",\n    \"1\"\n  );\n  searchFormData.append(\n    \"ctl00_body_grdsummary1_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\",\n    \"\"\n  );\n  searchFormData.append(\n    \"ctl00$body$grdsummary1$ctl00$ctl03$ctl01$ChangePageSizeTextBox\",\n    \"10\"\n  );\n  searchFormData.append(\n    \"ctl00_body_grdsummary1_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\",\n    \"\"\n  );\n  searchFormData.append(\n    \"ctl00_body_grdsummary1_ClientState\",\n    \"\"\n  );\n\n  const searchResponse = await fetch(url, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: searchFormData,\n    redirect: \"follow\"\n  });\n\n  const searchHtml = await searchResponse.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(searchHtml, \"text/html\");\n\n  function getSalaryGradeCode(doc, salaryGradeName) {\n    const headers = doc.querySelectorAll(\n      \"tr.GroupHeader_Default p\"\n    );\n\n    const targetName = salaryGradeName.trim().toLowerCase();\n\n    for (const p of headers) {\n      const text = p.textContent || \"\";\n\n      // Example text:\n      // \"Salary Grade  : 000004_Software Engineer\"\n      const match = text.match(/Salary Grade\\s*:\\s*(\\d+)_([\\s\\S]+)/i);\n\n      if (!match) continue;\n\n      const code = match[1];           // 000004\n      const name = match[2].trim();    // Software Engineer\n\n      if (name.toLowerCase() === targetName) {\n        return code;\n      }\n    }\n\n    return null;\n  }\n\n  const salaryGradeCode = getSalaryGradeCode(\n    doc,\n    args.salaryGradeName\n  );\n\n  if (!salaryGradeCode) {\n    throw new Error(\n      `Salary Grade not found for name: ${args.salaryGradeName}`\n    );\n  }\n\n  return {\n    code: salaryGradeCode\n  };\n})\n\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "DummyL"
+      ],
+      "taskName": "",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-22T10:23:22.367Z",
+      "updatedAt": "2025-12-22T10:23:22.367Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getSalaryGradeCode",
+      "args": [
+        {
+          "name": "salaryGradeName",
+          "type": "string",
+          "description": "The salary grade name",
+          "required": true,
+          "_id": "69491c1a5eb411adb9eeb497"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "69491c1a5eb411adb9eeb496"
+    },
+    "fetcher": "(function (args, reqOptions) {\n    return {\n      code: `(function(){\n          return [];\n        })`\n    };\n  })\n\n",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/SalaryGradeInfo.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"SalaryGradeInfo\");\n  const myHeaders = new Headers();\n  myHeaders.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/SalaryGradeInfo.aspx');\n  let url;\n  if (updateurl.updateUrl) {\n    url = `${window.origin}/${reqOptions.sl}/${updateurl.updateUrl}`;\n  } else {\n    url = `${window.origin}/${reqOptions.sl}/EIM/SalaryGradeInfo.aspx`;\n  }\n\n  // Search Salary Grade\n  const searchFormData = new FormData();\n\n  // mandatory ASP.NET fields\n  searchFormData.append(\"scrollLeft\", \"0\");\n  searchFormData.append(\"scrollTop\", \"0\");\n  searchFormData.append(\"__EVENTTARGET\", \"\");\n  searchFormData.append(\"__EVENTARGUMENT\", \"\");\n  searchFormData.append(\"__VIEWSTATE\", details.viewState);\n  searchFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  searchFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  searchFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n  // page-specific hidden fields\n  searchFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  searchFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n  // 🔍 Search criteria\n  searchFormData.append(\n    \"ctl00$body$ContentSearch$cboCriteria\",\n    \"SAGRD.SAL_GRD_NAME\" // or SAGRD.SAL_GRD_CODE\n  );\n  searchFormData.append(\n    \"ctl00$body$ContentSearch$txtContent\",\n    args.salaryGradeName // search text\n  );\n  searchFormData.append(\n    \"ctl00$body$ContentSearch$butSearch\",\n    \"Search\"\n  );\n\n  // Telerik RadGrid paging (grdsummary1)\n  searchFormData.append(\n    \"ctl00$body$grdsummary1$ctl00$ctl03$ctl01$GoToPageTextBox\",\n    \"1\"\n  );\n  searchFormData.append(\n    \"ctl00_body_grdsummary1_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\",\n    \"\"\n  );\n  searchFormData.append(\n    \"ctl00$body$grdsummary1$ctl00$ctl03$ctl01$ChangePageSizeTextBox\",\n    \"10\"\n  );\n  searchFormData.append(\n    \"ctl00_body_grdsummary1_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\",\n    \"\"\n  );\n  searchFormData.append(\n    \"ctl00_body_grdsummary1_ClientState\",\n    \"\"\n  );\n\n  const searchResponse = await fetch(url, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: searchFormData,\n    redirect: \"follow\"\n  });\n\n  const searchHtml = await searchResponse.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(searchHtml, \"text/html\");\n\n  function getSalaryGradeCode(doc, salaryGradeName) {\n    const headers = doc.querySelectorAll(\n      \"tr.GroupHeader_Default p\"\n    );\n\n    const targetName = salaryGradeName.trim().toLowerCase();\n\n    for (const p of headers) {\n      const text = p.textContent || \"\";\n\n      // Example text:\n      // \"Salary Grade  : 000004_Software Engineer\"\n      const match = text.match(/Salary Grade\\s*:\\s*(\\d+)_([\\s\\S]+)/i);\n\n      if (!match) continue;\n\n      const code = match[1];           // 000004\n      const name = match[2].trim();    // Software Engineer\n\n      if (name.toLowerCase() === targetName) {\n        return code;\n      }\n    }\n\n    return null;\n  }\n\n  const salaryGradeCode = getSalaryGradeCode(\n    doc,\n    args.salaryGradeName\n  );\n\n  if (!salaryGradeCode) {\n    throw new Error(\n      `Salary Grade not found for name: ${args.salaryGradeName}`\n    );\n  }\n\n  return {\n    code: salaryGradeCode\n  };\n})\n\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

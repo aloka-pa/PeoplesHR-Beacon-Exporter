@@ -1,0 +1,1098 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "entity",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Specifies the type of entity to be created. This is a mandatory field and must contain one of the predefined values listed. Supported entities include: location, costCenter, subLocation, salaryGrade, corporateTitle, designation, jobDescriptionCategory, jobDescriptionType, qualificationType, ratingMethod, membershipType, membershipDetails, membershipTitle, bargainingUnit, cashBenefit, nonCashBenefitCategory, nonCashBenefit, employeeCategory, statutoryClassification, function, functionalRoles, classification, employeeGroup, employmentType, employeeTitle, genderType, maritalStatus, bloodGroup, and attachmentType. This field is essential for identifying the module under which the creation request will be processed.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "location",
+          "costCenter",
+          "subLocation",
+          "salaryGrade",
+          "corporateTitle",
+          "designation",
+          "jobDescriptionCategory",
+          "jobDescriptionType",
+          "qualificationType",
+          "ratingMethod",
+          "membershipType",
+          "membershipDetails",
+          "membershipTitle",
+          "bargainingUnit",
+          "cashBenefit",
+          "nonCashBenefitCategory",
+          "nonCashBenefit",
+          "employeeCategory",
+          "statutoryClassification",
+          "createFunction",
+          "functionalRoles",
+          "classification",
+          "employeeGroup",
+          "employmentType",
+          "employeeTitle",
+          "genderType",
+          "maritalStatus",
+          "bloodGroup",
+          "attachmentType",
+          "cashBenefitAssignToSalaryGrade",
+          "nonCashBenefitAssignToSalaryGrade"
+        ],
+        "description": "Specifies the type of entity to be created. This is a mandatory field and must contain one of the predefined values listed. Supported entities include: location, costCenter, subLocation, salaryGrade, corporateTitle, designation, jobDescriptionCategory, jobDescriptionType, qualificationType, ratingMethod, membershipType, membershipDetails, membershipTitle, bargainingUnit, cashBenefit, nonCashBenefitCategory, nonCashBenefit, employeeCategory, statutoryClassification, function, functionalRoles, classification, employeeGroup, employmentType, employeeTitle, genderType, maritalStatus, bloodGroup, and attachmentType. This field is essential for identifying the module under which the creation request will be processed."
+      }
+    },
+    {
+      "name": "location",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "To create a location: Always collect required fields. For optional fields, only ask if the user provides related input. First, fetch values using the getDistrictDetails tool. If the user provides names like country, province, or district directly, map them to their corresponding codes using getSelectLocationDetails. If no input is given, fall back to tool-provided values.",
+      "advanced": true,
+      "raw": {
+        "title": "LocationFormData",
+        "type": "object",
+        "description": "To create a location: Always collect required fields. For optional fields, only ask if the user provides related input. First, fetch values using the getDistrictDetails tool. If the user provides names like country, province, or district directly, map them to their corresponding codes using getSelectLocationDetails. If no input is given, fall back to tool-provided values.",
+        "properties": {
+          "ctl00_body_txtName": {
+            "type": "string",
+            "description": "Full name of the location. Prefer user input when available."
+          },
+          "ctl00_body_txtAbbreviation": {
+            "type": "string",
+            "description": "Abbreviation for the location. Use user input when provided."
+          },
+          "ctl00_body_txttp": {
+            "type": "string",
+            "description": "Telephone number for the location. Use user input."
+          },
+          "ctl00_body_txtFax": {
+            "type": "string",
+            "description": "Fax number for the location. Use user input."
+          },
+          "ctl00_body_txtemail": {
+            "type": "string",
+            "format": "email",
+            "description": "Email address of the location. Use user input."
+          },
+          "ctl00_body_txturl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Website URL of the location. Use user input."
+          },
+          "ctl00_body_txtaddress": {
+            "type": "string",
+            "description": "Physical address of the location. Use user input."
+          },
+          "ctl00_body_ddlCountry": {
+            "type": "string",
+            "description": "Country code (e.g., '000012'). If the user provides a country name, map it to its code using getSelectLocationDetails. Otherwise, use the fallback value from the tool."
+          },
+          "ctl00_body_ddlProvince": {
+            "type": "string",
+            "description": "Province code (e.g., '000012'). If the user provides a province name, map it to its code using getSelectLocationDetails. Otherwise, use the fallback value from the tool."
+          },
+          "ctl00_body_ddlDistrict": {
+            "type": "string",
+            "description": "District code (e.g., '000012'). If the user provides a district name, map it to its code using getSelectLocationDetails. Otherwise, use the fallback value from the tool."
+          },
+          "ctl00_body_cboTimeZone": {
+            "type": "string",
+            "description": "Time zone of the location. Use user input."
+          },
+          "ctl00_body_txtHeadName": {
+            "type": "string",
+            "description": "Name of the head of the location. Use user input."
+          },
+          "ctl00_body_txtHTitle": {
+            "type": "string",
+            "description": "Title/designation of the head of the location. Use user input."
+          },
+          "ctl00_body_txtAdminName": {
+            "type": "string",
+            "description": "Name of the administrator for the location. Use user input."
+          },
+          "ctl00_body_filMyFile": {
+            "type": "string",
+            "contentEncoding": "base64",
+            "title": "Logo File",
+            "description": "Logo file in base64 encoding. Optional input, use only if provided."
+          },
+          "ctl00_body_butSave": {
+            "type": "string",
+            "enum": [
+              "Save"
+            ],
+            "description": "Save action trigger. Always set this to 'Save'."
+          },
+          "ctl00_body_hdnDefCountry": {
+            "type": "string",
+            "description": "Default country code. Use user input when available."
+          }
+        },
+        "required": [
+          "ctl00_body_txtName",
+          "ctl00_body_ddlCountry",
+          "ctl00_body_ddlProvince",
+          "ctl00_body_ddlDistrict"
+        ]
+      }
+    },
+    {
+      "name": "costCenter",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": null,
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "properties": {
+          "costCentreName": {
+            "type": "string",
+            "description": "Name of the cost centre if the user missing the field to ask user prompt to fill the cost centre name then i will create the cost center."
+          },
+          "description": {
+            "type": "string",
+            "description": "Short description of the cost centre."
+          }
+        },
+        "required": [
+          "costCentreName"
+        ]
+      }
+    },
+    {
+      "name": "subLocation",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "To create a new sub-location, first fetch all available locations using the getSelectLocations API and display the location names for the user to select. Once a location is selected, automatically retrieve the corresponding location ID. The 'Head of Sub Location' field is optional however, if the user provides an employee ID, the corresponding employee name should be automatically fetched and populated. The 'Head of Sub Location' name remains optional during the creation process.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "To create a new sub-location, first fetch all available locations using the getSelectLocations API and display the location names for the user to select. Once a location is selected, automatically retrieve the corresponding location ID. The 'Head of Sub Location' field is optional however, if the user provides an employee ID, the corresponding employee name should be automatically fetched and populated. The 'Head of Sub Location' name remains optional during the creation process.",
+        "properties": {
+          "ctl00_body_txtName": {
+            "type": "string",
+            "description": "Name or description of the sub-location, e.g., 'Colomboo'."
+          },
+          "ctl00_body_ddlLocation": {
+            "type": "string",
+            "description": "Selected location ID from the dropdown, e.g., '000002'. This value should be retrieved from the available locations using the getSubLocationDetails API. The user must select the corresponding value or id."
+          },
+          "ctl00_body_txtHeadName": {
+            "type": "string",
+            "description": "Head of Sub Location name, e.g., 'Peter Pascal'. This is an optional field. If provided, the corresponding employee ID should be fetched using the getEmployeeDetails API."
+          }
+        },
+        "required": [
+          "ctl00_body_txtName",
+          "ctl00_body_ddlLocation"
+        ]
+      }
+    },
+    {
+      "name": "salaryGrade",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Before Execute in this tool. first execute the getCurrencyDetails Api then display available currency name then pic the currency name corresponding value will be take.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Before Execute in this tool. first execute the getCurrencyDetails Api then display available currency name then pic the currency name corresponding value will be take.",
+        "properties": {
+          "ctl00_body_txtsalname": {
+            "type": "string",
+            "description": "Salary Grade Name (e.g., GCB Grade 04)."
+          },
+          "ctl00_body_cboCurrType": {
+            "type": "string",
+            "description": "Selected currency code (e.g., 000001 for AED). display the currency list to selected the currency name to get corresponding value for getCurrencyDetails api"
+          },
+          "ctl00_body_txtMin": {
+            "type": "number",
+            "description": "Minimum salary point. It must be less than equal to the Mid Point."
+          },
+          "ctl00_body_txtMid": {
+            "type": "number",
+            "description": "Mid salary point. It must be greater than the Min Point and less than equal to the Max Point."
+          },
+          "ctl00_body_txtMax": {
+            "type": "number",
+            "description": "Maximum salary point. It must be greater than equal to the Mid Point."
+          }
+        },
+        "required": [
+          "ctl00_body_txtsalname",
+          "ctl00_body_cboCurrType",
+          "ctl00_body_txtMin",
+          "ctl00_body_txtMid",
+          "ctl00_body_txtMax"
+        ]
+      }
+    },
+    {
+      "name": "corporateTitle",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Before creating a Corporate Title,must and should execute for 'getUpgradeLevelandSalaryGrade' tool then display the all salary grades,The Salary Grade options must be shown to the user, who will then select a name, and the corresponding value must be captured. If the user marks 'Top in Hierarchy' as enabled (on), the Next Upgrade Level field should not be displayed. However, if 'Top in Hierarchy' is disabled (off), the Next Upgrade Level options must be shown, and the user should select the appropriate value from the list. top Hierarchy is optional field if the user add then condations implement other then not required dont display the next upgrade details.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Before creating a Corporate Title,must and should execute for 'getUpgradeLevelandSalaryGrade' tool then display the all salary grades,The Salary Grade options must be shown to the user, who will then select a name, and the corresponding value must be captured. If the user marks 'Top in Hierarchy' as enabled (on), the Next Upgrade Level field should not be displayed. However, if 'Top in Hierarchy' is disabled (off), the Next Upgrade Level options must be shown, and the user should select the appropriate value from the list. top Hierarchy is optional field if the user add then condations implement other then not required dont display the next upgrade details.",
+        "properties": {
+          "ctl00_body_txtName": {
+            "type": "string",
+            "description": "Corporate Title Name (e.g., 'Middle Management').in this field is required must and should provide the user"
+          },
+          "ctl00_body_dpSalary": {
+            "type": "string",
+            "description": "Selected Salary Grade code (e.g., '000005'). All Salary Grades data for getUpdateCorporateTitleDetails api will be displayed for the user to select, and the corresponding value must be picked.and in this field is required must and should provide the user"
+          },
+          "ctl00_body_chkTop": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Top in Hierarchy flag. If provided as 'on', 'Next Upgrade Level' must NOT be passed. in this field is optional field"
+          },
+          "ctl00_body_dpNextUpgrade": {
+            "type": "string",
+            "description": "Next Upgrade Level code (e.g., '000008'). this field is optional This must be provided if 'Top in Hierarchy' is not 'on'. and user off to display the all next upgrade level detaisl for retrive the data for getUpdateCorporateTitleDetails api"
+          },
+          "ctl00_body_nuLevel": {
+            "type": "integer",
+            "description": "Level number (e.g., 3)."
+          },
+          "ctl00_body_ManagePos": {
+            "type": "string",
+            "enum": [
+              "on",
+              "off"
+            ],
+            "description": "Indicates whether it is a Managerial Position. on or off"
+          }
+        },
+        "required": [
+          "ctl00_body_txtName",
+          "ctl00_body_dpSalary"
+        ],
+        "dependencies": {
+          "ctl00_body_chkTop": {
+            "oneOf": [
+              {
+                "properties": {
+                  "ctl00_body_chkTop": {
+                    "const": "on"
+                  }
+                },
+                "not": {
+                  "required": [
+                    "ctl00_body_dpNextUpgrade"
+                  ]
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "ctl00_body_chkTop"
+                  ]
+                },
+                "required": [
+                  "ctl00_body_dpNextUpgrade"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "designation",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "This tool is used to create a Designation. First, it executes the gradeDetails API to retrieve and select the appropriate salary grade value. After selecting the salary grade, it then executes the getTitle API to retrieve and select the corresponding corporate title value. The steps must be followed in sequence: first execute gradeDetails, then execute getTitle.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "This tool is used to create a Designation. First, it executes the gradeDetails API to retrieve and select the appropriate salary grade value. After selecting the salary grade, it then executes the getTitle API to retrieve and select the corresponding corporate title value. The steps must be followed in sequence: first execute gradeDetails, then execute getTitle.",
+        "properties": {
+          "ctl00_body_txtName": {
+            "type": "string",
+            "description": "Designation name (e.g., 'Human Resources Manager')."
+          },
+          "ctl00_body_chksenior": {
+            "type": "string",
+            "enum": [
+              "on",
+              "off"
+            ],
+            "description": "selsect senior management 'on' or 'off'."
+          },
+          "ctl00_body_dpSalary": {
+            "type": "string",
+            "description": "Selected Salary Grade code (e.g., '000005')."
+          },
+          "ctl00_body_dpNextUpgrade": {
+            "type": "string",
+            "description": "Selected Corporate Title or Next Upgrade Level code (e.g., '000001')."
+          },
+          "ctl00_body_dpnextupgradedsg": {
+            "type": "string",
+            "description": "Selected Next Designation in Career Progression code (e.g., '000034').if the user missing fields to get data for gradeDetails api."
+          },
+          "ctl00_body_cbofunctionRole": {
+            "type": "string",
+            "description": "Selected Functional Role code (e.g., '000001').if the user missing fields to get data for getTitle api"
+          }
+        },
+        "required": [
+          "ctl00_body_txtName",
+          "ctl00_body_chksenior",
+          "ctl00_body_dpSalary",
+          "ctl00_body_dpNextUpgrade"
+        ]
+      }
+    },
+    {
+      "name": "jobDescriptionCategory",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "in this api create job description.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "in this api create job description.",
+        "properties": {
+          "jobDescriptionCategoryName": {
+            "type": "string",
+            "description": "to create a job Description Category first give the Description Category Name then will be create. user must be provide the description category name."
+          }
+        },
+        "required": [
+          "jobDescriptionCategoryName"
+        ]
+      }
+    },
+    {
+      "name": "jobDescriptionType",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "if the user create job Description Type take the entity value is 'jobDescriptionType',This tool is used to create a Job Description Type. First, execute the getJdCategory tool to fetch Job Description Category details. Display the full list of available categories, and prompt the user to select one. The selected category value will then be used to proceed. The Job Description Category list must be shown to the user before selection, and the getJdCategory tool should be executed to retrieve this list.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "if the user create job Description Type take the entity value is 'jobDescriptionType',This tool is used to create a Job Description Type. First, execute the getJdCategory tool to fetch Job Description Category details. Display the full list of available categories, and prompt the user to select one. The selected category value will then be used to proceed. The Job Description Category list must be shown to the user before selection, and the getJdCategory tool should be executed to retrieve this list.",
+        "properties": {
+          "jobDescriptionTypeName": {
+            "type": "string",
+            "description": "to give the  Job Description Type Name then will be create the Job Description Type"
+          },
+          "jobDescriptionCategory": {
+            "type": "string",
+            "description": "Do not auto-fill the field — the user must manually select it. Display the Job Description Category list using the getJdCategory tool, and allow the user to select a value. The corresponding value will then be used. To create a Job Description Category, first display all available categories from the getJdCategory API, and once the user selects one (e.g., '000001'), use the selected value accordingly."
+          }
+        },
+        "required": [
+          "jobDescriptionTypeName",
+          "jobDescriptionCategory"
+        ]
+      }
+    },
+    {
+      "name": "qualificationType",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "in this api create job description.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "in this api create job description.",
+        "properties": {
+          "qualificationTypeName": {
+            "type": "string",
+            "description": "to create a qualification type name, first give the qualification type Name then will be create. user must be provide the qualification type name."
+          }
+        },
+        "required": [
+          "qualificationTypeName"
+        ]
+      }
+    },
+    {
+      "name": "ratingMethod",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "in this api create Rating Method.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "in this api create Rating Method.",
+        "properties": {
+          "ratingMethod": {
+            "type": "string",
+            "description": "to give the  ratingMethod , Ex:- SkillRatingMethod"
+          },
+          "grade": {
+            "type": "string",
+            "description": "to give the grade , Ex:- `A` or `1`"
+          },
+          "minimumMarks": {
+            "type": "string",
+            "description": "to give the minimumMarks , Ex:-'10'"
+          },
+          "maximumMarks": {
+            "type": "string",
+            "description": "maximumMarks , Ex:- '100'"
+          }
+        },
+        "required": [
+          "ratingMethod",
+          "grade",
+          "minimumMarks",
+          "maximumMarks"
+        ]
+      }
+    },
+    {
+      "name": "membershipType",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "type key is 'membershipType',in this api create Membership Type. before creating the membership type first user to ask for member ship type name then after creating the membership type.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "type key is 'membershipType',in this api create Membership Type. before creating the membership type first user to ask for member ship type name then after creating the membership type.",
+        "properties": {
+          "membershipType": {
+            "type": "string",
+            "description": "to create give the membership Type name. before creating the mebership type first user to ask for membership type name then after create proce"
+          }
+        },
+        "required": [
+          "membershipType"
+        ]
+      }
+    },
+    {
+      "name": "membershipDetails",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "in this tool create the Membership.first execute the getEIMApii Api. display the all membership type then select one corresponding value will be take. and ask user membership name aslo.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "in this tool create the Membership.first execute the getEIMApii Api. display the all membership type then select one corresponding value will be take. and ask user membership name aslo.",
+        "properties": {
+          "ctl00_body_txtName": {
+            "type": "string",
+            "description": "The name of the membership name."
+          },
+          "ctl00_body_dpcountry": {
+            "type": "string",
+            "description": "The code corresponding to the selected membership type. if the user not update to get corresponsding data for getEIMApii api. and corresponding value wiil be take Example:-'000001'"
+          }
+        },
+        "required": [
+          "ctl00_body_txtName",
+          "ctl00_body_dpcountry"
+        ]
+      }
+    },
+    {
+      "name": "membershipTitle",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "in this api create the membership title.and must and should to ask for membership title name for the user",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "in this api create the membership title.and must and should to ask for membership title name for the user",
+        "properties": {
+          "membershipTitleName": {
+            "type": "string",
+            "description": "to create the membership title give the membership title name."
+          }
+        },
+        "required": [
+          "membershipTitleName"
+        ]
+      }
+    },
+    {
+      "name": "bargainingUnit",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "To create the Bargaining Unit, if any optional fields are left empty by the user, the process will still proceed using only the available input.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "To create the Bargaining Unit, if any optional fields are left empty by the user, the process will still proceed using only the available input.",
+        "properties": {
+          "ctl00_body_txtBGNName": {
+            "type": "string",
+            "description": "Name of the bargaining unit."
+          },
+          "ctl00_body_txtAbbreviation": {
+            "type": "string",
+            "description": "Abbreviation of the bargaining unit name."
+          },
+          "ctl00_body_txtRegDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Date when the bargaining unit was registered. data format '05/01/2025'"
+          },
+          "ctl00_body_txtRegNumber": {
+            "type": "integer",
+            "description": "Registration number of the bargaining unit.only numbers access string not access"
+          },
+          "ctl00_body_txtRegBody": {
+            "type": "string",
+            "description": "Name of the body with which the bargaining unit is registered."
+          }
+        },
+        "required": [
+          "ctl00_body_txtBGNName"
+        ]
+      }
+    },
+    {
+      "name": "cashBenefit",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "To create a cash benefit in this tool, first execute the getCurrencyDetails API to fetch all available currency options. Display the list for the user to select a currency, and use the corresponding value during creation. If any required fields are missing, halt the creation process.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "To create a cash benefit in this tool, first execute the getCurrencyDetails API to fetch all available currency options. Display the list for the user to select a currency, and use the corresponding value during creation. If any required fields are missing, halt the creation process.",
+        "properties": {
+          "ctl00_body_txtName": {
+            "type": "string",
+            "description": "Description of the cash benefit. description is a required field must and should ask for user cash benefit description required field. dont auto filling in ai ask for user"
+          },
+          "ctl00_body_nuamount": {
+            "type": "number",
+            "description": "Amount of the cash benefit. cash benefit amount is a required field must and should be ask for user cash benefit amount required field.dont auto filling in ai ask for user"
+          },
+          "ctl00_body_cboCurrency": {
+            "type": "string",
+            "description": "Selected currency code (e.g., 000146 for USD) you take currency name corresponding value will be take.cash benefit Currency is a required field must and should be ask for user cash benefit Currency required field.dont auto filling in ai ask for user"
+          },
+          "ctl00_body_dtRateEffDate_txtDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Rate effective date in dd/mm/yyyy format"
+          }
+        },
+        "required": [
+          "ctl00_body_txtName",
+          "ctl00_body_nuamount",
+          "ctl00_body_cboCurrency"
+        ]
+      }
+    },
+    {
+      "name": "nonCashBenefitCategory",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "in this api generate NonCash Benefit Category. must and should user to ask for description name. ai not filling",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "in this api generate NonCash Benefit Category. must and should user to ask for description name. ai not filling",
+        "properties": {
+          "ctl00_body_txtName": {
+            "type": "string",
+            "description": "create non cash benefit.give description name."
+          }
+        },
+        "required": [
+          "ctl00_body_txtName"
+        ]
+      }
+    },
+    {
+      "name": "nonCashBenefit",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "if the user to new non cash benefit to ask for the non cash benefit Description and Category and to get category list provide for 'ncdCategory' tool. before creating non cashbenefit must should execute for 'ncdCategory' tool to get the category details.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "if the user to new non cash benefit to ask for the non cash benefit Description and Category and to get category list provide for 'ncdCategory' tool. before creating non cashbenefit must should execute for 'ncdCategory' tool to get the category details.",
+        "properties": {
+          "ctl00_body_txtName": {
+            "type": "string",
+            "description": "Description or name of the non-cash benefit item."
+          },
+          "ctl00_body_dpCategory": {
+            "type": "string",
+            "description": "Selected category code for the non-cash benefit item.If the user updates the category details, use the corresponding category value when calling the 'ncdCategory' API"
+          }
+        },
+        "required": [
+          "ctl00_body_txtName",
+          "ctl00_body_dpCategory"
+        ]
+      }
+    },
+    {
+      "name": "employeeCategory",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "in this api create employee category. and must and should ask to the user for employee catagory details",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "in this api create employee category. and must and should ask to the user for employee catagory details",
+        "properties": {
+          "employeeCategory": {
+            "type": "string",
+            "description": "to update the employee category description. user to ask for in the field employee category."
+          }
+        },
+        "required": [
+          "employeeCategory"
+        ]
+      }
+    },
+    {
+      "name": "statutoryClassification",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "in this api create the Statutory Classification. and must and should ask for statutory classification name user to provide.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "in this api create the Statutory Classification. and must and should ask for statutory classification name user to provide.",
+        "properties": {
+          "statutoryClassificationName": {
+            "type": "string",
+            "description": "to update the employee category description.in the field to provide to user."
+          }
+        },
+        "required": [
+          "statutoryClassificationName"
+        ]
+      }
+    },
+    {
+      "name": "createFunction",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "in this api create the function. user to required fiels for before creating function user to ask for function name.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "in this api create the function. user to required fiels for before creating function user to ask for function name.",
+        "properties": {
+          "functionName": {
+            "type": "string",
+            "description": "to give the function name or description."
+          }
+        },
+        "required": [
+          "functionName"
+        ]
+      }
+    },
+    {
+      "name": "functionalRoles",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "To create a functional role, two fields are mandatory. The user must first fetch all available function types from the 'functionTypes' API. If the user provides a function name, map it to its corresponding value from this API. Then display all available functional types, allow the user to select one, and use the selected value for the creation process. If the user wants to create a new record for the functional role entity, return the keyword 'functionalRoles'.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "To create a functional role, two fields are mandatory. The user must first fetch all available function types from the 'functionTypes' API. If the user provides a function name, map it to its corresponding value from this API. Then display all available functional types, allow the user to select one, and use the selected value for the creation process. If the user wants to create a new record for the functional role entity, return the keyword 'functionalRoles'.",
+        "properties": {
+          "ctl00_body_dpcountry": {
+            "type": "string",
+            "description": "This field requires the functional type value. It should be obtained from the 'functionTypes' API. If the user provides a function name, map it to the corresponding value. Display all functional types, allow the user to select one, and then capture the corresponding value (functional role ID or country code)."
+          },
+          "ctl00_body_txtName": {
+            "type": "string",
+            "description": "The name or label to be assigned to the functional role."
+          }
+        },
+        "required": [
+          "ctl00_body_dpcountry",
+          "ctl00_body_txtName"
+        ]
+      }
+    },
+    {
+      "name": "classification",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "if the user create classification corresponding entity name is 'classification' in this api create the classification. and must and should to ask for classification name for user and take for entity value 'classification' ",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "if the user create classification corresponding entity name is 'classification' in this api create the classification. and must and should to ask for classification name for user and take for entity value 'classification' ",
+        "properties": {
+          "classificationName": {
+            "type": "string",
+            "description": "to give the classification Name or description. user to provided in the field."
+          }
+        },
+        "required": [
+          "classificationName"
+        ]
+      }
+    },
+    {
+      "name": "employeeGroup",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "in this api create the Create Employee Group. and user must be ask for employee group name and it is required to ask for user",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "in this api create the Create Employee Group. and user must be ask for employee group name and it is required to ask for user",
+        "properties": {
+          "empGroupName": {
+            "type": "string",
+            "description": "to give the employee group Name or description.and in this field to ask for user."
+          }
+        },
+        "required": [
+          "empGroupName"
+        ]
+      }
+    },
+    {
+      "name": "employeeTitle",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Before creating a new employee title, first check if the provided title exceeds 10 characters. If it does, return an error message saying: 'Please provide an employee title with fewer than 10 characters.'Next, before proceeding with the creation, you must execute the 'getEIMModuleLists' tool to retrieve the existing list of employee titles. If the given employee title already exists in the list, return a message stating: 'The employee title already exists,' and return the related data.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Before creating a new employee title, first check if the provided title exceeds 10 characters. If it does, return an error message saying: 'Please provide an employee title with fewer than 10 characters.'Next, before proceeding with the creation, you must execute the 'getEIMModuleLists' tool to retrieve the existing list of employee titles. If the given employee title already exists in the list, return a message stating: 'The employee title already exists,' and return the related data.",
+        "properties": {
+          "ctl00_body_txtName": {
+            "type": "string",
+            "description": "name of the employee title for example:'Mr.,Ms. etc..'. must and should ask for employee title for user."
+          },
+          "ctl00_body_chkGenderValid": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Checkbox indicating whether gender validation is enabled. if the user enable return the is on"
+          },
+          "ctl00_body_cboGender": {
+            "type": "string",
+            "enum": [
+              "0",
+              "1",
+              "2"
+            ],
+            "description": "Selected gender value (0: Female, 1: Male, 2: Other). if the user enable the gender validate then enable gender corresponding gender value take."
+          },
+          "ctl00_body_chkMaritalStatus_0": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Undisclosed marital status selected."
+          },
+          "ctl00_body_chkMaritalStatus_1": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Unmarried marital status selected."
+          },
+          "ctl00_body_chkMaritalStatus_2": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Married marital status selected."
+          },
+          "ctl00_body_chkMaritalStatus_3": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Divorced marital status selected."
+          },
+          "ctl00_body_chkMaritalStatus_4": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Others marital status selected."
+          },
+          "ctl00_body_chkMaritalStatus_5": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Solo Parent marital status selected."
+          },
+          "ctl00_body_chkMaritalStatus_6": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Single marital status selected."
+          },
+          "ctl00_body_chkMaritalStatus_7": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "It Is Complicated marital status selected."
+          }
+        },
+        "required": [
+          "ctl00_body_txtName"
+        ]
+      }
+    },
+    {
+      "name": "genderType",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "in this api create a gender type. if the user create duplicate name accept in this gender type accept for duplicate gender types.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "in this api create a gender type. if the user create duplicate name accept in this gender type accept for duplicate gender types.",
+        "properties": {
+          "ctl00_body_txtGenName": {
+            "type": "string",
+            "description": "Name of the gender (e.g., Male, Female, Other). gender type name must 20 charcaters more then user given 20 charcetrs. return the issue for user"
+          },
+          "ctl00_body_txtdesc": {
+            "type": "string",
+            "description": "Description or label for the gender (can be the same as the name or a more detailed label)."
+          }
+        },
+        "required": [
+          "ctl00_body_txtGenName",
+          "ctl00_body_txtdesc"
+        ]
+      }
+    },
+    {
+      "name": "maritalStatus",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "ai not auto filling te fields if the any required ask for user.before create the Marital Status.if the user give the marital Status name do not ask for user then create, if not provide first ask for user marital Status name Then after creating.if the user to create marital status before creating marital status user to ask for name of the marital status and return the entity value 'maritalStatus'",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "ai not auto filling te fields if the any required ask for user.before create the Marital Status.if the user give the marital Status name do not ask for user then create, if not provide first ask for user marital Status name Then after creating.if the user to create marital status before creating marital status user to ask for name of the marital status and return the entity value 'maritalStatus'",
+        "properties": {
+          "ctl00_body_txtName": {
+            "type": "string",
+            "description": "user to give the create Marital Status name. user to ask for marital Status name then after create."
+          }
+        },
+        "required": [
+          "ctl00_body_txtName"
+        ]
+      }
+    },
+    {
+      "name": "bloodGroup",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "If the user wants to create or add a new Blood Group,must and should first fetch the existing blood group list using the getEIMModuleLists tool. If the list already contains 11 entries, a new Blood Group cannot be created. If the same Blood Group name appears more then two dupplicated values created in the list, it can be accepted; otherwise, if the name already exists, return the message: 'Blood Group already exists', This API is specifically used to create a new Blood Group, and it is mandatory to prompt the user to enter the Blood Group name. AI must not autofill this field — the user must manually provide the Blood Group name. and return entity value is 'bloodGroup'",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "If the user wants to create or add a new Blood Group,must and should first fetch the existing blood group list using the getEIMModuleLists tool. If the list already contains 11 entries, a new Blood Group cannot be created. If the same Blood Group name appears more then two dupplicated values created in the list, it can be accepted; otherwise, if the name already exists, return the message: 'Blood Group already exists', This API is specifically used to create a new Blood Group, and it is mandatory to prompt the user to enter the Blood Group name. AI must not autofill this field — the user must manually provide the Blood Group name. and return entity value is 'bloodGroup'",
+        "properties": {
+          "ctl00_body_txtName": {
+            "type": "string",
+            "description": "to give the blood group example:-'A +','A -', etc.. more then two dupplicated values created"
+          }
+        },
+        "required": [
+          "ctl00_body_txtName"
+        ]
+      }
+    },
+    {
+      "name": "employmentType",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": null,
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "properties": {
+          "ctl00_body_txtempdesc": {
+            "type": "string",
+            "description": "Name or label of the Employment Type (e.g., Permanent, Contractual)."
+          },
+          "ctl00_body_cbisdatelimit": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Indicates if the employment has a date limit (checkbox)."
+          },
+          "ctl00_body_nuDuration": {
+            "type": "string",
+            "description": "Duration of employment (only required if Date Limited is enabled)."
+          },
+          "ctl00_body_dpDurationType": {
+            "type": "string",
+            "description": "Duration unit (e.g., Months, Years) (only required if Date Limited is enabled)."
+          },
+          "ctl00_body_chkRetirementAge": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Indicates if retirement age is applicable (checkbox)."
+          },
+          "ctl00_body_nuAgeofMale": {
+            "type": "string",
+            "description": "Retirement age for males (required if Retirement Age is enabled)."
+          },
+          "ctl00_body_nuAgeofFemale": {
+            "type": "string",
+            "description": "Retirement age for females (required if Retirement Age is enabled)."
+          },
+          "ctl00_body_dpempcat": {
+            "type": "string",
+            "description": "Employment category (e.g., Full-Time, Part-Time)."
+          }
+        },
+        "required": [
+          "ctl00_body_txtempdesc"
+        ],
+        "dependencies": {
+          "ctl00_body_cbisdatelimit": {
+            "required": [
+              "ctl00_body_cbisdatelimit",
+              "ctl00_body_nuDuration",
+              "ctl00_body_dpDurationType"
+            ]
+          },
+          "ctl00_body_chkRetirementAge": {
+            "required": [
+              "ctl00_body_chkRetirementAge",
+              "ctl00_body_nuAgeofMale",
+              "ctl00_body_nuAgeofFemale"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "attachmentType",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "in this api Create the Attachment Type.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "in this api Create the Attachment Type.",
+        "properties": {
+          "ctl00_body_txtDesc": {
+            "type": "string",
+            "description": "Description or name of the attachment type (e.g., 'Attachment from Template Designer Module')."
+          },
+          "ctl00_body_ChkisExpire": {
+            "type": "string",
+            "enum": [
+              "on"
+            ],
+            "description": "Checkbox indicating if the attachment has an expiration (value is 'on' when checked)."
+          }
+        },
+        "required": [
+          "ctl00_body_txtDesc",
+          "ctl00_body_ChkisExpire"
+        ]
+      }
+    },
+    {
+      "name": "cashBenefitAssignToSalaryGrade",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "must be will be take the entity name is 'cashBenefitAssignToSalaryGrade',In this API, create the Cash Benefit Assign To Salary Grade. before create the 'cashBenefitAssignToSalaryGrade' api, first execute for 'getCashBenefitAssignToSalaryGradeDetails' api.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "must be will be take the entity name is 'cashBenefitAssignToSalaryGrade',In this API, create the Cash Benefit Assign To Salary Grade. before create the 'cashBenefitAssignToSalaryGrade' api, first execute for 'getCashBenefitAssignToSalaryGradeDetails' api.",
+        "properties": {
+          "userSpecificcashBenefitAssignToSalaryGradeNames": {
+            "type": "array",
+            "description": "only user selected selected cash benefit added other wise user ask the consent, what are the available cash benefit user ask to what are the added cash benefit,User selected cash Benefit Assign To SalaryGrade to add corresponding name values. user selected available benefit name corresponing identifier will be take no need to take names",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "userSpecificcashBenefitAssignToSalaryGradeNames"
+        ]
+      }
+    },
+    {
+      "name": "nonCashBenefitAssignToSalaryGrade",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "must be will be take the entity name is 'nonCashBenefitAssignToSalaryGrade'In this API, create the Cash Benefit Assign To Salary Grade. before create the 'NonCashBenefitAssignToSalaryGrade' api, first execute for 'getNonCashBenefitAssignToSalaryGradeDetails' api.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "must be will be take the entity name is 'nonCashBenefitAssignToSalaryGrade'In this API, create the Cash Benefit Assign To Salary Grade. before create the 'NonCashBenefitAssignToSalaryGrade' api, first execute for 'getNonCashBenefitAssignToSalaryGradeDetails' api.",
+        "properties": {
+          "userSpecificcashBenefitAssignToSalaryGradeNames": {
+            "type": "array",
+            "description": "user to ask consent what are the added availbel non cah benefit then user selcted the non cash benefit user select to added that only,User selected non cash Benefit Assign To SalaryGrade to add corresponding name values. user selected available benefit name corresponing identifier will be take no need to take names",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "userSpecificcashBenefitAssignToSalaryGradeNames"
+        ]
+      }
+    }
+  ]
+}

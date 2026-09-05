@@ -1,0 +1,42 @@
+{
+  "id": "690dc572931a2d61ba0b1c56",
+  "slug": "policy-docs",
+  "name": "Policy docs",
+  "description": "Policy docs information",
+  "exportedAt": "2026-09-05T19:41:12.249Z",
+  "raw": {
+    "_id": "690dc572931a2d61ba0b1c56",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "Policy docs",
+    "description": "Policy docs information",
+    "by": "1927",
+    "prompt": "Get the policy docs based on the query and give information from that",
+    "notes": [],
+    "llmConfig": [],
+    "status": "live",
+    "toolIds": [
+      "690dc568931a2d61ba0b184b"
+    ],
+    "scenarioIds": [],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "metaReasoning": false,
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      }
+    },
+    "vis": false,
+    "createdAt": "2025-06-03T12:33:42.691Z",
+    "updatedAt": "2025-06-03T12:33:42.691Z",
+    "__v": 0
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "id": "690dc563931a2d61ba0b139d",
+  "slug": "getcorporatetitledetails",
+  "name": "getCorporateTitleDetails",
+  "description": "in this tool generate the Corporate Title Details.",
+  "instructions": null,
+  "taskName": "Corporate Title Details",
+  "tags": [],
+  "status": "unlive",
+  "signature": "getCorporateTitleDetails",
+  "createdAt": "2025-04-29T07:01:56.609Z",
+  "updatedAt": "2026-07-17T12:52:41.018Z",
+  "assignedAgents": [],
+  "contentHash": "5de8dbf07596465678024147c92e75b175d5323758cc48aba12126968f56e3eb",
+  "lastExportedAt": "2026-09-05T19:39:22.143Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc563931a2d61ba0b139d",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getCorporateTitleDetails",
+      "description": "in this tool generate the Corporate Title Details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getCorporateTitleDetails",
+        "args": [
+          {
+            "name": "corporateCode",
+            "type": "string",
+            "description": "to search details give the user prompt corporateCode.",
+            "required": true,
+            "_id": "68107964da79d330175fc58c"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a25995aa8b43ec1a82b91"
+      },
+      "by": "34476",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"CorporeteTitle\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"C.CT_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", args.corporateCode);\n  urlencoded1.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/hr/EIM/CorporeteTitle.aspx`, requestOptions1);\n  const html1 = await response1.text();\n  const parser1 = new DOMParser();\n  const doc1 = parser1.parseFromString(html1, 'text/html');\n\n  const viewState = doc1.querySelector('#__VIEWSTATE')?.value || '';\n  const eventValidation = doc1.querySelector('#__EVENTVALIDATION')?.value || '';\n  const viewStateGen = doc1.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n\n  const anchor = doc1.querySelector('tr[id^=\"ctl00_body_grdsummary_ctl00__\"] a[href^=\"javascript:__doPostBack\"]');\n  const href = anchor?.getAttribute('href') || \"\";\n  const match = href.match(/__doPostBack\\('([^']+)'/);\n  const postBackCode = match ? match[1] : \"\";\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", postBackCode);\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$cboCriteria\", \"C.CT_CODE\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$txtContent\", args.corporateCode);\n  urlencoded2.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(`${location.origin}/hr/EIM/CorporeteTitle.aspx`, requestOptions2);\n  const html2 = await response2.text();\n\n  const finalDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html2);\n  window.ct = finalDetails;\n\n  const parser2 = new DOMParser();\n  const doc2 = parser2.parseFromString(html2, 'text/html');\n\n  const getValue = (id) => doc2.getElementById(id)?.value?.trim() || \"\";\n  const getSelectedOption = (id) => {\n    const select = doc2.getElementById(id);\n    if (select && select.selectedIndex >= 0) {\n      return {\n        value: select.options[select.selectedIndex].value,\n        text: select.options[select.selectedIndex].text.trim()\n      };\n    }\n    return { value: \"\", text: \"\" };\n  };\n  const isChecked = (id) => doc2.getElementById(id)?.checked || false;\n\n  const extractedData = {\n    code: getValue('ctl00_body_txtCode'),\n    corporateTitle: getValue('ctl00_body_txtName'),\n    salaryGrade: getSelectedOption('ctl00_body_dpSalary'),\n    topInHierarchy: isChecked('ctl00_body_chkTop'),\n    nextUpgradeLevel: getSelectedOption('ctl00_body_dpNextUpgrade'),\n    level: parseInt(getValue('ctl00_body_nuLevel'), 10) || 0,\n    managerialPosition: isChecked('ctl00_body_ManagePos')\n  };\n\n  const salaryGrades = Array.from(doc2.querySelectorAll('#ctl00_body_dpSalary option'))\n    .filter(option => option.value !== \"-1\" && option.value.trim() && option.text.trim())\n    .map(({ value, text }) => ({ value, text: text.trim() }));\n\n  const nextUpgradeLevels = Array.from(doc2.querySelectorAll('#ctl00_body_dpNextUpgrade option'))\n    .filter(option => option.value !== \"-1\" && option.value.trim() && option.text.trim())\n    .map(({ value, text }) => ({ value, text: text.trim() }));\n\n\n  return { extractedData, salaryGrades, nextUpgradeLevels };\n})\n",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Corporate Title Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-29T07:01:56.609Z",
+      "updatedAt": "2026-07-17T12:52:41.018Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "getCorporateTitleDetails",
+      "args": [
+        {
+          "name": "corporateCode",
+          "type": "string",
+          "description": "to search details give the user prompt corporateCode.",
+          "required": true,
+          "_id": "68107964da79d330175fc58c"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a25995aa8b43ec1a82b91"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"CorporeteTitle\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"C.CT_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", args.corporateCode);\n  urlencoded1.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/hr/EIM/CorporeteTitle.aspx`, requestOptions1);\n  const html1 = await response1.text();\n  const parser1 = new DOMParser();\n  const doc1 = parser1.parseFromString(html1, 'text/html');\n\n  const viewState = doc1.querySelector('#__VIEWSTATE')?.value || '';\n  const eventValidation = doc1.querySelector('#__EVENTVALIDATION')?.value || '';\n  const viewStateGen = doc1.querySelector('#__VIEWSTATEGENERATOR')?.value || '';\n\n  const anchor = doc1.querySelector('tr[id^=\"ctl00_body_grdsummary_ctl00__\"] a[href^=\"javascript:__doPostBack\"]');\n  const href = anchor?.getAttribute('href') || \"\";\n  const match = href.match(/__doPostBack\\('([^']+)'/);\n  const postBackCode = match ? match[1] : \"\";\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", postBackCode);\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$cboCriteria\", \"C.CT_CODE\");\n  urlencoded2.append(\"ctl00$body$ContentSearch$txtContent\", args.corporateCode);\n  urlencoded2.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"1\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded2.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  };\n\n  const response2 = await fetch(`${location.origin}/hr/EIM/CorporeteTitle.aspx`, requestOptions2);\n  const html2 = await response2.text();\n\n  const finalDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html2);\n  window.ct = finalDetails;\n\n  const parser2 = new DOMParser();\n  const doc2 = parser2.parseFromString(html2, 'text/html');\n\n  const getValue = (id) => doc2.getElementById(id)?.value?.trim() || \"\";\n  const getSelectedOption = (id) => {\n    const select = doc2.getElementById(id);\n    if (select && select.selectedIndex >= 0) {\n      return {\n        value: select.options[select.selectedIndex].value,\n        text: select.options[select.selectedIndex].text.trim()\n      };\n    }\n    return { value: \"\", text: \"\" };\n  };\n  const isChecked = (id) => doc2.getElementById(id)?.checked || false;\n\n  const extractedData = {\n    code: getValue('ctl00_body_txtCode'),\n    corporateTitle: getValue('ctl00_body_txtName'),\n    salaryGrade: getSelectedOption('ctl00_body_dpSalary'),\n    topInHierarchy: isChecked('ctl00_body_chkTop'),\n    nextUpgradeLevel: getSelectedOption('ctl00_body_dpNextUpgrade'),\n    level: parseInt(getValue('ctl00_body_nuLevel'), 10) || 0,\n    managerialPosition: isChecked('ctl00_body_ManagePos')\n  };\n\n  const salaryGrades = Array.from(doc2.querySelectorAll('#ctl00_body_dpSalary option'))\n    .filter(option => option.value !== \"-1\" && option.value.trim() && option.text.trim())\n    .map(({ value, text }) => ({ value, text: text.trim() }));\n\n  const nextUpgradeLevels = Array.from(doc2.querySelectorAll('#ctl00_body_dpNextUpgrade option'))\n    .filter(option => option.value !== \"-1\" && option.value.trim() && option.text.trim())\n    .map(({ value, text }) => ({ value, text: text.trim() }));\n\n\n  return { extractedData, salaryGrades, nextUpgradeLevels };\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

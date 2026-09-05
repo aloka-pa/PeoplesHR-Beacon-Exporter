@@ -1,0 +1,93 @@
+# Beacon tool patterns
+
+Auto-generated from 356 exported tool(s) and 180 function(s) by `npm run beacon:export`. Regenerated on every export — do not hand-edit; add durable notes to README.md instead.
+
+## Permission / menu-access checks
+
+Code that gates behavior on a user permission, role, or menu-access flag before proceeding.
+
+- `tools/getteamattendanceapprovaldetails/transformer.js`: `const hasAccess = BeaconBar.user.metaData.menus.includes("TNAV9/AttendanceApproval/AttendanceApplication/1?mvc=1");`
+
+## Authentication headers
+
+Requests attaching an auth/bearer/session header to an outgoing call.
+
+- `tools/getpolicydocs/transformer.js`: `myHeaders.append("x-api-key", "your_secret_key");`
+
+## Request construction
+
+HTTP client usage (fetch/axios/XHR) building outbound requests.
+
+- `tools/submitsubordinatesmanualinandout/transformer.js`: `const res = await fetch(url, {`
+- `tools/submitselfmanualinandout/transformer.js`: `const res = await fetch(url, {`
+- `tools/submitmanualinandoutbyadmin/transformer.js`: `const res = await fetch(url, {`
+- `tools/editsubordinatesmanualinandout/transformer.js`: `const res = await fetch(url, {`
+- `tools/editselfmanualinandout/transformer.js`: `const res = await fetch(url, {`
+
+## Argument validation
+
+Explicit checks that a required argument/field is present or well-formed.
+
+- `tools/getteamattendanceapprovaldetails/transformer.js`: `// Validate required parameters`
+- `tools/getcashbenefit/transformer.js`: `// Required WebForms fields`
+- `tools/createbenefitclearanceheadinformation/transformer.js`: `// Validate required fields`
+- `tools/createstationinformation/transformer.js`: `// Validate required fields`
+- `tools/editstationinformation/transformer.js`: `// Validate that at least one update field is provided`
+
+## Date formatting
+
+Date/time formatting or parsing utilities.
+
+- `tools/getworkflowgroups/transformer.js`: `timestamp: new Date().toISOString()`
+- `tools/selfemployeeleavehistory/transformer.js`: `const formatDate = (dateStr) => {`
+- `tools/leavecancelation/transformer.js`: `const formatDate = (dateStr) => {`
+- `tools/getviewleavehistorydetails/transformer.js`: `const formatDate = (dateStr) => {`
+- `tools/changeorupdateshiftadjustment/transformer.js`: `function formatDate(inputDate) {`
+
+## Employee / subordinate selection
+
+Logic that selects an employee, subordinate, or reporting-line record.
+
+- `tools/submitsubordinatesmanualinandout/transformer.js`: `* Step 1: identify the subordinate and the date.`
+- `tools/editsubordinatesmanualinandout/transformer.js`: `* Step 1: identify the subordinate and the date.`
+- `tools/editbenefitclearanceheadinformation/transformer.js`: `if (args.employeeId) {`
+- `tools/createbenefitclearanceheadinformation/transformer.js`: `if (!args.employeeId) {`
+- `tools/getpriorovertimeapplicationdetails/transformer.js`: `employeeId : entry.EmpDisplayName || "",`
+
+## API error handling
+
+try/catch or status-code branching around an API call.
+
+- `tools/submitsubordinatesmanualinandout/transformer.js`: `const body = await res.json().catch(function () { return null; });`
+- `tools/submitselfmanualinandout/transformer.js`: `} catch (e) {`
+- `tools/submitmanualinandoutbyadmin/transformer.js`: `} catch (e) {`
+- `tools/editsubordinatesmanualinandout/transformer.js`: `const body = await res.json().catch(function () { return null; });`
+- `tools/editselfmanualinandout/transformer.js`: `} catch (e) {`
+
+## Response transformation
+
+Mapping/reshaping a raw API response before returning it (typical Transformer responsibility).
+
+- `tools/submitsubordinatesmanualinandout/transformer.js`: `candidates: matches.map(function (r) { return { employeeNumber: displayNumberOf(r), employee: r.text }; })`
+- `tools/submitselfmanualinandout/transformer.js`: `availableRosters: rosterList.map(function (r) { return { rosterCode: r.RosterCode, rosterName: r.RosterName }; })`
+- `tools/submitmanualinandoutbyadmin/transformer.js`: `availableRosters: rosterList.map(function (r) { return { rosterCode: r.RosterCode, rosterName: r.RosterName }; })`
+- `tools/editsubordinatesmanualinandout/transformer.js`: `candidates: matches.map(function (r) { return { employeeNumber: displayNumberOf(r), employee: r.text }; })`
+- `tools/editselfmanualinandout/transformer.js`: `availableRosters: rosterList.map(function (r) { return { rosterCode: r.RosterCode, rosterName: r.RosterName }; })`
+
+## Pagination
+
+Page/limit/offset/cursor handling for list endpoints.
+
+- `tools/submitsubordinatesmanualinandout/transformer.js`: `* "07.00", not the number 7 - that is what the page sends for the`
+- `tools/submitselfmanualinandout/transformer.js`: `// Wide default period, matching what the page falls back to.`
+- `tools/submitmanualinandoutbyadmin/transformer.js`: `// Wide default period, matching what the page falls back to.`
+- `tools/editsubordinatesmanualinandout/transformer.js`: `* "07.00", not the number 7 - that is what the page sends for the`
+- `tools/editselfmanualinandout/transformer.js`: `// Wide default period, matching what the page falls back to.`
+
+## Self vs subordinate vs administrator operations
+
+Branches that distinguish acting on your own record vs a subordinate's vs an admin-level operation.
+
+- `tools/getlocation/transformer.js`: `administrator: document.querySelector('#ctl00_body_txtAdminName')?.value || "",`
+- `tools/getcompanyhierarchydetails/transformer.js`: `administrator: getValue("#ctl00_body_txtAdminName"),`
+- `tools/geteimattributelist/transformer.js`: `administrator: doc.querySelector('#ctl00_body_txtAdminName')?.value || "",`

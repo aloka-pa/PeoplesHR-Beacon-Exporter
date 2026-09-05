@@ -1,0 +1,72 @@
+{
+  "id": "690dc566931a2d61ba0b1633",
+  "slug": "creategenderdetails",
+  "name": "createGenderDetails",
+  "description": "in this tool create gender.",
+  "instructions": null,
+  "taskName": "Create Gender",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createGenderDetails",
+  "createdAt": "2025-05-04T16:42:25.389Z",
+  "updatedAt": "2026-05-15T06:57:21.285Z",
+  "assignedAgents": [],
+  "contentHash": "8f8d90917e9fd5aa0ba762378c370f302750c4ee906f120ba3f3bb380a7fe617",
+  "lastExportedAt": "2026-09-05T19:39:22.660Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b1633",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createGenderDetails",
+      "description": "in this tool create gender.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createGenderDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtGenName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the gender (e.g., Male, Female, Other).\"\n    },\n    \"ctl00_body_txtdesc\": {\n      \"type\": \"string\",\n      \"description\": \"Description or label for the gender (can be the same as the name or a more detailed label).\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtGenName\",\n    \"ctl00_body_txtdesc\"\n  ]\n}",
+        "_id": "681798f16a612deb20747e66"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  const details =\n    await BeaconBar.executeFunction(\"getApiList\")(\n      \"GenderType\"\n    );\n\n  const newInt =\n    await BeaconBar.executeFunction(\"getEIMApii\")({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: details.viewState,\n      __VIEWSTATEGENERATOR: details.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: details.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n      \"ctl00$body$butNew\": \"New\"\n\n    }, \"GenderType\");\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\"getEIMApii\")({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __LASTFOCUS: \"\",\n\n      __VIEWSTATE: newInt.viewState,\n      __VIEWSTATEGENERATOR: newInt.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: newInt.eventValidation,\n\n      \"ctl00$body$txtGenName\":\n        args[\"ctl00_body_txtGenName\"],\n\n      \"ctl00$body$txtdesc\":\n        args[\"ctl00_body_txtdesc\"],\n\n      \"ctl00$body$butSave\": \"Save\"\n\n    }, \"GenderType\");\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const code =\n    doc.querySelector(\"#ctl00_body_txtCode\")\n      ?.value?.trim() || \"\";\n\n  const gender =\n    doc.querySelector(\"#ctl00_body_txtGenName\")\n      ?.value?.trim() || \"\";\n\n  const description =\n    doc.querySelector(\"#ctl00_body_txtdesc\")\n      ?.value?.trim() || \"\";\n\n  const createdetails = {\n    code,\n    gender,\n    description\n  };\n\n  return createdetails;\n\n})",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create Gender",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-04T16:42:25.389Z",
+      "updatedAt": "2026-05-15T06:57:21.285Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createGenderDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtGenName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the gender (e.g., Male, Female, Other).\"\n    },\n    \"ctl00_body_txtdesc\": {\n      \"type\": \"string\",\n      \"description\": \"Description or label for the gender (can be the same as the name or a more detailed label).\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtGenName\",\n    \"ctl00_body_txtdesc\"\n  ]\n}",
+      "_id": "681798f16a612deb20747e66"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  const details =\n    await BeaconBar.executeFunction(\"getApiList\")(\n      \"GenderType\"\n    );\n\n  const newInt =\n    await BeaconBar.executeFunction(\"getEIMApii\")({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: details.viewState,\n      __VIEWSTATEGENERATOR: details.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: details.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n      \"ctl00$body$butNew\": \"New\"\n\n    }, \"GenderType\");\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\"getEIMApii\")({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __LASTFOCUS: \"\",\n\n      __VIEWSTATE: newInt.viewState,\n      __VIEWSTATEGENERATOR: newInt.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: newInt.eventValidation,\n\n      \"ctl00$body$txtGenName\":\n        args[\"ctl00_body_txtGenName\"],\n\n      \"ctl00$body$txtdesc\":\n        args[\"ctl00_body_txtdesc\"],\n\n      \"ctl00$body$butSave\": \"Save\"\n\n    }, \"GenderType\");\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const code =\n    doc.querySelector(\"#ctl00_body_txtCode\")\n      ?.value?.trim() || \"\";\n\n  const gender =\n    doc.querySelector(\"#ctl00_body_txtGenName\")\n      ?.value?.trim() || \"\";\n\n  const description =\n    doc.querySelector(\"#ctl00_body_txtdesc\")\n      ?.value?.trim() || \"\";\n\n  const createdetails = {\n    code,\n    gender,\n    description\n  };\n\n  return createdetails;\n\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

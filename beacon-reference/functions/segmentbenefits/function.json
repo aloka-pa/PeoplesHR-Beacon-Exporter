@@ -1,0 +1,24 @@
+{
+  "id": "6a172108ba411a367a1a0d37",
+  "slug": "segmentbenefits",
+  "name": "segmentBenefits",
+  "status": "live",
+  "createdAt": "2026-05-27T16:51:20.862Z",
+  "updatedAt": "2026-07-01T15:58:36.441Z",
+  "contentHash": "9c9b632d67ad1f5151ed75fdfbaf4ed5594775bbeb5ae8345e260edc417de6d9",
+  "lastExportedAt": "2026-09-05T19:41:24.963Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "6a172108ba411a367a1a0d37",
+    "name": "segmentBenefits",
+    "status": "live",
+    "code": "(function () {\n    const enabledAgents = JSON.parse(\n        localStorage.getItem('enabledAgents') || '[]'\n    );\n        return enabledAgents\n        .map(agent => String(agent).toLowerCase())\n        .includes('benefits'.toLowerCase());\n})",
+    "by": "7854",
+    "__v": 2
+  }
+}

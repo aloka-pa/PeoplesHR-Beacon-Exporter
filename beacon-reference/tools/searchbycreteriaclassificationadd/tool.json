@@ -1,0 +1,89 @@
+{
+  "id": "690dc569931a2d61ba0b195a",
+  "slug": "searchbycreteriaclassificationadd",
+  "name": "searchByCreteriaClassificationadd",
+  "description": "searchByCreteriaClassification , before calling this api you need to call \"selectingEmployeesByCreteria\" get their classification",
+  "instructions": null,
+  "taskName": "searchByCriteria Classification",
+  "tags": [
+    "selectingCandidatePool"
+  ],
+  "status": "live",
+  "signature": "searchByCreteriaClassification",
+  "createdAt": "2025-06-04T07:31:12.223Z",
+  "updatedAt": "2025-06-04T07:31:12.223Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c4f",
+      "name": "SelectLeaderShipCandiates"
+    }
+  ],
+  "contentHash": "b4327f5ca2c947eb0f9dbb9922e7b08518ece3bbf5559e244653aafc88cee311",
+  "lastExportedAt": "2026-09-05T19:39:23.698Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b195a",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "searchByCreteriaClassificationadd",
+      "description": "searchByCreteriaClassification , before calling this api you need to call \"selectingEmployeesByCreteria\" get their classification",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "searchByCreteriaClassification",
+        "args": [
+          {
+            "name": "selectedClassification",
+            "type": "string",
+            "description": "selectedClassification , Ex:-  \"Supermarket\" takes only id \"000051\"",
+            "required": true,
+            "_id": "683ff64013cd1b013377aded"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "683ff64013cd1b013377adec"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function(data, args, reqOptions) {\n  const classificationadd = await BeaconBar.executeFunction(\"searchByCreteriaClassification\")(args)\n  return classificationadd;\n})",
+      "groupName": "",
+      "tags": [
+        "selectingCandidatePool"
+      ],
+      "taskName": "searchByCriteria Classification",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-04T07:31:12.223Z",
+      "updatedAt": "2025-06-04T07:31:12.223Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c4f",
+          "name": "SelectLeaderShipCandiates"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "searchByCreteriaClassification",
+      "args": [
+        {
+          "name": "selectedClassification",
+          "type": "string",
+          "description": "selectedClassification , Ex:-  \"Supermarket\" takes only id \"000051\"",
+          "required": true,
+          "_id": "683ff64013cd1b013377aded"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "683ff64013cd1b013377adec"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function(data, args, reqOptions) {\n  const classificationadd = await BeaconBar.executeFunction(\"searchByCreteriaClassification\")(args)\n  return classificationadd;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

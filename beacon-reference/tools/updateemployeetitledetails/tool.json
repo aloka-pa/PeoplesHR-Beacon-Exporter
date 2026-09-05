@@ -1,0 +1,88 @@
+{
+  "id": "690dc565931a2d61ba0b1611",
+  "slug": "updateemployeetitledetails",
+  "name": "updateEmployeeTitleDetails",
+  "description": "To update employee title details, begin by executing the \"getEIMAttributeList\" API to fetch the current data. If any required input fields are missing, populate them using the API response. For the gender field, use the appropriate value: 0 for Female, 1 for Male, and 2 for Other. If updating marital status, map each option to its corresponding key as follows: \"Undisclosed\" – ctl00$body$chkMaritalStatus$0, \"Unmarried\" – chkMaritalStatus$1, \"Married\" – chkMaritalStatus$2, \"Divorced\" – chkMaritalStatus$3, \"Others\" – chkMaritalStatus$4, \"Solo Parent\" – chkMaritalStatus$5, \"Single\" – chkMaritalStatus$6, and \"It Is Complicated\" – chkMaritalStatus$7. This ensures accurate mapping and submission of user selections.\nIf the user requests an update to the \"Employee Title\" field, them that it is a hidden field and cannot be modified. However, all other fields like gender validate, marital status can be updated as needed.",
+  "instructions": null,
+  "taskName": "Update Employee Title Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateEmployeeTitleDetails",
+  "createdAt": "2025-05-04T14:39:08.177Z",
+  "updatedAt": "2026-05-15T07:08:54.698Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "5339798219b02c114651cf6721f2775066a0b9b3a656b5938ea63ee613465bc7",
+  "lastExportedAt": "2026-09-05T19:39:22.528Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc565931a2d61ba0b1611",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateEmployeeTitleDetails",
+      "description": "To update employee title details, begin by executing the \"getEIMAttributeList\" API to fetch the current data. If any required input fields are missing, populate them using the API response. For the gender field, use the appropriate value: 0 for Female, 1 for Male, and 2 for Other. If updating marital status, map each option to its corresponding key as follows: \"Undisclosed\" – ctl00$body$chkMaritalStatus$0, \"Unmarried\" – chkMaritalStatus$1, \"Married\" – chkMaritalStatus$2, \"Divorced\" – chkMaritalStatus$3, \"Others\" – chkMaritalStatus$4, \"Solo Parent\" – chkMaritalStatus$5, \"Single\" – chkMaritalStatus$6, and \"It Is Complicated\" – chkMaritalStatus$7. This ensures accurate mapping and submission of user selections.\nIf the user requests an update to the \"Employee Title\" field, them that it is a hidden field and cannot be modified. However, all other fields like gender validate, marital status can be updated as needed.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateEmployeeTitleDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_chkGenderValid\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Checkbox indicating whether gender validation is enabled.\"\n    },\n    \"ctl00_body_cboGender\": {\n      \"type\": \"string\",\n      \"enum\": [\"0\", \"1\", \"2\"],\n      \"description\": \"Selected gender value (0: Female, 1: Male, 2: Other).\"\n    },\n    \"ctl00_body_chkMaritalStatus_0\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Undisclosed marital status selected.\"\n    },\n    \"ctl00_body_chkMaritalStatus_1\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Unmarried marital status selected.\"\n    },\n    \"ctl00_body_chkMaritalStatus_2\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Married marital status selected.\"\n    },\n    \"ctl00_body_chkMaritalStatus_3\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Divorced marital status selected.\"\n    },\n    \"ctl00_body_chkMaritalStatus_4\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Others marital status selected.\"\n    },\n    \"ctl00_body_chkMaritalStatus_5\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Solo Parent marital status selected.\"\n    },\n    \"ctl00_body_chkMaritalStatus_6\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Single marital status selected.\"\n    },\n    \"ctl00_body_chkMaritalStatus_7\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"It Is Complicated marital status selected.\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_chkGenderValid\",\n    \"ctl00_body_cboGender\",\n    \"ctl00_body_chkMaritalStatus_0\",\n    \"ctl00_body_chkMaritalStatus_1\",\n    \"ctl00_body_chkMaritalStatus_2\",\n    \"ctl00_body_chkMaritalStatus_3\",\n    \"ctl00_body_chkMaritalStatus_4\",\n    \"ctl00_body_chkMaritalStatus_5\",\n    \"ctl00_body_chkMaritalStatus_6\",\n    \"ctl00_body_chkMaritalStatus_7\"\n  ]\n}",
+        "_id": "68177c0ccfbd25ce9c17cc4c"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/Salutation.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/Salutation.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"Salutation\";\n  }\n\n  const editInit =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.eti.viewState,\n      __VIEWSTATEGENERATOR: window.eti.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.eti.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$butEdit\": \"Edit\"\n\n    }, url);\n\n  const payload = {\n\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n\n    \"ctl00$body$butSave\": \"Save\"\n  };\n\n  if (\n    args[\"ctl00_body_chkGenderValid\"] === \"on\"\n  ) {\n    payload[\"ctl00$body$chkGenderValid\"] = \"on\";\n  }\n\n  if (args[\"ctl00_body_cboGender\"]) {\n    payload[\"ctl00$body$cboGender\"] =\n      args[\"ctl00_body_cboGender\"];\n  }\n\n  for (let i = 0; i <= 7; i++) {\n\n    const schemaKey =\n      `ctl00_body_chkMaritalStatus_${i}`;\n\n    const payloadKey =\n      `ctl00$body$chkMaritalStatus$${i}`;\n\n    if (args[schemaKey] === \"on\") {\n      payload[payloadKey] = \"on\";\n    }\n\n  }\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )(payload, url);\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const updateemployeetypeDetails = {\n\n    code:\n      doc.querySelector(\"#ctl00_body_txtCode\")\n        ?.value?.trim() || \"\",\n\n    employeeTitle:\n      doc.querySelector(\"#ctl00_body_txtName\")\n        ?.value?.trim() || \"\",\n\n    genderValidate:\n      doc.querySelector(\"#ctl00_body_chkGenderValid\")\n        ?.checked || false,\n\n    gender: (() => {\n\n      const selected =\n        doc.querySelector(\"#ctl00_body_cboGender\")\n          ?.selectedOptions?.[0];\n\n      return selected\n        ? selected.textContent.trim()\n        : \"\";\n\n    })(),\n\n    maritalStatusLabel:\n      doc.querySelector(\"#ctl00_body_lblMAritalStatus\")\n        ?.textContent.trim() || \"\",\n\n    maritalStatuses: []\n  };\n\n  const maritalTable =\n    doc.querySelector(\n      \"#ctl00_body_chkMaritalStatus\"\n    );\n\n  if (maritalTable) {\n\n    const checkboxes =\n      maritalTable.querySelectorAll(\n        \"input[type='checkbox']\"\n      );\n\n    checkboxes.forEach((checkbox) => {\n\n      const label =\n        maritalTable.querySelector(\n          `label[for=\"${checkbox.id}\"]`\n        );\n\n      updateemployeetypeDetails.maritalStatuses.push({\n        label:\n          label\n            ? label.textContent.trim()\n            : \"\",\n\n        checked:\n          checkbox.checked\n      });\n\n    });\n\n  }\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\";\n  } else {\n    return updateemployeetypeDetails;\n  }\n\n});",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update Employee Title Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-04T14:39:08.177Z",
+      "updatedAt": "2026-05-15T07:08:54.698Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateEmployeeTitleDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_chkGenderValid\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Checkbox indicating whether gender validation is enabled.\"\n    },\n    \"ctl00_body_cboGender\": {\n      \"type\": \"string\",\n      \"enum\": [\"0\", \"1\", \"2\"],\n      \"description\": \"Selected gender value (0: Female, 1: Male, 2: Other).\"\n    },\n    \"ctl00_body_chkMaritalStatus_0\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Undisclosed marital status selected.\"\n    },\n    \"ctl00_body_chkMaritalStatus_1\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Unmarried marital status selected.\"\n    },\n    \"ctl00_body_chkMaritalStatus_2\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Married marital status selected.\"\n    },\n    \"ctl00_body_chkMaritalStatus_3\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Divorced marital status selected.\"\n    },\n    \"ctl00_body_chkMaritalStatus_4\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Others marital status selected.\"\n    },\n    \"ctl00_body_chkMaritalStatus_5\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Solo Parent marital status selected.\"\n    },\n    \"ctl00_body_chkMaritalStatus_6\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"Single marital status selected.\"\n    },\n    \"ctl00_body_chkMaritalStatus_7\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\"],\n      \"description\": \"It Is Complicated marital status selected.\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_chkGenderValid\",\n    \"ctl00_body_cboGender\",\n    \"ctl00_body_chkMaritalStatus_0\",\n    \"ctl00_body_chkMaritalStatus_1\",\n    \"ctl00_body_chkMaritalStatus_2\",\n    \"ctl00_body_chkMaritalStatus_3\",\n    \"ctl00_body_chkMaritalStatus_4\",\n    \"ctl00_body_chkMaritalStatus_5\",\n    \"ctl00_body_chkMaritalStatus_6\",\n    \"ctl00_body_chkMaritalStatus_7\"\n  ]\n}",
+      "_id": "68177c0ccfbd25ce9c17cc4c"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/Salutation.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/Salutation.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"Salutation\";\n  }\n\n  const editInit =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.eti.viewState,\n      __VIEWSTATEGENERATOR: window.eti.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.eti.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$butEdit\": \"Edit\"\n\n    }, url);\n\n  const payload = {\n\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n\n    \"ctl00$body$butSave\": \"Save\"\n  };\n\n  if (\n    args[\"ctl00_body_chkGenderValid\"] === \"on\"\n  ) {\n    payload[\"ctl00$body$chkGenderValid\"] = \"on\";\n  }\n\n  if (args[\"ctl00_body_cboGender\"]) {\n    payload[\"ctl00$body$cboGender\"] =\n      args[\"ctl00_body_cboGender\"];\n  }\n\n  for (let i = 0; i <= 7; i++) {\n\n    const schemaKey =\n      `ctl00_body_chkMaritalStatus_${i}`;\n\n    const payloadKey =\n      `ctl00$body$chkMaritalStatus$${i}`;\n\n    if (args[schemaKey] === \"on\") {\n      payload[payloadKey] = \"on\";\n    }\n\n  }\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )(payload, url);\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const updateemployeetypeDetails = {\n\n    code:\n      doc.querySelector(\"#ctl00_body_txtCode\")\n        ?.value?.trim() || \"\",\n\n    employeeTitle:\n      doc.querySelector(\"#ctl00_body_txtName\")\n        ?.value?.trim() || \"\",\n\n    genderValidate:\n      doc.querySelector(\"#ctl00_body_chkGenderValid\")\n        ?.checked || false,\n\n    gender: (() => {\n\n      const selected =\n        doc.querySelector(\"#ctl00_body_cboGender\")\n          ?.selectedOptions?.[0];\n\n      return selected\n        ? selected.textContent.trim()\n        : \"\";\n\n    })(),\n\n    maritalStatusLabel:\n      doc.querySelector(\"#ctl00_body_lblMAritalStatus\")\n        ?.textContent.trim() || \"\",\n\n    maritalStatuses: []\n  };\n\n  const maritalTable =\n    doc.querySelector(\n      \"#ctl00_body_chkMaritalStatus\"\n    );\n\n  if (maritalTable) {\n\n    const checkboxes =\n      maritalTable.querySelectorAll(\n        \"input[type='checkbox']\"\n      );\n\n    checkboxes.forEach((checkbox) => {\n\n      const label =\n        maritalTable.querySelector(\n          `label[for=\"${checkbox.id}\"]`\n        );\n\n      updateemployeetypeDetails.maritalStatuses.push({\n        label:\n          label\n            ? label.textContent.trim()\n            : \"\",\n\n        checked:\n          checkbox.checked\n      });\n\n    });\n\n  }\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\";\n  } else {\n    return updateemployeetypeDetails;\n  }\n\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

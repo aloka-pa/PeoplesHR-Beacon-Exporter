@@ -1,0 +1,109 @@
+{
+  "id": "690dc568931a2d61ba0b181a",
+  "slug": "getroundinginformationdetails",
+  "name": "getRoundingInformationDetails",
+  "description": "in this tool generate the Rounding Information Details.",
+  "instructions": null,
+  "taskName": "Fetching Rounding Information",
+  "tags": [
+    "Attendance"
+  ],
+  "status": "unlive",
+  "signature": "getRoundingInformationDetails",
+  "createdAt": "2025-05-22T08:29:00.431Z",
+  "updatedAt": "2026-07-17T12:54:00.163Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "25b8fc5f09ba617bd59b1eb1550e839ebed636ddec4de60eac373300bc2ad784",
+  "lastExportedAt": "2026-09-05T19:39:22.087Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b181a",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getRoundingInformationDetails",
+      "description": "in this tool generate the Rounding Information Details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getRoundingInformationDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to give the employee Id example \"000001\"",
+            "required": true,
+            "_id": "682ee04ce758c1c065219dba"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a25e85aa8b43ec1a8497c"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return [];\n    })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getmodule\")(`${reqOptions.sl}/TNA/RoundingInformation`);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n\n  const raw = `ctl00%24main%24RadScriptManager=ctl00%24body%24upPnlBody%7Cctl00%24body%24grdsummary%24ctl00%24ctl02%24ctl02%24FilterTextBox_ROUND_RULE_ID&ctl00_main_RadScriptManager_HiddenField=&__EVENTTARGET=ctl00%24body%24grdsummary%24ctl00%24ctl02%24ctl02%24FilterTextBox_ROUND_RULE_ID&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE=${details.viewState}&__VIEWSTATEGENERATOR=${details.viewStateGen}&__SCROLLPOSITIONX=0&__SCROLLPOSITIONY=0&__VIEWSTATEENCRYPTED=&__EVENTVALIDATION=${details.eventValidation}&ctl00%24body%24grdsummary%24ctl00%24ctl02%24ctl02%24FilterTextBox_ROUND_RULE_ID=${args.id}&ctl00%24body%24grdsummary%24ctl00%24ctl02%24ctl02%24FilterTextBox_ROUND_RULE_NAME=&ctl00%24body%24grdsummary%24ctl00%24ctl02%24ctl02%24FilterTextBox_ROUND_TYPE=&ctl00%24body%24grdsummary%24ctl00%24ctl03%24ctl01%24GoToPageTextBox=1&ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState=&ctl00%24body%24grdsummary%24ctl00%24ctl03%24ctl01%24ChangePageSizeTextBox=7&ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState=&ctl00%24body%24grdsummary%24ctl00%24ctl04%24butEditGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl04%24butDeleteGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl06%24butEditGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl06%24butDeleteGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl08%24butEditGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl08%24butDeleteGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl10%24butEditGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl10%24butDeleteGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl12%24butEditGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl12%24butDeleteGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl14%24butEditGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl14%24butDeleteGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl16%24butEditGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl16%24butDeleteGrid%24isControlEnabled=True&ctl00_body_grdsummary_rfltMenu_ClientState=&ctl00_body_grdsummary_ClientState=&ctl00%24body%24tpTest%24txtTime=&ctl00%24action%24ButtonPanel%24butNew%24isControlEnabled=True&ctl00%24hdnCulturDateFormat=M%2Fd%2Fyyyy&__ASYNCPOST=true&`;\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/TNA/RoundingInformation.aspx`, requestOptions1);\n  const responseText = await response.text();\n\n  const viewstateMatch = responseText.match(/\\|__VIEWSTATE\\|([^|]+)/);\n  const viewstategenMatch = responseText.match(/\\|__VIEWSTATEGENERATOR\\|([^|]+)/);\n  const eventvalidationMatch = responseText.match(/\\|__EVENTVALIDATION\\|([^|]+)/);\n\n  const viewstate = viewstateMatch ? viewstateMatch[1] : \"\";\n  const viewstategen = viewstategenMatch ? viewstategenMatch[1] : \"\";\n  const eventvalidation = eventvalidationMatch ? eventvalidationMatch[1] : \"\";\n\n  const raw1 = `ctl00%24main%24RadScriptManager=ctl00%24body%24upPnlBody%7Cctl00%24body%24grdsummary%24ctl00%24ctl04%24butEditGrid%24imgGRDEditButton&ctl00_main_RadScriptManager_HiddenField=&ctl00%24body%24grdsummary%24ctl00%24ctl02%24ctl02%24FilterTextBox_ROUND_RULE_ID=${args.id}&ctl00%24body%24grdsummary%24ctl00%24ctl02%24ctl02%24FilterTextBox_ROUND_RULE_NAME=&ctl00%24body%24grdsummary%24ctl00%24ctl02%24ctl02%24FilterTextBox_ROUND_TYPE=&ctl00%24body%24grdsummary%24ctl00%24ctl03%24ctl01%24GoToPageTextBox=1&ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState=&ctl00%24body%24grdsummary%24ctl00%24ctl03%24ctl01%24ChangePageSizeTextBox=1&ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState=&ctl00%24body%24grdsummary%24ctl00%24ctl04%24butEditGrid%24isControlEnabled=&ctl00%24body%24grdsummary%24ctl00%24ctl04%24butDeleteGrid%24isControlEnabled=&ctl00_body_grdsummary_rfltMenu_ClientState=&ctl00_body_grdsummary_ClientState=&ctl00%24body%24tpTest%24txtTime=&ctl00%24action%24ButtonPanel%24butNew%24isControlEnabled=True&ctl00%24hdnCulturDateFormat=M%2Fd%2Fyyyy&__EVENTTARGET=&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE=${viewstate}&__VIEWSTATEGENERATOR=${viewstategen}&__SCROLLPOSITIONX=0&__SCROLLPOSITIONY=0&__VIEWSTATEENCRYPTED=&__EVENTVALIDATION=${eventvalidation}&__ASYNCPOST=true&ctl00%24body%24grdsummary%24ctl00%24ctl04%24butEditGrid%24imgGRDEditButton.x=&ctl00%24body%24grdsummary%24ctl00%24ctl04%24butEditGrid%24imgGRDEditButton.y=`;\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/${reqOptions.sl}/TNA/RoundingInformation.aspx`, requestOptions2);\n  const text1 = await response1.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(text1, \"text/html\");\n\n  const result = {\n    roundingPatternName: \"\",\n    option: [],\n    method: \"\",\n    value: \"\"\n  };\n\n  const roundingPatternInput = doc.querySelector(\"#ctl00_body_txtRoundingPatternName\");\n  if (roundingPatternInput) {\n    result.roundingPatternName = roundingPatternInput.value.trim();\n  }\n\n  const radioLabels = doc.querySelectorAll(\"input[name='ctl00$body$Rounding_pattern']\");\n  radioLabels.forEach(input => {\n    const label = doc.querySelector(`label[for=\"${input.id}\"]`);\n    if (label) {\n      result.option.push(label.textContent.trim());\n    }\n  });\n\n  const selectedMethod = doc.querySelector(\"#ctl00_body_cboMethod option:checked\");\n  if (selectedMethod) {\n    result.method = selectedMethod.textContent.trim();\n  }\n\n  const valueInput = doc.querySelector(\"#ctl00_body_txtNumVal\");\n  if (valueInput) {\n    result.value = valueInput.value.trim();\n  }\n\n\n  return result;\n});\n",
+      "groupName": "",
+      "tags": [
+        "Attendance"
+      ],
+      "taskName": "Fetching Rounding Information",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-22T08:29:00.431Z",
+      "updatedAt": "2026-07-17T12:54:00.163Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getRoundingInformationDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to give the employee Id example \"000001\"",
+          "required": true,
+          "_id": "682ee04ce758c1c065219dba"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a25e85aa8b43ec1a8497c"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return [];\n    })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getmodule\")(`${reqOptions.sl}/TNA/RoundingInformation`);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n\n  const raw = `ctl00%24main%24RadScriptManager=ctl00%24body%24upPnlBody%7Cctl00%24body%24grdsummary%24ctl00%24ctl02%24ctl02%24FilterTextBox_ROUND_RULE_ID&ctl00_main_RadScriptManager_HiddenField=&__EVENTTARGET=ctl00%24body%24grdsummary%24ctl00%24ctl02%24ctl02%24FilterTextBox_ROUND_RULE_ID&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE=${details.viewState}&__VIEWSTATEGENERATOR=${details.viewStateGen}&__SCROLLPOSITIONX=0&__SCROLLPOSITIONY=0&__VIEWSTATEENCRYPTED=&__EVENTVALIDATION=${details.eventValidation}&ctl00%24body%24grdsummary%24ctl00%24ctl02%24ctl02%24FilterTextBox_ROUND_RULE_ID=${args.id}&ctl00%24body%24grdsummary%24ctl00%24ctl02%24ctl02%24FilterTextBox_ROUND_RULE_NAME=&ctl00%24body%24grdsummary%24ctl00%24ctl02%24ctl02%24FilterTextBox_ROUND_TYPE=&ctl00%24body%24grdsummary%24ctl00%24ctl03%24ctl01%24GoToPageTextBox=1&ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState=&ctl00%24body%24grdsummary%24ctl00%24ctl03%24ctl01%24ChangePageSizeTextBox=7&ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState=&ctl00%24body%24grdsummary%24ctl00%24ctl04%24butEditGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl04%24butDeleteGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl06%24butEditGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl06%24butDeleteGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl08%24butEditGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl08%24butDeleteGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl10%24butEditGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl10%24butDeleteGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl12%24butEditGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl12%24butDeleteGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl14%24butEditGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl14%24butDeleteGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl16%24butEditGrid%24isControlEnabled=True&ctl00%24body%24grdsummary%24ctl00%24ctl16%24butDeleteGrid%24isControlEnabled=True&ctl00_body_grdsummary_rfltMenu_ClientState=&ctl00_body_grdsummary_ClientState=&ctl00%24body%24tpTest%24txtTime=&ctl00%24action%24ButtonPanel%24butNew%24isControlEnabled=True&ctl00%24hdnCulturDateFormat=M%2Fd%2Fyyyy&__ASYNCPOST=true&`;\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/TNA/RoundingInformation.aspx`, requestOptions1);\n  const responseText = await response.text();\n\n  const viewstateMatch = responseText.match(/\\|__VIEWSTATE\\|([^|]+)/);\n  const viewstategenMatch = responseText.match(/\\|__VIEWSTATEGENERATOR\\|([^|]+)/);\n  const eventvalidationMatch = responseText.match(/\\|__EVENTVALIDATION\\|([^|]+)/);\n\n  const viewstate = viewstateMatch ? viewstateMatch[1] : \"\";\n  const viewstategen = viewstategenMatch ? viewstategenMatch[1] : \"\";\n  const eventvalidation = eventvalidationMatch ? eventvalidationMatch[1] : \"\";\n\n  const raw1 = `ctl00%24main%24RadScriptManager=ctl00%24body%24upPnlBody%7Cctl00%24body%24grdsummary%24ctl00%24ctl04%24butEditGrid%24imgGRDEditButton&ctl00_main_RadScriptManager_HiddenField=&ctl00%24body%24grdsummary%24ctl00%24ctl02%24ctl02%24FilterTextBox_ROUND_RULE_ID=${args.id}&ctl00%24body%24grdsummary%24ctl00%24ctl02%24ctl02%24FilterTextBox_ROUND_RULE_NAME=&ctl00%24body%24grdsummary%24ctl00%24ctl02%24ctl02%24FilterTextBox_ROUND_TYPE=&ctl00%24body%24grdsummary%24ctl00%24ctl03%24ctl01%24GoToPageTextBox=1&ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState=&ctl00%24body%24grdsummary%24ctl00%24ctl03%24ctl01%24ChangePageSizeTextBox=1&ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState=&ctl00%24body%24grdsummary%24ctl00%24ctl04%24butEditGrid%24isControlEnabled=&ctl00%24body%24grdsummary%24ctl00%24ctl04%24butDeleteGrid%24isControlEnabled=&ctl00_body_grdsummary_rfltMenu_ClientState=&ctl00_body_grdsummary_ClientState=&ctl00%24body%24tpTest%24txtTime=&ctl00%24action%24ButtonPanel%24butNew%24isControlEnabled=True&ctl00%24hdnCulturDateFormat=M%2Fd%2Fyyyy&__EVENTTARGET=&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE=${viewstate}&__VIEWSTATEGENERATOR=${viewstategen}&__SCROLLPOSITIONX=0&__SCROLLPOSITIONY=0&__VIEWSTATEENCRYPTED=&__EVENTVALIDATION=${eventvalidation}&__ASYNCPOST=true&ctl00%24body%24grdsummary%24ctl00%24ctl04%24butEditGrid%24imgGRDEditButton.x=&ctl00%24body%24grdsummary%24ctl00%24ctl04%24butEditGrid%24imgGRDEditButton.y=`;\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/${reqOptions.sl}/TNA/RoundingInformation.aspx`, requestOptions2);\n  const text1 = await response1.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(text1, \"text/html\");\n\n  const result = {\n    roundingPatternName: \"\",\n    option: [],\n    method: \"\",\n    value: \"\"\n  };\n\n  const roundingPatternInput = doc.querySelector(\"#ctl00_body_txtRoundingPatternName\");\n  if (roundingPatternInput) {\n    result.roundingPatternName = roundingPatternInput.value.trim();\n  }\n\n  const radioLabels = doc.querySelectorAll(\"input[name='ctl00$body$Rounding_pattern']\");\n  radioLabels.forEach(input => {\n    const label = doc.querySelector(`label[for=\"${input.id}\"]`);\n    if (label) {\n      result.option.push(label.textContent.trim());\n    }\n  });\n\n  const selectedMethod = doc.querySelector(\"#ctl00_body_cboMethod option:checked\");\n  if (selectedMethod) {\n    result.method = selectedMethod.textContent.trim();\n  }\n\n  const valueInput = doc.querySelector(\"#ctl00_body_txtNumVal\");\n  if (valueInput) {\n    result.value = valueInput.value.trim();\n  }\n\n\n  return result;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

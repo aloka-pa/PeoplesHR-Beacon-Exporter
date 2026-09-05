@@ -1,0 +1,24 @@
+{
+  "id": "690dc579931a2d61ba0b2182",
+  "slug": "trainingenrollment",
+  "name": "TrainingEnrollment",
+  "status": "live",
+  "createdAt": "2025-05-14T06:42:37.159Z",
+  "updatedAt": "2026-07-17T12:56:04.327Z",
+  "contentHash": "c852cda81676517c18c9fc9735581dc48657450339393eec25360894b136556d",
+  "lastExportedAt": "2026-09-05T19:41:13.757Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc579931a2d61ba0b2182",
+    "name": "TrainingEnrollment",
+    "status": "live",
+    "code": "(function () {\n    const reqOptions = BeaconBar.executeFunction(\"reqOptions\")();\n    const url = `${reqOptions}TNDV9/TrainingEnrollment/GetEnrollmentCourseDetails`;\n\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"*/*\");\n    myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n    myHeaders.append(\"content-length\", \"0\");\n    myHeaders.append(\"content-type\", \"application/json\");\n    myHeaders.append(\"origin\", \"https://devtest-echoengineers.phrsandbox.dev\");\n\n\n    const requestOptions = {\n        method: \"POST\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n\n    return fetch(url, requestOptions)\n        .then(response => {\n            if (!response.ok) {\n                throw new Error(`HTTP error! Status: ${response.status}`);\n            }\n            return response.text(); \n        })\n        .then(result => {\n            return result;\n        })\n        .catch(error => {\n        });\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "id": "6953574c802e449bd3234130",
+  "slug": "getelectorate",
+  "name": "getElectorate",
+  "description": "Searches Electorates in EIM/Electorate.aspx by electorate code, electorate name, or district name. Name/district searches use partial, case-insensitive matching and return all matching rows from the grid. Also supports returning all existing electorates via the screen’s Show All action when the user requests “all / available / existing / list”. If exactly one match is found, the tool opens the record and returns detailed fields.",
+  "instructions": null,
+  "taskName": "Fetching Electorates",
+  "tags": [
+    "EIMAdmin",
+    "GeographicalLocations"
+  ],
+  "status": "live",
+  "signature": "getElectorate",
+  "createdAt": "2025-12-30T04:38:36.673Z",
+  "updatedAt": "2026-02-03T04:28:54.866Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "64b76244e398a13dd636e09fa5b272e5908ac2b9a55e32fed64a265bc815715e",
+  "lastExportedAt": "2026-09-05T19:39:22.911Z",
+  "raw": {
+    "basic": {
+      "_id": "6953574c802e449bd3234130",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getElectorate",
+      "description": "Searches Electorates in EIM/Electorate.aspx by electorate code, electorate name, or district name. Name/district searches use partial, case-insensitive matching and return all matching rows from the grid. Also supports returning all existing electorates via the screen’s Show All action when the user requests “all / available / existing / list”. If exactly one match is found, the tool opens the record and returns detailed fields.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getElectorate",
+        "args": [
+          {
+            "name": "electorateCode",
+            "type": "string",
+            "description": "The electorate code to search for (e.g.: \"000002\")",
+            "required": false,
+            "_id": "6953574c802e449bd3234132"
+          },
+          {
+            "name": "electorateName",
+            "type": "string",
+            "description": "The electorate name to search for (e.g.: \"hSenid\")",
+            "required": false,
+            "_id": "6953574c802e449bd3234133"
+          },
+          {
+            "name": "districtName",
+            "type": "string",
+            "description": "District name to search for. Uses criteria D.DISTRICT_NAME. Partial match, case-insensitive.",
+            "required": false,
+            "_id": "697f74e25aa7e9f908a2f02f"
+          },
+          {
+            "name": "returnAll",
+            "type": "string",
+            "description": "\"yes\" to return all electorates (uses Show All).\nAlso auto-triggers when electorateCode / electorateName / districtName is: \"all\", \"available\", \"existing\", \"list\", \"show all\".",
+            "required": false,
+            "_id": "697f74e25aa7e9f908a2f030"
+          },
+          {
+            "name": "fetchDetails",
+            "type": "string",
+            "description": "\"yes\" / \"no\" (default \"yes\").\nIf exactly 1 result and \"yes\", opens record and returns detailed values.",
+            "required": false,
+            "_id": "697f74e25aa7e9f908a2f031"
+          },
+          {
+            "name": "pageSize",
+            "type": "string",
+            "description": "Page size used during initial grid load/search (example: \"10\", \"50\").\nThe tool will still adapt to UI page size after the first response.",
+            "required": false,
+            "_id": "69817986357f0d24964f48b7"
+          },
+          {
+            "name": "matchMode",
+            "type": "string",
+            "description": "Name matching behavior when searching by electorateName or districtName:\n\"contains\" (default) → partial match\n\"exact\" → exact match only",
+            "required": false,
+            "_id": "69817986357f0d24964f48b8"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6953574c802e449bd3234131"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access control\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Electorate.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Electorate screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Helpers (STRING ONLY)\n     * ------------------------------------------------- */\n    const ok = (v) => (v ?? \"\").toString().trim();\n    const low = (v) => ok(v).toLowerCase();\n    const isEmpty = (v) => ok(v) === \"\";\n    const isNumStr = (v) => /^[0-9]+$/.test(ok(v));\n\n    const getHidden = (doc, sel) => doc.querySelector(sel)?.value ?? \"\";\n\n    const getPagerText = (doc) => ok(doc.querySelector(\".PagerRight_Default\")?.textContent);\n\n    const parsePager = (pagerText) => {\n      // \"Displaying page 2 of 6, items 6 to 10 of 28.\"\n      const m = pagerText.match(/page\\s+(\\d+)\\s+of\\s+(\\d+).*?of\\s+(\\d+)\\./i);\n      if (!m) return { page: 1, totalPages: 1, totalItems: null };\n      return { page: Number(m[1]), totalPages: Number(m[2]), totalItems: Number(m[3]) };\n    };\n\n    const extractUiPageSize = (doc) => {\n      const sel = 'input[name=\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\"]';\n      const v = ok(doc.querySelector(sel)?.value);\n      if (isNumStr(v)) return Number(v);\n\n      const v2 = ok(doc.querySelector('input[id$=\"_ChangePageSizeTextBox_Value\"]')?.value);\n      if (isNumStr(v2)) return Number(v2);\n\n      return 10;\n    };\n\n    const extractRows = (doc) => {\n      const allRows = Array.from(doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\"));\n      const out = [];\n      for (const row of allRows) {\n        const tds = row.querySelectorAll(\"td\");\n        const rowCode = ok(tds[0]?.textContent);\n        const rowName = ok(tds[1]?.textContent);\n        const rowDistrict = ok(tds[2]?.textContent);\n        out.push({ code: rowCode, electorateName: rowName, district: rowDistrict, _rowEl: row });\n      }\n      return out;\n    };\n\n    const buildBaseForm = (vs, vsg, ev) => {\n      const fd = new FormData();\n      fd.append(\"scrollLeft\", \"0\");\n      fd.append(\"scrollTop\", \"0\");\n      fd.append(\"__EVENTTARGET\", \"\");\n      fd.append(\"__EVENTARGUMENT\", \"\");\n      fd.append(\"__VIEWSTATE\", vs || \"\");\n      fd.append(\"__VIEWSTATEGENERATOR\", vsg || \"\");\n      fd.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      fd.append(\"__EVENTVALIDATION\", ev || \"\");\n      fd.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      fd.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      // Grid fields present in UI posts\n      fd.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      fd.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      fd.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n      fd.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      fd.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      return fd;\n    };\n\n    const parser = new DOMParser();\n\n    /* -------------------------------------------------\n     * 3) Normalize args + detect returnAll\n     * ------------------------------------------------- */\n    const codeRaw = ok(args?.electorateCode);\n    const nameRaw = ok(args?.electorateName);\n    const districtRaw = ok(args?.districtName);\n\n    const fetchDetails = (low(args?.fetchDetails) === \"no\") ? \"no\" : \"yes\";\n\n    const allKeywords = new Set([\"all\", \"available\", \"existing\", \"list\", \"show all\", \"*\"]);\n    const returnAllExplicit = (low(args?.returnAll) === \"yes\" || low(args?.returnAll) === \"true\");\n    const keywordTriggered =\n      allKeywords.has(low(codeRaw)) || allKeywords.has(low(nameRaw)) || allKeywords.has(low(districtRaw));\n    const returnAll = returnAllExplicit || keywordTriggered;\n\n    if (!returnAll && isEmpty(codeRaw) && isEmpty(nameRaw) && isEmpty(districtRaw)) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Please provide electorateCode OR electorateName OR districtName, or set returnAll='yes'.\"\n      };\n    }\n\n    const providedCount = [codeRaw, nameRaw, districtRaw].filter(v => !isEmpty(v)).length;\n    if (!returnAll && providedCount > 1) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Please provide only ONE of electorateCode, electorateName, or districtName (or use returnAll='yes').\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 4) Get initial hidden fields + URL\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"Electorate\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Electorate.aspx\");\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Electorate.aspx`;\n\n    /* -------------------------------------------------\n     * 5) Build initial Search / Show All POST (page 1)\n     * ------------------------------------------------- */\n    let criteria = \"ELECTORATE_CODE\";\n    let searchValue = \"\";\n\n    if (!returnAll) {\n      if (!isEmpty(codeRaw)) {\n        criteria = \"ELECTORATE_CODE\";\n        searchValue = codeRaw;\n      } else if (!isEmpty(nameRaw)) {\n        criteria = \"ELECTORATE_NAME\";\n        searchValue = nameRaw;\n      } else {\n        criteria = \"D.DISTRICT_NAME\";\n        searchValue = districtRaw;\n      }\n    }\n\n    const firstFd = buildBaseForm(details.viewState, details.viewStateGen, details.eventValidation);\n    firstFd.append(\"ctl00$body$ContentSearch$cboCriteria\", criteria);\n    firstFd.append(\"ctl00$body$ContentSearch$txtContent\", returnAll ? \"\" : searchValue);\n\n    if (returnAll) firstFd.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n    else firstFd.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n\n    // Keep page 1\n    firstFd.set(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n\n    const firstRes = await fetch(url, { method: \"POST\", headers, body: firstFd, redirect: \"follow\" });\n    const firstHtml = await firstRes.text();\n    let doc = parser.parseFromString(firstHtml, \"text/html\");\n\n    let pagerMeta = parsePager(getPagerText(doc));\n    const uiPageSize = extractUiPageSize(doc);\n\n    /* -------------------------------------------------\n     * 6) Collect results from page 1 (and filter if needed)\n     * ------------------------------------------------- */\n    const applyMatch = (rowObj) => {\n      if (returnAll) return true;\n\n      if (criteria === \"ELECTORATE_CODE\") return rowObj.code === searchValue;\n      if (criteria === \"ELECTORATE_NAME\") return low(rowObj.electorateName).includes(low(searchValue));\n      if (criteria === \"D.DISTRICT_NAME\") return low(rowObj.district).includes(low(searchValue));\n      return false;\n    };\n\n    let pageRows = extractRows(doc);\n    let results = pageRows.filter(applyMatch).map(({ _rowEl, ...x }) => x);\n\n    /* -------------------------------------------------\n     * 7) If returnAll, iterate through ALL pages using GoToPageLinkButton\n     * ------------------------------------------------- */\n    const goToPage = async (pageNo) => {\n      const vs = getHidden(doc, \"#__VIEWSTATE\");\n      const vsg = getHidden(doc, \"#__VIEWSTATEGENERATOR\");\n      const ev = getHidden(doc, \"#__EVENTVALIDATION\");\n\n      const fd = buildBaseForm(vs, vsg, ev);\n\n      // preserve search context\n      fd.append(\"ctl00$body$ContentSearch$cboCriteria\", criteria);\n      fd.append(\"ctl00$body$ContentSearch$txtContent\", returnAll ? \"\" : searchValue);\n\n      // preserve UI page size\n      fd.set(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(uiPageSize));\n\n      // set page textbox + trigger Go postback\n      fd.set(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", String(pageNo));\n      fd.set(\"__EVENTTARGET\", \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\");\n      fd.set(\"__EVENTARGUMENT\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: fd, redirect: \"follow\" });\n      const html = await res.text();\n      doc = parser.parseFromString(html, \"text/html\");\n      pagerMeta = parsePager(getPagerText(doc));\n    };\n\n    if (returnAll && pagerMeta.totalPages > 1) {\n      for (let p = 2; p <= pagerMeta.totalPages; p++) {\n        await goToPage(p);\n        pageRows = extractRows(doc);\n        const matches = pageRows.filter(applyMatch).map(({ _rowEl, ...x }) => x);\n        results.push(...matches);\n      }\n    }\n\n    if (results.length === 0) {\n      return {\n        status: \"NOT_FOUND\",\n        message: returnAll ? \"No electorates found.\" : \"No electorates found matching the search criteria.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 8) fetchDetails (only when exactly one match)\n     * ------------------------------------------------- */\n    if (!returnAll && results.length === 1 && fetchDetails !== \"no\") {\n      const oneCode = results[0].code;\n\n      const rowEls = Array.from(doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\"));\n      const matchedRow = rowEls.find(r => ok(r.querySelectorAll(\"td\")[0]?.textContent) === oneCode);\n\n      const href = matchedRow?.querySelector(\"a\")?.getAttribute(\"href\") || \"\";\n      const eventTarget = href.match(/__doPostBack\\('([^']+)'/)?.[1];\n\n      if (eventTarget) {\n        const vs = getHidden(doc, \"#__VIEWSTATE\");\n        const ev = getHidden(doc, \"#__EVENTVALIDATION\");\n        const vg = getHidden(doc, \"#__VIEWSTATEGENERATOR\");\n\n        const openFD = buildBaseForm(vs, vg, ev);\n        openFD.set(\"__EVENTTARGET\", eventTarget);\n        openFD.set(\"__EVENTARGUMENT\", \"\");\n\n        openFD.append(\"ctl00$body$ContentSearch$cboCriteria\", criteria);\n        openFD.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n        openFD.set(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(uiPageSize));\n\n        const detailRes = await fetch(url, { method: \"POST\", headers, body: openFD, redirect: \"follow\" });\n        const detailHtml = await detailRes.text();\n        const detailDoc = parser.parseFromString(detailHtml, \"text/html\");\n\n        const detailCode =\n          ok(detailDoc.querySelector(\"#ctl00_body_txtCode\")?.value) || oneCode;\n\n        const detailName =\n          ok(detailDoc.querySelector(\"#ctl00_body_txtName\")?.value) ||\n          ok(detailDoc.querySelector(\"#ctl00_body_txtElectorate\")?.value) ||\n          results[0].electorateName;\n\n        const detailDistrict =\n          ok(detailDoc.querySelector(\"#ctl00_body_txtDistrict\")?.value) ||\n          ok(detailDoc.querySelector(\"#ctl00_body_cboDistrict\")?.selectedOptions?.[0]?.textContent) ||\n          results[0].district;\n\n        return {\n          status: \"SUCCESS\",\n          count: 1,\n          electorates: [{\n            code: detailCode,\n            electorateName: detailName,\n            district: detailDistrict\n          }]\n        };\n      }\n    }\n\n    /* -------------------------------------------------\n     * 9) Return results\n     * ------------------------------------------------- */\n    return {\n      status: \"SUCCESS\",\n      message: returnAll\n        ? `Found ${results.length} electorate(s) across ${pagerMeta.totalPages} page(s) (UI page size = ${uiPageSize}).`\n        : `Found ${results.length} electorate(s).`,\n      count: results.length,\n      uiPageSize,\n      totalPages: pagerMeta.totalPages,\n      totalItems: pagerMeta.totalItems,\n      electorates: results\n    };\n  } catch (e) {\n    return {\n      status: \"ERROR\",\n      message: e?.message || \"Unexpected error occurred in Electorate transformer.\"\n    };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "GeographicalLocations"
+      ],
+      "taskName": "Fetching Electorates",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-30T04:38:36.673Z",
+      "updatedAt": "2026-02-03T04:28:54.866Z",
+      "__v": 6,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getElectorate",
+      "args": [
+        {
+          "name": "electorateCode",
+          "type": "string",
+          "description": "The electorate code to search for (e.g.: \"000002\")",
+          "required": false,
+          "_id": "6953574c802e449bd3234132"
+        },
+        {
+          "name": "electorateName",
+          "type": "string",
+          "description": "The electorate name to search for (e.g.: \"hSenid\")",
+          "required": false,
+          "_id": "6953574c802e449bd3234133"
+        },
+        {
+          "name": "districtName",
+          "type": "string",
+          "description": "District name to search for. Uses criteria D.DISTRICT_NAME. Partial match, case-insensitive.",
+          "required": false,
+          "_id": "697f74e25aa7e9f908a2f02f"
+        },
+        {
+          "name": "returnAll",
+          "type": "string",
+          "description": "\"yes\" to return all electorates (uses Show All).\nAlso auto-triggers when electorateCode / electorateName / districtName is: \"all\", \"available\", \"existing\", \"list\", \"show all\".",
+          "required": false,
+          "_id": "697f74e25aa7e9f908a2f030"
+        },
+        {
+          "name": "fetchDetails",
+          "type": "string",
+          "description": "\"yes\" / \"no\" (default \"yes\").\nIf exactly 1 result and \"yes\", opens record and returns detailed values.",
+          "required": false,
+          "_id": "697f74e25aa7e9f908a2f031"
+        },
+        {
+          "name": "pageSize",
+          "type": "string",
+          "description": "Page size used during initial grid load/search (example: \"10\", \"50\").\nThe tool will still adapt to UI page size after the first response.",
+          "required": false,
+          "_id": "69817986357f0d24964f48b7"
+        },
+        {
+          "name": "matchMode",
+          "type": "string",
+          "description": "Name matching behavior when searching by electorateName or districtName:\n\"contains\" (default) → partial match\n\"exact\" → exact match only",
+          "required": false,
+          "_id": "69817986357f0d24964f48b8"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6953574c802e449bd3234131"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 1) Access control\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Electorate.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Electorate screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Helpers (STRING ONLY)\n     * ------------------------------------------------- */\n    const ok = (v) => (v ?? \"\").toString().trim();\n    const low = (v) => ok(v).toLowerCase();\n    const isEmpty = (v) => ok(v) === \"\";\n    const isNumStr = (v) => /^[0-9]+$/.test(ok(v));\n\n    const getHidden = (doc, sel) => doc.querySelector(sel)?.value ?? \"\";\n\n    const getPagerText = (doc) => ok(doc.querySelector(\".PagerRight_Default\")?.textContent);\n\n    const parsePager = (pagerText) => {\n      // \"Displaying page 2 of 6, items 6 to 10 of 28.\"\n      const m = pagerText.match(/page\\s+(\\d+)\\s+of\\s+(\\d+).*?of\\s+(\\d+)\\./i);\n      if (!m) return { page: 1, totalPages: 1, totalItems: null };\n      return { page: Number(m[1]), totalPages: Number(m[2]), totalItems: Number(m[3]) };\n    };\n\n    const extractUiPageSize = (doc) => {\n      const sel = 'input[name=\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\"]';\n      const v = ok(doc.querySelector(sel)?.value);\n      if (isNumStr(v)) return Number(v);\n\n      const v2 = ok(doc.querySelector('input[id$=\"_ChangePageSizeTextBox_Value\"]')?.value);\n      if (isNumStr(v2)) return Number(v2);\n\n      return 10;\n    };\n\n    const extractRows = (doc) => {\n      const allRows = Array.from(doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\"));\n      const out = [];\n      for (const row of allRows) {\n        const tds = row.querySelectorAll(\"td\");\n        const rowCode = ok(tds[0]?.textContent);\n        const rowName = ok(tds[1]?.textContent);\n        const rowDistrict = ok(tds[2]?.textContent);\n        out.push({ code: rowCode, electorateName: rowName, district: rowDistrict, _rowEl: row });\n      }\n      return out;\n    };\n\n    const buildBaseForm = (vs, vsg, ev) => {\n      const fd = new FormData();\n      fd.append(\"scrollLeft\", \"0\");\n      fd.append(\"scrollTop\", \"0\");\n      fd.append(\"__EVENTTARGET\", \"\");\n      fd.append(\"__EVENTARGUMENT\", \"\");\n      fd.append(\"__VIEWSTATE\", vs || \"\");\n      fd.append(\"__VIEWSTATEGENERATOR\", vsg || \"\");\n      fd.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      fd.append(\"__EVENTVALIDATION\", ev || \"\");\n      fd.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      fd.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      // Grid fields present in UI posts\n      fd.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n      fd.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      fd.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n      fd.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      fd.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      return fd;\n    };\n\n    const parser = new DOMParser();\n\n    /* -------------------------------------------------\n     * 3) Normalize args + detect returnAll\n     * ------------------------------------------------- */\n    const codeRaw = ok(args?.electorateCode);\n    const nameRaw = ok(args?.electorateName);\n    const districtRaw = ok(args?.districtName);\n\n    const fetchDetails = (low(args?.fetchDetails) === \"no\") ? \"no\" : \"yes\";\n\n    const allKeywords = new Set([\"all\", \"available\", \"existing\", \"list\", \"show all\", \"*\"]);\n    const returnAllExplicit = (low(args?.returnAll) === \"yes\" || low(args?.returnAll) === \"true\");\n    const keywordTriggered =\n      allKeywords.has(low(codeRaw)) || allKeywords.has(low(nameRaw)) || allKeywords.has(low(districtRaw));\n    const returnAll = returnAllExplicit || keywordTriggered;\n\n    if (!returnAll && isEmpty(codeRaw) && isEmpty(nameRaw) && isEmpty(districtRaw)) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Please provide electorateCode OR electorateName OR districtName, or set returnAll='yes'.\"\n      };\n    }\n\n    const providedCount = [codeRaw, nameRaw, districtRaw].filter(v => !isEmpty(v)).length;\n    if (!returnAll && providedCount > 1) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Please provide only ONE of electorateCode, electorateName, or districtName (or use returnAll='yes').\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 4) Get initial hidden fields + URL\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"Electorate\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Electorate.aspx\");\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Electorate.aspx`;\n\n    /* -------------------------------------------------\n     * 5) Build initial Search / Show All POST (page 1)\n     * ------------------------------------------------- */\n    let criteria = \"ELECTORATE_CODE\";\n    let searchValue = \"\";\n\n    if (!returnAll) {\n      if (!isEmpty(codeRaw)) {\n        criteria = \"ELECTORATE_CODE\";\n        searchValue = codeRaw;\n      } else if (!isEmpty(nameRaw)) {\n        criteria = \"ELECTORATE_NAME\";\n        searchValue = nameRaw;\n      } else {\n        criteria = \"D.DISTRICT_NAME\";\n        searchValue = districtRaw;\n      }\n    }\n\n    const firstFd = buildBaseForm(details.viewState, details.viewStateGen, details.eventValidation);\n    firstFd.append(\"ctl00$body$ContentSearch$cboCriteria\", criteria);\n    firstFd.append(\"ctl00$body$ContentSearch$txtContent\", returnAll ? \"\" : searchValue);\n\n    if (returnAll) firstFd.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n    else firstFd.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n\n    // Keep page 1\n    firstFd.set(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n\n    const firstRes = await fetch(url, { method: \"POST\", headers, body: firstFd, redirect: \"follow\" });\n    const firstHtml = await firstRes.text();\n    let doc = parser.parseFromString(firstHtml, \"text/html\");\n\n    let pagerMeta = parsePager(getPagerText(doc));\n    const uiPageSize = extractUiPageSize(doc);\n\n    /* -------------------------------------------------\n     * 6) Collect results from page 1 (and filter if needed)\n     * ------------------------------------------------- */\n    const applyMatch = (rowObj) => {\n      if (returnAll) return true;\n\n      if (criteria === \"ELECTORATE_CODE\") return rowObj.code === searchValue;\n      if (criteria === \"ELECTORATE_NAME\") return low(rowObj.electorateName).includes(low(searchValue));\n      if (criteria === \"D.DISTRICT_NAME\") return low(rowObj.district).includes(low(searchValue));\n      return false;\n    };\n\n    let pageRows = extractRows(doc);\n    let results = pageRows.filter(applyMatch).map(({ _rowEl, ...x }) => x);\n\n    /* -------------------------------------------------\n     * 7) If returnAll, iterate through ALL pages using GoToPageLinkButton\n     * ------------------------------------------------- */\n    const goToPage = async (pageNo) => {\n      const vs = getHidden(doc, \"#__VIEWSTATE\");\n      const vsg = getHidden(doc, \"#__VIEWSTATEGENERATOR\");\n      const ev = getHidden(doc, \"#__EVENTVALIDATION\");\n\n      const fd = buildBaseForm(vs, vsg, ev);\n\n      // preserve search context\n      fd.append(\"ctl00$body$ContentSearch$cboCriteria\", criteria);\n      fd.append(\"ctl00$body$ContentSearch$txtContent\", returnAll ? \"\" : searchValue);\n\n      // preserve UI page size\n      fd.set(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(uiPageSize));\n\n      // set page textbox + trigger Go postback\n      fd.set(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", String(pageNo));\n      fd.set(\"__EVENTTARGET\", \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\");\n      fd.set(\"__EVENTARGUMENT\", \"\");\n\n      const res = await fetch(url, { method: \"POST\", headers, body: fd, redirect: \"follow\" });\n      const html = await res.text();\n      doc = parser.parseFromString(html, \"text/html\");\n      pagerMeta = parsePager(getPagerText(doc));\n    };\n\n    if (returnAll && pagerMeta.totalPages > 1) {\n      for (let p = 2; p <= pagerMeta.totalPages; p++) {\n        await goToPage(p);\n        pageRows = extractRows(doc);\n        const matches = pageRows.filter(applyMatch).map(({ _rowEl, ...x }) => x);\n        results.push(...matches);\n      }\n    }\n\n    if (results.length === 0) {\n      return {\n        status: \"NOT_FOUND\",\n        message: returnAll ? \"No electorates found.\" : \"No electorates found matching the search criteria.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 8) fetchDetails (only when exactly one match)\n     * ------------------------------------------------- */\n    if (!returnAll && results.length === 1 && fetchDetails !== \"no\") {\n      const oneCode = results[0].code;\n\n      const rowEls = Array.from(doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\"));\n      const matchedRow = rowEls.find(r => ok(r.querySelectorAll(\"td\")[0]?.textContent) === oneCode);\n\n      const href = matchedRow?.querySelector(\"a\")?.getAttribute(\"href\") || \"\";\n      const eventTarget = href.match(/__doPostBack\\('([^']+)'/)?.[1];\n\n      if (eventTarget) {\n        const vs = getHidden(doc, \"#__VIEWSTATE\");\n        const ev = getHidden(doc, \"#__EVENTVALIDATION\");\n        const vg = getHidden(doc, \"#__VIEWSTATEGENERATOR\");\n\n        const openFD = buildBaseForm(vs, vg, ev);\n        openFD.set(\"__EVENTTARGET\", eventTarget);\n        openFD.set(\"__EVENTARGUMENT\", \"\");\n\n        openFD.append(\"ctl00$body$ContentSearch$cboCriteria\", criteria);\n        openFD.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n        openFD.set(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(uiPageSize));\n\n        const detailRes = await fetch(url, { method: \"POST\", headers, body: openFD, redirect: \"follow\" });\n        const detailHtml = await detailRes.text();\n        const detailDoc = parser.parseFromString(detailHtml, \"text/html\");\n\n        const detailCode =\n          ok(detailDoc.querySelector(\"#ctl00_body_txtCode\")?.value) || oneCode;\n\n        const detailName =\n          ok(detailDoc.querySelector(\"#ctl00_body_txtName\")?.value) ||\n          ok(detailDoc.querySelector(\"#ctl00_body_txtElectorate\")?.value) ||\n          results[0].electorateName;\n\n        const detailDistrict =\n          ok(detailDoc.querySelector(\"#ctl00_body_txtDistrict\")?.value) ||\n          ok(detailDoc.querySelector(\"#ctl00_body_cboDistrict\")?.selectedOptions?.[0]?.textContent) ||\n          results[0].district;\n\n        return {\n          status: \"SUCCESS\",\n          count: 1,\n          electorates: [{\n            code: detailCode,\n            electorateName: detailName,\n            district: detailDistrict\n          }]\n        };\n      }\n    }\n\n    /* -------------------------------------------------\n     * 9) Return results\n     * ------------------------------------------------- */\n    return {\n      status: \"SUCCESS\",\n      message: returnAll\n        ? `Found ${results.length} electorate(s) across ${pagerMeta.totalPages} page(s) (UI page size = ${uiPageSize}).`\n        : `Found ${results.length} electorate(s).`,\n      count: results.length,\n      uiPageSize,\n      totalPages: pagerMeta.totalPages,\n      totalItems: pagerMeta.totalItems,\n      electorates: results\n    };\n  } catch (e) {\n    return {\n      status: \"ERROR\",\n      message: e?.message || \"Unexpected error occurred in Electorate transformer.\"\n    };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "arguments": [
+    {
+      "name": "religionCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "user enters the religion code to search for and return the grid row details, including religion name",
+      "advanced": false,
+      "raw": {
+        "name": "religionCode",
+        "type": "string",
+        "description": "user enters the religion code to search for and return the grid row details, including religion name",
+        "required": false,
+        "_id": "69521a649efbf3c3d6761e0a"
+      }
+    },
+    {
+      "name": "religionName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Religion name search text (partial allowed, example: \"Christ\"). Also accepts \"all\", \"show all\", \"*\" to fetch all records.",
+      "advanced": false,
+      "raw": {
+        "name": "religionName",
+        "type": "string",
+        "description": "Religion name search text (partial allowed, example: \"Christ\"). Also accepts \"all\", \"show all\", \"*\" to fetch all records.",
+        "required": false,
+        "_id": "6956a3f1ce1605a649241ee4"
+      }
+    },
+    {
+      "name": "page",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Page number to return (example: \"6\"). If omitted, defaults to \"1\". You may also pass \"next\" / \"prev\" with currentPage.",
+      "advanced": false,
+      "raw": {
+        "name": "page",
+        "type": "string",
+        "description": "Page number to return (example: \"6\"). If omitted, defaults to \"1\". You may also pass \"next\" / \"prev\" with currentPage.",
+        "required": false,
+        "_id": "698172f4d90ee82f7599ec77"
+      }
+    },
+    {
+      "name": "currentPage",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Current page number (used only when page is \"next\" or \"prev\").",
+      "advanced": false,
+      "raw": {
+        "name": "currentPage",
+        "type": "string",
+        "description": "Current page number (used only when page is \"next\" or \"prev\").",
+        "required": false,
+        "_id": "698172f4d90ee82f7599ec78"
+      }
+    },
+    {
+      "name": "batchSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "How many records to return per response (example: \"10\"). If not given, it returns UI page size.",
+      "advanced": false,
+      "raw": {
+        "name": "batchSize",
+        "type": "string",
+        "description": "How many records to return per response (example: \"10\"). If not given, it returns UI page size.",
+        "required": false,
+        "_id": "698172f4d90ee82f7599ec79"
+      }
+    },
+    {
+      "name": "useUiPageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "\"true\" (default) uses UI page size; \"false\" lets batchSize drive the size.",
+      "advanced": false,
+      "raw": {
+        "name": "useUiPageSize",
+        "type": "string",
+        "description": "\"true\" (default) uses UI page size; \"false\" lets batchSize drive the size.",
+        "required": false,
+        "_id": "698172f4d90ee82f7599ec7a"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "\"true\" to fetch all pages and return all records.",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "\"true\" to fetch all pages and return all records.",
+        "required": false,
+        "_id": "698172f4d90ee82f7599ec7b"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

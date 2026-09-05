@@ -1,0 +1,155 @@
+{
+  "id": "6953f7e5fc6c7e58f0961992",
+  "slug": "getcurrencytype",
+  "name": "getCurrencyType",
+  "description": "Retrieves Currency Type master records from EIM/CurrencyType.aspx.\nSupports:\nSearch currency types by currencyCode (exact) OR currencyName (partial) OR currencySymbol (partial)\nShow all currency types\nAutomatically loops through all pages (even if page size is 5/8/9/etc.) so no results are missed\nReturns all matching records, not just page 1",
+  "instructions": null,
+  "taskName": "Fetching Currency Types",
+  "tags": [
+    "EIMAdmin",
+    "NexusInformation"
+  ],
+  "status": "live",
+  "signature": "getCurrencyType",
+  "createdAt": "2025-12-30T16:03:49.302Z",
+  "updatedAt": "2026-06-15T07:31:11.455Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "0db8796707e64db7c4840dde33d4051303a2810ab147e451225e7f6a096ad310",
+  "lastExportedAt": "2026-09-05T19:39:22.400Z",
+  "raw": {
+    "basic": {
+      "_id": "6953f7e5fc6c7e58f0961992",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getCurrencyType",
+      "description": "Retrieves Currency Type master records from EIM/CurrencyType.aspx.\nSupports:\nSearch currency types by currencyCode (exact) OR currencyName (partial) OR currencySymbol (partial)\nShow all currency types\nAutomatically loops through all pages (even if page size is 5/8/9/etc.) so no results are missed\nReturns all matching records, not just page 1",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getCurrencyType",
+        "args": [
+          {
+            "name": "currencyCode",
+            "type": "string",
+            "description": "The unique code identifier for the currency (e.g., \"000008\")",
+            "required": false,
+            "_id": "6953f7e5fc6c7e58f0961994"
+          },
+          {
+            "name": "currencyName",
+            "type": "string",
+            "description": " The full or partial name of the currency to search for (e.g., \"Dollar\", \"Euro\")",
+            "required": false,
+            "_id": "6953f7e5fc6c7e58f0961995"
+          },
+          {
+            "name": "currencySymbol",
+            "type": "string",
+            "description": "The currency symbol to search for (e.g., \"AUD,\" \"USD\"); \nNOTE: currencySymbol is not currency symbol like \"$\"; it is a combination of letters \"USD.\"",
+            "required": false,
+            "_id": "6953f7e5fc6c7e58f0961996"
+          },
+          {
+            "name": "mode",
+            "type": "string",
+            "description": "Defines how currency types are retrieved. Case-insensitive. Values like “show all”, “all”, “list of all”, “all existing”, “existing”, or “available” return all records across all pages. “Search” (default) filters results using code, name, or symbol.",
+            "required": false,
+            "_id": "69842a5c86762303195e9bcc"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6953f7e5fc6c7e58f0961993"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\r\n  try {\r\n    /* -------------------------------------------------\r\n     * 1) Access validation\r\n     * ------------------------------------------------- */\r\n    if (!BeaconBar?.user?.metaData?.menus?.includes(\"EIM/CurrencyType.aspx\")) {\r\n      return {\r\n        status: \"NO_ACCESS\",\r\n        message: \"You do not have access to Currency Type screen. Please contact HR Admin.\"\r\n      };\r\n    }\r\n\r\n    /* -------------------------------------------------\r\n     * 2) Input validation\r\n     * - user must provide either currencyCode, currencyName, or currencySymbol\r\n     * - mode default: \"search\"\r\n     * ------------------------------------------------- */\r\n    const mode = (args?.mode || \"search\").toString().trim().toLowerCase();\r\n    const currencyCode = args?.currencyCode?.toString()?.trim();\r\n    const currencyName = args?.currencyName?.toString()?.trim();\r\n    const currencySymbol = args?.currencySymbol?.toString()?.trim();\r\n\r\n    if (!currencyCode && !currencyName && !currencySymbol && mode !== \"showall\") {\r\n      return {\r\n        status: \"INVALID_ARGS\",\r\n        message: \"Please provide either currencyCode, currencyName, or currencySymbol (or use mode='showall')\"\r\n      };\r\n    }\r\n\r\n    /* -------------------------------------------------\r\n     * 3) Helpers\r\n     * ------------------------------------------------- */\r\n    const normalize = (s) =>\r\n      (s ?? \"\")\r\n        .toString()\r\n        .trim()\r\n        .replace(/\\s+/g, \" \")\r\n        .toLowerCase();\r\n\r\n    const parseHtml = (html) => new DOMParser().parseFromString(html, \"text/html\");\r\n\r\n    const getAspState = (doc) => ({\r\n      viewState: doc.querySelector(\"input[name='__VIEWSTATE']\")?.value || \"\",\r\n      viewStateGen: doc.querySelector(\"input[name='__VIEWSTATEGENERATOR']\")?.value || \"\",\r\n      eventValidation: doc.querySelector(\"input[name='__EVENTVALIDATION']\")?.value || \"\",\r\n      radScriptManagerHidden:\r\n        doc.querySelector(\"input[name='ctl00$body$RadScriptManager1_HiddenField']\")?.value ||\r\n        doc.querySelector(\"#ctl00_body_RadScriptManager1_HiddenField\")?.value ||\r\n        \"\"\r\n    });\r\n\r\n    const getPageSizeFromDoc = (doc) => {\r\n      const v =\r\n        doc.querySelector(\"input[name='ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox']\")?.value ||\r\n        doc.querySelector(\"#ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox\")?.value ||\r\n        doc.querySelector(\"#ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_Value\")?.value ||\r\n        doc.querySelector(\"#ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_text\")?.value ||\r\n        \"\";\r\n\r\n      const n = parseInt(v, 10);\r\n      return Number.isFinite(n) && n > 0 ? String(n) : \"10\"; // fallback\r\n    };\r\n\r\n    const getTotalPagesFromDoc = (doc) => {\r\n      const footer = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\r\n      const m = footer.match(/of\\s+(\\d+)\\s*,/i);\r\n      if (m && m[1]) {\r\n        const n = parseInt(m[1], 10);\r\n        if (Number.isFinite(n) && n > 0) return n;\r\n      }\r\n      return 1;\r\n    };\r\n\r\n    const buildBaseForm = (state, pageSize) => {\r\n      const fd = new FormData();\r\n      fd.append(\"ctl00$body$RadScriptManager1_HiddenField\", state.radScriptManagerHidden || \"\");\r\n      fd.append(\"scrollLeft\", \"0\");\r\n      fd.append(\"scrollTop\", \"0\");\r\n      fd.append(\"__EVENTTARGET\", \"\");\r\n      fd.append(\"__EVENTARGUMENT\", \"\");\r\n      fd.append(\"__VIEWSTATE\", state.viewState);\r\n      fd.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\r\n      fd.append(\"__VIEWSTATEENCRYPTED\", \"\");\r\n      fd.append(\"__EVENTVALIDATION\", state.eventValidation);\r\n\r\n      fd.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\r\n      fd.append(\"ctl00$hdnQuickmenu\", \"1\");\r\n\r\n      fd.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\r\n      fd.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\r\n      fd.append(\"ctl00_body_grdsummary_ClientState\", \"\");\r\n\r\n      fd.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\r\n      fd.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\r\n\r\n      return fd;\r\n    };\r\n\r\n    const extractRows = (doc) => {\r\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\r\n      const list = [];\r\n      for (const row of rows) {\r\n        const tds = row.querySelectorAll(\"td\");\r\n        const code = tds[0]?.textContent?.trim() || \"\";\r\n        const name = tds[1]?.textContent?.trim() || \"\";\r\n        const symbol = tds[2]?.textContent?.trim() || \"\";\r\n        if (code || name || symbol) {\r\n          list.push({ code, currencyName: name, currencySymbol: symbol });\r\n        }\r\n      }\r\n      return list;\r\n    };\r\n\r\n    const isMatch = (r) => {\r\n      // If mode=showall and no filters, return all\r\n      if (mode === \"showall\" && !currencyCode && !currencyName && !currencySymbol) return true;\r\n\r\n      if (currencyCode) return normalize(r.code) === normalize(currencyCode);\r\n      if (currencyName) return normalize(r.currencyName).includes(normalize(currencyName)); // smooth partial\r\n      if (currencySymbol) return normalize(r.currencySymbol).includes(normalize(currencySymbol)); // smooth partial\r\n      return false;\r\n    };\r\n\r\n    /* -------------------------------------------------\r\n     * 4) URL + headers\r\n     * ------------------------------------------------- */\r\n    const headers = new Headers();\r\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\r\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\r\n\r\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/CurrencyType.aspx\");\r\n    const url = updateUrl.updateUrl\r\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\r\n      : `${window.origin}/${reqOptions.sl}/EIM/CurrencyType.aspx`;\r\n\r\n    /* -------------------------------------------------\r\n     * 5) Initial state (VIEWSTATE etc.)\r\n     * ------------------------------------------------- */\r\n    const initial = await BeaconBar.executeFunction(\"getApiList\")(\"CurrencyType\");\r\n\r\n    let pageSize = \"10\";\r\n\r\n    /* -------------------------------------------------\r\n     * 6) First POST: Search or Show All (lands on page 1)\r\n     * ------------------------------------------------- */\r\n    let searchCriteria = \"\";\r\n    let searchValue = \"\";\r\n\r\n    if (currencyCode) {\r\n      searchCriteria = \"CURRENCY_ID\";\r\n      searchValue = currencyCode;\r\n    } else if (currencyName) {\r\n      searchCriteria = \"CURRENCY_NAME\";\r\n      searchValue = currencyName;\r\n    } else if (currencySymbol) {\r\n      searchCriteria = \"CURRENCY_SYMBOL\";\r\n      searchValue = currencySymbol;\r\n    } else {\r\n      searchCriteria = \"CURRENCY_ID\";\r\n      searchValue = \"\";\r\n    }\r\n\r\n    const state0 = {\r\n      viewState: initial.viewState,\r\n      viewStateGen: initial.viewStateGen,\r\n      eventValidation: initial.eventValidation,\r\n      radScriptManagerHidden: \"\" \r\n    };\r\n\r\n    const fd1 = buildBaseForm(state0, pageSize);\r\n\r\n    fd1.set(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\r\n    fd1.set(\"ctl00$body$ContentSearch$txtContent\", searchValue);\r\n\r\n    if (mode === \"showall\") {\r\n      fd1.set(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\r\n    } else {\r\n      fd1.set(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\r\n    }\r\n\r\n    fd1.set(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\r\n\r\n    const resp1 = await fetch(url, { method: \"POST\", headers, body: fd1 });\r\n    const html1 = await resp1.text();\r\n    let doc = parseHtml(html1);\r\n\r\n    let state = getAspState(doc);\r\n    pageSize = getPageSizeFromDoc(doc);\r\n    let totalPages = getTotalPagesFromDoc(doc);\r\n\r\n    /* -------------------------------------------------\r\n     * 7) Collect from page 1 + loop all pages\r\n     * ------------------------------------------------- */\r\n    const resultsByCode = new Map();\r\n\r\n    const collectMatches = (doc) => {\r\n      const rows = extractRows(doc);\r\n      for (const r of rows) {\r\n        if (isMatch(r)) {\r\n          const key = normalize(r.code || `${r.currencyName}|${r.currencySymbol}`);\r\n          resultsByCode.set(key, r);\r\n        }\r\n      }\r\n    };\r\n\r\n    collectMatches(doc);\r\n\r\n    for (let page = 2; page <= totalPages; page++) {\r\n      const fdPage = buildBaseForm(state, pageSize);\r\n\r\n      fdPage.set(\"__EVENTTARGET\", \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\");\r\n      fdPage.set(\"__EVENTARGUMENT\", \"\");\r\n      fdPage.set(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", String(page));\r\n\r\n      const resp = await fetch(url, { method: \"POST\", headers, body: fdPage });\r\n      const html = await resp.text();\r\n      doc = parseHtml(html);\r\n\r\n      state = getAspState(doc);\r\n      pageSize = getPageSizeFromDoc(doc);\r\n\r\n      totalPages = Math.max(totalPages, getTotalPagesFromDoc(doc));\r\n\r\n      collectMatches(doc);\r\n    }\r\n\r\n    const currencies = Array.from(resultsByCode.values()).sort((a, b) =>\r\n      (a.code || \"\").localeCompare(b.code || \"\")\r\n    );\r\n\r\n    if (!currencies.length) {\r\n      return { status: \"NOT_FOUND\", message: \"No Currency Types found matching the search criteria\" };\r\n    }\r\n\r\n    return { status: \"SUCCESS\", count: currencies.length, currencies };\r\n  } catch (e) {\r\n    return { status: \"ERROR\", message: `Unexpected error: ${e?.message || e}` };\r\n  }\r\n});\r\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "NexusInformation"
+      ],
+      "taskName": "Fetching Currency Types",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-30T16:03:49.302Z",
+      "updatedAt": "2026-06-15T07:31:11.455Z",
+      "__v": 6,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getCurrencyType",
+      "args": [
+        {
+          "name": "currencyCode",
+          "type": "string",
+          "description": "The unique code identifier for the currency (e.g., \"000008\")",
+          "required": false,
+          "_id": "6953f7e5fc6c7e58f0961994"
+        },
+        {
+          "name": "currencyName",
+          "type": "string",
+          "description": " The full or partial name of the currency to search for (e.g., \"Dollar\", \"Euro\")",
+          "required": false,
+          "_id": "6953f7e5fc6c7e58f0961995"
+        },
+        {
+          "name": "currencySymbol",
+          "type": "string",
+          "description": "The currency symbol to search for (e.g., \"AUD,\" \"USD\"); \nNOTE: currencySymbol is not currency symbol like \"$\"; it is a combination of letters \"USD.\"",
+          "required": false,
+          "_id": "6953f7e5fc6c7e58f0961996"
+        },
+        {
+          "name": "mode",
+          "type": "string",
+          "description": "Defines how currency types are retrieved. Case-insensitive. Values like “show all”, “all”, “list of all”, “all existing”, “existing”, or “available” return all records across all pages. “Search” (default) filters results using code, name, or symbol.",
+          "required": false,
+          "_id": "69842a5c86762303195e9bcc"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6953f7e5fc6c7e58f0961993"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\r\n  try {\r\n    /* -------------------------------------------------\r\n     * 1) Access validation\r\n     * ------------------------------------------------- */\r\n    if (!BeaconBar?.user?.metaData?.menus?.includes(\"EIM/CurrencyType.aspx\")) {\r\n      return {\r\n        status: \"NO_ACCESS\",\r\n        message: \"You do not have access to Currency Type screen. Please contact HR Admin.\"\r\n      };\r\n    }\r\n\r\n    /* -------------------------------------------------\r\n     * 2) Input validation\r\n     * - user must provide either currencyCode, currencyName, or currencySymbol\r\n     * - mode default: \"search\"\r\n     * ------------------------------------------------- */\r\n    const mode = (args?.mode || \"search\").toString().trim().toLowerCase();\r\n    const currencyCode = args?.currencyCode?.toString()?.trim();\r\n    const currencyName = args?.currencyName?.toString()?.trim();\r\n    const currencySymbol = args?.currencySymbol?.toString()?.trim();\r\n\r\n    if (!currencyCode && !currencyName && !currencySymbol && mode !== \"showall\") {\r\n      return {\r\n        status: \"INVALID_ARGS\",\r\n        message: \"Please provide either currencyCode, currencyName, or currencySymbol (or use mode='showall')\"\r\n      };\r\n    }\r\n\r\n    /* -------------------------------------------------\r\n     * 3) Helpers\r\n     * ------------------------------------------------- */\r\n    const normalize = (s) =>\r\n      (s ?? \"\")\r\n        .toString()\r\n        .trim()\r\n        .replace(/\\s+/g, \" \")\r\n        .toLowerCase();\r\n\r\n    const parseHtml = (html) => new DOMParser().parseFromString(html, \"text/html\");\r\n\r\n    const getAspState = (doc) => ({\r\n      viewState: doc.querySelector(\"input[name='__VIEWSTATE']\")?.value || \"\",\r\n      viewStateGen: doc.querySelector(\"input[name='__VIEWSTATEGENERATOR']\")?.value || \"\",\r\n      eventValidation: doc.querySelector(\"input[name='__EVENTVALIDATION']\")?.value || \"\",\r\n      radScriptManagerHidden:\r\n        doc.querySelector(\"input[name='ctl00$body$RadScriptManager1_HiddenField']\")?.value ||\r\n        doc.querySelector(\"#ctl00_body_RadScriptManager1_HiddenField\")?.value ||\r\n        \"\"\r\n    });\r\n\r\n    const getPageSizeFromDoc = (doc) => {\r\n      const v =\r\n        doc.querySelector(\"input[name='ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox']\")?.value ||\r\n        doc.querySelector(\"#ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox\")?.value ||\r\n        doc.querySelector(\"#ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_Value\")?.value ||\r\n        doc.querySelector(\"#ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_text\")?.value ||\r\n        \"\";\r\n\r\n      const n = parseInt(v, 10);\r\n      return Number.isFinite(n) && n > 0 ? String(n) : \"10\"; // fallback\r\n    };\r\n\r\n    const getTotalPagesFromDoc = (doc) => {\r\n      const footer = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\r\n      const m = footer.match(/of\\s+(\\d+)\\s*,/i);\r\n      if (m && m[1]) {\r\n        const n = parseInt(m[1], 10);\r\n        if (Number.isFinite(n) && n > 0) return n;\r\n      }\r\n      return 1;\r\n    };\r\n\r\n    const buildBaseForm = (state, pageSize) => {\r\n      const fd = new FormData();\r\n      fd.append(\"ctl00$body$RadScriptManager1_HiddenField\", state.radScriptManagerHidden || \"\");\r\n      fd.append(\"scrollLeft\", \"0\");\r\n      fd.append(\"scrollTop\", \"0\");\r\n      fd.append(\"__EVENTTARGET\", \"\");\r\n      fd.append(\"__EVENTARGUMENT\", \"\");\r\n      fd.append(\"__VIEWSTATE\", state.viewState);\r\n      fd.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\r\n      fd.append(\"__VIEWSTATEENCRYPTED\", \"\");\r\n      fd.append(\"__EVENTVALIDATION\", state.eventValidation);\r\n\r\n      fd.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\r\n      fd.append(\"ctl00$hdnQuickmenu\", \"1\");\r\n\r\n      fd.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\r\n      fd.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\r\n      fd.append(\"ctl00_body_grdsummary_ClientState\", \"\");\r\n\r\n      fd.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\r\n      fd.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\r\n\r\n      return fd;\r\n    };\r\n\r\n    const extractRows = (doc) => {\r\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\r\n      const list = [];\r\n      for (const row of rows) {\r\n        const tds = row.querySelectorAll(\"td\");\r\n        const code = tds[0]?.textContent?.trim() || \"\";\r\n        const name = tds[1]?.textContent?.trim() || \"\";\r\n        const symbol = tds[2]?.textContent?.trim() || \"\";\r\n        if (code || name || symbol) {\r\n          list.push({ code, currencyName: name, currencySymbol: symbol });\r\n        }\r\n      }\r\n      return list;\r\n    };\r\n\r\n    const isMatch = (r) => {\r\n      // If mode=showall and no filters, return all\r\n      if (mode === \"showall\" && !currencyCode && !currencyName && !currencySymbol) return true;\r\n\r\n      if (currencyCode) return normalize(r.code) === normalize(currencyCode);\r\n      if (currencyName) return normalize(r.currencyName).includes(normalize(currencyName)); // smooth partial\r\n      if (currencySymbol) return normalize(r.currencySymbol).includes(normalize(currencySymbol)); // smooth partial\r\n      return false;\r\n    };\r\n\r\n    /* -------------------------------------------------\r\n     * 4) URL + headers\r\n     * ------------------------------------------------- */\r\n    const headers = new Headers();\r\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\r\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\r\n\r\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/CurrencyType.aspx\");\r\n    const url = updateUrl.updateUrl\r\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\r\n      : `${window.origin}/${reqOptions.sl}/EIM/CurrencyType.aspx`;\r\n\r\n    /* -------------------------------------------------\r\n     * 5) Initial state (VIEWSTATE etc.)\r\n     * ------------------------------------------------- */\r\n    const initial = await BeaconBar.executeFunction(\"getApiList\")(\"CurrencyType\");\r\n\r\n    let pageSize = \"10\";\r\n\r\n    /* -------------------------------------------------\r\n     * 6) First POST: Search or Show All (lands on page 1)\r\n     * ------------------------------------------------- */\r\n    let searchCriteria = \"\";\r\n    let searchValue = \"\";\r\n\r\n    if (currencyCode) {\r\n      searchCriteria = \"CURRENCY_ID\";\r\n      searchValue = currencyCode;\r\n    } else if (currencyName) {\r\n      searchCriteria = \"CURRENCY_NAME\";\r\n      searchValue = currencyName;\r\n    } else if (currencySymbol) {\r\n      searchCriteria = \"CURRENCY_SYMBOL\";\r\n      searchValue = currencySymbol;\r\n    } else {\r\n      searchCriteria = \"CURRENCY_ID\";\r\n      searchValue = \"\";\r\n    }\r\n\r\n    const state0 = {\r\n      viewState: initial.viewState,\r\n      viewStateGen: initial.viewStateGen,\r\n      eventValidation: initial.eventValidation,\r\n      radScriptManagerHidden: \"\" \r\n    };\r\n\r\n    const fd1 = buildBaseForm(state0, pageSize);\r\n\r\n    fd1.set(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\r\n    fd1.set(\"ctl00$body$ContentSearch$txtContent\", searchValue);\r\n\r\n    if (mode === \"showall\") {\r\n      fd1.set(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\r\n    } else {\r\n      fd1.set(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\r\n    }\r\n\r\n    fd1.set(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\r\n\r\n    const resp1 = await fetch(url, { method: \"POST\", headers, body: fd1 });\r\n    const html1 = await resp1.text();\r\n    let doc = parseHtml(html1);\r\n\r\n    let state = getAspState(doc);\r\n    pageSize = getPageSizeFromDoc(doc);\r\n    let totalPages = getTotalPagesFromDoc(doc);\r\n\r\n    /* -------------------------------------------------\r\n     * 7) Collect from page 1 + loop all pages\r\n     * ------------------------------------------------- */\r\n    const resultsByCode = new Map();\r\n\r\n    const collectMatches = (doc) => {\r\n      const rows = extractRows(doc);\r\n      for (const r of rows) {\r\n        if (isMatch(r)) {\r\n          const key = normalize(r.code || `${r.currencyName}|${r.currencySymbol}`);\r\n          resultsByCode.set(key, r);\r\n        }\r\n      }\r\n    };\r\n\r\n    collectMatches(doc);\r\n\r\n    for (let page = 2; page <= totalPages; page++) {\r\n      const fdPage = buildBaseForm(state, pageSize);\r\n\r\n      fdPage.set(\"__EVENTTARGET\", \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\");\r\n      fdPage.set(\"__EVENTARGUMENT\", \"\");\r\n      fdPage.set(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", String(page));\r\n\r\n      const resp = await fetch(url, { method: \"POST\", headers, body: fdPage });\r\n      const html = await resp.text();\r\n      doc = parseHtml(html);\r\n\r\n      state = getAspState(doc);\r\n      pageSize = getPageSizeFromDoc(doc);\r\n\r\n      totalPages = Math.max(totalPages, getTotalPagesFromDoc(doc));\r\n\r\n      collectMatches(doc);\r\n    }\r\n\r\n    const currencies = Array.from(resultsByCode.values()).sort((a, b) =>\r\n      (a.code || \"\").localeCompare(b.code || \"\")\r\n    );\r\n\r\n    if (!currencies.length) {\r\n      return { status: \"NOT_FOUND\", message: \"No Currency Types found matching the search criteria\" };\r\n    }\r\n\r\n    return { status: \"SUCCESS\", count: currencies.length, currencies };\r\n  } catch (e) {\r\n    return { status: \"ERROR\", message: `Unexpected error: ${e?.message || e}` };\r\n  }\r\n});\r\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

@@ -1,0 +1,239 @@
+{
+  "id": "6954473e9f7bf02aaf035402",
+  "slug": "getstationinformation",
+  "name": "getStationInformation",
+  "description": "This tool retrieves Station Information records from the EIM → Station Information screen. It supports searching stations by station code (exact match), station name (partial match), transport cost (exact string match), or route name (partial match). It also supports a returnAll string flag to fetch all available station records across all RadGrid pages, ensuring results are not limited to the first page. When required, the tool can operate in a page-by-page mode and guide the user to request the next page if additional results exist.",
+  "instructions": null,
+  "taskName": "Fetching Station Information",
+  "tags": [
+    "EIMAdmin",
+    "CensusInformation"
+  ],
+  "status": "live",
+  "signature": "getStationInformation",
+  "createdAt": "2025-12-30T21:42:22.707Z",
+  "updatedAt": "2026-06-15T07:33:09.813Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "b606ca818f55168047b517c0c0d42af63ddace251641a186d5240b8f096522fe",
+  "lastExportedAt": "2026-09-05T19:39:22.368Z",
+  "raw": {
+    "basic": {
+      "_id": "6954473e9f7bf02aaf035402",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getStationInformation",
+      "description": "This tool retrieves Station Information records from the EIM → Station Information screen. It supports searching stations by station code (exact match), station name (partial match), transport cost (exact string match), or route name (partial match). It also supports a returnAll string flag to fetch all available station records across all RadGrid pages, ensuring results are not limited to the first page. When required, the tool can operate in a page-by-page mode and guide the user to request the next page if additional results exist.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getStationInformation",
+        "args": [
+          {
+            "name": "stationCode",
+            "type": "string",
+            "description": "When the user provides a station code, this performs an exact match search.\nTriggers the Search action with criteria = STATION_CODE and returns the matching station record. (e.g., \"000004\")",
+            "required": false,
+            "_id": "6954473e9f7bf02aaf035404"
+          },
+          {
+            "name": "stationName",
+            "type": "string",
+            "description": "When the user provides a station name (full or partial), this performs a case-insensitive partial match search.\nTriggers the Search action with criteria = STATION_NAME and returns all matching station rows. (e.g., \"Kandy\")",
+            "required": false,
+            "_id": "6954473e9f7bf02aaf035405"
+          },
+          {
+            "name": "transportCost",
+            "type": "string",
+            "description": "When the user provides a transport cost value, this performs an exact match search on the station transport cost.\nTriggers the Search action with criteria = STATION_COST and returns stations with that cost. (e.g., \"150.00\")",
+            "required": false,
+            "_id": "6954473e9f7bf02aaf035406"
+          },
+          {
+            "name": "routeName",
+            "type": "string",
+            "description": "When the user provides a route name, this performs a partial match search against the route group headers.\nReturns all stations listed under routes that match the provided route name. (e.g., \"Central Expressway\")",
+            "required": false,
+            "_id": "6954473e9f7bf02aaf035407"
+          },
+          {
+            "name": "returnAll",
+            "type": "string",
+            "description": "When user asks to return all/available/existing stations, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\"\nTriggers Show All and returns every station row from the grid.",
+            "required": false,
+            "_id": "697e460a972f5a0a65f71ce0"
+          },
+          {
+            "name": "showAll",
+            "type": "string",
+            "description": "Alias of returnAll (same behavior).",
+            "required": false,
+            "_id": "6980b988d6794aa35eda0b1d"
+          },
+          {
+            "name": "autoFetchAllPages",
+            "type": "string",
+            "description": "Controls paging when returnAll is used.\n\"true\" → auto-loop pages and return everything (default when returnAll is truthy)\n\"false\" → return only the requested/current page and include moreAvailable + nextPage Example: \"false\"",
+            "required": false,
+            "_id": "6980b988d6794aa35eda0b1e"
+          },
+          {
+            "name": "pageNumber",
+            "type": "string",
+            "description": "Page number to fetch (used when autoFetchAllPages is \"false\"). Default: \"1\"\nExample: \"2\"",
+            "required": false,
+            "_id": "6980b988d6794aa35eda0b1f"
+          },
+          {
+            "name": "pageSize",
+            "type": "string",
+            "description": "Page size sent to the grid pager (server may cap). Default: \"100\"\nExample: \"50\"",
+            "required": false,
+            "_id": "6980b988d6794aa35eda0b20"
+          },
+          {
+            "name": "maxPages",
+            "type": "string",
+            "description": "Safety limit for page looping to avoid infinite loops. Default: \"50\"\nExample: \"10\"",
+            "required": false,
+            "_id": "6980b988d6794aa35eda0b21"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6954473e9f7bf02aaf035403"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\r\n  try {\r\n    /* -------------------------------------------------\r\n     * 1) Access validation\r\n     * ------------------------------------------------- */\r\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/StationInformation.aspx\")) {\r\n      return {\r\n        status: \"NO_ACCESS\",\r\n        message: \"You do not have access to Station Information screen. Please contact HR Admin.\"\r\n      };\r\n    }\r\n\r\n    /* -------------------------------------------------\r\n     * 2) Helpers (STRING ONLY)\r\n     * ------------------------------------------------- */\r\n    const okText = (v) => (v ?? \"\").toString().trim();\r\n    const toLower = (v) => okText(v).toLowerCase();\r\n\r\n    const isTruthy = (v) => {\r\n      const t = toLower(v);\r\n      return [\r\n        \"true\", \"1\", \"yes\", \"y\",\r\n        \"all\", \"available\", \"existing\",\r\n        \"list\", \"showall\", \"show all\", \"returnall\"\r\n      ].includes(t);\r\n    };\r\n\r\n    const stationCode = okText(args?.stationCode);\r\n    const stationName = okText(args?.stationName);\r\n    const transportCost = okText(args?.transportCost);\r\n    const routeName = okText(args?.routeName);\r\n\r\n    const returnAll = isTruthy(args?.returnAll) || isTruthy(args?.showAll);\r\n\r\n    // If returnAll is used => default to auto-fetch all pages\r\n    const autoFetchAllPages = returnAll ? !isTruthy(args?.autoFetchAllPages) ? true : true : isTruthy(args?.autoFetchAllPages);\r\n\r\n    // manual paging support\r\n    const pageNumberRaw = okText(args?.pageNumber) || \"1\";\r\n    const pageNumber = Number.isFinite(Number(pageNumberRaw)) ? Math.max(1, parseInt(pageNumberRaw, 10)) : 1;\r\n\r\n    // keep a reasonable page size; server can cap (your capture shows 2)\r\n    const pageSizeRaw = okText(args?.pageSize) || \"100\";\r\n    const pageSize = Number.isFinite(Number(pageSizeRaw)) ? Math.max(1, parseInt(pageSizeRaw, 10)) : 100;\r\n\r\n    const maxPagesRaw = okText(args?.maxPages) || \"50\";\r\n    const maxPages = Number.isFinite(Number(maxPagesRaw)) ? Math.max(1, parseInt(maxPagesRaw, 10)) : 50;\r\n\r\n    if (!returnAll && !stationCode && !stationName && !transportCost && !routeName) {\r\n      return {\r\n        status: \"INVALID_ARGS\",\r\n        message:\r\n          \"Please provide either stationCode, stationName, transportCost, or routeName. To return all records, pass returnAll as 'true'/'all'/'available'/'existing'/'list'.\",\r\n        examples: {\r\n          searchByCode: { stationCode: \"000001\" },\r\n          searchByName: { stationName: \"Kandy\" },\r\n          searchByCost: { transportCost: \"400.00\" },\r\n          searchByRoute: { routeName: \"Expressway\" },\r\n          returnAll: { returnAll: \"all\" }\r\n        }\r\n      };\r\n    }\r\n\r\n    /* -------------------------------------------------\r\n     * 3) Initial page state + URL\r\n     * ------------------------------------------------- */\r\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"StationInformation\");\r\n\r\n    const headers = new Headers();\r\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\r\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\r\n\r\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/StationInformation.aspx\");\r\n    const url = updateUrl?.updateUrl\r\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\r\n      : `${window.origin}/${reqOptions.sl}/EIM/StationInformation.aspx`;\r\n\r\n    const parser = new DOMParser();\r\n\r\n    const extractState = (doc) => ({\r\n      viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\r\n      viewStateGen: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\r\n      eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\"\r\n    });\r\n\r\n    const extractPagerInfo = (doc) => {\r\n      const pagerText = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\r\n      // \"Displaying page 3 of 4, items 5 to 6 of 8.\"\r\n      const m = pagerText.match(/Displaying page\\s+(\\d+)\\s+of\\s+(\\d+).*?of\\s+(\\d+)/i);\r\n      const currentPage = m ? parseInt(m[1], 10) : 1;\r\n      const totalPages = m ? parseInt(m[2], 10) : 1;\r\n      const totalItems = m ? parseInt(m[3], 10) : null;\r\n\r\n      // Map \"1\",\"2\",\"3\"... -> {target,arg}\r\n      const pageTargets = {};\r\n      doc.querySelectorAll(\".PagerLeft_Default a\").forEach((a) => {\r\n        const pageNo = (a.textContent || \"\").trim();\r\n        const href = a.getAttribute(\"href\") || \"\";\r\n        const mm = href.match(/__doPostBack\\('([^']+)','([^']*)'\\)/);\r\n        if (pageNo && mm) pageTargets[pageNo] = { target: mm[1], arg: mm[2] || \"\" };\r\n      });\r\n\r\n      return { currentPage, totalPages, totalItems, pageTargets };\r\n    };\r\n\r\n    /* -------------------------------------------------\r\n     * 4) Determine search criteria/value (only if not returnAll)\r\n     * ------------------------------------------------- */\r\n    let searchCriteria = \"STATION_CODE\";\r\n    let searchValue = \"\";\r\n\r\n    if (!returnAll) {\r\n      if (stationCode) {\r\n        searchCriteria = \"STATION_CODE\";\r\n        searchValue = stationCode;\r\n      } else if (stationName) {\r\n        searchCriteria = \"STATION_NAME\";\r\n        searchValue = stationName;\r\n      } else if (transportCost) {\r\n        searchCriteria = \"STATION_COST\";\r\n        searchValue = transportCost;\r\n      } else {\r\n        searchCriteria = \"R.RT_NAME\";\r\n        searchValue = routeName;\r\n      }\r\n    }\r\n\r\n    /* -------------------------------------------------\r\n     * 5) Extract grouped rows (route headers + station rows)\r\n     * ------------------------------------------------- */\r\n    const extractStationsFromDoc = (doc) => {\r\n      const allRows = doc.querySelectorAll(\"tbody tr\");\r\n      const out = [];\r\n\r\n      let currentRoute = null;\r\n\r\n      const stationNameLower = stationName.toLowerCase();\r\n      const routeNameLower = routeName.toLowerCase();\r\n\r\n      for (const row of allRows) {\r\n        // group header row\r\n        if (row.classList.contains(\"GroupHeader_Default\")) {\r\n          const routeText = row.querySelector(\"p\")?.textContent?.trim() || \"\";\r\n          // \"Route : X\"\r\n          if (routeText.toLowerCase().includes(\"route\")) {\r\n            currentRoute = routeText.replace(/route\\s*:/i, \"\").trim();\r\n          }\r\n          continue;\r\n        }\r\n\r\n        // data row\r\n        if (row.id && row.id.startsWith(\"ctl00_body_grdsummary_ctl00__\")) {\r\n          const cells = row.querySelectorAll(\"td\");\r\n\r\n          // layout: [0]=empty, [1]=code, [2]=station, [3]=cost, [4]=edit\r\n          const code = (cells[1]?.textContent || \"\").trim();\r\n          const name = (cells[2]?.textContent || \"\").trim();\r\n          const cost = (cells[3]?.querySelector(\"span\")?.textContent || cells[3]?.textContent || \"\").trim();\r\n\r\n          if (!code && !name) continue;\r\n\r\n          if (!returnAll) {\r\n            let isMatch = false;\r\n\r\n            if (stationCode && code === stationCode) isMatch = true; // exact\r\n            else if (stationName && name.toLowerCase().includes(stationNameLower)) isMatch = true; // partial\r\n            else if (transportCost && cost === transportCost) isMatch = true; // exact string match\r\n            else if (routeName && currentRoute && currentRoute.toLowerCase().includes(routeNameLower)) isMatch = true; // partial route\r\n\r\n            if (!isMatch) continue;\r\n          }\r\n\r\n          out.push({\r\n            code,\r\n            stationName: name,\r\n            transportCost: cost,\r\n            route: currentRoute\r\n          });\r\n        }\r\n      }\r\n\r\n      return out;\r\n    };\r\n\r\n    /* -------------------------------------------------\r\n     * 6) POST #1: Search or Show All (page 1)\r\n     * ------------------------------------------------- */\r\n    const postSearchOrAll = async () => {\r\n      const formData = new FormData();\r\n      formData.append(\"scrollLeft\", \"0\");\r\n      formData.append(\"scrollTop\", \"0\");\r\n      formData.append(\"__EVENTTARGET\", \"\");\r\n      formData.append(\"__EVENTARGUMENT\", \"\");\r\n      formData.append(\"__VIEWSTATE\", details.viewState);\r\n      formData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\r\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\r\n      formData.append(\"__EVENTVALIDATION\", details.eventValidation);\r\n\r\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\r\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\r\n\r\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\r\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", returnAll ? \"\" : searchValue);\r\n\r\n      if (returnAll) formData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\r\n      else formData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\r\n\r\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\r\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\r\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\r\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\r\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\r\n\r\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\r\n      const html = await res.text();\r\n      return parser.parseFromString(html, \"text/html\");\r\n    };\r\n\r\n    /* -------------------------------------------------\r\n     * 7) POST to specific page using numbered pager targets\r\n     * ------------------------------------------------- */\r\n    const postToPage = async (fromDoc, targetPage) => {\r\n      const state = extractState(fromDoc);\r\n      const pager = extractPagerInfo(fromDoc);\r\n\r\n      const key = String(targetPage);\r\n      const event = pager.pageTargets[key];\r\n      if (!event?.target) return null;\r\n\r\n      const formData = new FormData();\r\n      formData.append(\"scrollLeft\", \"0\");\r\n      formData.append(\"scrollTop\", \"0\");\r\n      formData.append(\"__EVENTTARGET\", event.target);\r\n      formData.append(\"__EVENTARGUMENT\", event.arg || \"\");\r\n      formData.append(\"__VIEWSTATE\", state.viewState);\r\n      formData.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\r\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\r\n      formData.append(\"__EVENTVALIDATION\", state.eventValidation);\r\n\r\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\r\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\r\n\r\n      // keep search context\r\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\r\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", returnAll ? \"\" : searchValue);\r\n\r\n      // keep pager fields consistent\r\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", key);\r\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\r\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\r\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\r\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\r\n\r\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\r\n      const html = await res.text();\r\n      return parser.parseFromString(html, \"text/html\");\r\n    };\r\n\r\n    /* -------------------------------------------------\r\n     * 8) Execute\r\n     * ------------------------------------------------- */\r\n    const firstDoc = await postSearchOrAll();\r\n    const pager1 = extractPagerInfo(firstDoc);\r\n\r\n    // If returnAll & autoFetchAllPages => loop through every page\r\n    if (returnAll && autoFetchAllPages) {\r\n      const allStations = [];\r\n      let currentDoc = firstDoc;\r\n      let pager = pager1;\r\n\r\n      let safety = 0;\r\n      while (safety < maxPages) {\r\n        safety += 1;\r\n\r\n        allStations.push(...extractStationsFromDoc(currentDoc));\r\n\r\n        if (!(pager.currentPage < pager.totalPages)) break;\r\n\r\n        const nextPage = pager.currentPage + 1;\r\n        const nextDoc = await postToPage(currentDoc, nextPage);\r\n        if (!nextDoc) break;\r\n\r\n        currentDoc = nextDoc;\r\n        pager = extractPagerInfo(currentDoc);\r\n      }\r\n\r\n      if (!allStations.length) {\r\n        return {\r\n          status: \"NOT_FOUND\",\r\n          message: returnAll\r\n            ? \"No Station Information records found.\"\r\n            : \"No Station Information found matching the search criteria.\"\r\n        };\r\n      }\r\n\r\n      return {\r\n        status: \"SUCCESS\",\r\n        message: `Returned ${allStations.length} Station record(s).`,\r\n        count: allStations.length,\r\n        stations: allStations\r\n      };\r\n    }\r\n\r\n    // Manual/single page mode (agent can prompt for next)\r\n    let finalDoc = firstDoc;\r\n    const safePage = Math.min(pageNumber, pager1.totalPages || pageNumber);\r\n\r\n    if (safePage > 1) {\r\n      const paged = await postToPage(firstDoc, safePage);\r\n      if (paged) finalDoc = paged;\r\n    }\r\n\r\n    const pager = extractPagerInfo(finalDoc);\r\n    const stations = extractStationsFromDoc(finalDoc);\r\n\r\n    const moreAvailable = pager.currentPage < pager.totalPages;\r\n    const nextPage = moreAvailable ? String(pager.currentPage + 1) : \"\";\r\n\r\n    if (!stations.length) {\r\n      return {\r\n        status: \"NOT_FOUND\",\r\n        message: \"No Station Information found matching the search criteria.\",\r\n        pageNumber: String(pager.currentPage),\r\n        totalPages: String(pager.totalPages || 1),\r\n        moreAvailable: moreAvailable ? \"true\" : \"false\",\r\n        nextPage\r\n      };\r\n    }\r\n\r\n    return {\r\n      status: \"SUCCESS\",\r\n      message: moreAvailable\r\n        ? `Returned ${stations.length} station record(s) from page ${pager.currentPage} of ${pager.totalPages}. More are available. Would you like to see the next page?`\r\n        : `Returned ${stations.length} station record(s) from page ${pager.currentPage} of ${pager.totalPages}.`,\r\n      pageNumber: String(pager.currentPage),\r\n      totalPages: String(pager.totalPages || 1),\r\n      moreAvailable: moreAvailable ? \"true\" : \"false\",\r\n      nextPage,\r\n      count: stations.length,\r\n      stations\r\n    };\r\n  } catch (err) {\r\n    return {\r\n      status: \"ERROR\",\r\n      message: err?.message || \"Unexpected error\",\r\n      error: err?.toString?.() || String(err)\r\n    };\r\n  }\r\n});\r\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "CensusInformation"
+      ],
+      "taskName": "Fetching Station Information",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-30T21:42:22.707Z",
+      "updatedAt": "2026-06-15T07:33:09.813Z",
+      "__v": 3,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getStationInformation",
+      "args": [
+        {
+          "name": "stationCode",
+          "type": "string",
+          "description": "When the user provides a station code, this performs an exact match search.\nTriggers the Search action with criteria = STATION_CODE and returns the matching station record. (e.g., \"000004\")",
+          "required": false,
+          "_id": "6954473e9f7bf02aaf035404"
+        },
+        {
+          "name": "stationName",
+          "type": "string",
+          "description": "When the user provides a station name (full or partial), this performs a case-insensitive partial match search.\nTriggers the Search action with criteria = STATION_NAME and returns all matching station rows. (e.g., \"Kandy\")",
+          "required": false,
+          "_id": "6954473e9f7bf02aaf035405"
+        },
+        {
+          "name": "transportCost",
+          "type": "string",
+          "description": "When the user provides a transport cost value, this performs an exact match search on the station transport cost.\nTriggers the Search action with criteria = STATION_COST and returns stations with that cost. (e.g., \"150.00\")",
+          "required": false,
+          "_id": "6954473e9f7bf02aaf035406"
+        },
+        {
+          "name": "routeName",
+          "type": "string",
+          "description": "When the user provides a route name, this performs a partial match search against the route group headers.\nReturns all stations listed under routes that match the provided route name. (e.g., \"Central Expressway\")",
+          "required": false,
+          "_id": "6954473e9f7bf02aaf035407"
+        },
+        {
+          "name": "returnAll",
+          "type": "string",
+          "description": "When user asks to return all/available/existing stations, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\"\nTriggers Show All and returns every station row from the grid.",
+          "required": false,
+          "_id": "697e460a972f5a0a65f71ce0"
+        },
+        {
+          "name": "showAll",
+          "type": "string",
+          "description": "Alias of returnAll (same behavior).",
+          "required": false,
+          "_id": "6980b988d6794aa35eda0b1d"
+        },
+        {
+          "name": "autoFetchAllPages",
+          "type": "string",
+          "description": "Controls paging when returnAll is used.\n\"true\" → auto-loop pages and return everything (default when returnAll is truthy)\n\"false\" → return only the requested/current page and include moreAvailable + nextPage Example: \"false\"",
+          "required": false,
+          "_id": "6980b988d6794aa35eda0b1e"
+        },
+        {
+          "name": "pageNumber",
+          "type": "string",
+          "description": "Page number to fetch (used when autoFetchAllPages is \"false\"). Default: \"1\"\nExample: \"2\"",
+          "required": false,
+          "_id": "6980b988d6794aa35eda0b1f"
+        },
+        {
+          "name": "pageSize",
+          "type": "string",
+          "description": "Page size sent to the grid pager (server may cap). Default: \"100\"\nExample: \"50\"",
+          "required": false,
+          "_id": "6980b988d6794aa35eda0b20"
+        },
+        {
+          "name": "maxPages",
+          "type": "string",
+          "description": "Safety limit for page looping to avoid infinite loops. Default: \"50\"\nExample: \"10\"",
+          "required": false,
+          "_id": "6980b988d6794aa35eda0b21"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6954473e9f7bf02aaf035403"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\r\n  try {\r\n    /* -------------------------------------------------\r\n     * 1) Access validation\r\n     * ------------------------------------------------- */\r\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/StationInformation.aspx\")) {\r\n      return {\r\n        status: \"NO_ACCESS\",\r\n        message: \"You do not have access to Station Information screen. Please contact HR Admin.\"\r\n      };\r\n    }\r\n\r\n    /* -------------------------------------------------\r\n     * 2) Helpers (STRING ONLY)\r\n     * ------------------------------------------------- */\r\n    const okText = (v) => (v ?? \"\").toString().trim();\r\n    const toLower = (v) => okText(v).toLowerCase();\r\n\r\n    const isTruthy = (v) => {\r\n      const t = toLower(v);\r\n      return [\r\n        \"true\", \"1\", \"yes\", \"y\",\r\n        \"all\", \"available\", \"existing\",\r\n        \"list\", \"showall\", \"show all\", \"returnall\"\r\n      ].includes(t);\r\n    };\r\n\r\n    const stationCode = okText(args?.stationCode);\r\n    const stationName = okText(args?.stationName);\r\n    const transportCost = okText(args?.transportCost);\r\n    const routeName = okText(args?.routeName);\r\n\r\n    const returnAll = isTruthy(args?.returnAll) || isTruthy(args?.showAll);\r\n\r\n    // If returnAll is used => default to auto-fetch all pages\r\n    const autoFetchAllPages = returnAll ? !isTruthy(args?.autoFetchAllPages) ? true : true : isTruthy(args?.autoFetchAllPages);\r\n\r\n    // manual paging support\r\n    const pageNumberRaw = okText(args?.pageNumber) || \"1\";\r\n    const pageNumber = Number.isFinite(Number(pageNumberRaw)) ? Math.max(1, parseInt(pageNumberRaw, 10)) : 1;\r\n\r\n    // keep a reasonable page size; server can cap (your capture shows 2)\r\n    const pageSizeRaw = okText(args?.pageSize) || \"100\";\r\n    const pageSize = Number.isFinite(Number(pageSizeRaw)) ? Math.max(1, parseInt(pageSizeRaw, 10)) : 100;\r\n\r\n    const maxPagesRaw = okText(args?.maxPages) || \"50\";\r\n    const maxPages = Number.isFinite(Number(maxPagesRaw)) ? Math.max(1, parseInt(maxPagesRaw, 10)) : 50;\r\n\r\n    if (!returnAll && !stationCode && !stationName && !transportCost && !routeName) {\r\n      return {\r\n        status: \"INVALID_ARGS\",\r\n        message:\r\n          \"Please provide either stationCode, stationName, transportCost, or routeName. To return all records, pass returnAll as 'true'/'all'/'available'/'existing'/'list'.\",\r\n        examples: {\r\n          searchByCode: { stationCode: \"000001\" },\r\n          searchByName: { stationName: \"Kandy\" },\r\n          searchByCost: { transportCost: \"400.00\" },\r\n          searchByRoute: { routeName: \"Expressway\" },\r\n          returnAll: { returnAll: \"all\" }\r\n        }\r\n      };\r\n    }\r\n\r\n    /* -------------------------------------------------\r\n     * 3) Initial page state + URL\r\n     * ------------------------------------------------- */\r\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"StationInformation\");\r\n\r\n    const headers = new Headers();\r\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\r\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\r\n\r\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/StationInformation.aspx\");\r\n    const url = updateUrl?.updateUrl\r\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\r\n      : `${window.origin}/${reqOptions.sl}/EIM/StationInformation.aspx`;\r\n\r\n    const parser = new DOMParser();\r\n\r\n    const extractState = (doc) => ({\r\n      viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\r\n      viewStateGen: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\r\n      eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\"\r\n    });\r\n\r\n    const extractPagerInfo = (doc) => {\r\n      const pagerText = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\r\n      // \"Displaying page 3 of 4, items 5 to 6 of 8.\"\r\n      const m = pagerText.match(/Displaying page\\s+(\\d+)\\s+of\\s+(\\d+).*?of\\s+(\\d+)/i);\r\n      const currentPage = m ? parseInt(m[1], 10) : 1;\r\n      const totalPages = m ? parseInt(m[2], 10) : 1;\r\n      const totalItems = m ? parseInt(m[3], 10) : null;\r\n\r\n      // Map \"1\",\"2\",\"3\"... -> {target,arg}\r\n      const pageTargets = {};\r\n      doc.querySelectorAll(\".PagerLeft_Default a\").forEach((a) => {\r\n        const pageNo = (a.textContent || \"\").trim();\r\n        const href = a.getAttribute(\"href\") || \"\";\r\n        const mm = href.match(/__doPostBack\\('([^']+)','([^']*)'\\)/);\r\n        if (pageNo && mm) pageTargets[pageNo] = { target: mm[1], arg: mm[2] || \"\" };\r\n      });\r\n\r\n      return { currentPage, totalPages, totalItems, pageTargets };\r\n    };\r\n\r\n    /* -------------------------------------------------\r\n     * 4) Determine search criteria/value (only if not returnAll)\r\n     * ------------------------------------------------- */\r\n    let searchCriteria = \"STATION_CODE\";\r\n    let searchValue = \"\";\r\n\r\n    if (!returnAll) {\r\n      if (stationCode) {\r\n        searchCriteria = \"STATION_CODE\";\r\n        searchValue = stationCode;\r\n      } else if (stationName) {\r\n        searchCriteria = \"STATION_NAME\";\r\n        searchValue = stationName;\r\n      } else if (transportCost) {\r\n        searchCriteria = \"STATION_COST\";\r\n        searchValue = transportCost;\r\n      } else {\r\n        searchCriteria = \"R.RT_NAME\";\r\n        searchValue = routeName;\r\n      }\r\n    }\r\n\r\n    /* -------------------------------------------------\r\n     * 5) Extract grouped rows (route headers + station rows)\r\n     * ------------------------------------------------- */\r\n    const extractStationsFromDoc = (doc) => {\r\n      const allRows = doc.querySelectorAll(\"tbody tr\");\r\n      const out = [];\r\n\r\n      let currentRoute = null;\r\n\r\n      const stationNameLower = stationName.toLowerCase();\r\n      const routeNameLower = routeName.toLowerCase();\r\n\r\n      for (const row of allRows) {\r\n        // group header row\r\n        if (row.classList.contains(\"GroupHeader_Default\")) {\r\n          const routeText = row.querySelector(\"p\")?.textContent?.trim() || \"\";\r\n          // \"Route : X\"\r\n          if (routeText.toLowerCase().includes(\"route\")) {\r\n            currentRoute = routeText.replace(/route\\s*:/i, \"\").trim();\r\n          }\r\n          continue;\r\n        }\r\n\r\n        // data row\r\n        if (row.id && row.id.startsWith(\"ctl00_body_grdsummary_ctl00__\")) {\r\n          const cells = row.querySelectorAll(\"td\");\r\n\r\n          // layout: [0]=empty, [1]=code, [2]=station, [3]=cost, [4]=edit\r\n          const code = (cells[1]?.textContent || \"\").trim();\r\n          const name = (cells[2]?.textContent || \"\").trim();\r\n          const cost = (cells[3]?.querySelector(\"span\")?.textContent || cells[3]?.textContent || \"\").trim();\r\n\r\n          if (!code && !name) continue;\r\n\r\n          if (!returnAll) {\r\n            let isMatch = false;\r\n\r\n            if (stationCode && code === stationCode) isMatch = true; // exact\r\n            else if (stationName && name.toLowerCase().includes(stationNameLower)) isMatch = true; // partial\r\n            else if (transportCost && cost === transportCost) isMatch = true; // exact string match\r\n            else if (routeName && currentRoute && currentRoute.toLowerCase().includes(routeNameLower)) isMatch = true; // partial route\r\n\r\n            if (!isMatch) continue;\r\n          }\r\n\r\n          out.push({\r\n            code,\r\n            stationName: name,\r\n            transportCost: cost,\r\n            route: currentRoute\r\n          });\r\n        }\r\n      }\r\n\r\n      return out;\r\n    };\r\n\r\n    /* -------------------------------------------------\r\n     * 6) POST #1: Search or Show All (page 1)\r\n     * ------------------------------------------------- */\r\n    const postSearchOrAll = async () => {\r\n      const formData = new FormData();\r\n      formData.append(\"scrollLeft\", \"0\");\r\n      formData.append(\"scrollTop\", \"0\");\r\n      formData.append(\"__EVENTTARGET\", \"\");\r\n      formData.append(\"__EVENTARGUMENT\", \"\");\r\n      formData.append(\"__VIEWSTATE\", details.viewState);\r\n      formData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\r\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\r\n      formData.append(\"__EVENTVALIDATION\", details.eventValidation);\r\n\r\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\r\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\r\n\r\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\r\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", returnAll ? \"\" : searchValue);\r\n\r\n      if (returnAll) formData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\r\n      else formData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\r\n\r\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\r\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\r\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\r\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\r\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\r\n\r\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\r\n      const html = await res.text();\r\n      return parser.parseFromString(html, \"text/html\");\r\n    };\r\n\r\n    /* -------------------------------------------------\r\n     * 7) POST to specific page using numbered pager targets\r\n     * ------------------------------------------------- */\r\n    const postToPage = async (fromDoc, targetPage) => {\r\n      const state = extractState(fromDoc);\r\n      const pager = extractPagerInfo(fromDoc);\r\n\r\n      const key = String(targetPage);\r\n      const event = pager.pageTargets[key];\r\n      if (!event?.target) return null;\r\n\r\n      const formData = new FormData();\r\n      formData.append(\"scrollLeft\", \"0\");\r\n      formData.append(\"scrollTop\", \"0\");\r\n      formData.append(\"__EVENTTARGET\", event.target);\r\n      formData.append(\"__EVENTARGUMENT\", event.arg || \"\");\r\n      formData.append(\"__VIEWSTATE\", state.viewState);\r\n      formData.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\r\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\r\n      formData.append(\"__EVENTVALIDATION\", state.eventValidation);\r\n\r\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\r\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\r\n\r\n      // keep search context\r\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\r\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", returnAll ? \"\" : searchValue);\r\n\r\n      // keep pager fields consistent\r\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", key);\r\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\r\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\r\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\r\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\r\n\r\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\r\n      const html = await res.text();\r\n      return parser.parseFromString(html, \"text/html\");\r\n    };\r\n\r\n    /* -------------------------------------------------\r\n     * 8) Execute\r\n     * ------------------------------------------------- */\r\n    const firstDoc = await postSearchOrAll();\r\n    const pager1 = extractPagerInfo(firstDoc);\r\n\r\n    // If returnAll & autoFetchAllPages => loop through every page\r\n    if (returnAll && autoFetchAllPages) {\r\n      const allStations = [];\r\n      let currentDoc = firstDoc;\r\n      let pager = pager1;\r\n\r\n      let safety = 0;\r\n      while (safety < maxPages) {\r\n        safety += 1;\r\n\r\n        allStations.push(...extractStationsFromDoc(currentDoc));\r\n\r\n        if (!(pager.currentPage < pager.totalPages)) break;\r\n\r\n        const nextPage = pager.currentPage + 1;\r\n        const nextDoc = await postToPage(currentDoc, nextPage);\r\n        if (!nextDoc) break;\r\n\r\n        currentDoc = nextDoc;\r\n        pager = extractPagerInfo(currentDoc);\r\n      }\r\n\r\n      if (!allStations.length) {\r\n        return {\r\n          status: \"NOT_FOUND\",\r\n          message: returnAll\r\n            ? \"No Station Information records found.\"\r\n            : \"No Station Information found matching the search criteria.\"\r\n        };\r\n      }\r\n\r\n      return {\r\n        status: \"SUCCESS\",\r\n        message: `Returned ${allStations.length} Station record(s).`,\r\n        count: allStations.length,\r\n        stations: allStations\r\n      };\r\n    }\r\n\r\n    // Manual/single page mode (agent can prompt for next)\r\n    let finalDoc = firstDoc;\r\n    const safePage = Math.min(pageNumber, pager1.totalPages || pageNumber);\r\n\r\n    if (safePage > 1) {\r\n      const paged = await postToPage(firstDoc, safePage);\r\n      if (paged) finalDoc = paged;\r\n    }\r\n\r\n    const pager = extractPagerInfo(finalDoc);\r\n    const stations = extractStationsFromDoc(finalDoc);\r\n\r\n    const moreAvailable = pager.currentPage < pager.totalPages;\r\n    const nextPage = moreAvailable ? String(pager.currentPage + 1) : \"\";\r\n\r\n    if (!stations.length) {\r\n      return {\r\n        status: \"NOT_FOUND\",\r\n        message: \"No Station Information found matching the search criteria.\",\r\n        pageNumber: String(pager.currentPage),\r\n        totalPages: String(pager.totalPages || 1),\r\n        moreAvailable: moreAvailable ? \"true\" : \"false\",\r\n        nextPage\r\n      };\r\n    }\r\n\r\n    return {\r\n      status: \"SUCCESS\",\r\n      message: moreAvailable\r\n        ? `Returned ${stations.length} station record(s) from page ${pager.currentPage} of ${pager.totalPages}. More are available. Would you like to see the next page?`\r\n        : `Returned ${stations.length} station record(s) from page ${pager.currentPage} of ${pager.totalPages}.`,\r\n      pageNumber: String(pager.currentPage),\r\n      totalPages: String(pager.totalPages || 1),\r\n      moreAvailable: moreAvailable ? \"true\" : \"false\",\r\n      nextPage,\r\n      count: stations.length,\r\n      stations\r\n    };\r\n  } catch (err) {\r\n    return {\r\n      status: \"ERROR\",\r\n      message: err?.message || \"Unexpected error\",\r\n      error: err?.toString?.() || String(err)\r\n    };\r\n  }\r\n});\r\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

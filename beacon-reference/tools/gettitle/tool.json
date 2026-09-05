@@ -1,0 +1,91 @@
+{
+  "id": "690dc563931a2d61ba0b1442",
+  "slug": "gettitle",
+  "name": "getTitle",
+  "description": "This tool is used to generate Corporate title Details. First, first executes for \"gradeDetails\" API to retrieve all available salary grades. Once the salary grades are displayed, the user must select one, and the corresponding value will be used for further processing. then after final execute for \"createEIMModuleList\" tool.",
+  "instructions": null,
+  "taskName": "Corporate Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getTitle",
+  "createdAt": "2025-04-29T13:55:00.124Z",
+  "updatedAt": "2025-04-29T13:55:00.124Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "35b5e065091de1d4e2041684fe4f2a3e52641b1a29b617c5d1519262499b3ee0",
+  "lastExportedAt": "2026-09-05T19:39:24.446Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc563931a2d61ba0b1442",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getTitle",
+      "description": "This tool is used to generate Corporate title Details. First, first executes for \"gradeDetails\" API to retrieve all available salary grades. Once the salary grades are displayed, the user must select one, and the corresponding value will be used for further processing. then after final execute for \"createEIMModuleList\" tool.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getTitle",
+        "args": [
+          {
+            "name": "salaryGradeValue",
+            "type": "string",
+            "description": "to salary grade value to get for gradeDetails api. then available all salary grades then pick one grade corresponding value will be take.",
+            "required": true,
+            "_id": "6810da348363f608426f2c84"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6810da348363f608426f2c83"
+      },
+      "by": "1927",
+      "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Designation.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"ctl00$body$dpSalary\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__LASTFOCUS\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", window.gd.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", window.gd.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", window.gd.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded.append(\"ctl00$body$txtName\", \"\");\n  urlencoded.append(\"ctl00$body$dpSalary\", args.salaryGradeValue);\n  urlencoded.append(\"ctl00$body$dpNextUpgrade\", \"-1\");\n  urlencoded.append(\"ctl00$body$dpnextupgradedsg\", \"-1\");\n  urlencoded.append(\"ctl00$body$cbofunctionRole\", \"-1\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/EIM/Designation.aspx`, requestOptions);\n  const html = await response.text();\n\n  const finalDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html);\n  window.cd = finalDetails;\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html, 'text/html');\n\n  const extractOptions = (selector) =>\n    Array.from(doc.querySelector(selector)?.options || [])\n      .filter(opt => opt.value !== \"-1\" && opt.value.trim() && opt.text.trim())\n      .map(opt => ({ value: opt.value, text: opt.text.trim() }));\n\n  const corporationData = extractOptions('#ctl00_body_dpNextUpgrade');\n  return corporationData;\n})\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Corporate Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-29T13:55:00.124Z",
+      "updatedAt": "2025-04-29T13:55:00.124Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getTitle",
+      "args": [
+        {
+          "name": "salaryGradeValue",
+          "type": "string",
+          "description": "to salary grade value to get for gradeDetails api. then available all salary grades then pick one grade corresponding value will be take.",
+          "required": true,
+          "_id": "6810da348363f608426f2c84"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6810da348363f608426f2c83"
+    },
+    "fetcher": "(function(args, reqOptions) {\n    return {\n      code:`(function(){\n        return [];\n      })`\n    };\n  })",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Designation.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"ctl00$body$dpSalary\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__LASTFOCUS\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", window.gd.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", window.gd.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", window.gd.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded.append(\"ctl00$body$txtName\", \"\");\n  urlencoded.append(\"ctl00$body$dpSalary\", args.salaryGradeValue);\n  urlencoded.append(\"ctl00$body$dpNextUpgrade\", \"-1\");\n  urlencoded.append(\"ctl00$body$dpnextupgradedsg\", \"-1\");\n  urlencoded.append(\"ctl00$body$cbofunctionRole\", \"-1\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/EIM/Designation.aspx`, requestOptions);\n  const html = await response.text();\n\n  const finalDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html);\n  window.cd = finalDetails;\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html, 'text/html');\n\n  const extractOptions = (selector) =>\n    Array.from(doc.querySelector(selector)?.options || [])\n      .filter(opt => opt.value !== \"-1\" && opt.value.trim() && opt.text.trim())\n      .map(opt => ({ value: opt.value, text: opt.text.trim() }));\n\n  const corporationData = extractOptions('#ctl00_body_dpNextUpgrade');\n  return corporationData;\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the Unique identifier for the employee id or name.",
+      "advanced": false,
+      "raw": {
+        "name": "id",
+        "type": "string",
+        "description": "to give the Unique identifier for the employee id or name.",
+        "required": true,
+        "_id": "683ff9b5821cb330fd639cae"
+      }
+    },
+    {
+      "name": "updateId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get update id for before api resposne to user select update name corresposnding edit id will be take example 'ctl00$body$grdgrade$ctl00$ctl04$ctl01' to get edit  id for 'getAssignLanguageDetails' tool.",
+      "advanced": false,
+      "raw": {
+        "name": "updateId",
+        "type": "string",
+        "description": "to get update id for before api resposne to user select update name corresposnding edit id will be take example 'ctl00$body$grdgrade$ctl00$ctl04$ctl01' to get edit  id for 'getAssignLanguageDetails' tool.",
+        "required": true,
+        "_id": "683ff9b5821cb330fd639caf"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

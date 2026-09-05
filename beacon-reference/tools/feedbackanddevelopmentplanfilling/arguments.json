@@ -1,0 +1,111 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "jobPreferencesSection",
+      "type": "array",
+      "required": false,
+      "defaultValue": null,
+      "description": null,
+      "advanced": true,
+      "raw": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "position": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            },
+            "assessorComment": {
+              "type": "string"
+            },
+            "reviewerComment": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "achievementBlocks",
+      "type": "array",
+      "required": false,
+      "defaultValue": null,
+      "description": null,
+      "advanced": true,
+      "raw": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "achievement": {
+              "type": "string"
+            },
+            "learning": {
+              "type": "string"
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "reviewerComment": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "overallCommentsSection",
+      "type": "array",
+      "required": false,
+      "defaultValue": null,
+      "description": null,
+      "advanced": true,
+      "raw": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "comment": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "developmentArea",
+      "type": "array",
+      "required": false,
+      "defaultValue": null,
+      "description": null,
+      "advanced": true,
+      "raw": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "developmentArea": {
+              "type": "string"
+            },
+            "learning": {
+              "type": "string"
+            },
+            "suggestions": {
+              "type": "string"
+            },
+            "reviewerComment": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

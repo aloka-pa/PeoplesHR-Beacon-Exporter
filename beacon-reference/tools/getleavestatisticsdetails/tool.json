@@ -1,0 +1,91 @@
+{
+  "id": "690dc568931a2d61ba0b181e",
+  "slug": "getleavestatisticsdetails",
+  "name": "getLeaveStatisticsDetails",
+  "description": "to generate the Leave Statistics chat Example Bar chat.Before execute in this api first execute \"employeeLogKey\" api then execute in this api. in this tool only generate the leave Statistics. if the user ask more then one employee first execute the first employee  get response after execute second employee get response and display. if there no employee data do not give the graph chats. and if the user ask multiple user or years or months etc you fetching first then after execute following order execute one by one and A bar chart must be returned for every user query. However, if there is no data available for a particular employee or year, no chart should be displayed—instead, a message stating \"No data available\" should be returned. Before execute in this api first execute  \"employeeDetails\" tool get the data then after execute  \"employeeLogKey\" api then execute in this api. ",
+  "instructions": null,
+  "taskName": "Fetching Leave Statistics Details",
+  "tags": [
+    "Absence Management",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getLeaveStatisticsDetails",
+  "createdAt": "2025-05-22T06:30:39.703Z",
+  "updatedAt": "2025-05-22T06:30:39.703Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1be3",
+      "name": "AbsenceManagement"
+    }
+  ],
+  "contentHash": "5b73d07e796a6072aca5dc612d8bdf8cbb09c6c2f6559f4d071ab25d7bc90b55",
+  "lastExportedAt": "2026-09-05T19:39:23.862Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b181e",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getLeaveStatisticsDetails",
+      "description": "to generate the Leave Statistics chat Example Bar chat.Before execute in this api first execute \"employeeLogKey\" api then execute in this api. in this tool only generate the leave Statistics. if the user ask more then one employee first execute the first employee  get response after execute second employee get response and display. if there no employee data do not give the graph chats. and if the user ask multiple user or years or months etc you fetching first then after execute following order execute one by one and A bar chart must be returned for every user query. However, if there is no data available for a particular employee or year, no chart should be displayed—instead, a message stating \"No data available\" should be returned. Before execute in this api first execute  \"employeeDetails\" tool get the data then after execute  \"employeeLogKey\" api then execute in this api. ",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getLeaveStatisticsDetails",
+        "args": [
+          {
+            "name": "year",
+            "type": "string",
+            "description": "to give the Leave Statistics year.",
+            "required": true,
+            "_id": "682ec48fc916734e659656a7"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "682ec48fc916734e659656a6"
+      },
+      "by": "2414",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return [];\n    })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.some(menu => menu.includes(\"AbsenceV9/LeaveApplication/LeaveApplication?mvc=1&isAllEmployee=1\"))) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const myHeaders = new Headers();\n  myHeaders.append(\"__cfafvalue\", window.csrf);\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"content-type\", \"application/json\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: 'POST',\n    headers: myHeaders,\n    body: JSON.stringify({\n      \"EmpNumber\": window.logKey,\n      \"LeaveYear\": args.year\n    })\n  };\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveStats/GetLeaveStatistics/`, requestOptions);\n\n  const leaveStatistics = await response.json();\n  return leaveStatistics\n})",
+      "groupName": "",
+      "tags": [
+        "Absence Management",
+        "Headers"
+      ],
+      "taskName": "Fetching Leave Statistics Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-22T06:30:39.703Z",
+      "updatedAt": "2025-05-22T06:30:39.703Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1be3",
+          "name": "AbsenceManagement"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getLeaveStatisticsDetails",
+      "args": [
+        {
+          "name": "year",
+          "type": "string",
+          "description": "to give the Leave Statistics year.",
+          "required": true,
+          "_id": "682ec48fc916734e659656a7"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "682ec48fc916734e659656a6"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return [];\n    })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.some(menu => menu.includes(\"AbsenceV9/LeaveApplication/LeaveApplication?mvc=1&isAllEmployee=1\"))) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const myHeaders = new Headers();\n  myHeaders.append(\"__cfafvalue\", window.csrf);\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"content-type\", \"application/json\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: 'POST',\n    headers: myHeaders,\n    body: JSON.stringify({\n      \"EmpNumber\": window.logKey,\n      \"LeaveYear\": args.year\n    })\n  };\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveStats/GetLeaveStatistics/`, requestOptions);\n\n  const leaveStatistics = await response.json();\n  return leaveStatistics\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    {
+      "name": "stationName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name of the new station (e.g., \"Maharagama\")",
+      "advanced": false,
+      "raw": {
+        "name": "stationName",
+        "type": "string",
+        "description": "The name of the new station (e.g., \"Maharagama\")",
+        "required": true,
+        "_id": "69545635f72a612a8c8864b0"
+      }
+    },
+    {
+      "name": "transportCost",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The transport cost for the station (e.g., \"780\" or \"780.00\")",
+      "advanced": false,
+      "raw": {
+        "name": "transportCost",
+        "type": "string",
+        "description": "The transport cost for the station (e.g., \"780\" or \"780.00\")",
+        "required": true,
+        "_id": "69545635f72a612a8c8864b1"
+      }
+    },
+    {
+      "name": "routeCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The code of the new route. The user must provide either the route code (e.g., \"000002\") or route name (e.g., \"Central Expressway\")",
+      "advanced": false,
+      "raw": {
+        "name": "routeCode",
+        "type": "string",
+        "description": "The code of the new route. The user must provide either the route code (e.g., \"000002\") or route name (e.g., \"Central Expressway\")",
+        "required": false,
+        "_id": "69545635f72a612a8c8864b2"
+      }
+    },
+    {
+      "name": "routeName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The name of the new route. The user must provide either the route code (e.g., \"000002\") or route name (e.g., \"Central Expressway\")",
+      "advanced": false,
+      "raw": {
+        "name": "routeName",
+        "type": "string",
+        "description": "The name of the new route. The user must provide either the route code (e.g., \"000002\") or route name (e.g., \"Central Expressway\")",
+        "required": false,
+        "_id": "69545635f72a612a8c8864b3"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

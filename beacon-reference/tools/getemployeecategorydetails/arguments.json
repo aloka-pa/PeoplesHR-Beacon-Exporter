@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "employeeCategoryCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the Employee Category Details.give the employeeCategoryCode.",
+      "advanced": false,
+      "raw": {
+        "name": "employeeCategoryCode",
+        "type": "string",
+        "description": "to get the Employee Category Details.give the employeeCategoryCode.",
+        "required": true,
+        "_id": "681497d0eb28e5d6f39f9ee9"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,73 @@
+{
+  "id": "690dc569931a2d61ba0b190a",
+  "slug": "gettalentreviewcycle",
+  "name": "getTalentReviewCycle",
+  "description": "getTalentReviewCycle",
+  "instructions": null,
+  "taskName": "TalentReviewCycle",
+  "tags": [
+    "selectingCandidatePool"
+  ],
+  "status": "live",
+  "signature": "getTalentReviewCycle",
+  "createdAt": "2025-06-03T11:00:08.959Z",
+  "updatedAt": "2025-06-03T11:00:08.959Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c4f",
+      "name": "SelectLeaderShipCandiates"
+    }
+  ],
+  "contentHash": "93b609c45f74494a9c89983b627fc37004a939b621028521b9001076625b36ca",
+  "lastExportedAt": "2026-09-05T19:39:23.741Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b190a",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getTalentReviewCycle",
+      "description": "getTalentReviewCycle",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getTalentReviewCycle",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "683ed5b835914d778845821d"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function(data, args, reqOptions) {\n  const selectLeaderShip = await BeaconBar.executeFunction(\"selectLeaderShip\");\n  return selectLeaderShip;\n})",
+      "groupName": "",
+      "tags": [
+        "selectingCandidatePool"
+      ],
+      "taskName": "TalentReviewCycle",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-03T11:00:08.959Z",
+      "updatedAt": "2025-06-03T11:00:08.959Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c4f",
+          "name": "SelectLeaderShipCandiates"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getTalentReviewCycle",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "683ed5b835914d778845821d"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function(data, args, reqOptions) {\n  const selectLeaderShip = await BeaconBar.executeFunction(\"selectLeaderShip\");\n  return selectLeaderShip;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

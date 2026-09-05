@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "salaryGradeCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the salaryGradeCode for gradeDetails api corresponding value will be take.",
+      "advanced": false,
+      "raw": {
+        "name": "salaryGradeCode",
+        "type": "string",
+        "description": "to get the salaryGradeCode for gradeDetails api corresponding value will be take.",
+        "required": true,
+        "_id": "68147892034b00ace618c616"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

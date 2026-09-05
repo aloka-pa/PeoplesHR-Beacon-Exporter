@@ -1,0 +1,24 @@
+{
+  "id": "690dc58a931a2d61ba0b313b",
+  "slug": "shiftadjustment1",
+  "name": "shiftAdjustment1",
+  "status": "live",
+  "createdAt": "2025-05-19T07:45:55.149Z",
+  "updatedAt": "2025-05-19T07:45:55.149Z",
+  "contentHash": "bb52c50568bd97765987a2bce56c8f9221243bd5f7928d9e33c2bcdf4bebfedd",
+  "lastExportedAt": "2026-09-05T19:41:42.116Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58a931a2d61ba0b313b",
+    "name": "shiftAdjustment1",
+    "status": "live",
+    "code": "(async function () {\n    //done\n    const digestkey1 = await BeaconBar.executeFunction('getDigest')(\"mvc=1&bs=4\");\n    const sl = await BeaconBar.getSharedData(\"sl\");\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"*/*\");\n    myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n    myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n\n    const response1 = await fetch(`${location.origin}/${sl}/TNAVUE/app/ShiftAdjustment?mvc=1&bs=4&digest=${digestkey1.digest}`,requestOptions);\n    const data1 = await response1.text();\n\n    const empNumberPattern = /empNumber=([^\"&]+)/;\n    const callBackPattern = /(?:callBack=|SearchCallBack\":\")(.*?)(?:&|\")/;\n    const elgModIdPattern = /elgmodid=([^\"&]+)/;\n    const elgGrpIdPattern = /elggrpid=([^\"&]+)/;\n    const elgParamPattern = /ElgParam=([^\"&]+)/;\n    const searchTokenPattern = /searchToken=([^\"&']+)/;\n\n    const empNumberMatch = data1.match(empNumberPattern);\n    const callBackMatch = data1.match(callBackPattern);\n    const elgModIdMatch = data1.match(elgModIdPattern);\n    const elgGrpIdMatch = data1.match(elgGrpIdPattern);\n    const elgParamMatch = data1.match(elgParamPattern);\n    const searchTokenMatch = data1.match(searchTokenPattern);\n\n    const empNumber = empNumberMatch ? empNumberMatch[1] : \"\";\n    const callBack = callBackMatch ? decodeURIComponent(callBackMatch[1]) : \"\";\n    // const elgModId = elgModIdMatch ? elgModIdMatch[1] : \"\";\n    // const elgGrpId = elgGrpIdMatch ? elgGrpIdMatch[1] : \"\";\n    // const elgParam = elgParamMatch ? elgParamMatch[1] : \"\";\n    const searchToken = searchTokenMatch ? searchTokenMatch[1] : \"\";\n\n    const searchUrl = `${location.origin}/${sl}/CommonComponents/Search/Search?empNumber=${empNumber}&callBack=${callBack}&searchMode=2&searchQueryMode=All&searchQueryState=ActiveOnly&isMultiple=1&breadCrumbEnable=0&isDivLoading=0&displayName=&searchToken=${searchToken}`;\n    \n    const response2 = await fetch(searchUrl, requestOptions);\n    const data2 = await response2.text();\n\n    const empNumberMatch2 = data2.match(/\"EmpNumber\":\"([^\"]+)\"/);\n    const keyValueMatch = data2.match(/\"KeyValue\":\"([^\"]+)\"/);\n\n    const empNumber2 = empNumberMatch2 ? empNumberMatch2[1] : \"\";\n    const keyValue = keyValueMatch ? keyValueMatch[1] : \"\";\n\n    window.empLog = {\n        empNumber2,\n        keyValue\n    };\n\n    return {\n        empNumber2,\n        keyValue\n    };\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

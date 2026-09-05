@@ -1,0 +1,110 @@
+{
+  "arguments": [
+    {
+      "name": "districtCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "District code to search (exact match). Example: \"000153\"",
+      "advanced": false,
+      "raw": {
+        "name": "districtCode",
+        "type": "string",
+        "description": "District code to search (exact match). Example: \"000153\"",
+        "required": false,
+        "_id": "6953423fe76b124cc3118f95"
+      }
+    },
+    {
+      "name": "districtName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "District name to search (partial match). Example: \"alt\"",
+      "advanced": false,
+      "raw": {
+        "name": "districtName",
+        "type": "string",
+        "description": "District name to search (partial match). Example: \"alt\"",
+        "required": false,
+        "_id": "6953423fe76b124cc3118f96"
+      }
+    },
+    {
+      "name": "provinceName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Province name to search (partial match). Example: \"Aklan\"",
+      "advanced": false,
+      "raw": {
+        "name": "provinceName",
+        "type": "string",
+        "description": "Province name to search (partial match). Example: \"Aklan\"",
+        "required": false,
+        "_id": "697f95d942b57a258add781d"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "If user asks show all/list/available/existing, set this to that phrase. Triggers Show All mode.",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "If user asks show all/list/available/existing, set this to that phrase. Triggers Show All mode.",
+        "required": false,
+        "_id": "697f95d942b57a258add781e"
+      }
+    },
+    {
+      "name": "page",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "For Show All mode only. Page number to fetch (default 1).",
+      "advanced": false,
+      "raw": {
+        "name": "page",
+        "type": "string",
+        "description": "For Show All mode only. Page number to fetch (default 1).",
+        "required": false,
+        "_id": "697f95d942b57a258add781f"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Page size (defaults to 10 to match UI). Keep as 10 unless needed.",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "Page size (defaults to 10 to match UI). Keep as 10 unless needed.",
+        "required": false,
+        "_id": "697f95d942b57a258add7820"
+      }
+    },
+    {
+      "name": "maxPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Safety limit when auto-collecting search results across pages (default 50).",
+      "advanced": false,
+      "raw": {
+        "name": "maxPages",
+        "type": "string",
+        "description": "Safety limit when auto-collecting search results across pages (default 50).",
+        "required": false,
+        "_id": "697f95d942b57a258add7821"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

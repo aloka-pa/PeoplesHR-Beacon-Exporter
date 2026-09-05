@@ -1,0 +1,24 @@
+{
+  "id": "690dc589931a2d61ba0b30bb",
+  "slug": "selectleadership",
+  "name": "selectLeaderShip",
+  "status": "live",
+  "createdAt": "2025-06-03T10:12:32.740Z",
+  "updatedAt": "2025-06-03T10:12:32.740Z",
+  "contentHash": "a0fd5789c9cf65e1f5e4f355ba9ca16e491da4e1a22c8a41b8d6d590c186c16f",
+  "lastExportedAt": "2026-09-05T19:41:38.677Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc589931a2d61ba0b30bb",
+    "name": "selectLeaderShip",
+    "status": "live",
+    "code": "(async function() {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"priority\", \"u=0, i\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const response = await fetch(`${reqOptions}Talent/SelectLeadershipCandiddates.aspx?`, requestOptions);\n  const data = await response.text();\n\n  function extractViewState(html) {\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html, \"text/html\");\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const comapanydetails = doc.querySelector(\"#body_hdnIsCompanyDetail\")?.value || \"\";\n  const eventarguement = doc.querySelector(\"#__EVENTARGUMENT\")?.value || \"\";\n\n  // Get the first script containing \"Talent\" in its src\n  const talentScript = Array.from(doc.querySelectorAll(\"script[src]\"))\n    .map(s => s.getAttribute(\"src\"))\n    .find(src => src.includes(\"/Talent/\") && src.includes(\"Telerik\"));\n\n  return {\n    viewState,\n    viewStateGenerator,\n    eventValidation,\n    comapanydetails,\n    eventarguement,\n    talentScript\n  };\n}\n\n  function extractReviewCycleData(htmlString) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(htmlString, 'text/html');\n\n    const reviewCycleDropdown = doc.getElementById('ctl00_body_ucCycleHeader_ddlReviewCycle');\n    const reviewCycles = Array.from(reviewCycleDropdown?.options || []).map(option => ({\n      value: option.value,\n      label: option.text,\n      selected: option.selected\n    }));\n\n    const startDate = doc.getElementById('ctl00_body_ucCycleHeader_lblStartDateCustom')?.innerText.trim();\n    const feedbackCutoffDate = doc.getElementById('ctl00_body_ucCycleHeader_lblFeedBackCutOffDateCustom')?.innerText.trim();\n    const endDate = doc.getElementById('ctl00_body_ucCycleHeader_lblEndDateCustom')?.innerText.trim();\n    const reviewCutoffDate = doc.getElementById('ctl00_body_ucCycleHeader_lblReviewCutOffDateCustom')?.innerText.trim();\n\n    const reviewCycleData = reviewCycles.map(cycle => ({\n      ...cycle,\n      dates: {\n        startDate,\n        feedbackCutoffDate,\n        endDate,\n        reviewCutoffDate\n      }\n    }));\n\n    return reviewCycleData;\n  }\n\n  const extracted = extractViewState(data);\n  BeaconBar.setSharedData('selectLeaderShipViewState', extracted);\n\n  const reviewCycleData = extractReviewCycleData(data);\n  return reviewCycleData;\n})();\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

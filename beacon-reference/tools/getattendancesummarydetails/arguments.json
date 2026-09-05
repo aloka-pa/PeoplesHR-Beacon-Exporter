@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the employee id for \"getPaginatedTypeaheadList\" api. Example:-\"000006\" or \"00001\" etc...",
+      "advanced": false,
+      "raw": {
+        "name": "id",
+        "type": "string",
+        "description": "to get the employee id for \"getPaginatedTypeaheadList\" api. Example:-\"000006\" or \"00001\" etc...",
+        "required": true,
+        "_id": "682acf9181dc680489a63a98"
+      }
+    },
+    {
+      "name": "fromDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the fromDate Example:-\"02/01/2023\" format date DD/MM/YYYY",
+      "advanced": false,
+      "raw": {
+        "name": "fromDate",
+        "type": "string",
+        "description": "to give the fromDate Example:-\"02/01/2023\" format date DD/MM/YYYY",
+        "required": true,
+        "_id": "682acf9181dc680489a63a99"
+      }
+    },
+    {
+      "name": "toDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the toDate Example:-\"02/01/2024\" format date DD/MM/YYYY",
+      "advanced": false,
+      "raw": {
+        "name": "toDate",
+        "type": "string",
+        "description": "to give the toDate Example:-\"02/01/2024\" format date DD/MM/YYYY",
+        "required": true,
+        "_id": "682acf9181dc680489a63a9a"
+      }
+    },
+    {
+      "name": "rosterCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "to get the user select roster corresponding id will be take roster CodeExample '000030' execute for \"rosetersDetails\" tool.",
+      "advanced": false,
+      "raw": {
+        "name": "rosterCode",
+        "type": "string",
+        "description": "to get the user select roster corresponding id will be take roster CodeExample '000030' execute for \"rosetersDetails\" tool.",
+        "required": false,
+        "_id": "68419532123663b7eac2ef00"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

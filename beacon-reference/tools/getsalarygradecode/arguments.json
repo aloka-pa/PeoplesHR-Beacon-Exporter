@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "salaryGradeName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The salary grade name",
+      "advanced": false,
+      "raw": {
+        "name": "salaryGradeName",
+        "type": "string",
+        "description": "The salary grade name",
+        "required": true,
+        "_id": "69491c1a5eb411adb9eeb497"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

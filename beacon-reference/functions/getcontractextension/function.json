@@ -1,0 +1,24 @@
+{
+  "id": "690dc580931a2d61ba0b2755",
+  "slug": "getcontractextension",
+  "name": "getContractExtension",
+  "status": "live",
+  "createdAt": "2025-06-09T14:03:36.866Z",
+  "updatedAt": "2025-06-09T14:03:36.866Z",
+  "contentHash": "ff1b7bb7299c982d35b94f5bad05d96525c1ce764a781972f78a1a21578cf1eb",
+  "lastExportedAt": "2026-09-05T19:41:36.846Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc580931a2d61ba0b2755",
+    "name": "getContractExtension",
+    "status": "live",
+    "code": "(async function () {\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n    myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\n    const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n    const digest = await BeaconBar.executeFunction(\"getDigest\")('IsShowButtons=1')\n    const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n    const response = await fetch(`${reqOptions}EIM/ContractExtend.aspx?IsShowButtons=1&digest=${digest.digest}`, requestOptions)\n    const data = await response.text()\n    function extractViewState(html) {\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html, \"text/html\");\n\n  return {\n    viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n    viewStateGenerator: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n    eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\",\n    SupervisorEmpNumber: doc.querySelector(\"#body_hdnSupervisorEmpNumber\")?.value || \"\",\n    comapanydetails: doc.querySelector(\"#body_hdnIsCompanyDetail\")?.value || \"\",\n    eventarguement: doc.querySelector(\"#__EVENTARGUMENT\")?.value || \"\",\n    talentemployee: doc.querySelector(\"#TalentEmployeeSearch_ctl05_ctl07\")?.value || \"\",\n    searchCreteria: doc.querySelector('#TalentEmployeeSearch_ctl05_ctl19')?.value || \"\"\n  };\n}\nconst datssss = extractViewState(data);\n    return datssss;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "arguments": [
+    {
+      "name": "raceCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Race code to search (exact match).\nUses search criteria RAC_CODE and returns the record whose Code matches exactly.",
+      "advanced": false,
+      "raw": {
+        "name": "raceCode",
+        "type": "string",
+        "description": "Race code to search (exact match).\nUses search criteria RAC_CODE and returns the record whose Code matches exactly.",
+        "required": false,
+        "_id": "695240a86ae33a160b41ed38"
+      }
+    },
+    {
+      "name": "searchRaceName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Race name (or partial text) to search.\nUses search criteria RAC_NAME and returns all rows whose Race Name contains the given text (case-insensitive).",
+      "advanced": false,
+      "raw": {
+        "name": "searchRaceName",
+        "type": "string",
+        "description": "Race name (or partial text) to search.\nUses search criteria RAC_NAME and returns all rows whose Race Name contains the given text (case-insensitive).",
+        "required": false,
+        "_id": "695240a86ae33a160b41ed39"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "When user asks to return all/available/existing races, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\".\nTriggers Show All (ctl00$body$ContentSearch$butAll) and returns every grid row.",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "When user asks to return all/available/existing races, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\".\nTriggers Show All (ctl00$body$ContentSearch$butAll) and returns every grid row.",
+        "required": false,
+        "_id": "697e5870e0162eac02679f3d"
+      }
+    },
+    {
+      "name": "showAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Alias of returnAll.",
+      "advanced": false,
+      "raw": {
+        "name": "showAll",
+        "type": "string",
+        "description": "Alias of returnAll.",
+        "required": false,
+        "_id": "6980c299fb8ef3a07947acb8"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Page size value sent to the grid pager (server may cap). Default is \"100\".",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "Page size value sent to the grid pager (server may cap). Default is \"100\".",
+        "required": false,
+        "_id": "6980c299fb8ef3a07947acb9"
+      }
+    },
+    {
+      "name": "maxPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Safety cap for the maximum number of pages to iterate (prevents infinite loops). Default is \"50\".",
+      "advanced": false,
+      "raw": {
+        "name": "maxPages",
+        "type": "string",
+        "description": "Safety cap for the maximum number of pages to iterate (prevents infinite loops). Default is \"50\".",
+        "required": false,
+        "_id": "6980c299fb8ef3a07947acba"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

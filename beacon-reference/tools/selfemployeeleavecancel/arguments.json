@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    {
+      "name": "leaveCancelDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the leave cancel Date using in this format date example \"06/24/2025\" format \"dd/mm/yyyy\".",
+      "advanced": false,
+      "raw": {
+        "name": "leaveCancelDate",
+        "type": "string",
+        "description": "to give the leave cancel Date using in this format date example \"06/24/2025\" format \"dd/mm/yyyy\".",
+        "required": true,
+        "_id": "68b09daa69d8ad5401b743a3"
+      }
+    },
+    {
+      "name": "comment",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "reason or comment for leave cancel",
+      "advanced": false,
+      "raw": {
+        "name": "comment",
+        "type": "string",
+        "description": "reason or comment for leave cancel",
+        "required": true,
+        "_id": "68b09daa69d8ad5401b743a4"
+      }
+    },
+    {
+      "name": "leaveAppliedId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "dont user ask for leave id to get user given date or user date corresponding leave applied Id to get example \"82.0\",\"71.0\" etc..",
+      "advanced": false,
+      "raw": {
+        "name": "leaveAppliedId",
+        "type": "string",
+        "description": "dont user ask for leave id to get user given date or user date corresponding leave applied Id to get example \"82.0\",\"71.0\" etc..",
+        "required": true,
+        "_id": "68b09daa69d8ad5401b743a5"
+      }
+    },
+    {
+      "name": "year",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the leave cancel year",
+      "advanced": false,
+      "raw": {
+        "name": "year",
+        "type": "string",
+        "description": "to give the leave cancel year",
+        "required": true,
+        "_id": "68b09fc652b4ae33b90a2823"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

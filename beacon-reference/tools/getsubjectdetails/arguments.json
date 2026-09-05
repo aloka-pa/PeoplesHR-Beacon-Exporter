@@ -1,0 +1,80 @@
+{
+  "arguments": [
+    {
+      "name": "subjectCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The unique subject code to search for (e.g., \"000001\", \"000008\")",
+      "advanced": false,
+      "raw": {
+        "name": "subjectCode",
+        "type": "string",
+        "description": "The unique subject code to search for (e.g., \"000001\", \"000008\")",
+        "required": false,
+        "_id": "6954cec9f72a612a8c89ba6b"
+      }
+    },
+    {
+      "name": "subjectName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The subject name or partial name to search for (e.g., \"OOP\", \"big data\", \"Programming\")\n",
+      "advanced": false,
+      "raw": {
+        "name": "subjectName",
+        "type": "string",
+        "description": "The subject name or partial name to search for (e.g., \"OOP\", \"big data\", \"Programming\")\n",
+        "required": false,
+        "_id": "6954cec9f72a612a8c89ba6c"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "To return all subjects, pass one of:\n\"all\", \"show all\", \"true\", \"list\", \"available\", \"existing\"",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "To return all subjects, pass one of:\n\"all\", \"show all\", \"true\", \"list\", \"available\", \"existing\"",
+        "required": false,
+        "_id": "697e35f232be68838ce3484c"
+      }
+    },
+    {
+      "name": "pageNumber",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "which page to fetch (default \"1\")",
+      "advanced": false,
+      "raw": {
+        "name": "pageNumber",
+        "type": "string",
+        "description": "which page to fetch (default \"1\")",
+        "required": false,
+        "_id": "698085ed8534fce07a4a797d"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "page size requested (default \"100\"). If system caps to 4/5, pagination still works",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "page size requested (default \"100\"). If system caps to 4/5, pagination still works",
+        "required": false,
+        "_id": "698085ed8534fce07a4a797e"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

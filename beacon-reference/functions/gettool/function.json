@@ -1,0 +1,24 @@
+{
+  "id": "690dc583931a2d61ba0b2a78",
+  "slug": "gettool",
+  "name": "getTool",
+  "status": "live",
+  "createdAt": "2025-04-25T13:17:59.006Z",
+  "updatedAt": "2025-04-25T13:17:59.006Z",
+  "contentHash": "84cfa9331e06aa9ebd14a0f462d15bdd4bfc4c0c3e6ef7ef36b226b5d00d00ce",
+  "lastExportedAt": "2026-09-05T19:41:44.196Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc583931a2d61ba0b2a78",
+    "name": "getTool",
+    "status": "live",
+    "code": "(async function(name){\n    const map = {\n        \"fuse\": \"https://cdn.beacon.li/libs/fuse.js-7.0.0.js\",\n        \"alasql\": \"https://cdn.beacon.li/libs/alasql-4.js\",\n    }\n    const url = map[name];\n    if(!url) {\n        throw new Error(\"Script doesn't exists\");\n    }\n    await BeaconBar.executeFunction(\"loadJS\")(name, url);\n    if(name === \"alasql\") {\n        return window.alasql;\n    }\n    if(name === \"fuse\") {\n        return window.Fuse;\n    }\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    {
+      "name": "empList",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the user select employee index list example \"1\", \"2\", \"5\", ...",
+      "advanced": false,
+      "raw": {
+        "name": "empList",
+        "type": "string",
+        "description": "to get the user select employee index list example \"1\", \"2\", \"5\", ...",
+        "required": true,
+        "_id": "68498223d776951a8b1228c0"
+      }
+    },
+    {
+      "name": "supervisorEmpId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the employee supervisor id Example \"000001\".",
+      "advanced": false,
+      "raw": {
+        "name": "supervisorEmpId",
+        "type": "string",
+        "description": "to give the employee supervisor id Example \"000001\".",
+        "required": true,
+        "_id": "6849908597e854ef280fa421"
+      }
+    },
+    {
+      "name": "employeeDesignation",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get proposed Supervisor Designation to for \"getCoveringEmployee\" to get employee id Example \"Head of Human Resources\"",
+      "advanced": false,
+      "raw": {
+        "name": "employeeDesignation",
+        "type": "string",
+        "description": "to get proposed Supervisor Designation to for \"getCoveringEmployee\" to get employee id Example \"Head of Human Resources\"",
+        "required": true,
+        "_id": "6849908597e854ef280fa423"
+      }
+    },
+    {
+      "name": "supervisorType",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to ask the user supervisor type such as if the user select direct supervisor return \"Direct\" else if the user select indirect supervisor return \"Indirect\".",
+      "advanced": false,
+      "raw": {
+        "name": "supervisorType",
+        "type": "string",
+        "description": "to ask the user supervisor type such as if the user select direct supervisor return \"Direct\" else if the user select indirect supervisor return \"Indirect\".",
+        "required": true,
+        "_id": "684a6e3ebead09d7168e5d09"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

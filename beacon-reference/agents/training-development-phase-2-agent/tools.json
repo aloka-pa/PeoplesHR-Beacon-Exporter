@@ -1,0 +1,17 @@
+[
+  {
+    "toolId": "6956293bab9dbe6266aec3e1",
+    "toolName": "traininingDevCreateCourseDescFilling",
+    "path": "tools/traininingdevcreatecoursedescfilling"
+  },
+  {
+    "toolId": "695524daa4e4f389f90f1d7a",
+    "toolName": "getTrainingBudgetAllocation",
+    "path": "tools/gettrainingbudgetallocation"
+  },
+  {
+    "toolId": "69552f87921cbb106adf3556",
+    "toolName": "getTrainingBudgetUtilization",
+    "path": "tools/gettrainingbudgetutilization"
+  }
+]

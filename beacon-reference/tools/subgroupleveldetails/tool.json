@@ -1,0 +1,133 @@
+{
+  "id": "690dc569931a2d61ba0b19e6",
+  "slug": "subgroupleveldetails",
+  "name": "subGroupLevelDetails",
+  "description": "in this generate the sub group level details. first execute the \"positionTitleDetails\" tool to get corresponding value take in this tool. display the available sub group level details then user select after execute \"createEmployeeCoveringDetails\" tool.",
+  "instructions": null,
+  "taskName": "Fetching Sub Group Level Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "subGroupLevelDetails",
+  "createdAt": "2025-06-10T07:41:52.586Z",
+  "updatedAt": "2025-06-10T07:41:52.586Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "ab6428a4e22fe09911d69fe58ef3dc0034f0f7e60e3c404e14c789835ffa03b0",
+  "lastExportedAt": "2026-09-05T19:39:23.596Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b19e6",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "subGroupLevelDetails",
+      "description": "in this generate the sub group level details. first execute the \"positionTitleDetails\" tool to get corresponding value take in this tool. display the available sub group level details then user select after execute \"createEmployeeCoveringDetails\" tool.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "subGroupLevelDetails",
+        "args": [
+          {
+            "name": "personalGradeValue",
+            "type": "string",
+            "description": "in this personal Grade Value to get for user selected personal grade name corresponding value will be take \"GCB Grade 05\" corresponding value \"000004\"",
+            "required": true,
+            "_id": "6847e1c0d0f2440578f3ca4a"
+          },
+          {
+            "name": "groupLevelValue",
+            "type": "string",
+            "description": "in this group value to get for user selected group level name corresponding value will be take example \"beacon class 02\" corresponding value \"000001\"",
+            "required": true,
+            "_id": "6847e1c0d0f2440578f3ca4b"
+          },
+          {
+            "name": "positionTitleValue",
+            "type": "string",
+            "description": "in this position Title Value to get for user selected position Title name corresponding value will be take example \"asdfg\" corresponding value \"000001\"",
+            "required": true,
+            "_id": "6847e1c0d0f2440578f3ca4c"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to give the employee id Example:- \"000001\" etc...",
+            "required": true,
+            "_id": "6847e1c0d0f2440578f3ca4d"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6847e1c0d0f2440578f3ca49"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/empCoveringDetails.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const addResponse = await BeaconBar.executeFunction(\"module\")(\n    {\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"ctl00$body$drpCorporateTitle\",\n      __EVENTARGUMENT: \"\",\n      __VIEWSTATE: window.emp1.viewState,\n      __VIEWSTATEGENERATOR: window.emp1.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.emp1.eventValidation,\n      \"ctl00$hdnDateFormat\": \"m/d/yy\",\n      \"ctl00$hdnQuickmenu\": \"\",\n      \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n      \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n      \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n      \"ctl00$body$drpSalaryGrade\": args.personalGradeValue,\n      \"ctl00$body$drpClassification\": args.groupLevelValue,\n      \"ctl00$body$drpCorporateTitle\": args.positionTitleValue,\n      \"ctl00$body$drpClassification\": \"\",\n      \"ctl00$body$hdnDisplayMethod\": \"1\",\n      \"ctl00$body$txtactfrom\": \"\",\n      \"ctl00$body$txtactto\": \"\",\n      \"ctl00$body$fileAttatchment\": \"\",\n      \"ctl00$body$payable\": \"rbpayable\",\n      \"ctl00$body$txtCmmt\": \"\",\n      \"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"10\",\n      \"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdCovringDtl_ClientState\": \"\",\n      \"ctl00$footers$hdnIsDateChanged\": \"1\",\n      \"ctl00$footers$txtPublicKey\": window.emp.publicKey1,\n      \"ctl00$footers$txtempNo\": window.emp.empEnc\n    },\n    `${reqOptions.sl}/EIM/empCoveringDetails.aspx`\n  );\n\n  window.emp2 = addResponse\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(addResponse.rawData, \"text/html\");\n\n\n  const subGroupSelect = document.querySelector('#ctl00_body_drpdsg');\n\n  const subGroupOptions = Array.from(subGroupSelect.options)\n    .filter(option => option.value !== \"\")\n    .map(option => ({\n      key: option.value,\n      value: option.textContent.trim()\n    }));\n\n  return subGroupOptions;\n})",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Fetching Sub Group Level Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-10T07:41:52.586Z",
+      "updatedAt": "2025-06-10T07:41:52.586Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "subGroupLevelDetails",
+      "args": [
+        {
+          "name": "personalGradeValue",
+          "type": "string",
+          "description": "in this personal Grade Value to get for user selected personal grade name corresponding value will be take \"GCB Grade 05\" corresponding value \"000004\"",
+          "required": true,
+          "_id": "6847e1c0d0f2440578f3ca4a"
+        },
+        {
+          "name": "groupLevelValue",
+          "type": "string",
+          "description": "in this group value to get for user selected group level name corresponding value will be take example \"beacon class 02\" corresponding value \"000001\"",
+          "required": true,
+          "_id": "6847e1c0d0f2440578f3ca4b"
+        },
+        {
+          "name": "positionTitleValue",
+          "type": "string",
+          "description": "in this position Title Value to get for user selected position Title name corresponding value will be take example \"asdfg\" corresponding value \"000001\"",
+          "required": true,
+          "_id": "6847e1c0d0f2440578f3ca4c"
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to give the employee id Example:- \"000001\" etc...",
+          "required": true,
+          "_id": "6847e1c0d0f2440578f3ca4d"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6847e1c0d0f2440578f3ca49"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/empCoveringDetails.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const addResponse = await BeaconBar.executeFunction(\"module\")(\n    {\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"ctl00$body$drpCorporateTitle\",\n      __EVENTARGUMENT: \"\",\n      __VIEWSTATE: window.emp1.viewState,\n      __VIEWSTATEGENERATOR: window.emp1.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.emp1.eventValidation,\n      \"ctl00$hdnDateFormat\": \"m/d/yy\",\n      \"ctl00$hdnQuickmenu\": \"\",\n      \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n      \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n      \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n      \"ctl00$body$drpSalaryGrade\": args.personalGradeValue,\n      \"ctl00$body$drpClassification\": args.groupLevelValue,\n      \"ctl00$body$drpCorporateTitle\": args.positionTitleValue,\n      \"ctl00$body$drpClassification\": \"\",\n      \"ctl00$body$hdnDisplayMethod\": \"1\",\n      \"ctl00$body$txtactfrom\": \"\",\n      \"ctl00$body$txtactto\": \"\",\n      \"ctl00$body$fileAttatchment\": \"\",\n      \"ctl00$body$payable\": \"rbpayable\",\n      \"ctl00$body$txtCmmt\": \"\",\n      \"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"10\",\n      \"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdCovringDtl_ClientState\": \"\",\n      \"ctl00$footers$hdnIsDateChanged\": \"1\",\n      \"ctl00$footers$txtPublicKey\": window.emp.publicKey1,\n      \"ctl00$footers$txtempNo\": window.emp.empEnc\n    },\n    `${reqOptions.sl}/EIM/empCoveringDetails.aspx`\n  );\n\n  window.emp2 = addResponse\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(addResponse.rawData, \"text/html\");\n\n\n  const subGroupSelect = document.querySelector('#ctl00_body_drpdsg');\n\n  const subGroupOptions = Array.from(subGroupSelect.options)\n    .filter(option => option.value !== \"\")\n    .map(option => ({\n      key: option.value,\n      value: option.textContent.trim()\n    }));\n\n  return subGroupOptions;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

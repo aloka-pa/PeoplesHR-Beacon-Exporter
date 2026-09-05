@@ -1,0 +1,72 @@
+{
+  "id": "690dc564931a2d61ba0b1545",
+  "slug": "createnoncashbenefit",
+  "name": "createNonCashBenefit",
+  "description": "Before Execute In this tool, first execute the ncdCategory API. to retrieve the category details. Display the available categories, and upon selection, use the corresponding category value for ncdCategory api.",
+  "instructions": null,
+  "taskName": "Create NonCash Benefit",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createNonCashBenefit",
+  "createdAt": "2025-05-02T06:48:32.165Z",
+  "updatedAt": "2026-05-15T06:59:45.113Z",
+  "assignedAgents": [],
+  "contentHash": "ab0f1b80c67a6f89474f271fdcfe5472b8309854775c22a2b61636fb89cfdda8",
+  "lastExportedAt": "2026-09-05T19:39:22.647Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b1545",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createNonCashBenefit",
+      "description": "Before Execute In this tool, first execute the ncdCategory API. to retrieve the category details. Display the available categories, and upon selection, use the corresponding category value for ncdCategory api.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createNonCashBenefit",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"Description or name of the non-cash benefit item.\"\n    },\n    \"ctl00_body_dpCategory\": {\n      \"type\": \"string\",\n      \"description\": \"Selected category code for the non-cash benefit item.If the user updates the category details, use the corresponding category value when calling the getNonCashBenefitDetails API\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_dpCategory\"\n  ]\n}",
+        "_id": "68146ac079ebe9607c1659f9"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\"getEIMApii\")({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.ncd.viewState,\n      __VIEWSTATEGENERATOR: window.ncd.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.ncd.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$txtName\":\n        args[\"ctl00_body_txtName\"] || \"\",\n\n      \"ctl00$body$dpCategory\":\n        args[\"ctl00_body_dpCategory\"] || \"\",\n\n      \"ctl00$body$butSave\": \"Save\"\n\n    }, \"NonCashBenifit\");\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const code =\n    doc.getElementById(\"ctl00_body_txtCode\")\n      ?.value?.trim() || \"\";\n\n  const description =\n    doc.getElementById(\"ctl00_body_txtName\")\n      ?.value?.trim() || \"\";\n\n  return {\n    code,\n    description\n  };\n\n});",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create NonCash Benefit",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-02T06:48:32.165Z",
+      "updatedAt": "2026-05-15T06:59:45.113Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createNonCashBenefit",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"Description or name of the non-cash benefit item.\"\n    },\n    \"ctl00_body_dpCategory\": {\n      \"type\": \"string\",\n      \"description\": \"Selected category code for the non-cash benefit item.If the user updates the category details, use the corresponding category value when calling the getNonCashBenefitDetails API\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_dpCategory\"\n  ]\n}",
+      "_id": "68146ac079ebe9607c1659f9"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\"getEIMApii\")({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.ncd.viewState,\n      __VIEWSTATEGENERATOR: window.ncd.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.ncd.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$txtName\":\n        args[\"ctl00_body_txtName\"] || \"\",\n\n      \"ctl00$body$dpCategory\":\n        args[\"ctl00_body_dpCategory\"] || \"\",\n\n      \"ctl00$body$butSave\": \"Save\"\n\n    }, \"NonCashBenifit\");\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const code =\n    doc.getElementById(\"ctl00_body_txtCode\")\n      ?.value?.trim() || \"\";\n\n  const description =\n    doc.getElementById(\"ctl00_body_txtName\")\n      ?.value?.trim() || \"\";\n\n  return {\n    code,\n    description\n  };\n\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

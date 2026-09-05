@@ -1,0 +1,197 @@
+{
+  "id": "69521a649efbf3c3d6761e08",
+  "slug": "getreligion",
+  "name": "getReligion",
+  "description": "This tool retrieves Religion master data from EIM/Religion.aspx in PeoplesHR. It can search religions by exact code or by partial religion name, return results using the same paging behavior as the UI (page size and page navigation), and optionally fetch all religions across all pages when the user explicitly requests “all records”. It also supports returning a specific page (e.g., “6th page”) and provides navigation hints (next/previous availability) to continue fetching more records safely.",
+  "instructions": null,
+  "taskName": "Fetching Religions",
+  "tags": [
+    "EIMAdmin",
+    "Nationality&ReligionInformation"
+  ],
+  "status": "live",
+  "signature": "getReligion",
+  "createdAt": "2025-12-29T06:06:28.075Z",
+  "updatedAt": "2026-06-15T07:32:20.287Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "e1ca4439613a55160f509cf773292cba54e56765f82fd8555f67fe8186e31ef2",
+  "lastExportedAt": "2026-09-05T19:39:22.384Z",
+  "raw": {
+    "basic": {
+      "_id": "69521a649efbf3c3d6761e08",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getReligion",
+      "description": "This tool retrieves Religion master data from EIM/Religion.aspx in PeoplesHR. It can search religions by exact code or by partial religion name, return results using the same paging behavior as the UI (page size and page navigation), and optionally fetch all religions across all pages when the user explicitly requests “all records”. It also supports returning a specific page (e.g., “6th page”) and provides navigation hints (next/previous availability) to continue fetching more records safely.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getReligion",
+        "args": [
+          {
+            "name": "religionCode",
+            "type": "string",
+            "description": "user enters the religion code to search for and return the grid row details, including religion name",
+            "required": false,
+            "_id": "69521a649efbf3c3d6761e0a"
+          },
+          {
+            "name": "religionName",
+            "type": "string",
+            "description": "Religion name search text (partial allowed, example: \"Christ\"). Also accepts \"all\", \"show all\", \"*\" to fetch all records.",
+            "required": false,
+            "_id": "6956a3f1ce1605a649241ee4"
+          },
+          {
+            "name": "page",
+            "type": "string",
+            "description": "Page number to return (example: \"6\"). If omitted, defaults to \"1\". You may also pass \"next\" / \"prev\" with currentPage.",
+            "required": false,
+            "_id": "698172f4d90ee82f7599ec77"
+          },
+          {
+            "name": "currentPage",
+            "type": "string",
+            "description": "Current page number (used only when page is \"next\" or \"prev\").",
+            "required": false,
+            "_id": "698172f4d90ee82f7599ec78"
+          },
+          {
+            "name": "batchSize",
+            "type": "string",
+            "description": "How many records to return per response (example: \"10\"). If not given, it returns UI page size.",
+            "required": false,
+            "_id": "698172f4d90ee82f7599ec79"
+          },
+          {
+            "name": "useUiPageSize",
+            "type": "string",
+            "description": "\"true\" (default) uses UI page size; \"false\" lets batchSize drive the size.",
+            "required": false,
+            "_id": "698172f4d90ee82f7599ec7a"
+          },
+          {
+            "name": "returnAll",
+            "type": "string",
+            "description": "\"true\" to fetch all pages and return all records.",
+            "required": false,
+            "_id": "698172f4d90ee82f7599ec7b"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "69521a649efbf3c3d6761e09"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 0) Helpers (STRING ARGS ONLY)\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const toLower = (v) => okText(v).toLowerCase();\n    const isEmpty = (v) => okText(v) === \"\";\n    const isNumStr = (v) => /^[0-9]+$/.test(okText(v));\n    const clampInt = (n, min, max) => Math.max(min, Math.min(max, n));\n\n    const parseIntSafe = (v, def) => {\n      const t = okText(v);\n      if (!isNumStr(t)) return def;\n      const n = Number(t);\n      return Number.isFinite(n) ? n : def;\n    };\n\n    const isTrue = (v) => [\"true\", \"1\", \"yes\", \"y\"].includes(toLower(v));\n\n    const isAllRequest = (nameVal, returnAllVal) => {\n      if (isTrue(returnAllVal)) return true;\n      const t = toLower(nameVal);\n      return t === \"all\" || t === \"show all\" || t === \"*\" || t === \"showall\";\n    };\n\n    const getHidden = (doc, sel) => doc.querySelector(sel)?.value ?? \"\";\n\n    const getPagerText = (doc) => {\n      const el = doc.querySelector(\".PagerRight_Default\");\n      return el ? okText(el.textContent) : \"\";\n    };\n\n    const parsePagerMeta = (pagerText) => {\n      // Example: \"Displaying page 2 of 6, items 6 to 10 of 28.\"\n      const m = pagerText.match(/page\\s+(\\d+)\\s+of\\s+(\\d+).*?of\\s+(\\d+)\\./i);\n      if (!m) return { page: 1, totalPages: 1, totalItems: null };\n      return {\n        page: Number(m[1]),\n        totalPages: Number(m[2]),\n        totalItems: Number(m[3])\n      };\n    };\n\n    const extractUiPageSize = (doc) => {\n      // The actual posted value comes from the *name* input:\n      // name=\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\"\n      const nameSel =\n        'input[name=\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\"]';\n      const v = okText(doc.querySelector(nameSel)?.value);\n\n      if (isNumStr(v)) return Number(v);\n\n      // Fallback: sometimes only _Value exists\n      const valueSel = 'input[id$=\"_ChangePageSizeTextBox_Value\"]';\n      const v2 = okText(doc.querySelector(valueSel)?.value);\n      if (isNumStr(v2)) return Number(v2);\n\n      // Default fallback\n      return 10;\n    };\n\n    const extractRows = (doc) => {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const out = [];\n      for (const row of rows) {\n        const cells = row.querySelectorAll(\"td\");\n        if (cells.length >= 2) {\n          out.push({\n            code: okText(cells[0]?.textContent),\n            religionName: okText(cells[1]?.textContent)\n          });\n        }\n      }\n      return out;\n    };\n\n    const buildBaseForm = (docOrDetails) => {\n      // docOrDetails may be the initial \"details\" object or a parsed doc\n      const vs =\n        docOrDetails?.viewState ?? getHidden(docOrDetails, \"#__VIEWSTATE\");\n      const vsg =\n        docOrDetails?.viewStateGen ?? getHidden(docOrDetails, \"#__VIEWSTATEGENERATOR\");\n      const ev =\n        docOrDetails?.eventValidation ?? getHidden(docOrDetails, \"#__EVENTVALIDATION\");\n\n      const fd = new FormData();\n      fd.append(\"scrollLeft\", \"0\");\n      fd.append(\"scrollTop\", \"0\");\n      fd.append(\"__EVENTTARGET\", \"\");\n      fd.append(\"__EVENTARGUMENT\", \"\");\n      fd.append(\"__VIEWSTATE\", vs);\n      fd.append(\"__VIEWSTATEGENERATOR\", vsg);\n      fd.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      fd.append(\"__EVENTVALIDATION\", ev);\n\n      fd.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      fd.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      // Grid hidden client state\n      fd.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      // These exist in the UI post, keep them present\n      fd.append(\n        \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\",\n        \"\"\n      );\n      fd.append(\n        \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\",\n        \"\"\n      );\n\n      return fd;\n    };\n\n    const post = async (url, headers, formData) => {\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      return await res.text();\n    };\n\n    const parser = new DOMParser();\n\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Religion.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Religion screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Args normalization + intent\n     * ------------------------------------------------- */\n    const religionCode = okText(args?.religionCode);\n    const religionName = okText(args?.religionName);\n    const pageArg = okText(args?.page);\n    const currentPageArg = okText(args?.currentPage);\n    const batchSizeArg = okText(args?.batchSize);\n    const useUiPageSizeArg = okText(args?.useUiPageSize);\n    const returnAllArg = okText(args?.returnAll);\n\n    const wantAll = isAllRequest(religionName, returnAllArg);\n\n    // Validate: must provide code OR name OR request all\n    if (!wantAll && isEmpty(religionCode) && isEmpty(religionName)) {\n      return {\n        status: \"INVALID_ARGS\",\n        message:\n          'Provide either \"religionCode\" (exact) or \"religionName\" (partial), or set returnAll=\"true\".'\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Build URL + initial state\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"Religion\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Religion.aspx\");\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Religion.aspx`;\n\n    /* -------------------------------------------------\n     * 4) First action: Search (code/name) OR Show All\n     * ------------------------------------------------- */\n    let firstForm = buildBaseForm(details);\n\n    // Default criteria + content\n    let searchCriteria = \"RLG_NAME\";\n    let searchValue = religionName;\n\n    if (!isEmpty(religionCode)) {\n      searchCriteria = \"RLG_CODE\";\n      searchValue = religionCode;\n    }\n\n    // Always set these controls (safe even for Show All)\n    firstForm.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n    firstForm.append(\"ctl00$body$ContentSearch$txtContent\", wantAll ? \"\" : searchValue);\n\n    // If Show All requested, click the UI button butAll; otherwise click Search\n    if (wantAll) {\n      firstForm.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n      // In some screens criteria still required; keep it present\n      if (!firstForm.get(\"ctl00$body$ContentSearch$cboCriteria\")) {\n        firstForm.append(\"ctl00$body$ContentSearch$cboCriteria\", \"RLG_CODE\");\n      }\n    } else {\n      firstForm.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n    }\n\n    // Start at page 1\n    firstForm.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n\n    // Do NOT hardcode 100. Let UI decide first; we will adapt after parsing UI page size.\n    // Still must post a value (UI always posts it). Use a safe default 10.\n    firstForm.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n\n    const firstHtml = await post(url, headers, firstForm);\n    let doc = parser.parseFromString(firstHtml, \"text/html\");\n\n    // If no grid rows, return NOT_FOUND\n    let rows = extractRows(doc);\n    if (rows.length === 0) {\n      return {\n        status: \"NOT_FOUND\",\n        message: wantAll\n          ? \"No Religions found.\"\n          : `No Religions found matching \"${searchValue}\"`,\n        searchCriteria,\n        searchValue\n      };\n    }\n\n    /* -------------------------------------------------\n     * 5) Decide page size behavior (UI page size vs batch)\n     * ------------------------------------------------- */\n    const uiPageSize = extractUiPageSize(doc);\n    const useUiPageSize = isEmpty(useUiPageSizeArg) ? true : isTrue(useUiPageSizeArg);\n\n    // If using UI page size, we will return exactly that page.\n    // If not using UI page size, we keep returning \"batchSize\" from that page (trim),\n    // and user can ask for next page.\n    const batchSize = isNumStr(batchSizeArg) ? Number(batchSizeArg) : 10;\n    const effectiveReturnSize = useUiPageSize ? uiPageSize : clampInt(batchSize, 1, 500);\n\n    /* -------------------------------------------------\n     * 6) Navigate to requested page (supports: \"6\", \"next\", \"prev\")\n     * ------------------------------------------------- */\n    const pagerMeta1 = parsePagerMeta(getPagerText(doc));\n    const totalPagesKnown = pagerMeta1.totalPages || 1;\n\n    let targetPage = 1;\n\n    if (isEmpty(pageArg)) {\n      targetPage = 1;\n    } else {\n      const p = toLower(pageArg);\n      if (p === \"next\") {\n        const cur = parseIntSafe(currentPageArg, pagerMeta1.page || 1);\n        targetPage = cur + 1;\n      } else if (p === \"prev\" || p === \"previous\") {\n        const cur = parseIntSafe(currentPageArg, pagerMeta1.page || 1);\n        targetPage = cur - 1;\n      } else if (isNumStr(pageArg)) {\n        targetPage = Number(pageArg);\n      } else {\n        targetPage = 1;\n      }\n    }\n\n    targetPage = clampInt(targetPage, 1, totalPagesKnown);\n\n    const goToPage = async (desiredPage) => {\n      if (desiredPage === (parsePagerMeta(getPagerText(doc)).page || 1)) return;\n\n      const fd = buildBaseForm(doc);\n\n      // Keep current search fields (important on ASP.NET)\n      fd.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      fd.append(\"ctl00$body$ContentSearch$txtContent\", wantAll ? \"\" : searchValue);\n\n      // Preserve / post current page size (UI uses this)\n      fd.append(\n        \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\",\n        String(uiPageSize)\n      );\n\n      // Set page textbox + trigger Go button postback\n      fd.set(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", String(desiredPage));\n      fd.set(\"__EVENTTARGET\", \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\");\n      fd.set(\"__EVENTARGUMENT\", \"\");\n\n      const html = await post(url, headers, fd);\n      doc = parser.parseFromString(html, \"text/html\");\n    };\n\n    await goToPage(targetPage);\n\n    /* -------------------------------------------------\n     * 7) If returnAll=true (or \"all\"), aggregate ALL pages\n     * ------------------------------------------------- */\n    const pagerMetaAfter = parsePagerMeta(getPagerText(doc));\n    const totalPages = pagerMetaAfter.totalPages || 1;\n    const totalItems = pagerMetaAfter.totalItems ?? null;\n\n    if (wantAll) {\n      const all = [];\n      // Start from page 1 and iterate to totalPages\n      for (let p = 1; p <= totalPages; p++) {\n        await goToPage(p);\n        const pageRows = extractRows(doc);\n        all.push(...pageRows);\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: `Found ${all.length} Religion(s) (all pages)`,\n        searchCriteria: wantAll ? \"SHOW_ALL\" : searchCriteria,\n        searchValue: wantAll ? \"ALL\" : searchValue,\n        page: 1,\n        totalPages,\n        totalItems,\n        pageSize: uiPageSize,\n        count: all.length,\n        religions: all\n      };\n    }\n\n    /* -------------------------------------------------\n     * 8) Normal mode: return ONE page (UI page size) OR 10-set\n     * ------------------------------------------------- */\n    rows = extractRows(doc);\n\n    // If user wants 10-per-set, trim the page results\n    const returned = rows.slice(0, effectiveReturnSize);\n\n    const pagerMetaFinal = parsePagerMeta(getPagerText(doc));\n    const currentPage = pagerMetaFinal.page || targetPage || 1;\n\n    const hasNext = currentPage < (pagerMetaFinal.totalPages || totalPages || 1);\n    const hasPrev = currentPage > 1;\n\n    return {\n      status: \"SUCCESS\",\n      message: useUiPageSize\n        ? `Found ${returned.length} Religion(s) on page ${currentPage} (UI page size = ${uiPageSize}).`\n        : `Found ${returned.length} Religion(s) on page ${currentPage} (returned ${effectiveReturnSize} records; UI page size = ${uiPageSize}).`,\n      searchCriteria,\n      searchValue,\n      page: currentPage,\n      totalPages,\n      totalItems,\n      uiPageSize,\n      returnedPageSize: effectiveReturnSize,\n      count: returned.length,\n      religions: returned,\n      navigation: {\n        hasPrev,\n        hasNext,\n        nextPage: hasNext ? currentPage + 1 : null,\n        prevPage: hasPrev ? currentPage - 1 : null,\n        hint: hasNext\n          ? `Ask: \"get all religions in page ${currentPage + 1}\" or set returnAll=\"true\" for all records.`\n          : \"No more pages.\"\n      }\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message ?? \"Unknown error\",\n      error: err?.toString?.() ?? String(err)\n    };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "Nationality&ReligionInformation"
+      ],
+      "taskName": "Fetching Religions",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-29T06:06:28.075Z",
+      "updatedAt": "2026-06-15T07:32:20.287Z",
+      "__v": 8,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getReligion",
+      "args": [
+        {
+          "name": "religionCode",
+          "type": "string",
+          "description": "user enters the religion code to search for and return the grid row details, including religion name",
+          "required": false,
+          "_id": "69521a649efbf3c3d6761e0a"
+        },
+        {
+          "name": "religionName",
+          "type": "string",
+          "description": "Religion name search text (partial allowed, example: \"Christ\"). Also accepts \"all\", \"show all\", \"*\" to fetch all records.",
+          "required": false,
+          "_id": "6956a3f1ce1605a649241ee4"
+        },
+        {
+          "name": "page",
+          "type": "string",
+          "description": "Page number to return (example: \"6\"). If omitted, defaults to \"1\". You may also pass \"next\" / \"prev\" with currentPage.",
+          "required": false,
+          "_id": "698172f4d90ee82f7599ec77"
+        },
+        {
+          "name": "currentPage",
+          "type": "string",
+          "description": "Current page number (used only when page is \"next\" or \"prev\").",
+          "required": false,
+          "_id": "698172f4d90ee82f7599ec78"
+        },
+        {
+          "name": "batchSize",
+          "type": "string",
+          "description": "How many records to return per response (example: \"10\"). If not given, it returns UI page size.",
+          "required": false,
+          "_id": "698172f4d90ee82f7599ec79"
+        },
+        {
+          "name": "useUiPageSize",
+          "type": "string",
+          "description": "\"true\" (default) uses UI page size; \"false\" lets batchSize drive the size.",
+          "required": false,
+          "_id": "698172f4d90ee82f7599ec7a"
+        },
+        {
+          "name": "returnAll",
+          "type": "string",
+          "description": "\"true\" to fetch all pages and return all records.",
+          "required": false,
+          "_id": "698172f4d90ee82f7599ec7b"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "69521a649efbf3c3d6761e09"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 0) Helpers (STRING ARGS ONLY)\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const toLower = (v) => okText(v).toLowerCase();\n    const isEmpty = (v) => okText(v) === \"\";\n    const isNumStr = (v) => /^[0-9]+$/.test(okText(v));\n    const clampInt = (n, min, max) => Math.max(min, Math.min(max, n));\n\n    const parseIntSafe = (v, def) => {\n      const t = okText(v);\n      if (!isNumStr(t)) return def;\n      const n = Number(t);\n      return Number.isFinite(n) ? n : def;\n    };\n\n    const isTrue = (v) => [\"true\", \"1\", \"yes\", \"y\"].includes(toLower(v));\n\n    const isAllRequest = (nameVal, returnAllVal) => {\n      if (isTrue(returnAllVal)) return true;\n      const t = toLower(nameVal);\n      return t === \"all\" || t === \"show all\" || t === \"*\" || t === \"showall\";\n    };\n\n    const getHidden = (doc, sel) => doc.querySelector(sel)?.value ?? \"\";\n\n    const getPagerText = (doc) => {\n      const el = doc.querySelector(\".PagerRight_Default\");\n      return el ? okText(el.textContent) : \"\";\n    };\n\n    const parsePagerMeta = (pagerText) => {\n      // Example: \"Displaying page 2 of 6, items 6 to 10 of 28.\"\n      const m = pagerText.match(/page\\s+(\\d+)\\s+of\\s+(\\d+).*?of\\s+(\\d+)\\./i);\n      if (!m) return { page: 1, totalPages: 1, totalItems: null };\n      return {\n        page: Number(m[1]),\n        totalPages: Number(m[2]),\n        totalItems: Number(m[3])\n      };\n    };\n\n    const extractUiPageSize = (doc) => {\n      // The actual posted value comes from the *name* input:\n      // name=\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\"\n      const nameSel =\n        'input[name=\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\"]';\n      const v = okText(doc.querySelector(nameSel)?.value);\n\n      if (isNumStr(v)) return Number(v);\n\n      // Fallback: sometimes only _Value exists\n      const valueSel = 'input[id$=\"_ChangePageSizeTextBox_Value\"]';\n      const v2 = okText(doc.querySelector(valueSel)?.value);\n      if (isNumStr(v2)) return Number(v2);\n\n      // Default fallback\n      return 10;\n    };\n\n    const extractRows = (doc) => {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const out = [];\n      for (const row of rows) {\n        const cells = row.querySelectorAll(\"td\");\n        if (cells.length >= 2) {\n          out.push({\n            code: okText(cells[0]?.textContent),\n            religionName: okText(cells[1]?.textContent)\n          });\n        }\n      }\n      return out;\n    };\n\n    const buildBaseForm = (docOrDetails) => {\n      // docOrDetails may be the initial \"details\" object or a parsed doc\n      const vs =\n        docOrDetails?.viewState ?? getHidden(docOrDetails, \"#__VIEWSTATE\");\n      const vsg =\n        docOrDetails?.viewStateGen ?? getHidden(docOrDetails, \"#__VIEWSTATEGENERATOR\");\n      const ev =\n        docOrDetails?.eventValidation ?? getHidden(docOrDetails, \"#__EVENTVALIDATION\");\n\n      const fd = new FormData();\n      fd.append(\"scrollLeft\", \"0\");\n      fd.append(\"scrollTop\", \"0\");\n      fd.append(\"__EVENTTARGET\", \"\");\n      fd.append(\"__EVENTARGUMENT\", \"\");\n      fd.append(\"__VIEWSTATE\", vs);\n      fd.append(\"__VIEWSTATEGENERATOR\", vsg);\n      fd.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      fd.append(\"__EVENTVALIDATION\", ev);\n\n      fd.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      fd.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      // Grid hidden client state\n      fd.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      // These exist in the UI post, keep them present\n      fd.append(\n        \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\",\n        \"\"\n      );\n      fd.append(\n        \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\",\n        \"\"\n      );\n\n      return fd;\n    };\n\n    const post = async (url, headers, formData) => {\n      const res = await fetch(url, { method: \"POST\", headers, body: formData });\n      return await res.text();\n    };\n\n    const parser = new DOMParser();\n\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/Religion.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Religion screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Args normalization + intent\n     * ------------------------------------------------- */\n    const religionCode = okText(args?.religionCode);\n    const religionName = okText(args?.religionName);\n    const pageArg = okText(args?.page);\n    const currentPageArg = okText(args?.currentPage);\n    const batchSizeArg = okText(args?.batchSize);\n    const useUiPageSizeArg = okText(args?.useUiPageSize);\n    const returnAllArg = okText(args?.returnAll);\n\n    const wantAll = isAllRequest(religionName, returnAllArg);\n\n    // Validate: must provide code OR name OR request all\n    if (!wantAll && isEmpty(religionCode) && isEmpty(religionName)) {\n      return {\n        status: \"INVALID_ARGS\",\n        message:\n          'Provide either \"religionCode\" (exact) or \"religionName\" (partial), or set returnAll=\"true\".'\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Build URL + initial state\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"Religion\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Religion.aspx\");\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/Religion.aspx`;\n\n    /* -------------------------------------------------\n     * 4) First action: Search (code/name) OR Show All\n     * ------------------------------------------------- */\n    let firstForm = buildBaseForm(details);\n\n    // Default criteria + content\n    let searchCriteria = \"RLG_NAME\";\n    let searchValue = religionName;\n\n    if (!isEmpty(religionCode)) {\n      searchCriteria = \"RLG_CODE\";\n      searchValue = religionCode;\n    }\n\n    // Always set these controls (safe even for Show All)\n    firstForm.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n    firstForm.append(\"ctl00$body$ContentSearch$txtContent\", wantAll ? \"\" : searchValue);\n\n    // If Show All requested, click the UI button butAll; otherwise click Search\n    if (wantAll) {\n      firstForm.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n      // In some screens criteria still required; keep it present\n      if (!firstForm.get(\"ctl00$body$ContentSearch$cboCriteria\")) {\n        firstForm.append(\"ctl00$body$ContentSearch$cboCriteria\", \"RLG_CODE\");\n      }\n    } else {\n      firstForm.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n    }\n\n    // Start at page 1\n    firstForm.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n\n    // Do NOT hardcode 100. Let UI decide first; we will adapt after parsing UI page size.\n    // Still must post a value (UI always posts it). Use a safe default 10.\n    firstForm.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n\n    const firstHtml = await post(url, headers, firstForm);\n    let doc = parser.parseFromString(firstHtml, \"text/html\");\n\n    // If no grid rows, return NOT_FOUND\n    let rows = extractRows(doc);\n    if (rows.length === 0) {\n      return {\n        status: \"NOT_FOUND\",\n        message: wantAll\n          ? \"No Religions found.\"\n          : `No Religions found matching \"${searchValue}\"`,\n        searchCriteria,\n        searchValue\n      };\n    }\n\n    /* -------------------------------------------------\n     * 5) Decide page size behavior (UI page size vs batch)\n     * ------------------------------------------------- */\n    const uiPageSize = extractUiPageSize(doc);\n    const useUiPageSize = isEmpty(useUiPageSizeArg) ? true : isTrue(useUiPageSizeArg);\n\n    // If using UI page size, we will return exactly that page.\n    // If not using UI page size, we keep returning \"batchSize\" from that page (trim),\n    // and user can ask for next page.\n    const batchSize = isNumStr(batchSizeArg) ? Number(batchSizeArg) : 10;\n    const effectiveReturnSize = useUiPageSize ? uiPageSize : clampInt(batchSize, 1, 500);\n\n    /* -------------------------------------------------\n     * 6) Navigate to requested page (supports: \"6\", \"next\", \"prev\")\n     * ------------------------------------------------- */\n    const pagerMeta1 = parsePagerMeta(getPagerText(doc));\n    const totalPagesKnown = pagerMeta1.totalPages || 1;\n\n    let targetPage = 1;\n\n    if (isEmpty(pageArg)) {\n      targetPage = 1;\n    } else {\n      const p = toLower(pageArg);\n      if (p === \"next\") {\n        const cur = parseIntSafe(currentPageArg, pagerMeta1.page || 1);\n        targetPage = cur + 1;\n      } else if (p === \"prev\" || p === \"previous\") {\n        const cur = parseIntSafe(currentPageArg, pagerMeta1.page || 1);\n        targetPage = cur - 1;\n      } else if (isNumStr(pageArg)) {\n        targetPage = Number(pageArg);\n      } else {\n        targetPage = 1;\n      }\n    }\n\n    targetPage = clampInt(targetPage, 1, totalPagesKnown);\n\n    const goToPage = async (desiredPage) => {\n      if (desiredPage === (parsePagerMeta(getPagerText(doc)).page || 1)) return;\n\n      const fd = buildBaseForm(doc);\n\n      // Keep current search fields (important on ASP.NET)\n      fd.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      fd.append(\"ctl00$body$ContentSearch$txtContent\", wantAll ? \"\" : searchValue);\n\n      // Preserve / post current page size (UI uses this)\n      fd.append(\n        \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\",\n        String(uiPageSize)\n      );\n\n      // Set page textbox + trigger Go button postback\n      fd.set(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", String(desiredPage));\n      fd.set(\"__EVENTTARGET\", \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\");\n      fd.set(\"__EVENTARGUMENT\", \"\");\n\n      const html = await post(url, headers, fd);\n      doc = parser.parseFromString(html, \"text/html\");\n    };\n\n    await goToPage(targetPage);\n\n    /* -------------------------------------------------\n     * 7) If returnAll=true (or \"all\"), aggregate ALL pages\n     * ------------------------------------------------- */\n    const pagerMetaAfter = parsePagerMeta(getPagerText(doc));\n    const totalPages = pagerMetaAfter.totalPages || 1;\n    const totalItems = pagerMetaAfter.totalItems ?? null;\n\n    if (wantAll) {\n      const all = [];\n      // Start from page 1 and iterate to totalPages\n      for (let p = 1; p <= totalPages; p++) {\n        await goToPage(p);\n        const pageRows = extractRows(doc);\n        all.push(...pageRows);\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: `Found ${all.length} Religion(s) (all pages)`,\n        searchCriteria: wantAll ? \"SHOW_ALL\" : searchCriteria,\n        searchValue: wantAll ? \"ALL\" : searchValue,\n        page: 1,\n        totalPages,\n        totalItems,\n        pageSize: uiPageSize,\n        count: all.length,\n        religions: all\n      };\n    }\n\n    /* -------------------------------------------------\n     * 8) Normal mode: return ONE page (UI page size) OR 10-set\n     * ------------------------------------------------- */\n    rows = extractRows(doc);\n\n    // If user wants 10-per-set, trim the page results\n    const returned = rows.slice(0, effectiveReturnSize);\n\n    const pagerMetaFinal = parsePagerMeta(getPagerText(doc));\n    const currentPage = pagerMetaFinal.page || targetPage || 1;\n\n    const hasNext = currentPage < (pagerMetaFinal.totalPages || totalPages || 1);\n    const hasPrev = currentPage > 1;\n\n    return {\n      status: \"SUCCESS\",\n      message: useUiPageSize\n        ? `Found ${returned.length} Religion(s) on page ${currentPage} (UI page size = ${uiPageSize}).`\n        : `Found ${returned.length} Religion(s) on page ${currentPage} (returned ${effectiveReturnSize} records; UI page size = ${uiPageSize}).`,\n      searchCriteria,\n      searchValue,\n      page: currentPage,\n      totalPages,\n      totalItems,\n      uiPageSize,\n      returnedPageSize: effectiveReturnSize,\n      count: returned.length,\n      religions: returned,\n      navigation: {\n        hasPrev,\n        hasNext,\n        nextPage: hasNext ? currentPage + 1 : null,\n        prevPage: hasPrev ? currentPage - 1 : null,\n        hint: hasNext\n          ? `Ask: \"get all religions in page ${currentPage + 1}\" or set returnAll=\"true\" for all records.`\n          : \"No more pages.\"\n      }\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message ?? \"Unknown error\",\n      error: err?.toString?.() ?? String(err)\n    };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

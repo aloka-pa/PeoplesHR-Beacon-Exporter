@@ -1,0 +1,125 @@
+{
+  "arguments": [
+    {
+      "name": "statutoryCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "When the user provides a statutory item code, this is used for an exact match search.\nTriggers the Search action with criteria = STA_CODE and returns the matching grid record(s). (e.g., \"000005\").",
+      "advanced": false,
+      "raw": {
+        "name": "statutoryCode",
+        "type": "string",
+        "description": "When the user provides a statutory item code, this is used for an exact match search.\nTriggers the Search action with criteria = STA_CODE and returns the matching grid record(s). (e.g., \"000005\").",
+        "required": false,
+        "_id": "695430ddec34eb2090d6af5f"
+      }
+    },
+    {
+      "name": "statutoryName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "When the user provides a statutory item name (full or partial), this performs a case-insensitive partial match search.\nTriggers the Search action with criteria = STA_NAME and returns all matching grid rows. (e.g., \"Gratuity\", \"EPF\").  ",
+      "advanced": false,
+      "raw": {
+        "name": "statutoryName",
+        "type": "string",
+        "description": "When the user provides a statutory item name (full or partial), this performs a case-insensitive partial match search.\nTriggers the Search action with criteria = STA_NAME and returns all matching grid rows. (e.g., \"Gratuity\", \"EPF\").  ",
+        "required": false,
+        "_id": "695430ddec34eb2090d6af60"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "When user asks to return all/available/existing statutory items, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\"\nTriggers Show All and returns every grid row.",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "When user asks to return all/available/existing statutory items, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\"\nTriggers Show All and returns every grid row.",
+        "required": false,
+        "_id": "697e47e442b57a258adca036"
+      }
+    },
+    {
+      "name": "showAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Alias of returnAll. Example: \"true\"",
+      "advanced": false,
+      "raw": {
+        "name": "showAll",
+        "type": "string",
+        "description": "Alias of returnAll. Example: \"true\"",
+        "required": false,
+        "_id": "6980bbfb65468510eaea3212"
+      }
+    },
+    {
+      "name": "autoFetchAllPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Controls paging behavior when returnAll is used.\n\"true\" = loop all pages (default when returnAll is truthy)\n\"false\" = return only page 1 and provide nextPage + moreAvailable",
+      "advanced": false,
+      "raw": {
+        "name": "autoFetchAllPages",
+        "type": "string",
+        "description": "Controls paging behavior when returnAll is used.\n\"true\" = loop all pages (default when returnAll is truthy)\n\"false\" = return only page 1 and provide nextPage + moreAvailable",
+        "required": false,
+        "_id": "6980bbfb65468510eaea3213"
+      }
+    },
+    {
+      "name": "pageNumber",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Page to fetch when not auto-looping (default \"1\"). Example: \"2\"",
+      "advanced": false,
+      "raw": {
+        "name": "pageNumber",
+        "type": "string",
+        "description": "Page to fetch when not auto-looping (default \"1\"). Example: \"2\"",
+        "required": false,
+        "_id": "6980bbfb65468510eaea3214"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Page size sent to the grid pager (server may cap it). Default: \"100\". Example: \"200\"",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "Page size sent to the grid pager (server may cap it). Default: \"100\". Example: \"200\"",
+        "required": false,
+        "_id": "6980bbfb65468510eaea3215"
+      }
+    },
+    {
+      "name": "maxPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Safety cap to prevent infinite loops. Default: \"50\". Example: \"10\"",
+      "advanced": false,
+      "raw": {
+        "name": "maxPages",
+        "type": "string",
+        "description": "Safety cap to prevent infinite loops. Default: \"50\". Example: \"10\"",
+        "required": false,
+        "_id": "6980bbfb65468510eaea3216"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,141 @@
+{
+  "id": "69521688c933be4dd2b33c46",
+  "slug": "editcountry",
+  "name": "editCountry",
+  "description": "Edit an existing country record. Only change the record that the user asked to edit. Do not change any other record.",
+  "instructions": null,
+  "taskName": "Editing Country Details",
+  "tags": [
+    "EIMAdmin",
+    "GeographicalLocations"
+  ],
+  "status": "live",
+  "signature": "editCountry",
+  "createdAt": "2025-12-29T05:50:00.488Z",
+  "updatedAt": "2026-08-28T03:30:03.085Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "de6f4c8900c72ace62bb64412a147f3ceadd37ea914dae0b4fd59cac1e593f4b",
+  "lastExportedAt": "2026-09-05T19:39:21.967Z",
+  "raw": {
+    "basic": {
+      "_id": "69521688c933be4dd2b33c46",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "editCountry",
+      "description": "Edit an existing country record. Only change the record that the user asked to edit. Do not change any other record.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "editCountry",
+        "args": [
+          {
+            "name": "countryCode",
+            "type": "string",
+            "description": "the country code to search for",
+            "required": false,
+            "_id": "69521688c933be4dd2b33c48"
+          },
+          {
+            "name": "countryName",
+            "type": "string",
+            "description": "updated country name",
+            "required": false,
+            "_id": "69521688c933be4dd2b33c49"
+          },
+          {
+            "name": "isBase",
+            "type": "string",
+            "description": "Updated base country flag (\"true\"/\"false\" or \"yes\"/\"no\")",
+            "required": false,
+            "_id": "69521688c933be4dd2b33c4a"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6a9100bbe1dcfa5ff146a330"
+      },
+      "by": "36419",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const stringToBoolean = (val) => {\n    if (typeof val === \"string\") {\n      return [\"true\", \"yes\", \"1\"].includes(val.toLowerCase().trim());\n    }\n    return Boolean(val);\n  };\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Country.aspx\")) {\n    return \"You do not have access to Country screen. Please contact HR Admin.\";\n  }\n\n  if (!args.countryCode) {\n    return \"Error: countryCode is required\";\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Country\");\n\n  const headers = new Headers();\n  headers.append(\n    \"Accept\",\n    \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\"\n  );\n  headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Country.aspx\");\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/Country.aspx`;\n\n  const parser = new DOMParser();\n\n  const searchFormData = new FormData();\n  searchFormData.append(\"scrollLeft\", \"0\");\n  searchFormData.append(\"scrollTop\", \"0\");\n  searchFormData.append(\"__EVENTTARGET\", \"\");\n  searchFormData.append(\"__EVENTARGUMENT\", \"\");\n  searchFormData.append(\"__VIEWSTATE\", details.viewState);\n  searchFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  searchFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  searchFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n  searchFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  searchFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"COU_CODE\");\n  searchFormData.append(\"ctl00$body$ContentSearch$txtContent\", args.countryCode);\n  searchFormData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  searchFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const searchResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: searchFormData\n  });\n\n  const searchDoc = parser.parseFromString(await searchResponse.text(), \"text/html\");\n\n  const searchViewState = searchDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const searchEventValidation = searchDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const searchViewStateGen = searchDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  let row = null;\n  const rows = searchDoc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n  for (const r of rows) {\n    const code = r.querySelector(\"td\")?.textContent.trim();\n    if (code === args.countryCode) {\n      row = r;\n      break;\n    }\n  }\n\n  if (!row) {\n    return \"Country not found. Please verify the country code.\";\n  }\n\n  const editKey = row\n    .querySelector(\"a\")\n    ?.getAttribute(\"href\")\n    ?.match(/__doPostBack\\('([^']+)'/)?.[1];\n\n  if (!editKey) {\n    return \"Unable to open country record.\";\n  }\n\n  const rowClickFormData = new FormData();\n  rowClickFormData.append(\"scrollLeft\", \"0\");\n  rowClickFormData.append(\"scrollTop\", \"0\");\n  rowClickFormData.append(\"__EVENTTARGET\", editKey);\n  rowClickFormData.append(\"__EVENTARGUMENT\", \"\");\n  rowClickFormData.append(\"__VIEWSTATE\", searchViewState);\n  rowClickFormData.append(\"__VIEWSTATEGENERATOR\", searchViewStateGen);\n  rowClickFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  rowClickFormData.append(\"__EVENTVALIDATION\", searchEventValidation);\n  rowClickFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n\n  const detailResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: rowClickFormData\n  });\n\n  const detailDoc = parser.parseFromString(await detailResponse.text(), \"text/html\");\n\n  const currentCode = detailDoc.querySelector(\"#ctl00_body_txtCode\")?.value || args.countryCode;\n  const currentName = detailDoc.querySelector(\"#ctl00_body_txtName\")?.value || \"\";\n  const currentIsBase = detailDoc.querySelector(\"#ctl00_body_chkBase\")?.checked || false;\n  const hdnPreCountry = detailDoc.querySelector(\"#ctl00_body_hdnPreCountry\")?.value || \"\";\n\n  const updatedName = args.countryName !== undefined ? args.countryName : currentName;\n  const updatedIsBase = args.isBase !== undefined ? stringToBoolean(args.isBase) : currentIsBase;\n\n  const detailViewState = detailDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const detailEventValidation = detailDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const detailViewStateGen = detailDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  const editFormData = new FormData();\n  editFormData.append(\"scrollLeft\", \"0\");\n  editFormData.append(\"scrollTop\", \"0\");\n  editFormData.append(\"__EVENTTARGET\", \"\");\n  editFormData.append(\"__EVENTARGUMENT\", \"\");\n  editFormData.append(\"__VIEWSTATE\", detailViewState);\n  editFormData.append(\"__VIEWSTATEGENERATOR\", detailViewStateGen);\n  editFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  editFormData.append(\"__EVENTVALIDATION\", detailEventValidation);\n  editFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  editFormData.append(\"ctl00$body$butEdit\", \"Edit\");\n\n  const editModeResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: editFormData\n  });\n\n  const editModeDoc = parser.parseFromString(await editModeResponse.text(), \"text/html\");\n\n  const saveViewState = editModeDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const saveEventValidation = editModeDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const saveViewStateGen = editModeDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  const saveFormData = new FormData();\n  saveFormData.append(\"scrollLeft\", \"0\");\n  saveFormData.append(\"scrollTop\", \"0\");\n  saveFormData.append(\"__EVENTTARGET\", \"\");\n  saveFormData.append(\"__EVENTARGUMENT\", \"\");\n  saveFormData.append(\"__VIEWSTATE\", saveViewState);\n  saveFormData.append(\"__VIEWSTATEGENERATOR\", saveViewStateGen);\n  saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  saveFormData.append(\"__EVENTVALIDATION\", saveEventValidation);\n  saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n  saveFormData.append(\"ctl00$body$txtCode\", currentCode);\n  saveFormData.append(\"ctl00$body$txtName\", updatedName);\n  saveFormData.append(\"ctl00$body$chkBase\", updatedIsBase ? \"on\" : \"\");\n  saveFormData.append(\"ctl00$body$hdnPreCountry\", hdnPreCountry);\n  saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n  const finalResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: saveFormData\n  });\n\n  await finalResponse.text();\n\n  if (finalResponse.status === 200) {\n    return `Successfully updated country (${args.countryCode}).`;\n  }\n\n  return \"Failed to update country. Please verify in the UI.\";\n\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "GeographicalLocations"
+      ],
+      "taskName": "Editing Country Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-29T05:50:00.488Z",
+      "updatedAt": "2026-08-28T03:30:03.085Z",
+      "__v": 6,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "editCountry",
+      "args": [
+        {
+          "name": "countryCode",
+          "type": "string",
+          "description": "the country code to search for",
+          "required": false,
+          "_id": "69521688c933be4dd2b33c48"
+        },
+        {
+          "name": "countryName",
+          "type": "string",
+          "description": "updated country name",
+          "required": false,
+          "_id": "69521688c933be4dd2b33c49"
+        },
+        {
+          "name": "isBase",
+          "type": "string",
+          "description": "Updated base country flag (\"true\"/\"false\" or \"yes\"/\"no\")",
+          "required": false,
+          "_id": "69521688c933be4dd2b33c4a"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6a9100bbe1dcfa5ff146a330"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const stringToBoolean = (val) => {\n    if (typeof val === \"string\") {\n      return [\"true\", \"yes\", \"1\"].includes(val.toLowerCase().trim());\n    }\n    return Boolean(val);\n  };\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Country.aspx\")) {\n    return \"You do not have access to Country screen. Please contact HR Admin.\";\n  }\n\n  if (!args.countryCode) {\n    return \"Error: countryCode is required\";\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Country\");\n\n  const headers = new Headers();\n  headers.append(\n    \"Accept\",\n    \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\"\n  );\n  headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/Country.aspx\");\n  const url = updateUrl.updateUrl\n    ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n    : `${window.origin}/${reqOptions.sl}/EIM/Country.aspx`;\n\n  const parser = new DOMParser();\n\n  const searchFormData = new FormData();\n  searchFormData.append(\"scrollLeft\", \"0\");\n  searchFormData.append(\"scrollTop\", \"0\");\n  searchFormData.append(\"__EVENTTARGET\", \"\");\n  searchFormData.append(\"__EVENTARGUMENT\", \"\");\n  searchFormData.append(\"__VIEWSTATE\", details.viewState);\n  searchFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  searchFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  searchFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n  searchFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  searchFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", \"COU_CODE\");\n  searchFormData.append(\"ctl00$body$ContentSearch$txtContent\", args.countryCode);\n  searchFormData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n  searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  searchFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n  const searchResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: searchFormData\n  });\n\n  const searchDoc = parser.parseFromString(await searchResponse.text(), \"text/html\");\n\n  const searchViewState = searchDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const searchEventValidation = searchDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const searchViewStateGen = searchDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  let row = null;\n  const rows = searchDoc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n  for (const r of rows) {\n    const code = r.querySelector(\"td\")?.textContent.trim();\n    if (code === args.countryCode) {\n      row = r;\n      break;\n    }\n  }\n\n  if (!row) {\n    return \"Country not found. Please verify the country code.\";\n  }\n\n  const editKey = row\n    .querySelector(\"a\")\n    ?.getAttribute(\"href\")\n    ?.match(/__doPostBack\\('([^']+)'/)?.[1];\n\n  if (!editKey) {\n    return \"Unable to open country record.\";\n  }\n\n  const rowClickFormData = new FormData();\n  rowClickFormData.append(\"scrollLeft\", \"0\");\n  rowClickFormData.append(\"scrollTop\", \"0\");\n  rowClickFormData.append(\"__EVENTTARGET\", editKey);\n  rowClickFormData.append(\"__EVENTARGUMENT\", \"\");\n  rowClickFormData.append(\"__VIEWSTATE\", searchViewState);\n  rowClickFormData.append(\"__VIEWSTATEGENERATOR\", searchViewStateGen);\n  rowClickFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  rowClickFormData.append(\"__EVENTVALIDATION\", searchEventValidation);\n  rowClickFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n\n  const detailResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: rowClickFormData\n  });\n\n  const detailDoc = parser.parseFromString(await detailResponse.text(), \"text/html\");\n\n  const currentCode = detailDoc.querySelector(\"#ctl00_body_txtCode\")?.value || args.countryCode;\n  const currentName = detailDoc.querySelector(\"#ctl00_body_txtName\")?.value || \"\";\n  const currentIsBase = detailDoc.querySelector(\"#ctl00_body_chkBase\")?.checked || false;\n  const hdnPreCountry = detailDoc.querySelector(\"#ctl00_body_hdnPreCountry\")?.value || \"\";\n\n  const updatedName = args.countryName !== undefined ? args.countryName : currentName;\n  const updatedIsBase = args.isBase !== undefined ? stringToBoolean(args.isBase) : currentIsBase;\n\n  const detailViewState = detailDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const detailEventValidation = detailDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const detailViewStateGen = detailDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  const editFormData = new FormData();\n  editFormData.append(\"scrollLeft\", \"0\");\n  editFormData.append(\"scrollTop\", \"0\");\n  editFormData.append(\"__EVENTTARGET\", \"\");\n  editFormData.append(\"__EVENTARGUMENT\", \"\");\n  editFormData.append(\"__VIEWSTATE\", detailViewState);\n  editFormData.append(\"__VIEWSTATEGENERATOR\", detailViewStateGen);\n  editFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  editFormData.append(\"__EVENTVALIDATION\", detailEventValidation);\n  editFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  editFormData.append(\"ctl00$body$butEdit\", \"Edit\");\n\n  const editModeResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: editFormData\n  });\n\n  const editModeDoc = parser.parseFromString(await editModeResponse.text(), \"text/html\");\n\n  const saveViewState = editModeDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const saveEventValidation = editModeDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n  const saveViewStateGen = editModeDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n  const saveFormData = new FormData();\n  saveFormData.append(\"scrollLeft\", \"0\");\n  saveFormData.append(\"scrollTop\", \"0\");\n  saveFormData.append(\"__EVENTTARGET\", \"\");\n  saveFormData.append(\"__EVENTARGUMENT\", \"\");\n  saveFormData.append(\"__VIEWSTATE\", saveViewState);\n  saveFormData.append(\"__VIEWSTATEGENERATOR\", saveViewStateGen);\n  saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  saveFormData.append(\"__EVENTVALIDATION\", saveEventValidation);\n  saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n  saveFormData.append(\"ctl00$body$txtCode\", currentCode);\n  saveFormData.append(\"ctl00$body$txtName\", updatedName);\n  saveFormData.append(\"ctl00$body$chkBase\", updatedIsBase ? \"on\" : \"\");\n  saveFormData.append(\"ctl00$body$hdnPreCountry\", hdnPreCountry);\n  saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n  const finalResponse = await fetch(url, {\n    method: \"POST\",\n    headers,\n    body: saveFormData\n  });\n\n  await finalResponse.text();\n\n  if (finalResponse.status === 200) {\n    return `Successfully updated country (${args.countryCode}).`;\n  }\n\n  return \"Failed to update country. Please verify in the UI.\";\n\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "arguments": [
+    {
+      "name": "dwellingCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "the dwelling type code to search for (e.g., \"000006\")",
+      "advanced": false,
+      "raw": {
+        "name": "dwellingCode",
+        "type": "string",
+        "description": "the dwelling type code to search for (e.g., \"000006\")",
+        "required": false,
+        "_id": "695424e4582bc4265d51607f"
+      }
+    },
+    {
+      "name": "dwellingName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The dwelling type name to search for (e.g., \"Annex / Portion\", \"Apartment\"). Either dwellingCode or dwellingType must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "dwellingName",
+        "type": "string",
+        "description": "The dwelling type name to search for (e.g., \"Annex / Portion\", \"Apartment\"). Either dwellingCode or dwellingType must be provided.",
+        "required": false,
+        "_id": "695424e4582bc4265d516080"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "When user asks to return all/available/existing dwelling types, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\"\nTriggers Show All (ctl00$body$ContentSearch$butAll) and returns every grid row.",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "When user asks to return all/available/existing dwelling types, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\"\nTriggers Show All (ctl00$body$ContentSearch$butAll) and returns every grid row.",
+        "required": false,
+        "_id": "697e41e842b57a258adc995c"
+      }
+    },
+    {
+      "name": "showAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Same behavior as returnAll (alias).",
+      "advanced": false,
+      "raw": {
+        "name": "showAll",
+        "type": "string",
+        "description": "Same behavior as returnAll (alias).",
+        "required": false,
+        "_id": "6980b67bfc334c01e18c40e9"
+      }
+    },
+    {
+      "name": "pageNumber",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Specific page number to fetch (used when not auto-fetching all pages). Default \"1\".",
+      "advanced": false,
+      "raw": {
+        "name": "pageNumber",
+        "type": "string",
+        "description": "Specific page number to fetch (used when not auto-fetching all pages). Default \"1\".",
+        "required": false,
+        "_id": "6980b67bfc334c01e18c40ea"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Number of rows requested per page. Server may cap it. Default \"100\".",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "Number of rows requested per page. Server may cap it. Default \"100\".",
+        "required": false,
+        "_id": "6980b67bfc334c01e18c40eb"
+      }
+    },
+    {
+      "name": "autoFetchAllPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "If \"true\", tool loops through all pages. Defaults to true when returnAll is used.",
+      "advanced": false,
+      "raw": {
+        "name": "autoFetchAllPages",
+        "type": "string",
+        "description": "If \"true\", tool loops through all pages. Defaults to true when returnAll is used.",
+        "required": false,
+        "_id": "6980b67bfc334c01e18c40ec"
+      }
+    },
+    {
+      "name": "maxPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Safety limit to avoid infinite loops. Default \"50\".",
+      "advanced": false,
+      "raw": {
+        "name": "maxPages",
+        "type": "string",
+        "description": "Safety limit to avoid infinite loops. Default \"50\".",
+        "required": false,
+        "_id": "6980b67bfc334c01e18c40ed"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

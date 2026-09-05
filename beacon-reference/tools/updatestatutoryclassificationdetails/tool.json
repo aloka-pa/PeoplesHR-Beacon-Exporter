@@ -1,0 +1,91 @@
+{
+  "id": "690dc565931a2d61ba0b1578",
+  "slug": "updatestatutoryclassificationdetails",
+  "name": "updateStatutoryClassificationDetails",
+  "description": "Before calling this api, must and should be first execute for \"getEIMAttributeList\" API, then after in this tool execute. to retrieve existing data. Then, compare the updated Statutory Classification name with the previous name from the getEIMAttributeList response before proceeding with the update.",
+  "instructions": null,
+  "taskName": "update Statutory Classification Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateStatutoryClassificationDetails",
+  "createdAt": "2025-05-02T11:27:43.941Z",
+  "updatedAt": "2025-05-02T11:27:43.941Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "5f00a4ad2e11b887ebe6fdb4d05c2223bfcf1fa585b516475295a04acd3c997b",
+  "lastExportedAt": "2026-09-05T19:39:24.250Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc565931a2d61ba0b1578",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateStatutoryClassificationDetails",
+      "description": "Before calling this api, must and should be first execute for \"getEIMAttributeList\" API, then after in this tool execute. to retrieve existing data. Then, compare the updated Statutory Classification name with the previous name from the getEIMAttributeList response before proceeding with the update.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateStatutoryClassificationDetails",
+        "args": [
+          {
+            "name": "statutoryClassification",
+            "type": "string",
+            "description": "to give the statutory Classification name or description.",
+            "required": true,
+            "_id": "6814ac2f68ca7396dee59b3b"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6814ac2f68ca7396dee59b3a"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/EmpCatgary.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/EmpCatgary.aspx');\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n  } else {\n    url = \"EmpCatgary\"\n  }\n\n  const editInit = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.sc.viewState,\n    __VIEWSTATEGENERATOR: window.sc.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.sc.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butEdit\": \"Edit\"\n  }, url);\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtName\": args.statutoryClassification || \"\",\n    \"ctl00$body$butSave\": \"Save\"\n  }, url);\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const statutoryClassification = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const result = {\n    code,\n    statutoryClassification\n  };\n  // return result;\n  if (saveResponse === false) {\n    return \"try again api is fail.\"\n  } else {\n    return result;\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "update Statutory Classification Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-02T11:27:43.941Z",
+      "updatedAt": "2025-05-02T11:27:43.941Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateStatutoryClassificationDetails",
+      "args": [
+        {
+          "name": "statutoryClassification",
+          "type": "string",
+          "description": "to give the statutory Classification name or description.",
+          "required": true,
+          "_id": "6814ac2f68ca7396dee59b3b"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6814ac2f68ca7396dee59b3a"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/EmpCatgary.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/EmpCatgary.aspx');\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n  } else {\n    url = \"EmpCatgary\"\n  }\n\n  const editInit = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.sc.viewState,\n    __VIEWSTATEGENERATOR: window.sc.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.sc.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butEdit\": \"Edit\"\n  }, url);\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtName\": args.statutoryClassification || \"\",\n    \"ctl00$body$butSave\": \"Save\"\n  }, url);\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const statutoryClassification = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const result = {\n    code,\n    statutoryClassification\n  };\n  // return result;\n  if (saveResponse === false) {\n    return \"try again api is fail.\"\n  } else {\n    return result;\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

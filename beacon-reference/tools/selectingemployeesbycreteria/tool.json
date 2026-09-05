@@ -1,0 +1,89 @@
+{
+  "id": "690dc569931a2d61ba0b1942",
+  "slug": "selectingemployeesbycreteria",
+  "name": "selectingEmployeesByCreteria",
+  "description": "selectingEmployeesByCreteria Before calling this api you need to call \"getSelectEmployeeByCreteriaOptions\" to get there options and send it here as arguements.",
+  "instructions": null,
+  "taskName": "selectingEmployeesByCriteria",
+  "tags": [
+    "selectingCandidatePool"
+  ],
+  "status": "live",
+  "signature": "selectingEmployeesByCreteria",
+  "createdAt": "2025-06-04T07:14:11.942Z",
+  "updatedAt": "2025-06-04T07:14:11.942Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c4f",
+      "name": "SelectLeaderShipCandiates"
+    }
+  ],
+  "contentHash": "d93890ac2a6fa71342c4d301969c77e10f22d99db02727b0d4fb0cd21efee24d",
+  "lastExportedAt": "2026-09-05T19:39:23.706Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b1942",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "selectingEmployeesByCreteria",
+      "description": "selectingEmployeesByCreteria Before calling this api you need to call \"getSelectEmployeeByCreteriaOptions\" to get there options and send it here as arguements.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "selectingEmployeesByCreteria",
+        "args": [
+          {
+            "name": "creteria",
+            "type": "string",
+            "description": "creteria ,  Ex:- \"Business Unit\" here takes only value is \"103\".",
+            "required": true,
+            "_id": "683ff24334a2f8c7e64a7f1e"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "683ff24334a2f8c7e64a7f1d"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function(data, args, reqOptions) {\n  const selectEmployeesByCreteria = await BeaconBar.executeFunction(\"searchByCriteria\")(args);\n  BeaconBar.setSharedData(\"selectedCreteria\" , args.creteria);\n  return selectEmployeesByCreteria;\n})",
+      "groupName": "",
+      "tags": [
+        "selectingCandidatePool"
+      ],
+      "taskName": "selectingEmployeesByCriteria",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-04T07:14:11.942Z",
+      "updatedAt": "2025-06-04T07:14:11.942Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c4f",
+          "name": "SelectLeaderShipCandiates"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "selectingEmployeesByCreteria",
+      "args": [
+        {
+          "name": "creteria",
+          "type": "string",
+          "description": "creteria ,  Ex:- \"Business Unit\" here takes only value is \"103\".",
+          "required": true,
+          "_id": "683ff24334a2f8c7e64a7f1e"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "683ff24334a2f8c7e64a7f1d"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function(data, args, reqOptions) {\n  const selectEmployeesByCreteria = await BeaconBar.executeFunction(\"searchByCriteria\")(args);\n  BeaconBar.setSharedData(\"selectedCreteria\" , args.creteria);\n  return selectEmployeesByCreteria;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

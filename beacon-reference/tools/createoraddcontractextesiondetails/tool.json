@@ -1,0 +1,105 @@
+{
+  "id": "690dc569931a2d61ba0b19b6",
+  "slug": "createoraddcontractextesiondetails",
+  "name": "createOrAddContractExtesionDetails",
+  "description": "If the user intends to update or change the contract extension for self, admin, or any related queries, begin by executing the 'getAllEmployeeInformationDetails' tool to verify whether the employee's employment type is 'contract' or 'Temporary'. If confirmed, proceed to call the 'createOrAddContractExtensionDetails' tool. If not, return: \"The employee is not eligible for contract extension.\" Prior to invoking the 'createOrAddContractExtensionDetails' API, it is mandatory to call the 'getContractExtensionDetails' API to fetch the last contract extension records. When adding a new extension, ensure the new Contract Extension Commencement Date is strictly greater than the Previous last Contract Extension Termination Date. If the new date is earlier than or equal to the previous end date, return: \"Contract Extension Commencement Date must be greater than the Previous Contract Extension Termination Date.\" Invalid date entries should trigger an error and halt the process. must and should ask extension dates.",
+  "instructions": null,
+  "taskName": "adding Contract Extesion  Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "createOrAddContractExtesionDetails",
+  "createdAt": "2025-06-09T17:10:07.385Z",
+  "updatedAt": "2025-06-09T17:10:07.385Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "5aacc64aed0d4037f9f4913124ec660b7aeb60b4123ed6e52690f811e850e430",
+  "lastExportedAt": "2026-09-05T19:39:23.628Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b19b6",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createOrAddContractExtesionDetails",
+      "description": "If the user intends to update or change the contract extension for self, admin, or any related queries, begin by executing the 'getAllEmployeeInformationDetails' tool to verify whether the employee's employment type is 'contract' or 'Temporary'. If confirmed, proceed to call the 'createOrAddContractExtensionDetails' tool. If not, return: \"The employee is not eligible for contract extension.\" Prior to invoking the 'createOrAddContractExtensionDetails' API, it is mandatory to call the 'getContractExtensionDetails' API to fetch the last contract extension records. When adding a new extension, ensure the new Contract Extension Commencement Date is strictly greater than the Previous last Contract Extension Termination Date. If the new date is earlier than or equal to the previous end date, return: \"Contract Extension Commencement Date must be greater than the Previous Contract Extension Termination Date.\" Invalid date entries should trigger an error and halt the process. must and should ask extension dates.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createOrAddContractExtesionDetails",
+        "args": [
+          {
+            "name": "StartDate",
+            "type": "string",
+            "description": "StartDate , Ex:- \"14/10/2027\" , format must be in the DD/MM/YYYY\".",
+            "required": true,
+            "_id": "6847156fe7d5d1d93e928e19"
+          },
+          {
+            "name": "EndDate",
+            "type": "string",
+            "description": "EndDate ,   Ex:- \"13/12/2027\" ,  format must be in the DD/MM/YYYY\".",
+            "required": true,
+            "_id": "6847156fe7d5d1d93e928e1a"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6847156fe7d5d1d93e928e18"
+      },
+      "by": "2414",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/ContractExtend.aspx?IsShowButtons=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  try {\n    const myHeaders = new Headers({\n      \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\",\n      \"accept-language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n      \"content-type\": \"application/x-www-form-urlencoded\"\n    });\n    async function payload(url) {\n      const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n      if (updateurl.updateUrl) {\n        return {\n          pageUrl: updateurl.updateUrl,\n          param: updateurl.updateParams\n        }\n      } else {\n        return {\n          pageUrl: url,\n          param: \"IsShowButtons=1\"\n        }\n      }\n    }\n\n    const updateUrlData = await payload(\"EIM/ContractExtend.aspx?IsShowButtons=1\");\n\n    const id = BeaconBar.getSharedData('employeeid');\n    const reqBase = await BeaconBar.executeFunction(\"reqOptions\")();\n    const digest = await BeaconBar.executeFunction('getDigest')(\"IsShowButtons=1\");\n    const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(window.contract.publickey, id);\n\n    const formData1 = new URLSearchParams({\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __VIEWSTATE: window.contract.viewState,\n      __VIEWSTATEGENERATOR: window.contract.viewStateGenerator,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.contract.eventValidation,\n      \"ctl00$hdnDateFormat\": \"m/d/yy\",\n      \"ctl00$hdnQuickmenu\": \"\",\n      \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n      \"ctl00$body$EmpSearch$hdnEmpNumber\": id,\n      \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n      \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"9\",\n      \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdsummary_ClientState\": \"\",\n      \"ctl00$body$butNew\": \"New\",\n      \"ctl00$body$txtPublicKey\": window.contract.publickey,\n      \"ctl00$body$txtempNo\": empEnc\n    });\n\n    const response1 = await fetch(`${reqBase}${updateUrlData.pageUrl}&digest=${digest.digest}`, {\n      method: \"POST\",\n      headers: myHeaders,\n      body: formData1,\n      redirect: \"follow\"\n    });\n\n    const html1 = await response1.text();\n\n    function extractViewState(html) {\n      const parser = new DOMParser();\n      const doc = parser.parseFromString(html, \"text/html\");\n\n      return {\n        viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n        viewStateGenerator: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n        eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\",\n        publickey: doc.querySelector('#ctl00_body_txtPublicKey')?.value || \"\",\n        employeetext: doc.querySelector('#ctl00_body_txtempNo')?.value || \"\",\n        currentContractTerminationDate: doc.querySelector(\"#ctl00_body_txtendDate\")?.value || \"\"\n      };\n    }\n    const viewStates = extractViewState(html1);\n    //const empEnc2 = await BeaconBar.executeFunction(\"employeeEncryptId\")(viewStates.publickey, viewStates.employeetext);\n    const prevTerminationDate = new Date(viewStates.currentContractTerminationDate);\n    const newCommencementDate = new Date(args.StartDate);\n\n    if (newCommencementDate <= prevTerminationDate) {\n      return `Contract Extension Commencement Date must be greater than the Previous Contract Extension Termination Date. Previous Contract Termination Date: ${viewStates.currentContractTerminationDate}`;\n    }\n\n    const formData2 = new URLSearchParams({\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __VIEWSTATE: viewStates.viewState,\n      __VIEWSTATEGENERATOR: viewStates.viewStateGenerator,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: viewStates.eventValidation,\n      \"ctl00$hdnDateFormat\": \"m/d/yy\",\n      \"ctl00$hdnQuickmenu\": \"\",\n      \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n      \"ctl00$body$EmpSearch$hdnEmpNumber\": id,\n      \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n      \"ctl00$body$txtCpStartDate\": args.StartDate,\n      \"ctl00$body$txtCpEndDate\": args.EndDate,\n      \"ctl00$body$butSave\": \"Save\",\n      \"ctl00$body$txtPublicKey\": viewStates.publickey,\n      \"ctl00$body$txtempNo\": viewStates.employeetext\n    });\n\n    const response2 = await fetch(`${reqBase}${updateUrlData.pageUrl}&digest=${digest.digest}`, {\n      method: \"POST\",\n      headers: myHeaders,\n      body: formData2,\n      redirect: \"follow\"\n    });\n\n    const finalHtml = await response2.text();\n    const parser = new DOMParser();\n    const parsedDoc = parser.parseFromString(finalHtml, \"text/html\");\n\n    const validation = parsedDoc.getElementById(\"ctl00_body_butNew\");\n  \n    if (validation?.disabled) {\n      return \"Contract Extension Commencement Date must be greater than Previous Contract Extension Termination Date.\";\n    } else {\n      return {\n        message: \"Successfully created\",\n        finalHtml\n      };\n    }\n\n  } catch (error) {\n    return {\n      message: \"Error occurred\",\n      error: error.message || error.toString()\n    };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "adding Contract Extesion  Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-09T17:10:07.385Z",
+      "updatedAt": "2025-06-09T17:10:07.385Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "createOrAddContractExtesionDetails",
+      "args": [
+        {
+          "name": "StartDate",
+          "type": "string",
+          "description": "StartDate , Ex:- \"14/10/2027\" , format must be in the DD/MM/YYYY\".",
+          "required": true,
+          "_id": "6847156fe7d5d1d93e928e19"
+        },
+        {
+          "name": "EndDate",
+          "type": "string",
+          "description": "EndDate ,   Ex:- \"13/12/2027\" ,  format must be in the DD/MM/YYYY\".",
+          "required": true,
+          "_id": "6847156fe7d5d1d93e928e1a"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6847156fe7d5d1d93e928e18"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/ContractExtend.aspx?IsShowButtons=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  try {\n    const myHeaders = new Headers({\n      \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\",\n      \"accept-language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n      \"content-type\": \"application/x-www-form-urlencoded\"\n    });\n    async function payload(url) {\n      const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n      if (updateurl.updateUrl) {\n        return {\n          pageUrl: updateurl.updateUrl,\n          param: updateurl.updateParams\n        }\n      } else {\n        return {\n          pageUrl: url,\n          param: \"IsShowButtons=1\"\n        }\n      }\n    }\n\n    const updateUrlData = await payload(\"EIM/ContractExtend.aspx?IsShowButtons=1\");\n\n    const id = BeaconBar.getSharedData('employeeid');\n    const reqBase = await BeaconBar.executeFunction(\"reqOptions\")();\n    const digest = await BeaconBar.executeFunction('getDigest')(\"IsShowButtons=1\");\n    const empEnc = await BeaconBar.executeFunction(\"employeeEncryptId\")(window.contract.publickey, id);\n\n    const formData1 = new URLSearchParams({\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __VIEWSTATE: window.contract.viewState,\n      __VIEWSTATEGENERATOR: window.contract.viewStateGenerator,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.contract.eventValidation,\n      \"ctl00$hdnDateFormat\": \"m/d/yy\",\n      \"ctl00$hdnQuickmenu\": \"\",\n      \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n      \"ctl00$body$EmpSearch$hdnEmpNumber\": id,\n      \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n      \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"9\",\n      \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdsummary_ClientState\": \"\",\n      \"ctl00$body$butNew\": \"New\",\n      \"ctl00$body$txtPublicKey\": window.contract.publickey,\n      \"ctl00$body$txtempNo\": empEnc\n    });\n\n    const response1 = await fetch(`${reqBase}${updateUrlData.pageUrl}&digest=${digest.digest}`, {\n      method: \"POST\",\n      headers: myHeaders,\n      body: formData1,\n      redirect: \"follow\"\n    });\n\n    const html1 = await response1.text();\n\n    function extractViewState(html) {\n      const parser = new DOMParser();\n      const doc = parser.parseFromString(html, \"text/html\");\n\n      return {\n        viewState: doc.querySelector(\"#__VIEWSTATE\")?.value || \"\",\n        viewStateGenerator: doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\",\n        eventValidation: doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\",\n        publickey: doc.querySelector('#ctl00_body_txtPublicKey')?.value || \"\",\n        employeetext: doc.querySelector('#ctl00_body_txtempNo')?.value || \"\",\n        currentContractTerminationDate: doc.querySelector(\"#ctl00_body_txtendDate\")?.value || \"\"\n      };\n    }\n    const viewStates = extractViewState(html1);\n    //const empEnc2 = await BeaconBar.executeFunction(\"employeeEncryptId\")(viewStates.publickey, viewStates.employeetext);\n    const prevTerminationDate = new Date(viewStates.currentContractTerminationDate);\n    const newCommencementDate = new Date(args.StartDate);\n\n    if (newCommencementDate <= prevTerminationDate) {\n      return `Contract Extension Commencement Date must be greater than the Previous Contract Extension Termination Date. Previous Contract Termination Date: ${viewStates.currentContractTerminationDate}`;\n    }\n\n    const formData2 = new URLSearchParams({\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __VIEWSTATE: viewStates.viewState,\n      __VIEWSTATEGENERATOR: viewStates.viewStateGenerator,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: viewStates.eventValidation,\n      \"ctl00$hdnDateFormat\": \"m/d/yy\",\n      \"ctl00$hdnQuickmenu\": \"\",\n      \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n      \"ctl00$body$EmpSearch$hdnEmpNumber\": id,\n      \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n      \"ctl00$body$txtCpStartDate\": args.StartDate,\n      \"ctl00$body$txtCpEndDate\": args.EndDate,\n      \"ctl00$body$butSave\": \"Save\",\n      \"ctl00$body$txtPublicKey\": viewStates.publickey,\n      \"ctl00$body$txtempNo\": viewStates.employeetext\n    });\n\n    const response2 = await fetch(`${reqBase}${updateUrlData.pageUrl}&digest=${digest.digest}`, {\n      method: \"POST\",\n      headers: myHeaders,\n      body: formData2,\n      redirect: \"follow\"\n    });\n\n    const finalHtml = await response2.text();\n    const parser = new DOMParser();\n    const parsedDoc = parser.parseFromString(finalHtml, \"text/html\");\n\n    const validation = parsedDoc.getElementById(\"ctl00_body_butNew\");\n  \n    if (validation?.disabled) {\n      return \"Contract Extension Commencement Date must be greater than Previous Contract Extension Termination Date.\";\n    } else {\n      return {\n        message: \"Successfully created\",\n        finalHtml\n      };\n    }\n\n  } catch (error) {\n    return {\n      message: \"Error occurred\",\n      error: error.message || error.toString()\n    };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

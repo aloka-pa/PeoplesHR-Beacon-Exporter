@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the employee id",
+      "advanced": false,
+      "raw": {
+        "name": "id",
+        "type": "string",
+        "description": "to give the employee id",
+        "required": true,
+        "_id": "6839ae10d9dba9360723f71b"
+      }
+    },
+    {
+      "name": "editId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get edit id for \"getEmployeeBankDetails\" tool user selected bank edit id get.",
+      "advanced": false,
+      "raw": {
+        "name": "editId",
+        "type": "string",
+        "description": "to get edit id for \"getEmployeeBankDetails\" tool user selected bank edit id get.",
+        "required": true,
+        "_id": "6839ae10d9dba9360723f71c"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -1,0 +1,110 @@
+{
+  "arguments": [
+    {
+      "name": "routeCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Route code to search for (e.g., \"000001\"). Searches by RT_ID (exact match).\nExample: \"000003\"",
+      "advanced": false,
+      "raw": {
+        "name": "routeCode",
+        "type": "string",
+        "description": "Route code to search for (e.g., \"000001\"). Searches by RT_ID (exact match).\nExample: \"000003\"",
+        "required": false,
+        "_id": "695414f8a1e1ab0f84aad5a0"
+      }
+    },
+    {
+      "name": "routeName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Route name (or partial name) to search for (e.g., \"Expressway\", \"Central\"). Searches by RT_NAME and supports partial match.\nExample: \"Express\"",
+      "advanced": false,
+      "raw": {
+        "name": "routeName",
+        "type": "string",
+        "description": "Route name (or partial name) to search for (e.g., \"Expressway\", \"Central\"). Searches by RT_NAME and supports partial match.\nExample: \"Express\"",
+        "required": false,
+        "_id": "695414f8a1e1ab0f84aad5a1"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "When user asks to return all/available/existing routes, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\".\nTriggers Show All (ctl00$body$ContentSearch$butAll) and returns every grid row.",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "When user asks to return all/available/existing routes, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\".\nTriggers Show All (ctl00$body$ContentSearch$butAll) and returns every grid row.",
+        "required": false,
+        "_id": "697e3a8e5aa7e9f908a2253b"
+      }
+    },
+    {
+      "name": "pageNumber",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Specific page number to fetch when not auto-fetching all pages. Default = \"1\".",
+      "advanced": false,
+      "raw": {
+        "name": "pageNumber",
+        "type": "string",
+        "description": "Specific page number to fetch when not auto-fetching all pages. Default = \"1\".",
+        "required": false,
+        "_id": "69808cee6b245ef085f2a80e"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Number of records per page to request from grid. Server may cap this. Default = \"100\".",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "Number of records per page to request from grid. Server may cap this. Default = \"100\".",
+        "required": false,
+        "_id": "69808cee6b245ef085f2a80f"
+      }
+    },
+    {
+      "name": "autoFetchAllPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Controls whether transformer automatically loops through all pages. Defaults to true when returnAll is used.",
+      "advanced": false,
+      "raw": {
+        "name": "autoFetchAllPages",
+        "type": "string",
+        "description": "Controls whether transformer automatically loops through all pages. Defaults to true when returnAll is used.",
+        "required": false,
+        "_id": "69808cee6b245ef085f2a810"
+      }
+    },
+    {
+      "name": "maxPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Safety limit to prevent infinite paging loops. Default \"50\".",
+      "advanced": false,
+      "raw": {
+        "name": "maxPages",
+        "type": "string",
+        "description": "Safety limit to prevent infinite paging loops. Default \"50\".",
+        "required": false,
+        "_id": "69808cee6b245ef085f2a811"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

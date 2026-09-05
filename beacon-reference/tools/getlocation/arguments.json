@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "locationCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the locationCode for user prompt. Ex:-\"000001\"",
+      "advanced": false,
+      "raw": {
+        "name": "locationCode",
+        "type": "string",
+        "description": "to get the locationCode for user prompt. Ex:-\"000001\"",
+        "required": true,
+        "_id": "680b2d697054b5fe3e78e98b"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

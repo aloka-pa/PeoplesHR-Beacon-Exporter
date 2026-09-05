@@ -1,0 +1,91 @@
+{
+  "id": "690dc566931a2d61ba0b1685",
+  "slug": "getadminpaneldetails",
+  "name": "getAdminPanelDetails",
+  "description": "in this tool generate the getAdminPanelDetails. give table format data. and user any format give date you must be take for example format \"1/04/2024\" ,\"d/MM/YYYY\" using in this format example today date 25/06/2025-- 25 is date , 06 is month and 2025 is year following in this format if the user any format.",
+  "instructions": null,
+  "taskName": "Admin Panel Details",
+  "tags": [
+    "Attendance",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getAdminPanelDetails",
+  "createdAt": "2025-05-05T12:10:04.374Z",
+  "updatedAt": "2025-05-05T12:10:04.374Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "5c988fead75d3ab4cb970158adb4d5b79c766dc87492e4a36ac647b9e05a90b2",
+  "lastExportedAt": "2026-09-05T19:39:24.109Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b1685",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getAdminPanelDetails",
+      "description": "in this tool generate the getAdminPanelDetails. give table format data. and user any format give date you must be take for example format \"1/04/2024\" ,\"d/MM/YYYY\" using in this format example today date 25/06/2025-- 25 is date , 06 is month and 2025 is year following in this format if the user any format.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getAdminPanelDetails",
+        "args": [
+          {
+            "name": "date",
+            "type": "string",
+            "description": "user to give the data example format \"1/04/2024\" ,\"d/MM/YYYY\"",
+            "required": true,
+            "_id": "682b3e84b1cab61da612bf61"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6818aa9c56a981e5d770a49c"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"TNA/dashboard.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('TNA/dashboard.aspx');\n  let url;\n  let details;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n    details = await BeaconBar.executeFunction(\"getmodule\")(url);\n  } else {\n    url = \"TNA/dashboard.aspx\"\n    details = await BeaconBar.executeFunction(\"getmodule\")(`${reqOptions.sl}/TNA/dashboard`);\n  }\n  // const details = await BeaconBar.executeFunction(\"getmodule\")(`${reqOptions.sl}/TNA/dashboard`);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"content-type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"RadScriptManager_HiddenField\", \"\");\n  urlencoded.append(\"__EVENTTARGET\", \"\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded.append(\"txtDate\", args.date);\n  urlencoded.append(\"butRefress.x\", \"0\");\n  urlencoded.append(\"butRefress.y\", \"0\");\n  urlencoded.append(\"RadDock60_C_ctl00_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"RadDock62_C_ctl00_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"radLeftDock_ClientState\", \"\");\n  urlencoded.append(\"radRightDock_ClientState\", \"\");\n  urlencoded.append(\"hdnCulturDateFormat\", \"dd/MM/yyyy\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${url}`, requestOptions);\n  const text = await response.text();\n  const document = new DOMParser().parseFromString(text, 'text/html');\n\n  const dockModules = Array.from(document.querySelectorAll('.raddock.RadDock_Default'));\n\n  const extractedModules = dockModules.map(dock => {\n    const title = dock.querySelector('.rdTitle')?.innerText?.trim();\n    const content = dock.querySelector('.rdContent')?.innerText?.trim().replace(/\\s+/g, ' ');\n    return {\n      title,\n      context: content\n    };\n  });\n\n  const targetModules = [\n    \"Reminder\",\n    \"Clock Status\",\n    \"Attendance Info\",\n    \"Attendance Overview\"\n  ];\n  const result = extractedModules.filter(module =>\n    targetModules.some(target => module.title?.startsWith(target))\n  );\n  return result;\n});\n",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "Headers"
+      ],
+      "taskName": "Admin Panel Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-05T12:10:04.374Z",
+      "updatedAt": "2025-05-05T12:10:04.374Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getAdminPanelDetails",
+      "args": [
+        {
+          "name": "date",
+          "type": "string",
+          "description": "user to give the data example format \"1/04/2024\" ,\"d/MM/YYYY\"",
+          "required": true,
+          "_id": "682b3e84b1cab61da612bf61"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6818aa9c56a981e5d770a49c"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"TNA/dashboard.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('TNA/dashboard.aspx');\n  let url;\n  let details;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n    details = await BeaconBar.executeFunction(\"getmodule\")(url);\n  } else {\n    url = \"TNA/dashboard.aspx\"\n    details = await BeaconBar.executeFunction(\"getmodule\")(`${reqOptions.sl}/TNA/dashboard`);\n  }\n  // const details = await BeaconBar.executeFunction(\"getmodule\")(`${reqOptions.sl}/TNA/dashboard`);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"content-type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"RadScriptManager_HiddenField\", \"\");\n  urlencoded.append(\"__EVENTTARGET\", \"\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded.append(\"txtDate\", args.date);\n  urlencoded.append(\"butRefress.x\", \"0\");\n  urlencoded.append(\"butRefress.y\", \"0\");\n  urlencoded.append(\"RadDock60_C_ctl00_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"RadDock62_C_ctl00_RadWindowManager1_ClientState\", \"\");\n  urlencoded.append(\"radLeftDock_ClientState\", \"\");\n  urlencoded.append(\"radRightDock_ClientState\", \"\");\n  urlencoded.append(\"hdnCulturDateFormat\", \"dd/MM/yyyy\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${url}`, requestOptions);\n  const text = await response.text();\n  const document = new DOMParser().parseFromString(text, 'text/html');\n\n  const dockModules = Array.from(document.querySelectorAll('.raddock.RadDock_Default'));\n\n  const extractedModules = dockModules.map(dock => {\n    const title = dock.querySelector('.rdTitle')?.innerText?.trim();\n    const content = dock.querySelector('.rdContent')?.innerText?.trim().replace(/\\s+/g, ' ');\n    return {\n      title,\n      context: content\n    };\n  });\n\n  const targetModules = [\n    \"Reminder\",\n    \"Clock Status\",\n    \"Attendance Info\",\n    \"Attendance Overview\"\n  ];\n  const result = extractedModules.filter(module =>\n    targetModules.some(target => module.title?.startsWith(target))\n  );\n  return result;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "id": "690dc563931a2d61ba0b13eb",
+  "slug": "getupgradelevelandsalarygrade",
+  "name": "getUpgradeLevelandSalaryGrade",
+  "description": "in this tool generate Upgrade Level and SalaryGrade. if the user user create a corporate title first execute for \"getUpgradeLevelandSalaryGrade\" tool. then after execute for \"createEIMModuleList\" tool then create corporate title.",
+  "instructions": null,
+  "taskName": "Upgrade Level And  Salary Grade",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getUpgradeLevelandSalaryGrade",
+  "createdAt": "2025-04-29T09:45:02.431Z",
+  "updatedAt": "2025-04-29T09:45:02.431Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "5ef8caff99abc81fb57e9b589e4749568f99e55e36b5893105d696ae6b11a558",
+  "lastExportedAt": "2026-09-05T19:39:24.460Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc563931a2d61ba0b13eb",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getUpgradeLevelandSalaryGrade",
+      "description": "in this tool generate Upgrade Level and SalaryGrade. if the user user create a corporate title first execute for \"getUpgradeLevelandSalaryGrade\" tool. then after execute for \"createEIMModuleList\" tool then create corporate title.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getUpgradeLevelandSalaryGrade",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68109f9ea2d0b799707dda65"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/CorporeteTitle.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"CorporeteTitle\");\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded.append(\"ctl00$body$ContentSearch$cboCriteria\", \"C.CT_CODE\");\n  urlencoded.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  urlencoded.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  urlencoded.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$butNew\", \"New\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/EIM/CorporeteTitle.aspx`, requestOptions);\n  const html = await response.text();\n  const viewDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html);\n  window.cp = viewDetails;\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html, 'text/html');\n\n  const salaryGrades = Array.from(doc.querySelectorAll('#ctl00_body_dpSalary option'))\n    .filter(option => option.value !== \"-1\" && option.value.trim() && option.text.trim())\n    .map(option => ({ value: option.value, text: option.text.trim() }));\n\n  const nextUpgradeLevels = Array.from(doc.querySelectorAll('#ctl00_body_dpNextUpgrade option'))\n    .filter(option => option.value !== \"-1\" && option.value.trim() && option.text.trim())\n    .map(option => ({ value: option.value, text: option.text.trim() }));\n\n  return { salaryGrades, nextUpgradeLevels };\n})\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Upgrade Level And  Salary Grade",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-29T09:45:02.431Z",
+      "updatedAt": "2025-04-29T09:45:02.431Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getUpgradeLevelandSalaryGrade",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68109f9ea2d0b799707dda65"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/CorporeteTitle.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"CorporeteTitle\");\n  const urlencoded = new URLSearchParams();\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded.append(\"ctl00$body$ContentSearch$cboCriteria\", \"C.CT_CODE\");\n  urlencoded.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  urlencoded.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"10\");\n  urlencoded.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  urlencoded.append(\"ctl00$body$butNew\", \"New\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/EIM/CorporeteTitle.aspx`, requestOptions);\n  const html = await response.text();\n  const viewDetails = await BeaconBar.executeFunction(\"getDomExtract\")(html);\n  window.cp = viewDetails;\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html, 'text/html');\n\n  const salaryGrades = Array.from(doc.querySelectorAll('#ctl00_body_dpSalary option'))\n    .filter(option => option.value !== \"-1\" && option.value.trim() && option.text.trim())\n    .map(option => ({ value: option.value, text: option.text.trim() }));\n\n  const nextUpgradeLevels = Array.from(doc.querySelectorAll('#ctl00_body_dpNextUpgrade option'))\n    .filter(option => option.value !== \"-1\" && option.value.trim() && option.text.trim())\n    .map(option => ({ value: option.value, text: option.text.trim() }));\n\n  return { salaryGrades, nextUpgradeLevels };\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

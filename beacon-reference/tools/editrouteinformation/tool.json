@@ -1,0 +1,141 @@
+{
+  "id": "695419d7a1e1ab0f84aadb5a",
+  "slug": "editrouteinformation",
+  "name": "editRouteInformation",
+  "description": "Updates route information. Searches for a route by code or name, opens the record, enters edit mode, and saves the new route name.\nThe user must provide either routeCode OR routeName to identify the record, AND must provide newRouteName to update it.",
+  "instructions": null,
+  "taskName": "editing route details",
+  "tags": [
+    "EIMAdmin",
+    "CensusInformation"
+  ],
+  "status": "live",
+  "signature": "editRouteInformation",
+  "createdAt": "2025-12-30T18:28:39.899Z",
+  "updatedAt": "2026-06-15T07:35:52.570Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "4621532234f89756711b8c4f13aa18f1fa34d2c5691da44c47e6aae6f3b39136",
+  "lastExportedAt": "2026-09-05T19:39:22.318Z",
+  "raw": {
+    "basic": {
+      "_id": "695419d7a1e1ab0f84aadb5a",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "editRouteInformation",
+      "description": "Updates route information. Searches for a route by code or name, opens the record, enters edit mode, and saves the new route name.\nThe user must provide either routeCode OR routeName to identify the record, AND must provide newRouteName to update it.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "editRouteInformation",
+        "args": [
+          {
+            "name": "routeCode",
+            "type": "string",
+            "description": "The unique route code/ID to identify which route to update (e.g., \"000003\")",
+            "required": false,
+            "_id": "695419d7a1e1ab0f84aadb5c"
+          },
+          {
+            "name": "routeName",
+            "type": "string",
+            "description": "The exact route name to identify which route to update (e.g., \"Southern Expressway\")",
+            "required": false,
+            "_id": "695419d7a1e1ab0f84aadb5d"
+          },
+          {
+            "name": "newRouteName",
+            "type": "string",
+            "description": "The new name for the route (e.g., \"Outer Circular Highway (OCH) - updated\")",
+            "required": true,
+            "_id": "695419d7a1e1ab0f84aadb5e"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "695419d7a1e1ab0f84aadb5b"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* Access validation */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/RoutInfo.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Route Information screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* Input validation */\n    if (!args?.routeCode && !args?.routeName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: either routeCode or routeName is required to identify the record\"\n      };\n    }\n\n    if (!args?.newRouteName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: newRouteName is required to update the record\"\n      };\n    }\n\n    if (args?.newRouteName && args.newRouteName.length > 120) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: newRouteName must be 120 characters or less\"\n      };\n    }\n\n    /* Initial page state */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"RoutInfo\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/RoutInfo.aspx\");\n\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/RoutInfo.aspx`;\n\n    const parser = new DOMParser();\n\n    /* Determine search criteria */\n    let searchCriteria, searchValue;\n    if (args.routeCode) {\n      searchCriteria = \"RT_ID\";\n      searchValue = args.routeCode.trim();\n    } else {\n      searchCriteria = \"RT_NAME\";\n      searchValue = args.routeName.trim();\n    }\n\n    /* Step 1: Search for the route */\n    const searchFormData = new FormData();\n    searchFormData.append(\"scrollLeft\", \"0\");\n    searchFormData.append(\"scrollTop\", \"0\");\n    searchFormData.append(\"__EVENTTARGET\", \"\");\n    searchFormData.append(\"__EVENTARGUMENT\", \"\");\n    searchFormData.append(\"__VIEWSTATE\", details.viewState);\n    searchFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    searchFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    searchFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n    searchFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    searchFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    searchFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n    searchFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n    searchFormData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n    searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n    searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    searchFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    const searchResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: searchFormData\n    });\n\n    const searchDoc = parser.parseFromString(await searchResponse.text(), \"text/html\");\n\n    const searchViewState = searchDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const searchEventValidation = searchDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const searchViewStateGen = searchDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Find matching row - EXACT MATCH */\n    let row = null;\n    const rows = searchDoc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n    \n    for (const r of rows) {\n      const cells = r.querySelectorAll(\"td\");\n      const rowCode = cells[0]?.textContent.trim();\n      const rowName = cells[1]?.textContent.trim();\n      \n      if (args.routeCode && rowCode === args.routeCode) {\n        row = r;\n        break;\n      } else if (args.routeName && rowName === args.routeName) {\n        row = r;\n        break;\n      }\n    }\n\n    if (!row) {\n      return {\n        status: \"NOT_FOUND\",\n        message: `Route not found: \"${searchValue}\"`\n      };\n    }\n\n    /* Extract current values from row */\n    const cells = row.querySelectorAll(\"td\");\n    const currentCode = cells[0]?.textContent.trim();\n    const currentRouteName = cells[1]?.textContent.trim();\n\n    /* Get edit link */\n    const editKey = row\n      .querySelector(\"a\")\n      ?.getAttribute(\"href\")\n      ?.match(/__doPostBack\\('([^']+)'/)?.[1];\n\n    if (!editKey) {\n      return {\n        status: \"ERROR\",\n        message: \"Unable to open route record for editing\"\n      };\n    }\n\n    /* Step 2: Click on edit icon to open detail view */\n    const rowClickFormData = new FormData();\n    rowClickFormData.append(\"scrollLeft\", \"0\");\n    rowClickFormData.append(\"scrollTop\", \"0\");\n    rowClickFormData.append(\"__EVENTTARGET\", editKey);\n    rowClickFormData.append(\"__EVENTARGUMENT\", \"\");\n    rowClickFormData.append(\"__VIEWSTATE\", searchViewState);\n    rowClickFormData.append(\"__VIEWSTATEGENERATOR\", searchViewStateGen);\n    rowClickFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    rowClickFormData.append(\"__EVENTVALIDATION\", searchEventValidation);\n    rowClickFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    rowClickFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    rowClickFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n    rowClickFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n    rowClickFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    rowClickFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    rowClickFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n    rowClickFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    rowClickFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    const detailResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: rowClickFormData\n    });\n\n    const detailDoc = parser.parseFromString(await detailResponse.text(), \"text/html\");\n\n    const detailViewState = detailDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const detailEventValidation = detailDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const detailViewStateGen = detailDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Step 3: Click Edit button */\n    const editFormData = new FormData();\n    editFormData.append(\"scrollLeft\", \"0\");\n    editFormData.append(\"scrollTop\", \"0\");\n    editFormData.append(\"__EVENTTARGET\", \"\");\n    editFormData.append(\"__EVENTARGUMENT\", \"\");\n    editFormData.append(\"__VIEWSTATE\", detailViewState);\n    editFormData.append(\"__VIEWSTATEGENERATOR\", detailViewStateGen);\n    editFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    editFormData.append(\"__EVENTVALIDATION\", detailEventValidation);\n    editFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    editFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    editFormData.append(\"ctl00$body$butEdit\", \"Edit\");\n\n    const editModeResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: editFormData\n    });\n\n    const editModeDoc = parser.parseFromString(await editModeResponse.text(), \"text/html\");\n\n    const saveViewState = editModeDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const saveEventValidation = editModeDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const saveViewStateGen = editModeDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Step 4: Save changes */\n    const finalRouteName = args.newRouteName.trim();\n\n    const saveFormData = new FormData();\n    saveFormData.append(\"scrollLeft\", \"0\");\n    saveFormData.append(\"scrollTop\", \"0\");\n    saveFormData.append(\"__EVENTTARGET\", \"\");\n    saveFormData.append(\"__EVENTARGUMENT\", \"\");\n    saveFormData.append(\"__VIEWSTATE\", saveViewState);\n    saveFormData.append(\"__VIEWSTATEGENERATOR\", saveViewStateGen);\n    saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    saveFormData.append(\"__EVENTVALIDATION\", saveEventValidation);\n    saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    saveFormData.append(\"ctl00$body$txtName\", finalRouteName);\n    saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n    const finalResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: saveFormData\n    });\n\n    const saveHtml = await finalResponse.text();\n\n    if (finalResponse.status === 200) {\n      const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n      const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n      \n      if (errorMsg) {\n        return {\n          status: \"ERROR\",\n          message: `Save failed: ${errorMsg.trim()}`\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: `Successfully updated Route (${currentCode})`,\n        routeCode: currentCode,\n        previousRouteName: currentRouteName,\n        newRouteName: finalRouteName\n      };\n    }\n\n    return {\n      status: \"ERROR\",\n      message: \"Failed to update route. Please verify in the UI.\"\n    };\n\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err.message,\n      error: err.toString()\n    };\n  }\n})",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "CensusInformation"
+      ],
+      "taskName": "editing route details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-30T18:28:39.899Z",
+      "updatedAt": "2026-06-15T07:35:52.570Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "editRouteInformation",
+      "args": [
+        {
+          "name": "routeCode",
+          "type": "string",
+          "description": "The unique route code/ID to identify which route to update (e.g., \"000003\")",
+          "required": false,
+          "_id": "695419d7a1e1ab0f84aadb5c"
+        },
+        {
+          "name": "routeName",
+          "type": "string",
+          "description": "The exact route name to identify which route to update (e.g., \"Southern Expressway\")",
+          "required": false,
+          "_id": "695419d7a1e1ab0f84aadb5d"
+        },
+        {
+          "name": "newRouteName",
+          "type": "string",
+          "description": "The new name for the route (e.g., \"Outer Circular Highway (OCH) - updated\")",
+          "required": true,
+          "_id": "695419d7a1e1ab0f84aadb5e"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "695419d7a1e1ab0f84aadb5b"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* Access validation */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/RoutInfo.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Route Information screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* Input validation */\n    if (!args?.routeCode && !args?.routeName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: either routeCode or routeName is required to identify the record\"\n      };\n    }\n\n    if (!args?.newRouteName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: newRouteName is required to update the record\"\n      };\n    }\n\n    if (args?.newRouteName && args.newRouteName.length > 120) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Error: newRouteName must be 120 characters or less\"\n      };\n    }\n\n    /* Initial page state */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"RoutInfo\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/RoutInfo.aspx\");\n\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/RoutInfo.aspx`;\n\n    const parser = new DOMParser();\n\n    /* Determine search criteria */\n    let searchCriteria, searchValue;\n    if (args.routeCode) {\n      searchCriteria = \"RT_ID\";\n      searchValue = args.routeCode.trim();\n    } else {\n      searchCriteria = \"RT_NAME\";\n      searchValue = args.routeName.trim();\n    }\n\n    /* Step 1: Search for the route */\n    const searchFormData = new FormData();\n    searchFormData.append(\"scrollLeft\", \"0\");\n    searchFormData.append(\"scrollTop\", \"0\");\n    searchFormData.append(\"__EVENTTARGET\", \"\");\n    searchFormData.append(\"__EVENTARGUMENT\", \"\");\n    searchFormData.append(\"__VIEWSTATE\", details.viewState);\n    searchFormData.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    searchFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    searchFormData.append(\"__EVENTVALIDATION\", details.eventValidation);\n    searchFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    searchFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    searchFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n    searchFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n    searchFormData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n    searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    searchFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n    searchFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    searchFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    const searchResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: searchFormData\n    });\n\n    const searchDoc = parser.parseFromString(await searchResponse.text(), \"text/html\");\n\n    const searchViewState = searchDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const searchEventValidation = searchDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const searchViewStateGen = searchDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Find matching row - EXACT MATCH */\n    let row = null;\n    const rows = searchDoc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n    \n    for (const r of rows) {\n      const cells = r.querySelectorAll(\"td\");\n      const rowCode = cells[0]?.textContent.trim();\n      const rowName = cells[1]?.textContent.trim();\n      \n      if (args.routeCode && rowCode === args.routeCode) {\n        row = r;\n        break;\n      } else if (args.routeName && rowName === args.routeName) {\n        row = r;\n        break;\n      }\n    }\n\n    if (!row) {\n      return {\n        status: \"NOT_FOUND\",\n        message: `Route not found: \"${searchValue}\"`\n      };\n    }\n\n    /* Extract current values from row */\n    const cells = row.querySelectorAll(\"td\");\n    const currentCode = cells[0]?.textContent.trim();\n    const currentRouteName = cells[1]?.textContent.trim();\n\n    /* Get edit link */\n    const editKey = row\n      .querySelector(\"a\")\n      ?.getAttribute(\"href\")\n      ?.match(/__doPostBack\\('([^']+)'/)?.[1];\n\n    if (!editKey) {\n      return {\n        status: \"ERROR\",\n        message: \"Unable to open route record for editing\"\n      };\n    }\n\n    /* Step 2: Click on edit icon to open detail view */\n    const rowClickFormData = new FormData();\n    rowClickFormData.append(\"scrollLeft\", \"0\");\n    rowClickFormData.append(\"scrollTop\", \"0\");\n    rowClickFormData.append(\"__EVENTTARGET\", editKey);\n    rowClickFormData.append(\"__EVENTARGUMENT\", \"\");\n    rowClickFormData.append(\"__VIEWSTATE\", searchViewState);\n    rowClickFormData.append(\"__VIEWSTATEGENERATOR\", searchViewStateGen);\n    rowClickFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    rowClickFormData.append(\"__EVENTVALIDATION\", searchEventValidation);\n    rowClickFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    rowClickFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    rowClickFormData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n    rowClickFormData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n    rowClickFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    rowClickFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    rowClickFormData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n    rowClickFormData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    rowClickFormData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    const detailResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: rowClickFormData\n    });\n\n    const detailDoc = parser.parseFromString(await detailResponse.text(), \"text/html\");\n\n    const detailViewState = detailDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const detailEventValidation = detailDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const detailViewStateGen = detailDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Step 3: Click Edit button */\n    const editFormData = new FormData();\n    editFormData.append(\"scrollLeft\", \"0\");\n    editFormData.append(\"scrollTop\", \"0\");\n    editFormData.append(\"__EVENTTARGET\", \"\");\n    editFormData.append(\"__EVENTARGUMENT\", \"\");\n    editFormData.append(\"__VIEWSTATE\", detailViewState);\n    editFormData.append(\"__VIEWSTATEGENERATOR\", detailViewStateGen);\n    editFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    editFormData.append(\"__EVENTVALIDATION\", detailEventValidation);\n    editFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    editFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    editFormData.append(\"ctl00$body$butEdit\", \"Edit\");\n\n    const editModeResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: editFormData\n    });\n\n    const editModeDoc = parser.parseFromString(await editModeResponse.text(), \"text/html\");\n\n    const saveViewState = editModeDoc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const saveEventValidation = editModeDoc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    const saveViewStateGen = editModeDoc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n\n    /* Step 4: Save changes */\n    const finalRouteName = args.newRouteName.trim();\n\n    const saveFormData = new FormData();\n    saveFormData.append(\"scrollLeft\", \"0\");\n    saveFormData.append(\"scrollTop\", \"0\");\n    saveFormData.append(\"__EVENTTARGET\", \"\");\n    saveFormData.append(\"__EVENTARGUMENT\", \"\");\n    saveFormData.append(\"__VIEWSTATE\", saveViewState);\n    saveFormData.append(\"__VIEWSTATEGENERATOR\", saveViewStateGen);\n    saveFormData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    saveFormData.append(\"__EVENTVALIDATION\", saveEventValidation);\n    saveFormData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    saveFormData.append(\"ctl00$hdnQuickmenu\", \"1\");\n    saveFormData.append(\"ctl00$body$txtName\", finalRouteName);\n    saveFormData.append(\"ctl00$body$butSave\", \"Save\");\n\n    const finalResponse = await fetch(url, {\n      method: \"POST\",\n      headers,\n      body: saveFormData\n    });\n\n    const saveHtml = await finalResponse.text();\n\n    if (finalResponse.status === 200) {\n      const saveDoc = parser.parseFromString(saveHtml, \"text/html\");\n      const errorMsg = saveDoc.querySelector(\".alert-danger, .error\")?.textContent;\n      \n      if (errorMsg) {\n        return {\n          status: \"ERROR\",\n          message: `Save failed: ${errorMsg.trim()}`\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: `Successfully updated Route (${currentCode})`,\n        routeCode: currentCode,\n        previousRouteName: currentRouteName,\n        newRouteName: finalRouteName\n      };\n    }\n\n    return {\n      status: \"ERROR\",\n      message: \"Failed to update route. Please verify in the UI.\"\n    };\n\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err.message,\n      error: err.toString()\n    };\n  }\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

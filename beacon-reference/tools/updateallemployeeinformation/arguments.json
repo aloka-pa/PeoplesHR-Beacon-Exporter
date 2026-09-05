@@ -1,0 +1,1620 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "EmployeeBasicDtl",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Basic employee details and identification information",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Basic employee details and identification information",
+        "properties": {
+          "Emp_number": {
+            "type": "string",
+            "description": "Encrypted employee number. This field is sent as an empty string ('') when not provided by the user."
+          },
+          "Display_name": {
+            "type": "string",
+            "description": "Employee's display name. Use the provided value only if the user enters it; otherwise, send as an empty string ('')."
+          },
+          "Display_number": {
+            "type": "string",
+            "description": "Employee's display number, Use the provided value only if the user enters it; otherwise, send as an empty string ('')"
+          },
+          "Designation": {
+            "type": "string",
+            "description": "Employee's job designation/title , Use the provided value only if the user enters it; otherwise, send as an empty string ('')"
+          },
+          "HR_active": {
+            "type": "boolean",
+            "description": "Flag indicating if employee is active in HR system"
+          },
+          "externalConfirmation": {
+            "type": "boolean",
+            "description": "External confirmation status"
+          },
+          "EmpImageName": {
+            "type": "string",
+            "description": "Employee profile image filename"
+          },
+          "externalConfirmationResource": {
+            "type": "string",
+            "description": "External confirmation resource reference"
+          },
+          "Recapp_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Recruitment application ID"
+          },
+          "Obcan_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Onboarding candidate ID"
+          }
+        },
+        "required": [
+          "Emp_number",
+          "Display_name",
+          "Display_number",
+          "Designation",
+          "HR_active",
+          "externalConfirmation",
+          "EmpImageName",
+          "externalConfirmationResource",
+          "Recapp_id",
+          "Obcan_id"
+        ]
+      }
+    },
+    {
+      "name": "EmployeePersonalInfo",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Personal information and demographic details of the employee",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Personal information and demographic details of the employee",
+        "properties": {
+          "SaluCode": {
+            "type": "string",
+            "description": "Salutation code (Mr., Ms., Dr., etc.)"
+          },
+          "EMP_CALLING_NAME": {
+            "type": "string",
+            "description": "Employee's preferred calling name"
+          },
+          "EMP_SURNAME": {
+            "type": "string",
+            "description": "Employee's surname/family name"
+          },
+          "EMP_MAIDEN_NAME": {
+            "type": "string",
+            "description": "Employee's maiden name"
+          },
+          "EMP_MIDDLE_INI": {
+            "type": "string",
+            "description": "Employee's middle initial"
+          },
+          "EMP_NAMES_BY_INI": {
+            "type": "string",
+            "description": "Employee's name by initials"
+          },
+          "EMP_FULLNAME": {
+            "type": "string",
+            "description": "Employee's full name"
+          },
+          "EMP_OTHER_NAMES": {
+            "type": "string",
+            "description": "Employee's other names or aliases"
+          },
+          "EMP_SURNAME_LNG": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Employee's surname in local language"
+          },
+          "GenderCode": {
+            "type": "string",
+            "description": "Gender code (1=Male, 2=Female, etc.)"
+          },
+          "DateOfBirth": {
+            "type": "string",
+            "description": "Employee's date of birth (MM/DD/YYYY format)"
+          },
+          "PlaceOfBirth": {
+            "type": "string",
+            "description": "Employee's place of birth"
+          },
+          "PANNumber": {
+            "type": "string",
+            "description": "Permanent Account Number (tax identification)"
+          },
+          "UANNumber": {
+            "type": "string",
+            "description": "Universal Account Number"
+          },
+          "PENumber": {
+            "type": "string",
+            "description": "Provident Fund number"
+          },
+          "BloodGroupCode": {
+            "type": "string",
+            "description": "Employee's blood group"
+          },
+          "NICNumberold": {
+            "type": "string",
+            "description": "Old National Identity Card number"
+          },
+          "NICNumber": {
+            "type": "string",
+            "description": "Encrypted National Identity Card number"
+          },
+          "NICIssueDate": {
+            "type": "string",
+            "description": "NIC issue date"
+          },
+          "NICIssuePlace": {
+            "type": "string",
+            "description": "NIC issue place"
+          },
+          "NICColorCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "NIC color code"
+          },
+          "NationalityCode": {
+            "type": "string",
+            "description": "Nationality code"
+          },
+          "RaceCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Race/ethnicity code"
+          },
+          "ReligionCode": {
+            "type": "string",
+            "description": "Religion code"
+          },
+          "CivilStatusCode": {
+            "type": "string",
+            "description": "Civil status (Single, Married, Divorced, etc.)"
+          },
+          "MarriedDate": {
+            "type": "string",
+            "description": "Marriage date"
+          },
+          "DivorcedDate": {
+            "type": "string",
+            "description": "Divorce date"
+          },
+          "isChanged": {
+            "type": "boolean",
+            "description": "Flag indicating if personal info has been changed"
+          },
+          "AirportCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Airport code for travel preferences"
+          },
+          "PeriodCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Period code"
+          },
+          "TicketCount": {
+            "type": "string",
+            "description": "Ticket count for travel"
+          },
+          "PassportNumber": {
+            "type": "string",
+            "description": "Passport number"
+          },
+          "MediumCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Medium/language code"
+          },
+          "SchoolAttendDistricCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "School attendance district code"
+          },
+          "School": {
+            "type": "string",
+            "description": "School name"
+          },
+          "SchoolAttendPeriod": {
+            "type": "string",
+            "description": "School attendance period"
+          }
+        },
+        "required": [
+          "SaluCode",
+          "EMP_CALLING_NAME",
+          "EMP_SURNAME",
+          "EMP_MAIDEN_NAME",
+          "EMP_MIDDLE_INI",
+          "EMP_NAMES_BY_INI",
+          "EMP_FULLNAME",
+          "EMP_OTHER_NAMES",
+          "EMP_SURNAME_LNG",
+          "GenderCode",
+          "DateOfBirth",
+          "PlaceOfBirth",
+          "PANNumber",
+          "UANNumber",
+          "PENumber",
+          "BloodGroupCode",
+          "NICNumberold",
+          "NICNumber",
+          "NICIssueDate",
+          "NICIssuePlace",
+          "NICColorCode",
+          "NationalityCode",
+          "RaceCode",
+          "ReligionCode",
+          "CivilStatusCode",
+          "MarriedDate",
+          "DivorcedDate",
+          "isChanged",
+          "AirportCode",
+          "PeriodCode",
+          "TicketCount",
+          "PassportNumber",
+          "MediumCode",
+          "SchoolAttendDistricCode",
+          "School",
+          "SchoolAttendPeriod"
+        ]
+      }
+    },
+    {
+      "name": "EmployeeEmployementInfo",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Employment-related information including job details, salary, and work arrangements",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Employment-related information including job details, salary, and work arrangements",
+        "properties": {
+          "PreEmployeeNo": {
+            "type": "string",
+            "description": "Previous employee number"
+          },
+          "PersonalGradeCode": {
+            "type": "string",
+            "description": "Personal grade code"
+          },
+          "DesignationCode": {
+            "type": "string",
+            "description": "Designation code"
+          },
+          "CostCentreCode": {
+            "type": "string",
+            "description": "Cost center code"
+          },
+          "CorporateTitleCode": {
+            "type": "string",
+            "description": "Corporate title code"
+          },
+          "FunctionCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Function code"
+          },
+          "FunctionalRoleCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Functional role code"
+          },
+          "DateJoinedtoGroup": {
+            "type": "string",
+            "description": "Date joined to group (MM/DD/YYYY format)"
+          },
+          "DateJoined": {
+            "type": "string",
+            "description": "Date joined company (MM/DD/YYYY format)"
+          },
+          "NextIncrementDate": {
+            "type": "string",
+            "description": "Next salary increment date"
+          },
+          "WorkingHoursperDay": {
+            "type": "string",
+            "description": "Working hours per day"
+          },
+          "EmpBasicSal": {
+            "type": "string",
+            "description": "Employee basic salary"
+          },
+          "BRA1": {
+            "type": "string",
+            "description": "Basic rate allowance 1"
+          },
+          "BRA2": {
+            "type": "string",
+            "description": "Basic rate allowance 2"
+          },
+          "IsShopAndOffice": {
+            "type": "boolean",
+            "description": "Flag indicating if employee works in shop and office"
+          },
+          "EmploymentTypeCode": {
+            "type": "string",
+            "description": "Employment type code (permanent, contract, etc.)"
+          },
+          "StartDate": {
+            "type": "string",
+            "description": "Employment start date"
+          },
+          "EndDate": {
+            "type": "string",
+            "description": "Employment end date"
+          },
+          "StatutoryClassificationCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Statutory classification code"
+          },
+          "EmploymentCategoryCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Employment category code"
+          },
+          "EmployeeGroupCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Employee group code"
+          },
+          "BarcodeNo": {
+            "type": "string",
+            "description": "Employee barcode number"
+          },
+          "OracleNo": {
+            "type": "string",
+            "description": "Oracle system number"
+          },
+          "RFIDNumber": {
+            "type": "string",
+            "description": "RFID card number"
+          },
+          "PayrollNo": {
+            "type": "string",
+            "description": "Payroll number"
+          },
+          "IsTimeAttendanceActive": {
+            "type": "boolean",
+            "description": "Flag indicating if time attendance is active"
+          },
+          "IsPayrollActive": {
+            "type": "boolean",
+            "description": "Flag indicating if payroll is active"
+          },
+          "IsConfirmed": {
+            "type": "boolean",
+            "description": "Flag indicating if employee is confirmed"
+          },
+          "IsTraining": {
+            "type": "boolean",
+            "description": "Flag indicating if employee is in training"
+          },
+          "IsTemporary": {
+            "type": "boolean",
+            "description": "Flag indicating if employee is temporary"
+          },
+          "DateforConfirmation": {
+            "type": "string",
+            "description": "Date for confirmation"
+          },
+          "DateConfirmed": {
+            "type": "string",
+            "description": "Date confirmed"
+          },
+          "IsContractToPermanent": {
+            "type": "boolean",
+            "description": "Flag indicating contract to permanent conversion"
+          },
+          "ContractToPermanentDate": {
+            "type": "string",
+            "description": "Contract to permanent conversion date"
+          },
+          "DateResigned": {
+            "type": "string",
+            "description": "Resignation date"
+          },
+          "DateOfRetirement": {
+            "type": "string",
+            "description": "Retirement date"
+          },
+          "DateOfLastWork": {
+            "type": "string",
+            "description": "Last working date"
+          },
+          "ResignationTypeCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Resignation type code"
+          },
+          "ReasonForLeaving": {
+            "type": "string",
+            "description": "Reason for leaving"
+          },
+          "JobPreference": {
+            "type": "string",
+            "description": "Job preference"
+          },
+          "PreferredLocationCode": {
+            "type": "string",
+            "description": "Preferred location code"
+          },
+          "PreferredSubLocationCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Preferred sub-location code"
+          },
+          "SubLocationCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Sub-location code"
+          },
+          "PreferredJobLocationCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Preferred job location code"
+          },
+          "JobLocationCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Job location code"
+          },
+          "LocationCode": {
+            "type": "string",
+            "description": "Location code"
+          },
+          "EmployeeCostCenter": {
+            "type": "array",
+            "description": "Array of cost centers assigned to employee",
+            "items": {
+              "type": "object",
+              "properties": {
+                "CenterCode": {
+                  "type": "string",
+                  "description": "Cost center code"
+                },
+                "CenterName": {
+                  "type": "string",
+                  "description": "Cost center name"
+                },
+                "CenterPercentage": {
+                  "type": "number",
+                  "description": "Percentage allocation to this cost center"
+                },
+                "CenterPrimaryFlg": {
+                  "type": "string",
+                  "description": "Primary center flag"
+                }
+              },
+              "required": [
+                "CenterCode",
+                "CenterName",
+                "CenterPercentage",
+                "CenterPrimaryFlg"
+              ]
+            }
+          },
+          "hasMultipleCostCenters": {
+            "type": "boolean",
+            "description": "Flag indicating if employee has multiple cost centers"
+          },
+          "LeaveGroupCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Leave group code"
+          },
+          "RosterGroupCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Roster group code"
+          },
+          "selectedRosterMode1": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Selected roster mode 1"
+          },
+          "selectedRosterMode2": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Selected roster mode 2"
+          },
+          "selectedRosterMode3": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Selected roster mode 3"
+          },
+          "selectedRosterGroupMode1": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Selected roster group mode 1"
+          },
+          "selectedRosterGroupMode2": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Selected roster group mode 2"
+          },
+          "selectedRosterGroupMode3": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Selected roster group mode 3"
+          },
+          "RosterCommentMode1": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Roster comment mode 1"
+          },
+          "RosterCommentMode2": {
+            "type": "string",
+            "description": "Roster comment mode 2"
+          },
+          "RosterCommentMode3": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Roster comment mode 3"
+          },
+          "DateOfRosterFromDateMode2": {
+            "type": "string",
+            "description": "Roster from date mode 2"
+          },
+          "DateOfRosterToDateMode2": {
+            "type": "string",
+            "description": "Roster to date mode 2"
+          },
+          "DateOfRosterFromDateMode3": {
+            "type": "string",
+            "description": "Roster from date mode 3"
+          },
+          "RosterCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Roster code"
+          },
+          "AbsorptionDate": {
+            "type": "string",
+            "description": "Absorption date"
+          },
+          "EmployeeSalInfo": {
+            "type": "array",
+            "description": "Employee salary information array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "IsSalaryRemoved": {
+            "type": "boolean",
+            "description": "Flag indicating if salary is removed"
+          },
+          "ComCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Company code"
+          }
+        },
+        "required": [
+          "PreEmployeeNo",
+          "PersonalGradeCode",
+          "DesignationCode",
+          "CostCentreCode",
+          "CorporateTitleCode",
+          "FunctionCode",
+          "FunctionalRoleCode",
+          "DateJoinedtoGroup",
+          "DateJoined",
+          "NextIncrementDate",
+          "WorkingHoursperDay",
+          "EmpBasicSal",
+          "BRA1",
+          "BRA2",
+          "IsShopAndOffice",
+          "EmploymentTypeCode",
+          "StartDate",
+          "EndDate",
+          "StatutoryClassificationCode",
+          "EmploymentCategoryCode",
+          "EmployeeGroupCode",
+          "BarcodeNo",
+          "OracleNo",
+          "RFIDNumber",
+          "PayrollNo",
+          "IsTimeAttendanceActive",
+          "IsPayrollActive",
+          "IsConfirmed",
+          "IsTraining",
+          "IsTemporary",
+          "DateforConfirmation",
+          "DateConfirmed",
+          "IsContractToPermanent",
+          "ContractToPermanentDate",
+          "DateResigned",
+          "DateOfRetirement",
+          "DateOfLastWork",
+          "ResignationTypeCode",
+          "ReasonForLeaving",
+          "JobPreference",
+          "PreferredLocationCode",
+          "PreferredSubLocationCode",
+          "SubLocationCode",
+          "PreferredJobLocationCode",
+          "JobLocationCode",
+          "LocationCode",
+          "EmployeeCostCenter",
+          "hasMultipleCostCenters",
+          "LeaveGroupCode",
+          "RosterGroupCode",
+          "selectedRosterMode1",
+          "selectedRosterMode2",
+          "selectedRosterMode3",
+          "selectedRosterGroupMode1",
+          "selectedRosterGroupMode2",
+          "selectedRosterGroupMode 3",
+          "RosterCommentMode1",
+          "RosterCommentMode2",
+          "RosterCommentMode3",
+          "DateOfRosterFromDateMode2",
+          "DateOfRosterToDateMode2",
+          "DateOfRosterFromDateMode3",
+          "RosterCode",
+          "AbsorptionDate",
+          "EmployeeSalInfo",
+          "IsSalaryRemoved",
+          "ComCode"
+        ]
+      }
+    },
+    {
+      "name": "EmployeeHierarchyInformation",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Organizational hierarchy and reporting structure information",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Organizational hierarchy and reporting structure information",
+        "properties": {
+          "SelectedCompanyHierarchyFirst": {
+            "type": "array",
+            "description": "Primary company hierarchy levels",
+            "items": {
+              "type": "object",
+              "properties": {
+                "HieName": {
+                  "type": "string",
+                  "description": "Hierarchy name"
+                },
+                "HieCode": {
+                  "type": "string",
+                  "description": "Hierarchy code"
+                },
+                "DefLevel": {
+                  "type": "string",
+                  "description": "Definition level"
+                }
+              },
+              "required": [
+                "HieName",
+                "HieCode",
+                "DefLevel"
+              ]
+            }
+          },
+          "SelectedCompanyHierarchySecond": {
+            "type": "array",
+            "description": "Secondary company hierarchy levels",
+            "items": {
+              "type": "object"
+            }
+          },
+          "SupervisorEmpNo": {
+            "type": "string",
+            "description": "Supervisor employee number"
+          }
+        },
+        "required": [
+          "SelectedCompanyHierarchyFirst",
+          "SelectedCompanyHierarchySecond",
+          "SupervisorEmpNo"
+        ]
+      }
+    },
+    {
+      "name": "EmployeeContactInfo",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Contact information including addresses, phone numbers, and email addresses",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Contact information including addresses, phone numbers, and email addresses",
+        "properties": {
+          "PerHouseNumber": {
+            "type": "string",
+            "description": "Permanent address house number"
+          },
+          "PerStreet1": {
+            "type": "string",
+            "description": "Permanent address street 1"
+          },
+          "PerStreet2": {
+            "type": "string",
+            "description": "Permanent address street 2"
+          },
+          "FloorNo": {
+            "type": "string",
+            "description": "Floor number"
+          },
+          "ResFloorNo": {
+            "type": "string",
+            "description": "Residential floor number"
+          },
+          "NotFloorNo": {
+            "type": "string",
+            "description": "Notification floor number"
+          },
+          "PerAtoll": {
+            "type": "string",
+            "description": "Permanent address atoll"
+          },
+          "ResAtoll": {
+            "type": "string",
+            "description": "Residential address atoll"
+          },
+          "NotAtoll": {
+            "type": "string",
+            "description": "Notification address atoll"
+          },
+          "PerCity": {
+            "type": "string",
+            "description": "Permanent address city"
+          },
+          "SelectedPerCity": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Selected permanent city"
+          },
+          "SelectedPerPostalCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Selected permanent postal code"
+          },
+          "PerPostalCode": {
+            "type": "string",
+            "description": "Permanent address postal code"
+          },
+          "PerFulladdress": {
+            "type": "string",
+            "description": "Permanent full address"
+          },
+          "PerPerFullotherlngaddress": {
+            "type": "string",
+            "description": "Permanent full address in other language"
+          },
+          "PerTelephone": {
+            "type": "string",
+            "description": "Permanent address telephone"
+          },
+          "PerMobile": {
+            "type": "string",
+            "description": "Permanent address mobile"
+          },
+          "PerFax": {
+            "type": "string",
+            "description": "Permanent address fax"
+          },
+          "PerEmail": {
+            "type": "string",
+            "description": "Permanent address email (encrypted)"
+          },
+          "PerCountryCode": {
+            "type": "string",
+            "description": "Permanent address country code"
+          },
+          "PerProvinceCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Permanent address province code"
+          },
+          "PerDistrictCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Permanent address district code"
+          },
+          "PerElectorateCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Permanent address electorate code"
+          },
+          "PerDSDivisionCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Permanent address DS division code"
+          },
+          "PerGNDivisionCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Permanent address GN division code"
+          },
+          "ResStreet2": {
+            "type": "string",
+            "description": "Residential address street 2"
+          },
+          "ResStreet1": {
+            "type": "string",
+            "description": "Residential address street 1"
+          },
+          "NotStreet2": {
+            "type": "string",
+            "description": "Notification address street 2"
+          },
+          "ResHouseNo": {
+            "type": "string",
+            "description": "Residential house number"
+          },
+          "NotHouseNo": {
+            "type": "string",
+            "description": "Notification house number"
+          },
+          "ResCity": {
+            "type": "string",
+            "description": "Residential city"
+          },
+          "NotCity": {
+            "type": "string",
+            "description": "Notification city"
+          },
+          "SelectedResCity": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Selected residential city"
+          },
+          "SelectedNotCity": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Selected notification city"
+          },
+          "SelectedResPostalCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Selected residential postal code"
+          },
+          "ResPostalCode": {
+            "type": "string",
+            "description": "Residential postal code"
+          },
+          "SelectedNotPostalCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Selected notification postal code"
+          },
+          "NotPostalCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Notification postal code"
+          },
+          "ResTelephone": {
+            "type": "string",
+            "description": "Residential telephone"
+          },
+          "NotTelephone": {
+            "type": "string",
+            "description": "Notification telephone"
+          },
+          "ResMobile": {
+            "type": "string",
+            "description": "Residential mobile"
+          },
+          "NotMobile": {
+            "type": "string",
+            "description": "Notification mobile"
+          },
+          "ResFax": {
+            "type": "string",
+            "description": "Residential fax"
+          },
+          "NotFax": {
+            "type": "string",
+            "description": "Notification fax"
+          },
+          "ResEmail": {
+            "type": "string",
+            "description": "Residential email (encrypted)"
+          },
+          "NotEmail": {
+            "type": "string",
+            "description": "Notification email"
+          },
+          "ResFullotherlngaddress": {
+            "type": "string",
+            "description": "Residential full address in other language"
+          },
+          "ResFulladdress": {
+            "type": "string",
+            "description": "Residential full address"
+          },
+          "NotFulladdress": {
+            "type": "string",
+            "description": "Notification full address"
+          },
+          "ResCountryCode": {
+            "type": "string",
+            "description": "Residential country code"
+          },
+          "NotCountryCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Notification country code"
+          },
+          "ResProvinceCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Residential province code"
+          },
+          "NotProvinceCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Notification province code"
+          },
+          "ResDistrictCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Residential district code"
+          },
+          "NotDistrictCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Notification district code"
+          },
+          "ResElectorateCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Residential electorate code"
+          },
+          "NotElectorateCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Notification electorate code"
+          },
+          "ResDSDivisionCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Residential DS division code"
+          },
+          "NotDSDivisionCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Notification DS division code"
+          },
+          "ResGNDivisionCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Residential GN division code"
+          },
+          "NotGNDivisionCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Notification GN division code"
+          },
+          "NotFullotherlngaddress": {
+            "type": "string",
+            "description": "Notification full address in other language"
+          },
+          "OffGeneralLine": {
+            "type": "string",
+            "description": "Office general line number"
+          },
+          "OffDirectLine": {
+            "type": "string",
+            "description": "Office direct line number"
+          },
+          "OffEmail": {
+            "type": "string",
+            "description": "Office email (encrypted)"
+          },
+          "OffLotusEmail": {
+            "type": "string",
+            "description": "Office Lotus email"
+          },
+          "OffMobile": {
+            "type": "string",
+            "description": "Office mobile number"
+          },
+          "PrimaryAddress": {
+            "type": "number",
+            "description": "Primary address indicator"
+          },
+          "LinkBlog": {
+            "type": "string",
+            "description": "Blog link"
+          },
+          "LinkTwitter": {
+            "type": "string",
+            "description": "Twitter profile link"
+          },
+          "LinkLinkedIn": {
+            "type": "string",
+            "description": "LinkedIn profile link"
+          },
+          "LinkSkypeID": {
+            "type": "string",
+            "description": "Skype ID"
+          },
+          "LinkFacebookID": {
+            "type": "string",
+            "description": "Facebook profile link"
+          },
+          "LocationCode": {
+            "type": "string",
+            "description": "Location code"
+          },
+          "PerLocation": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Permanent location"
+          }
+        },
+        "required": [
+          "PerHouseNumber",
+          "PerStreet1",
+          "PerStreet2",
+          "FloorNo",
+          "ResFloorNo",
+          "NotFloorNo",
+          "PerAtoll",
+          "ResAtoll",
+          "NotAtoll",
+          "PerCity",
+          "SelectedPerCity",
+          "SelectedPerPostalCode",
+          "PerPostalCode",
+          "PerFulladdress",
+          "PerPerFullotherlngaddress",
+          "PerTelephone",
+          "PerMobile",
+          "PerFax",
+          "PerEmail",
+          "PerCountryCode",
+          "PerProvinceCode",
+          "PerDistrictCode",
+          "PerElectorateCode",
+          "PerDSDivisionCode",
+          "PerGNDivisionCode",
+          "ResStreet2",
+          "ResStreet1",
+          "NotStreet2",
+          "ResHouseNo",
+          "NotHouseNo",
+          "ResCity",
+          "NotCity",
+          "SelectedResCity",
+          "SelectedNotCity",
+          "SelectedResPostalCode",
+          "ResPostalCode",
+          "SelectedNotPostalCode",
+          "NotPostalCode",
+          "ResTelephone",
+          "NotTelephone",
+          "ResMobile",
+          "NotMobile",
+          "ResFax",
+          "NotFax",
+          "ResEmail",
+          "NotEmail",
+          "ResFullotherlngaddress",
+          "ResFulladdress",
+          "NotFulladdress",
+          "ResCountryCode",
+          "NotCountryCode",
+          "ResProvinceCode",
+          "NotProvinceCode",
+          "ResDistrictCode",
+          "NotDistrictCode",
+          "ResElectorateCode",
+          "NotElectorateCode",
+          "ResDSDivisionCode",
+          "NotDSDivisionCode",
+          "ResGNDivisionCode",
+          "NotGNDivisionCode",
+          "NotFullotherlngaddress",
+          "OffGeneralLine",
+          "OffDirectLine",
+          "OffEmail",
+          "OffLotusEmail",
+          "OffMobile",
+          "PrimaryAddress",
+          "LinkBlog",
+          "LinkTwitter",
+          "LinkLinkedIn",
+          "LinkSkypeID",
+          "LinkFacebookID",
+          "LocationCode",
+          "PerLocation"
+        ]
+      }
+    },
+    {
+      "name": "OtherDetailInfo",
+      "type": "array",
+      "required": true,
+      "defaultValue": [],
+      "description": "Array of employee additional attributes and custom fields",
+      "advanced": true,
+      "raw": {
+        "type": "array",
+        "description": "Array of employee additional attributes and custom fields",
+        "items": {
+          "type": "object",
+          "properties": {
+            "EmpNumber": {
+              "type": "string",
+              "description": "Encrypted/encoded employee identification number",
+              "default": ""
+            },
+            "AttributeCode": {
+              "type": "string",
+              "description": "Unique code identifying the type of attribute (e.g., 000005 for Meal Preference)",
+              "default": ""
+            },
+            "AttributeDispOrder": {
+              "type": "string",
+              "description": "Display order number for UI presentation of attributes",
+              "default": ""
+            },
+            "AttributeName": {
+              "type": "string",
+              "description": "Human-readable name of the attribute (e.g., 'Meal Preference', 'Vaccination Status')",
+              "default": ""
+            },
+            "AttributeValue": {
+              "type": "string",
+              "description": "Primary value of the attribute, can be null if not populated",
+              "default": ""
+            },
+            "AttributeDateValue": {
+              "type": "string",
+              "description": "Date representation of the attribute value, matches AttributeValue for non-date types",
+              "default": ""
+            },
+            "AttributeStringValue": {
+              "type": "string",
+              "description": "String representation of the attribute value, matches AttributeValue",
+              "default": ""
+            },
+            "AttributeBooleanValue": {
+              "type": "string",
+              "description": "Boolean representation of the attribute value as string",
+              "default": ""
+            },
+            "AttributeNumericValue": {
+              "type": "string",
+              "description": "Numeric representation of the attribute value as string",
+              "default": ""
+            },
+            "AttributeDataType": {
+              "type": "string",
+              "description": "Data type of the attribute (String, Boolean, Date, Numeric)",
+              "enum": [
+                "String",
+                "Boolean",
+                "Date",
+                "Numeric"
+              ],
+              "default": "String"
+            },
+            "AttributeDisplayType": {
+              "type": "string",
+              "description": "Type defining how attribute should be displayed in UI (0, 1, 2)",
+              "default": "0"
+            },
+            "AttributeEditType": {
+              "type": "string",
+              "description": "Type defining how attribute can be edited (0, 1, 2)",
+              "default": "0"
+            },
+            "ActionType": {
+              "type": "string",
+              "description": "Action type for the attribute operation",
+              "default": "0"
+            },
+            "UpdateInsert": {
+              "type": "string",
+              "description": "Flag indicating update or insert operation",
+              "default": "0"
+            }
+          },
+          "required": [
+            "EmpNumber",
+            "AttributeCode",
+            "AttributeDispOrder",
+            "AttributeName",
+            "AttributeValue",
+            "AttributeDateValue",
+            "AttributeStringValue",
+            "AttributeBooleanValue",
+            "AttributeNumericValue",
+            "AttributeDataType",
+            "AttributeDisplayType",
+            "AttributeEditType",
+            "ActionType",
+            "UpdateInsert"
+          ]
+        },
+        "default": []
+      }
+    },
+    {
+      "name": "EmployeeTaxInfo",
+      "type": "object",
+      "required": true,
+      "defaultValue": null,
+      "description": "Employee tax-related information including EPF, ETF, and MSPS details",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Employee tax-related information including EPF, ETF, and MSPS details",
+        "properties": {
+          "TaxTypeCode": {
+            "type": "string",
+            "description": "Code identifying the type of tax applicable to employee",
+            "default": ""
+          },
+          "TaxIDNumber": {
+            "type": "string",
+            "description": "Employee's tax identification number",
+            "default": ""
+          },
+          "IsTaxOnTax": {
+            "type": "string",
+            "description": "Boolean flag indicating if tax on tax is applicable (as string)",
+            "default": "false"
+          },
+          "IsEPFEligible": {
+            "type": "string",
+            "description": "Boolean flag indicating EPF (Employee Provident Fund) eligibility",
+            "default": "false"
+          },
+          "EPFNo": {
+            "type": "string",
+            "description": "Employee Provident Fund number",
+            "default": ""
+          },
+          "EPFNoOld": {
+            "type": "string",
+            "description": "Previous EPF number if changed",
+            "default": ""
+          },
+          "IsCompanyEPF": {
+            "type": "string",
+            "description": "Boolean flag indicating if company manages EPF",
+            "default": "false"
+          },
+          "EmployeeEPFPer": {
+            "type": "string",
+            "description": "Employee EPF contribution percentage",
+            "default": "0.00"
+          },
+          "EmployerEPFPer": {
+            "type": "string",
+            "description": "Employer EPF contribution percentage",
+            "default": "0.00"
+          },
+          "IsETFEligible": {
+            "type": "string",
+            "description": "Boolean flag indicating ETF (Employee Trust Fund) eligibility",
+            "default": "false"
+          },
+          "ETFNo": {
+            "type": "string",
+            "description": "Employee Trust Fund number",
+            "default": ""
+          },
+          "EmpETFPer": {
+            "type": "string",
+            "description": "Employee ETF contribution percentage",
+            "default": "0.00"
+          },
+          "ETFDate": {
+            "type": "string",
+            "description": "ETF effective date",
+            "default": ""
+          },
+          "IsMSPSEligible": {
+            "type": "string",
+            "description": "Boolean flag indicating MSPS eligibility",
+            "default": "false"
+          },
+          "EmployeeMSPSPer": {
+            "type": "string",
+            "description": "Employee MSPS contribution percentage",
+            "default": "0.00"
+          },
+          "EmployerMSPSPer": {
+            "type": "string",
+            "description": "Employer MSPS contribution percentage",
+            "default": "0.00"
+          },
+          "MSPSNo": {
+            "type": "string",
+            "description": "MSPS number",
+            "default": ""
+          }
+        },
+        "required": [
+          "TaxTypeCode",
+          "TaxIDNumber",
+          "IsTaxOnTax",
+          "IsEPFEligible",
+          "EPFNo",
+          "EPFNoOld",
+          "IsCompanyEPF",
+          "EmployeeEPFPer",
+          "EmployerEPFPer",
+          "IsETFEligible",
+          "ETFNo",
+          "EmpETFPer",
+          "ETFDate",
+          "IsMSPSEligible",
+          "EmployeeMSPSPer",
+          "EmployerMSPSPer",
+          "MSPSNo"
+        ]
+      }
+    },
+    {
+      "name": "PositionInfo",
+      "type": "object",
+      "required": true,
+      "defaultValue": null,
+      "description": "Employee position and organizational structure information",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Employee position and organizational structure information",
+        "properties": {
+          "PositionCode": {
+            "type": "string",
+            "description": "Code identifying the employee's position/job role",
+            "default": ""
+          },
+          "SlotCode": {
+            "type": "string",
+            "description": "Code identifying the position slot or vacancy",
+            "default": ""
+          },
+          "ImmSupCode": {
+            "type": "string",
+            "description": "Immediate supervisor code",
+            "default": ""
+          }
+        },
+        "required": [
+          "PositionCode",
+          "SlotCode",
+          "ImmSupCode"
+        ]
+      }
+    },
+    {
+      "name": "EmployeeIndustrySkillInfo",
+      "type": "object",
+      "required": true,
+      "defaultValue": null,
+      "description": "Employee industry-specific skills and work-related flags",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Employee industry-specific skills and work-related flags",
+        "properties": {
+          "ReservedSkillWorker": {
+            "type": "string",
+            "description": "Boolean flag indicating if employee is a reserved skill worker",
+            "default": "false"
+          },
+          "IsReliever": {
+            "type": "string",
+            "description": "Boolean flag indicating if employee can work as reliever",
+            "default": "false"
+          },
+          "IsSpare": {
+            "type": "string",
+            "description": "Boolean flag indicating if employee is spare/backup worker",
+            "default": "false"
+          },
+          "IsSuitableforTblGames": {
+            "type": "string",
+            "description": "Boolean flag indicating suitability for table games work",
+            "default": "false"
+          },
+          "IsPregnantflg": {
+            "type": "string",
+            "description": "Boolean flag indicating pregnancy status",
+            "default": "false"
+          },
+          "IsSpouseworkingSameEntityflg": {
+            "type": "string",
+            "description": "Boolean flag indicating if spouse works in same entity",
+            "default": "false"
+          },
+          "PregnantEffectiveFromDate": {
+            "type": "string",
+            "description": "Effective start date for pregnancy-related accommodations",
+            "default": ""
+          },
+          "PregnantEffectiveToDate": {
+            "type": "string",
+            "description": "Effective end date for pregnancy-related accommodations",
+            "default": ""
+          },
+          "SpouseEmpNo": {
+            "type": "string",
+            "description": "Employee number of spouse if working in same entity",
+            "default": ""
+          },
+          "RoleCode": {
+            "type": "string",
+            "description": "Code identifying employee's role",
+            "default": ""
+          },
+          "EmployeeSkillDetail": {
+            "type": "array",
+            "description": "Array containing detailed skill information for employee",
+            "items": {
+              "type": "object",
+              "description": "Individual skill detail object"
+            },
+            "default": []
+          },
+          "IsIndustrySkillRemoved": {
+            "type": "string",
+            "description": "Boolean flag indicating if industry skills have been removed",
+            "default": "false"
+          },
+          "ShiftTrasitionPeriodCode": {
+            "type": "string",
+            "description": "Code for shift transition period (numeric as string)",
+            "default": "3"
+          }
+        },
+        "required": [
+          "ReservedSkillWorker",
+          "IsReliever",
+          "IsSpare",
+          "IsSuitableforTblGames",
+          "IsPregnantflg",
+          "IsSpouseworkingSameEntityflg",
+          "PregnantEffectiveFromDate",
+          "PregnantEffectiveToDate",
+          "SpouseEmpNo",
+          "RoleCode",
+          "EmployeeSkillDetail",
+          "IsIndustrySkillRemoved",
+          "ShiftTrasitionPeriodCode"
+        ]
+      }
+    }
+  ]
+}

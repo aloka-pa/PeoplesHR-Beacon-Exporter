@@ -1,0 +1,105 @@
+{
+  "id": "690dc568931a2d61ba0b18c1",
+  "slug": "specificbankemployeedetails",
+  "name": "specificBankEmployeeDetails",
+  "description": "in this tool generate the specific Bank Employee Details. before execute in this api first execute the \"getEmployeeBankDetails\" tool. to generate user select bank details and to get specific bank edit id use in this api payload argument then generate the bank details. this api  response then use for \"updateEmployeeInformationDetails\" tool. then final execute for \"updateEmployeeInformationDetails\" tool. if the user any change order number ask to the user \"The Order must not be duplicate\" and if the user update no key fields update return the no field in this bank employee details.",
+  "instructions": null,
+  "taskName": "Fetching The Bank Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "specificBankEmployeeDetails",
+  "createdAt": "2025-05-30T13:09:36.973Z",
+  "updatedAt": "2025-05-30T13:09:36.973Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "b03c6d84d40d7a6786bd41ec0f20c1a4eec491be92e4a78d7e5f726fdcc7b5ec",
+  "lastExportedAt": "2026-09-05T19:39:23.783Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b18c1",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "specificBankEmployeeDetails",
+      "description": "in this tool generate the specific Bank Employee Details. before execute in this api first execute the \"getEmployeeBankDetails\" tool. to generate user select bank details and to get specific bank edit id use in this api payload argument then generate the bank details. this api  response then use for \"updateEmployeeInformationDetails\" tool. then final execute for \"updateEmployeeInformationDetails\" tool. if the user any change order number ask to the user \"The Order must not be duplicate\" and if the user update no key fields update return the no field in this bank employee details.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "specificBankEmployeeDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to give the employee id",
+            "required": true,
+            "_id": "6839ae10d9dba9360723f71b"
+          },
+          {
+            "name": "editId",
+            "type": "string",
+            "description": "to get edit id for \"getEmployeeBankDetails\" tool user selected bank edit id get.",
+            "required": true,
+            "_id": "6839ae10d9dba9360723f71c"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6839ae10d9dba9360723f71a"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignBankInformation.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const empEncId = await BeaconBar.executeFunction(\"employeeEncryptId\")(window.view.publicKey, args.id);\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        // param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        // param : \"IsShowButtons=1\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/AssignBankInformation.aspx\");\n\n  const editResponse = await BeaconBar.executeFunction('module')({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.editId,\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: window.view.viewState,\n    __VIEWSTATEGENERATOR: window.view.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.view.eventValidation,\n    \"ctl00$hdnDateFormat\": \"m/d/yy\",\n    \"ctl00$hdnQuickmenu\": \"\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00$body$cboBank\": \"\",\n    \"ctl00$body$cboAccType\": \"-1\",\n    \"ctl00$body$txtAccountNo\": \"\",\n    \"ctl00$body$cboCurrency\": \"000081\",\n    \"ctl00$body$txtAccountEmpName\": \"\",\n    \"ctl00$body$cboAmountType\": \"0\",\n    \"ctl00$body$nuBnkAmount\": \"\",\n    \"ctl00$body$nuOrder\": \"\",\n    \"ctl00$body$chkBankActive\": \"on\",\n    \"ctl00$body$txtAccStartDate\": \"\",\n    \"ctl00$body$txtAccEndDate\": \"\",\n    \"ctl00$body$txtBankComment\": \"\",\n    \"ctl00$body$txtPublicKey\": window.view.publicKey,\n    \"ctl00$body$txtAccount\": \"\",\n    \"ctl00$body$txtempnumber\": empEncId,\n    \"ctl00$body$grdEmpBank$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdEmpBank_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdEmpBank$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"2\",\n    \"ctl00_body_grdEmpBank_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdEmpBank_ClientState\": \"\",\n    \"ctl00$body$hdnCurrentAmount\": \"\",\n    \"ctl00$body$hdnAmountType\": \"\",\n    \"ctl00$body$txtEmpNo\": args.id\n  }, `${reqOptions.sl}/${updateUrlData.pageUrl}`);\n\n  window.bdv = editResponse\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(editResponse.rawData, \"text/html\");\n\n  const select = document.querySelector('#ctl00_body_cboAccType');\n  const options = Array.from(select.options);\n  const accountOptionTypes = options.map(option => ({\n    name: option.text.trim(),\n    value: option.value\n  }));\n\n  const currencySelect = document.querySelector('#ctl00_body_cboCurrency');\n  const currencyOptions = Array.from(currencySelect.options);\n  const currencyOptionDetails = currencyOptions.map(option => ({\n    name: option.text.trim(),\n    value: option.value\n  }));\n\n  const getSelectedInfo = (selector) => {\n    const el = document.querySelector(selector);\n    return {\n      name: el?.options[el.selectedIndex]?.text?.trim() || '',\n      value: el?.value || ''\n    };\n  };\n\n  const getInputValue = (selector) => {\n    return document.querySelector(selector)?.value?.trim() || '';\n  };\n\n  const getCheckboxValue = (selector) => {\n    return document.querySelector(selector)?.checked || false;\n  };\n\n  const bankInformation = {\n    \"Bank Name\": getSelectedInfo('#ctl00_body_cboBank'),\n    \"Branch Name\": getSelectedInfo('#ctl00_body_cboBankBranch'),\n    \"Account Type\": getSelectedInfo('#ctl00_body_cboAccType'),\n    \"Account Number\": getInputValue('#ctl00_body_txtAccountNo'),\n    \"Currency\": getSelectedInfo('#ctl00_body_cboCurrency'),\n    \"Name Given to the Bank\": getInputValue('#ctl00_body_txtAccountEmpName'),\n    \"Amount Type\": getSelectedInfo('#ctl00_body_cboAmountType'),\n    \"Amount / Percentage\": getInputValue('#ctl00_body_nuBnkAmount'),\n    \"Order\": getInputValue('#ctl00_body_nuOrder'),\n    \"Bank Active\": getCheckboxValue('#ctl00_body_chkBankActive') ? \"Yes\" : \"No\",\n    \"Start Date\": getInputValue('#ctl00_body_txtAccStartDate'),\n    \"End Date\": getInputValue('#ctl00_body_txtAccEndDate'),\n    \"Comments\": getInputValue('#ctl00_body_txtBankComment')\n  };\n\n  return {\n    bankInformation,\n    accountOptionTypes,\n    currencyOptionDetails\n  };\n\n});\n",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Fetching The Bank Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-30T13:09:36.973Z",
+      "updatedAt": "2025-05-30T13:09:36.973Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "specificBankEmployeeDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to give the employee id",
+          "required": true,
+          "_id": "6839ae10d9dba9360723f71b"
+        },
+        {
+          "name": "editId",
+          "type": "string",
+          "description": "to get edit id for \"getEmployeeBankDetails\" tool user selected bank edit id get.",
+          "required": true,
+          "_id": "6839ae10d9dba9360723f71c"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6839ae10d9dba9360723f71a"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignBankInformation.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const empEncId = await BeaconBar.executeFunction(\"employeeEncryptId\")(window.view.publicKey, args.id);\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        // param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        // param : \"IsShowButtons=1\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/AssignBankInformation.aspx\");\n\n  const editResponse = await BeaconBar.executeFunction('module')({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.editId,\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: window.view.viewState,\n    __VIEWSTATEGENERATOR: window.view.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.view.eventValidation,\n    \"ctl00$hdnDateFormat\": \"m/d/yy\",\n    \"ctl00$hdnQuickmenu\": \"\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00$body$cboBank\": \"\",\n    \"ctl00$body$cboAccType\": \"-1\",\n    \"ctl00$body$txtAccountNo\": \"\",\n    \"ctl00$body$cboCurrency\": \"000081\",\n    \"ctl00$body$txtAccountEmpName\": \"\",\n    \"ctl00$body$cboAmountType\": \"0\",\n    \"ctl00$body$nuBnkAmount\": \"\",\n    \"ctl00$body$nuOrder\": \"\",\n    \"ctl00$body$chkBankActive\": \"on\",\n    \"ctl00$body$txtAccStartDate\": \"\",\n    \"ctl00$body$txtAccEndDate\": \"\",\n    \"ctl00$body$txtBankComment\": \"\",\n    \"ctl00$body$txtPublicKey\": window.view.publicKey,\n    \"ctl00$body$txtAccount\": \"\",\n    \"ctl00$body$txtempnumber\": empEncId,\n    \"ctl00$body$grdEmpBank$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdEmpBank_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdEmpBank$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"2\",\n    \"ctl00_body_grdEmpBank_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdEmpBank_ClientState\": \"\",\n    \"ctl00$body$hdnCurrentAmount\": \"\",\n    \"ctl00$body$hdnAmountType\": \"\",\n    \"ctl00$body$txtEmpNo\": args.id\n  }, `${reqOptions.sl}/${updateUrlData.pageUrl}`);\n\n  window.bdv = editResponse\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(editResponse.rawData, \"text/html\");\n\n  const select = document.querySelector('#ctl00_body_cboAccType');\n  const options = Array.from(select.options);\n  const accountOptionTypes = options.map(option => ({\n    name: option.text.trim(),\n    value: option.value\n  }));\n\n  const currencySelect = document.querySelector('#ctl00_body_cboCurrency');\n  const currencyOptions = Array.from(currencySelect.options);\n  const currencyOptionDetails = currencyOptions.map(option => ({\n    name: option.text.trim(),\n    value: option.value\n  }));\n\n  const getSelectedInfo = (selector) => {\n    const el = document.querySelector(selector);\n    return {\n      name: el?.options[el.selectedIndex]?.text?.trim() || '',\n      value: el?.value || ''\n    };\n  };\n\n  const getInputValue = (selector) => {\n    return document.querySelector(selector)?.value?.trim() || '';\n  };\n\n  const getCheckboxValue = (selector) => {\n    return document.querySelector(selector)?.checked || false;\n  };\n\n  const bankInformation = {\n    \"Bank Name\": getSelectedInfo('#ctl00_body_cboBank'),\n    \"Branch Name\": getSelectedInfo('#ctl00_body_cboBankBranch'),\n    \"Account Type\": getSelectedInfo('#ctl00_body_cboAccType'),\n    \"Account Number\": getInputValue('#ctl00_body_txtAccountNo'),\n    \"Currency\": getSelectedInfo('#ctl00_body_cboCurrency'),\n    \"Name Given to the Bank\": getInputValue('#ctl00_body_txtAccountEmpName'),\n    \"Amount Type\": getSelectedInfo('#ctl00_body_cboAmountType'),\n    \"Amount / Percentage\": getInputValue('#ctl00_body_nuBnkAmount'),\n    \"Order\": getInputValue('#ctl00_body_nuOrder'),\n    \"Bank Active\": getCheckboxValue('#ctl00_body_chkBankActive') ? \"Yes\" : \"No\",\n    \"Start Date\": getInputValue('#ctl00_body_txtAccStartDate'),\n    \"End Date\": getInputValue('#ctl00_body_txtAccEndDate'),\n    \"Comments\": getInputValue('#ctl00_body_txtBankComment')\n  };\n\n  return {\n    bankInformation,\n    accountOptionTypes,\n    currencyOptionDetails\n  };\n\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

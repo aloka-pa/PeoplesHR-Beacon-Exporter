@@ -1,0 +1,95 @@
+{
+  "id": "69eeb23ec801998ae0abcd87",
+  "slug": "getpaytype",
+  "name": "GetPayType",
+  "description": "getPayTypes - Do not display any hyperlinks in the output",
+  "instructions": null,
+  "taskName": "Fetching Pay Types",
+  "tags": [
+    "Payroll",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "GetPayType",
+  "createdAt": "2026-04-27T00:47:58.675Z",
+  "updatedAt": "2026-07-17T12:53:40.474Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c51",
+      "name": "PayRoll"
+    }
+  ],
+  "contentHash": "52cb505a3861ae5580fa13041eeb1dc9fcf3a66374387604c9cfdf419cfc51ad",
+  "lastExportedAt": "2026-09-05T19:39:22.098Z",
+  "raw": {
+    "basic": {
+      "_id": "69eeb23ec801998ae0abcd87",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "GetPayType",
+      "description": "getPayTypes - Do not display any hyperlinks in the output",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "GetPayType",
+        "args": [],
+        "isAdvanced": false,
+        "_id": "6a5a25d4ac96d1c943ad402a"
+      },
+      "by": "34476",
+      "fetcher": "(async function (args, reqOptions) {\n  const baseUrl = await BeaconBar.executeFunction(\"reqOptions\")();\n\n  const finalUrl = `${baseUrl}GPAdding/Api/widgets/ExternalSlipApi/GetPayType`;\n\n\n  return {\n    url: finalUrl,\n    method: \"POST\",\n    headers: {\n      \"x-requested-with\": \"XMLHttpRequest\",\n      \"Content-Type\": \"application/json\"\n    },\n    credentials: \"include\",\n    body: JSON.stringify({})\n  };\n})",
+      "transformer": "(function (data, args, reqOptions) {\n  return data.map(item => ({\n    PayType: item.PayType,\n    PayTypeName: item.PayTypeName\n  }));\n})",
+      "groupName": "",
+      "tags": [
+        "Payroll",
+        "Headers"
+      ],
+      "taskName": "Fetching Pay Types",
+      "etl": false,
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return data.map(item => ({\n    url: \"\",\n    title: item.PayTypeName,\n    subTitle: `Pay Type: ${item.PayType}`,\n    icon: \"\"\n  }));\n})",
+      "toolType": "code",
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "status": "live",
+      "createdAt": "2026-04-27T00:47:58.675Z",
+      "updatedAt": "2026-07-17T12:53:40.474Z",
+      "__v": 6,
+      "outputExample": {},
+      "sampleRequest": {},
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "isFromKG": false,
+      "sanity": {
+        "apiResponse": []
+      },
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c51",
+          "name": "PayRoll"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "GetPayType",
+      "args": [],
+      "isAdvanced": false,
+      "_id": "6a5a25d4ac96d1c943ad402a"
+    },
+    "fetcher": "(async function (args, reqOptions) {\n  const baseUrl = await BeaconBar.executeFunction(\"reqOptions\")();\n\n  const finalUrl = `${baseUrl}GPAdding/Api/widgets/ExternalSlipApi/GetPayType`;\n\n\n  return {\n    url: finalUrl,\n    method: \"POST\",\n    headers: {\n      \"x-requested-with\": \"XMLHttpRequest\",\n      \"Content-Type\": \"application/json\"\n    },\n    credentials: \"include\",\n    body: JSON.stringify({})\n  };\n})",
+    "transformer": "(function (data, args, reqOptions) {\n  return data.map(item => ({\n    PayType: item.PayType,\n    PayTypeName: item.PayTypeName\n  }));\n})",
+    "source": "(function(data, args, reqOptions) {\n  return data.map(item => ({\n    url: \"\",\n    title: item.PayTypeName,\n    subTitle: `Pay Type: ${item.PayType}`,\n    icon: \"\"\n  }));\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

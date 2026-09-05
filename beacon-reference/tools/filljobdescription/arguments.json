@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "description",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Generate the Job description.",
+      "advanced": false,
+      "raw": {
+        "name": "description",
+        "type": "string",
+        "description": "Generate the Job description.",
+        "required": true,
+        "_id": "680a27c4fb12ce73e850dab2"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

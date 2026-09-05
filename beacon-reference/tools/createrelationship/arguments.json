@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "relationshipName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name for the new relationship (e.g., \"Wife\", \"Husband\", \"Father\", \"Mother\", \"Sibling\")",
+      "advanced": false,
+      "raw": {
+        "name": "relationshipName",
+        "type": "string",
+        "description": "The name for the new relationship (e.g., \"Wife\", \"Husband\", \"Father\", \"Mother\", \"Sibling\")",
+        "required": true,
+        "_id": "69576a72ca68a9f2794e81fc"
+      }
+    },
+    {
+      "name": "anseliCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional reference/Anseli code (max 10 chars).\nIf the page contains ctl00$body$txtrefcode, the tool fills it; otherwise it skips it safely.",
+      "advanced": false,
+      "raw": {
+        "name": "anseliCode",
+        "type": "string",
+        "description": "Optional reference/Anseli code (max 10 chars).\nIf the page contains ctl00$body$txtrefcode, the tool fills it; otherwise it skips it safely.",
+        "required": false,
+        "_id": "697e503b32be68838ce36dec"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

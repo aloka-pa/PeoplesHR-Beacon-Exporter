@@ -1,0 +1,24 @@
+{
+  "id": "690dc577931a2d61ba0b1f6f",
+  "slug": "attendance",
+  "name": "Attendance",
+  "status": "live",
+  "createdAt": "2025-05-14T06:56:43.128Z",
+  "updatedAt": "2025-05-14T06:56:43.128Z",
+  "contentHash": "e5c7f65f00f2e904d25af1cb8427cfbd71e7ce5a4329683d5a9555675e1dd6e4",
+  "lastExportedAt": "2026-09-05T19:41:42.716Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc577931a2d61ba0b1f6f",
+    "name": "Attendance",
+    "status": "live",
+    "code": "(async function () {\n    //done\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('TNAV9/ManualInOut/ManualInOut/0?mvc=1');\n    let url;\n\n    if(updateurl.updateUrl){\n        url = updateurl.updateUrl\n    }else{\n        url = \"TNAV9/ManualInOut/ManualInOut/0?mvc=1\"\n    }\n\n    const digestkey1 = await BeaconBar.executeFunction('getDigest')(updateurl.updateParams);\n    const sl = await BeaconBar.getSharedData(\"sl\");\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"*/*\");\n    myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n    myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n\n    const response1 = await fetch(`${location.origin}/${sl}/${url}&digest=${digestkey1.digest}`, requestOptions);\n    const data1 = await response1.text();\n\n    const empNumberPattern = /\"EmployeeSearchURL\":\".*?empNumber=([^\"&]+)/;\n    const searchTokenPattern = /searchToken=([^\"&]+)/;\n    const callBackPattern = /(?:callBack=|SearchCallBack\":\")(.*?)(?:&|\")/;\n\n    // Extracting values using regex\n    const empNumberMatch = data1.match(empNumberPattern);\n    const searchTokenMatch = data1.match(searchTokenPattern);\n    const callBackMatch = data1.match(callBackPattern);\n\n    // Extracted values\n    const empNumber = empNumberMatch ? empNumberMatch[1] : null;\n    const searchToken = searchTokenMatch ? searchTokenMatch[1] : null;\n    const callBack = callBackMatch ? decodeURIComponent(callBackMatch[1]) : null;\n\n    const searchUrl = `${location.origin}/${sl}/CommonComponents/Search/Search?empNumber=${empNumber}&callBack=${callBack}&searchMode=2&searchQueryMode=all&searchQueryState=activeonly&breadCrumbEnable=0&isDivLoading=0&isShowDisplayName=0&isMultiple=0&searchToken=${searchToken}&_=${Date.now()}`;\n    const response2 = await fetch(searchUrl, requestOptions);\n    const data2 = await response2.text();\n\n    const empNumberMatch2 = data2.match(/\"EmpNumber\":\"([^\"]+)\"/);\n    const keyValueMatch = data2.match(/\"KeyValue\":\"([^\"]+)\"/);\n\n    const empNumber2 = empNumberMatch2 ? empNumberMatch2[1] : null;\n    const keyValue = keyValueMatch ? keyValueMatch[1] : null;\n\n\n    window.empLog = {\n        empNumber2: empNumber2,\n        keyValue: keyValue\n    };\n\n\n    return {\n        empNumber2,\n        keyValue\n    };\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "id": "698464ba03255c80cef5c0e6",
+  "slug": "getbasecurrencytype",
+  "name": "getBaseCurrencyType",
+  "description": "Returns the top (first) row from the Currency Type summary grid (Code / Currency / Symbol) after clicking Show All. No record open. Exchange rate is always returned as \"1\".",
+  "instructions": null,
+  "taskName": "Fetching Base Currency Details",
+  "tags": [
+    "EIMAdmin",
+    "NexusInformation"
+  ],
+  "status": "live",
+  "signature": "getBaseCurrencyType",
+  "createdAt": "2026-02-05T09:36:58.674Z",
+  "updatedAt": "2026-07-17T12:51:56.496Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "c9d9bcc0bac7e2cab326729a9c5cfdf1e9034e4a009efcf81c4c3e1d8b8d6cdc",
+  "lastExportedAt": "2026-09-05T19:39:22.176Z",
+  "raw": {
+    "basic": {
+      "_id": "698464ba03255c80cef5c0e6",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getBaseCurrencyType",
+      "description": "Returns the top (first) row from the Currency Type summary grid (Code / Currency / Symbol) after clicking Show All. No record open. Exchange rate is always returned as \"1\".",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getBaseCurrencyType",
+        "args": [],
+        "isAdvanced": false,
+        "_id": "6a5a256c5aa8b43ec1a81a97"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar?.user?.metaData?.menus?.includes(\"EIM/CurrencyType.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Currency Type screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Navigate to the Currency Type page\n     * ------------------------------------------------- */\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/CurrencyType.aspx\");\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/CurrencyType.aspx`;\n\n\n    // Open the page in an iframe to get the rendered DOM\n    const iframe = document.createElement('iframe');\n    iframe.style.display = 'none';\n    document.body.appendChild(iframe);\n\n    try {\n      // Load the page\n      await new Promise((resolve, reject) => {\n        iframe.onload = resolve;\n        iframe.onerror = reject;\n        iframe.src = url;\n        \n        // Timeout after 10 seconds\n        setTimeout(() => reject(new Error('Page load timeout')), 10000);\n      });\n\n      // Wait a bit for JavaScript to execute and apply styles\n      await new Promise(resolve => setTimeout(resolve, 2000));\n\n      const doc = iframe.contentDocument || iframe.contentWindow.document;\n\n      /* -------------------------------------------------\n       * 3) Extract base currency row (row with blue background)\n       * ------------------------------------------------- */\n      const allRows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n\n      // Log first 5 rows\n      for (let i = 0; i < Math.min(5, allRows.length); i++) {\n        const row = allRows[i];\n        const style = row.getAttribute(\"style\") || row.style.cssText;\n        const tds = row.querySelectorAll(\"td\");\n        const code = (tds[0]?.textContent || \"\").trim();\n        const name = (tds[1]?.textContent || \"\").trim();\n        \n      }\n\n      // Look for row with blue background color\n      let baseRow = null;\n      \n      // Method 1: Check inline style attribute\n      baseRow = doc.querySelector(\"tr[style*='C6DEFA' i]\");\n      \n      // Method 2: Check computed style if inline not found\n      if (!baseRow) {\n        for (const row of allRows) {\n          const computedStyle = iframe.contentWindow.getComputedStyle(row);\n          const bgColor = computedStyle.backgroundColor;\n          \n          // Convert rgb to hex to check if it's the blue color\n          if (bgColor && bgColor.includes('198, 222, 250')) { // RGB values for #C6DEFA\n            baseRow = row;\n            break;\n          }\n        }\n      }\n\n      if (!baseRow && allRows.length > 0) {\n        baseRow = allRows[0];\n      }\n\n      if (!baseRow) {\n        return {\n          status: \"NOT_FOUND\",\n          message: \"No currency records found in the summary grid.\"\n        };\n      }\n\n      const tds = baseRow.querySelectorAll(\"td\");\n      const result = {\n        currencyCode: (tds[0]?.textContent || \"\").trim(),\n        currencyName: (tds[1]?.textContent || \"\").trim(),\n        currencySymbol: (tds[2]?.textContent || \"\").trim(),\n        exchangeRate: \"1\"\n      };\n\n\n      return {\n        status: \"SUCCESS\",\n        baseCurrency: result\n      };\n\n    } finally {\n      // Clean up iframe\n      document.body.removeChild(iframe);\n    }\n\n  } catch (e) {\n    return { status: \"ERROR\", message: e?.message || String(e) };\n  }\n});",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "NexusInformation"
+      ],
+      "taskName": "Fetching Base Currency Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2026-02-05T09:36:58.674Z",
+      "updatedAt": "2026-07-17T12:51:56.496Z",
+      "__v": 12,
+      "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getBaseCurrencyType",
+      "args": [],
+      "isAdvanced": false,
+      "_id": "6a5a256c5aa8b43ec1a81a97"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar?.user?.metaData?.menus?.includes(\"EIM/CurrencyType.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Currency Type screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Navigate to the Currency Type page\n     * ------------------------------------------------- */\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/CurrencyType.aspx\");\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/CurrencyType.aspx`;\n\n\n    // Open the page in an iframe to get the rendered DOM\n    const iframe = document.createElement('iframe');\n    iframe.style.display = 'none';\n    document.body.appendChild(iframe);\n\n    try {\n      // Load the page\n      await new Promise((resolve, reject) => {\n        iframe.onload = resolve;\n        iframe.onerror = reject;\n        iframe.src = url;\n        \n        // Timeout after 10 seconds\n        setTimeout(() => reject(new Error('Page load timeout')), 10000);\n      });\n\n      // Wait a bit for JavaScript to execute and apply styles\n      await new Promise(resolve => setTimeout(resolve, 2000));\n\n      const doc = iframe.contentDocument || iframe.contentWindow.document;\n\n      /* -------------------------------------------------\n       * 3) Extract base currency row (row with blue background)\n       * ------------------------------------------------- */\n      const allRows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n\n      // Log first 5 rows\n      for (let i = 0; i < Math.min(5, allRows.length); i++) {\n        const row = allRows[i];\n        const style = row.getAttribute(\"style\") || row.style.cssText;\n        const tds = row.querySelectorAll(\"td\");\n        const code = (tds[0]?.textContent || \"\").trim();\n        const name = (tds[1]?.textContent || \"\").trim();\n        \n      }\n\n      // Look for row with blue background color\n      let baseRow = null;\n      \n      // Method 1: Check inline style attribute\n      baseRow = doc.querySelector(\"tr[style*='C6DEFA' i]\");\n      \n      // Method 2: Check computed style if inline not found\n      if (!baseRow) {\n        for (const row of allRows) {\n          const computedStyle = iframe.contentWindow.getComputedStyle(row);\n          const bgColor = computedStyle.backgroundColor;\n          \n          // Convert rgb to hex to check if it's the blue color\n          if (bgColor && bgColor.includes('198, 222, 250')) { // RGB values for #C6DEFA\n            baseRow = row;\n            break;\n          }\n        }\n      }\n\n      if (!baseRow && allRows.length > 0) {\n        baseRow = allRows[0];\n      }\n\n      if (!baseRow) {\n        return {\n          status: \"NOT_FOUND\",\n          message: \"No currency records found in the summary grid.\"\n        };\n      }\n\n      const tds = baseRow.querySelectorAll(\"td\");\n      const result = {\n        currencyCode: (tds[0]?.textContent || \"\").trim(),\n        currencyName: (tds[1]?.textContent || \"\").trim(),\n        currencySymbol: (tds[2]?.textContent || \"\").trim(),\n        exchangeRate: \"1\"\n      };\n\n\n      return {\n        status: \"SUCCESS\",\n        baseCurrency: result\n      };\n\n    } finally {\n      // Clean up iframe\n      document.body.removeChild(iframe);\n    }\n\n  } catch (e) {\n    return { status: \"ERROR\", message: e?.message || String(e) };\n  }\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

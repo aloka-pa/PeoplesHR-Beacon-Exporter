@@ -1,0 +1,54 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "ctl00_body_txtName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Description of the cash benefit",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Description of the cash benefit"
+      }
+    },
+    {
+      "name": "ctl00_body_nuamount",
+      "type": "number",
+      "required": true,
+      "defaultValue": null,
+      "description": "Amount of the cash benefit",
+      "advanced": true,
+      "raw": {
+        "type": "number",
+        "description": "Amount of the cash benefit"
+      }
+    },
+    {
+      "name": "ctl00_body_cboCurrency",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Selected currency code (e.g., 000146 for USD) if the user currency name corresponding value take.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Selected currency code (e.g., 000146 for USD) if the user currency name corresponding value take."
+      }
+    },
+    {
+      "name": "ctl00_body_dtRateEffDate_txtDate",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Rate effective date in dd/mm/yyyy format",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "format": "date",
+        "description": "Rate effective date in dd/mm/yyyy format"
+      }
+    }
+  ]
+}

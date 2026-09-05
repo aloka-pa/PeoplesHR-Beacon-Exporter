@@ -1,0 +1,147 @@
+{
+  "id": "690dc569931a2d61ba0b1985",
+  "slug": "updatethepriorovertimeapplication",
+  "name": "updatethePriorOvertimeApplication",
+  "description": "Before calling updatePriorOvertimeApplication, you must first call the \"getPriorOvertimeApplicationDetails\" API. Only update the dates that are available in the GET API response and that the user has specifically requested to modify. If the requested dates are not available in the GET API response, do not proceed with the update.Do not show the end user the internal processing steps or explanations of what the system is doing.When a user updates multiple records, the system should prompt for all required fields for each date record before proceeding",
+  "instructions": null,
+  "taskName": "updatingPriorOvertimeApplication",
+  "tags": [
+    "Attendance",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updatethePriorOvertimeApplication",
+  "createdAt": "2025-06-05T11:02:20.586Z",
+  "updatedAt": "2025-06-05T11:02:20.586Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bcd",
+      "name": "Attendance"
+    }
+  ],
+  "contentHash": "16b09d7e4e8b0032fe8a13a37b01a52f829d7592721ec28aa1d6a4742df3111d",
+  "lastExportedAt": "2026-09-05T19:39:23.657Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b1985",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updatethePriorOvertimeApplication",
+      "description": "Before calling updatePriorOvertimeApplication, you must first call the \"getPriorOvertimeApplicationDetails\" API. Only update the dates that are available in the GET API response and that the user has specifically requested to modify. If the requested dates are not available in the GET API response, do not proceed with the update.Do not show the end user the internal processing steps or explanations of what the system is doing.When a user updates multiple records, the system should prompt for all required fields for each date record before proceeding",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updatethePriorOvertimeApplication",
+        "args": [
+          {
+            "name": "preOT",
+            "type": "string",
+            "description": "preOT , Ex:- 04:00",
+            "required": true,
+            "_id": "6841793c9a45e164ddd3eaf8"
+          },
+          {
+            "name": "postOT",
+            "type": "string",
+            "description": "postOT, Ex:- 01:30",
+            "required": true,
+            "_id": "6841793c9a45e164ddd3eaf9"
+          },
+          {
+            "name": "comment",
+            "type": "string",
+            "description": "comment, Ex:- Early meeting preparation",
+            "required": true,
+            "_id": "6841793c9a45e164ddd3eafa"
+          },
+          {
+            "name": "selectedDates",
+            "type": "string",
+            "description": "selectedDates:- array of 06/23/25, 06/24/25, 06/25/25",
+            "required": true,
+            "_id": "6841793c9a45e164ddd3eafb"
+          },
+          {
+            "name": "reason",
+            "type": "string",
+            "description": "reason : 00003 is  extra covering hours  and 00002 is monthEndProcess and 00001 is urjentshipping Request only send only number ",
+            "required": true,
+            "_id": "6841793c9a45e164ddd3eafc"
+          }
+        ],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"updatePriorOvertimeApplication\": {\n      \"type\": \"array\",\n      \"description\": \"When a user updates multiple records, the system should prompt for all required fields for each date record before proceeding. This array contains objects for an intelligent overtime application processing system that uses AI-driven validation to ensure policy compliance and accurate time tracking, If the user updates multiple dates, you must ask for Pre OT and Post OT values for each individual date. Each date represents one record, so for bulk date updates, prompt the user to provide Pre OT and Post OT for every single date.\",\n      \"items\": {\n        \"type\": \"object\",\n        \"description\" : \"If the user updates multiple dates, you must ask for Pre OT and Post OT values for each individual date. Each date represents one record, so for bulk date updates, prompt the user to provide Pre OT and Post OT for every single date.\",\n        \"properties\": {\n          \"PreOTHrsText\": {\n            \"type\": \"string\",\n            \"description\": \"The original pre-shift overtime hours that were previously recorded. This field captures the initial overtime allocation before any modifications, enabling the AI agent to calculate delta changes and maintain audit trails for compliance reporting.\"\n          },\n          \"PostOTHrsText\": {\n            \"type\": \"string\",\n            \"description\": \"The revised post-shift overtime hours that represent the updated overtime allocation. This field allows the AI system to automatically recalculate total work hours, validate against maximum overtime limits, and trigger approval workflows when necessary.\"\n          },\n          \"selectedDates\": {\n            \"type\": \"string\",\n            \"description\": \"no need take mutiple dates only evry record one date.Comma-separated list of specific dates for which the overtime application updates should be applied. Format: DD/MM/YY (e.g., '23/06/25, 24/06/25, 25/06/25'). The AI agent will parse these dates to ensure they fall within valid pay periods and check for any scheduling conflicts or overlapping requests.\"\n          },\n          \"reason\": {\n            \"type\": \"string\",\n            \"description\": \"Standardized reason code for the overtime update request that enables automated categorization and approval routing. Values: '00003' = Extra covering hours (requires supervisor approval), '00002' = Month End Process (auto-approved for finance team), '00001' = Urgent shipping Request (requires immediate processing and client notification). The AI system uses these codes to trigger appropriate workflow automations. do not take ai user must be ask consent availebel reasion display user selected corresponding reasion id will be take.\"\n          },\n          \"comments\": {\n            \"type\": \"string\",\n            \"description\": \"Optional free-text field for additional context, justification, or special instructions related to the overtime update. When provided, the AI agent can perform sentiment analysis and keyword extraction to flag potential issues, ensure proper documentation for audit purposes, and route requests requiring human review.\"\n          }\n        },\n        \"required\": [\"PreOTHrsText\", \"PostOTHrsText\", \"selectedDates\", \"reason\"]\n      }\n    }\n  },\n  \"required\": [\"updatePriorOvertimeApplication\"]\n}",
+        "_id": "6841793c9a45e164ddd3eaf7"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  window.updatePrior.forEach(x => {\n    args.updatePriorOvertimeApplication.forEach(y => {\n      if (x.OutDateText === y.selectedDates) {\n        x.PreOTHrsText = y.PreOTHrsText;\n        x.PostOTHrsText = y.PostOTHrsText;\n        x.PriorDetail.PostOTHours = y.PostOTHrsText.trim().replace(':', '.');\n        x.PriorDetail.PreOTHours = y.PreOTHrsText.trim().replace(':', '.');\n        x.PriorDetail.ReasonCode = y.reason;\n        x.IsSelected = true;\n        if (y.comments) {\n          x.PriorDetail.Comment = y.comments;\n        }\n      }\n    });\n  });\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: {\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify({\n      PageMode: 0,\n      PriorOTDetailList: window.updatePrior\n    }),\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/TNAV9/api/PriorOT/SubmitPriorOTApplication/`, requestOptions);\n\n  return await response.json();\n});",
+      "groupName": "",
+      "tags": [
+        "Attendance",
+        "Headers"
+      ],
+      "taskName": "updatingPriorOvertimeApplication",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-05T11:02:20.586Z",
+      "updatedAt": "2025-06-05T11:02:20.586Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bcd",
+          "name": "Attendance"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updatethePriorOvertimeApplication",
+      "args": [
+        {
+          "name": "preOT",
+          "type": "string",
+          "description": "preOT , Ex:- 04:00",
+          "required": true,
+          "_id": "6841793c9a45e164ddd3eaf8"
+        },
+        {
+          "name": "postOT",
+          "type": "string",
+          "description": "postOT, Ex:- 01:30",
+          "required": true,
+          "_id": "6841793c9a45e164ddd3eaf9"
+        },
+        {
+          "name": "comment",
+          "type": "string",
+          "description": "comment, Ex:- Early meeting preparation",
+          "required": true,
+          "_id": "6841793c9a45e164ddd3eafa"
+        },
+        {
+          "name": "selectedDates",
+          "type": "string",
+          "description": "selectedDates:- array of 06/23/25, 06/24/25, 06/25/25",
+          "required": true,
+          "_id": "6841793c9a45e164ddd3eafb"
+        },
+        {
+          "name": "reason",
+          "type": "string",
+          "description": "reason : 00003 is  extra covering hours  and 00002 is monthEndProcess and 00001 is urjentshipping Request only send only number ",
+          "required": true,
+          "_id": "6841793c9a45e164ddd3eafc"
+        }
+      ],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"updatePriorOvertimeApplication\": {\n      \"type\": \"array\",\n      \"description\": \"When a user updates multiple records, the system should prompt for all required fields for each date record before proceeding. This array contains objects for an intelligent overtime application processing system that uses AI-driven validation to ensure policy compliance and accurate time tracking, If the user updates multiple dates, you must ask for Pre OT and Post OT values for each individual date. Each date represents one record, so for bulk date updates, prompt the user to provide Pre OT and Post OT for every single date.\",\n      \"items\": {\n        \"type\": \"object\",\n        \"description\" : \"If the user updates multiple dates, you must ask for Pre OT and Post OT values for each individual date. Each date represents one record, so for bulk date updates, prompt the user to provide Pre OT and Post OT for every single date.\",\n        \"properties\": {\n          \"PreOTHrsText\": {\n            \"type\": \"string\",\n            \"description\": \"The original pre-shift overtime hours that were previously recorded. This field captures the initial overtime allocation before any modifications, enabling the AI agent to calculate delta changes and maintain audit trails for compliance reporting.\"\n          },\n          \"PostOTHrsText\": {\n            \"type\": \"string\",\n            \"description\": \"The revised post-shift overtime hours that represent the updated overtime allocation. This field allows the AI system to automatically recalculate total work hours, validate against maximum overtime limits, and trigger approval workflows when necessary.\"\n          },\n          \"selectedDates\": {\n            \"type\": \"string\",\n            \"description\": \"no need take mutiple dates only evry record one date.Comma-separated list of specific dates for which the overtime application updates should be applied. Format: DD/MM/YY (e.g., '23/06/25, 24/06/25, 25/06/25'). The AI agent will parse these dates to ensure they fall within valid pay periods and check for any scheduling conflicts or overlapping requests.\"\n          },\n          \"reason\": {\n            \"type\": \"string\",\n            \"description\": \"Standardized reason code for the overtime update request that enables automated categorization and approval routing. Values: '00003' = Extra covering hours (requires supervisor approval), '00002' = Month End Process (auto-approved for finance team), '00001' = Urgent shipping Request (requires immediate processing and client notification). The AI system uses these codes to trigger appropriate workflow automations. do not take ai user must be ask consent availebel reasion display user selected corresponding reasion id will be take.\"\n          },\n          \"comments\": {\n            \"type\": \"string\",\n            \"description\": \"Optional free-text field for additional context, justification, or special instructions related to the overtime update. When provided, the AI agent can perform sentiment analysis and keyword extraction to flag potential issues, ensure proper documentation for audit purposes, and route requests requiring human review.\"\n          }\n        },\n        \"required\": [\"PreOTHrsText\", \"PostOTHrsText\", \"selectedDates\", \"reason\"]\n      }\n    }\n  },\n  \"required\": [\"updatePriorOvertimeApplication\"]\n}",
+      "_id": "6841793c9a45e164ddd3eaf7"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  window.updatePrior.forEach(x => {\n    args.updatePriorOvertimeApplication.forEach(y => {\n      if (x.OutDateText === y.selectedDates) {\n        x.PreOTHrsText = y.PreOTHrsText;\n        x.PostOTHrsText = y.PostOTHrsText;\n        x.PriorDetail.PostOTHours = y.PostOTHrsText.trim().replace(':', '.');\n        x.PriorDetail.PreOTHours = y.PreOTHrsText.trim().replace(':', '.');\n        x.PriorDetail.ReasonCode = y.reason;\n        x.IsSelected = true;\n        if (y.comments) {\n          x.PriorDetail.Comment = y.comments;\n        }\n      }\n    });\n  });\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: {\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\"\n    },\n    body: JSON.stringify({\n      PageMode: 0,\n      PriorOTDetailList: window.updatePrior\n    }),\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/TNAV9/api/PriorOT/SubmitPriorOTApplication/`, requestOptions);\n\n  return await response.json();\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

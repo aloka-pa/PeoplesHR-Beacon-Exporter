@@ -1,0 +1,95 @@
+{
+  "id": "690dc562931a2d61ba0b1298",
+  "slug": "setupconfiguration",
+  "name": "setupConfiguration",
+  "description": "setup Configuration in the to set up configuration sectionData and profileData.",
+  "instructions": null,
+  "taskName": "Configuration Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "setupConfiguration",
+  "createdAt": "2025-04-28T09:18:16.121Z",
+  "updatedAt": "2026-07-17T12:55:29.092Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "65f334aaacd84199b227f37e7cf63c353ff52a22cccc3c31095c77d8b0c62c43",
+  "lastExportedAt": "2026-09-05T19:39:22.029Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc562931a2d61ba0b1298",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "setupConfiguration",
+      "description": "setup Configuration in the to set up configuration sectionData and profileData.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "setupConfiguration",
+        "args": [],
+        "isAdvanced": false,
+        "_id": "6a5a264183d39a96ca2ac816"
+      },
+      "by": "34476",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return [];\n    })`\n  };\n})\n",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIMV9/SetupConfiguration/SetupConfiguration?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const requiredOpt = {\n    method: \"GET\",\n    headers: myHeaders\n  };\n\n  const resposne = await fetch(`${location.origin}/${reqOptions.sl}/EIMV9/SetupConfiguration/SetupConfiguration?mvc=1&_=${Date.now()}`, requiredOpt);\n\n  const details = await resposne.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(details, 'text/html');\n\n  const scripts = Array.from(doc.querySelectorAll('script'));\n\n  let modelConfText = \"\";\n\n  for (const script of scripts) {\n    if (script.textContent.includes(\"var modelConf =\")) {\n      modelConfText = script.textContent;\n      break;\n    }\n  }\n\n  if (!modelConfText) {\n    return [];\n  }\n\n  const modelConfJsonStr = modelConfText\n    .split(\"var modelConf =\")[1]\n    .split(\";\")[0]\n    .trim();\n\n  const modelConf = JSON.parse(modelConfJsonStr);\n\n  const profileData = {\n    \"Employee Self Service\": 1,\n    \"Manager Self Service\": 2\n  }\n\n  const sectionData = modelConf.SectionList.map(section => ({\n    SectionCode: section.SectionCode,\n    SectionName: section.SectionName\n  }));\n\n  window.list = sectionData;\n  return { sectionData, profileData };\n})",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Configuration Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-28T09:18:16.121Z",
+      "updatedAt": "2026-07-17T12:55:29.092Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "setupConfiguration",
+      "args": [],
+      "isAdvanced": false,
+      "_id": "6a5a264183d39a96ca2ac816"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return [];\n    })`\n  };\n})\n",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIMV9/SetupConfiguration/SetupConfiguration?mvc=1\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const requiredOpt = {\n    method: \"GET\",\n    headers: myHeaders\n  };\n\n  const resposne = await fetch(`${location.origin}/${reqOptions.sl}/EIMV9/SetupConfiguration/SetupConfiguration?mvc=1&_=${Date.now()}`, requiredOpt);\n\n  const details = await resposne.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(details, 'text/html');\n\n  const scripts = Array.from(doc.querySelectorAll('script'));\n\n  let modelConfText = \"\";\n\n  for (const script of scripts) {\n    if (script.textContent.includes(\"var modelConf =\")) {\n      modelConfText = script.textContent;\n      break;\n    }\n  }\n\n  if (!modelConfText) {\n    return [];\n  }\n\n  const modelConfJsonStr = modelConfText\n    .split(\"var modelConf =\")[1]\n    .split(\";\")[0]\n    .trim();\n\n  const modelConf = JSON.parse(modelConfJsonStr);\n\n  const profileData = {\n    \"Employee Self Service\": 1,\n    \"Manager Self Service\": 2\n  }\n\n  const sectionData = modelConf.SectionList.map(section => ({\n    SectionCode: section.SectionCode,\n    SectionName: section.SectionName\n  }));\n\n  window.list = sectionData;\n  return { sectionData, profileData };\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

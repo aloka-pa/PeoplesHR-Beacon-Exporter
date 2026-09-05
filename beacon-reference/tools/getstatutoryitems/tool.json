@@ -1,0 +1,192 @@
+{
+  "id": "695430ddec34eb2090d6af5d",
+  "slug": "getstatutoryitems",
+  "name": "getStatutoryItems",
+  "description": "This tool retrieves Statutory Items from the PeopleHR EIM screen. It supports searching by statutory code (exact match) or statutory name (partial match), and it can also return all available records. When “return all” is requested, the transformer automatically navigates through all RadGrid pages using the Go-To-Page postback and aggregates results so user don’t get stuck with only page 1’s data.",
+  "instructions": null,
+  "taskName": "Fetching Statutory Items",
+  "tags": [
+    "EIMAdmin",
+    "CensusInformation"
+  ],
+  "status": "live",
+  "signature": "getStatutoryItems",
+  "createdAt": "2025-12-30T20:06:53.673Z",
+  "updatedAt": "2026-02-02T15:00:11.455Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "4975a9e12562d26b7859bb03778fe1d680f7315846ea53775fde384d2f71544b",
+  "lastExportedAt": "2026-09-05T19:39:22.981Z",
+  "raw": {
+    "basic": {
+      "_id": "695430ddec34eb2090d6af5d",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getStatutoryItems",
+      "description": "This tool retrieves Statutory Items from the PeopleHR EIM screen. It supports searching by statutory code (exact match) or statutory name (partial match), and it can also return all available records. When “return all” is requested, the transformer automatically navigates through all RadGrid pages using the Go-To-Page postback and aggregates results so user don’t get stuck with only page 1’s data.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getStatutoryItems",
+        "args": [
+          {
+            "name": "statutoryCode",
+            "type": "string",
+            "description": "When the user provides a statutory item code, this is used for an exact match search.\nTriggers the Search action with criteria = STA_CODE and returns the matching grid record(s). (e.g., \"000005\").",
+            "required": false,
+            "_id": "695430ddec34eb2090d6af5f"
+          },
+          {
+            "name": "statutoryName",
+            "type": "string",
+            "description": "When the user provides a statutory item name (full or partial), this performs a case-insensitive partial match search.\nTriggers the Search action with criteria = STA_NAME and returns all matching grid rows. (e.g., \"Gratuity\", \"EPF\").  ",
+            "required": false,
+            "_id": "695430ddec34eb2090d6af60"
+          },
+          {
+            "name": "returnAll",
+            "type": "string",
+            "description": "When user asks to return all/available/existing statutory items, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\"\nTriggers Show All and returns every grid row.",
+            "required": false,
+            "_id": "697e47e442b57a258adca036"
+          },
+          {
+            "name": "showAll",
+            "type": "string",
+            "description": "Alias of returnAll. Example: \"true\"",
+            "required": false,
+            "_id": "6980bbfb65468510eaea3212"
+          },
+          {
+            "name": "autoFetchAllPages",
+            "type": "string",
+            "description": "Controls paging behavior when returnAll is used.\n\"true\" = loop all pages (default when returnAll is truthy)\n\"false\" = return only page 1 and provide nextPage + moreAvailable",
+            "required": false,
+            "_id": "6980bbfb65468510eaea3213"
+          },
+          {
+            "name": "pageNumber",
+            "type": "string",
+            "description": "Page to fetch when not auto-looping (default \"1\"). Example: \"2\"",
+            "required": false,
+            "_id": "6980bbfb65468510eaea3214"
+          },
+          {
+            "name": "pageSize",
+            "type": "string",
+            "description": "Page size sent to the grid pager (server may cap it). Default: \"100\". Example: \"200\"",
+            "required": false,
+            "_id": "6980bbfb65468510eaea3215"
+          },
+          {
+            "name": "maxPages",
+            "type": "string",
+            "description": "Safety cap to prevent infinite loops. Default: \"50\". Example: \"10\"",
+            "required": false,
+            "_id": "6980bbfb65468510eaea3216"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "695430ddec34eb2090d6af5e"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 0) Helpers (STRING ARGS ONLY)\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const lower = (v) => okText(v).toLowerCase();\n\n    const isTruthy = (v) => {\n      const t = lower(v);\n      return [\n        \"true\", \"1\", \"yes\", \"y\",\n        \"all\", \"available\", \"existing\", \"list\",\n        \"showall\", \"show all\", \"returnall\"\n      ].includes(t);\n    };\n\n    const safeInt = (v, def) => {\n      const n = Number(okText(v));\n      return Number.isFinite(n) && n > 0 ? Math.floor(n) : def;\n    };\n\n    const extractHidden = (doc, name) =>\n      doc.querySelector(`input[name=\"${name}\"]`)?.getAttribute(\"value\") || \"\";\n\n    const extractState = (html) => {\n      const parser = new DOMParser();\n      const doc = parser.parseFromString(html, \"text/html\");\n      return {\n        doc,\n        viewState: extractHidden(doc, \"__VIEWSTATE\"),\n        viewStateGen: extractHidden(doc, \"__VIEWSTATEGENERATOR\"),\n        eventValidation: extractHidden(doc, \"__EVENTVALIDATION\")\n      };\n    };\n\n    const parseTotalPages = (doc) => {\n      // Example: \"Displaying page 1 of 3, items 1 to 2 of 6.\"\n      const pagerText =\n        doc.querySelector(\".PagerRight_Default\")?.textContent ||\n        doc.querySelector(\"tr.GridPager_Default\")?.textContent ||\n        \"\";\n\n      const m = pagerText.match(/Displaying\\s+page\\s+(\\d+)\\s+of\\s+(\\d+)/i);\n      if (!m) return { current: 1, total: 1 };\n\n      const current = safeInt(m[1], 1);\n      const total = safeInt(m[2], 1);\n      return { current, total };\n    };\n\n    const extractRows = (doc) => {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const out = [];\n\n      for (const row of rows) {\n        const cells = row.querySelectorAll(\"td\");\n        if (cells.length < 2) continue;\n\n        const code = okText(cells[0]?.textContent);\n        const name = okText(cells[1]?.textContent);\n        if (!code && !name) continue;\n\n        out.push({ code, statutoryName: name });\n      }\n      return out;\n    };\n\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/StatutoryItems.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Statutory Items screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Args (string-only)\n     * ------------------------------------------------- */\n    const statutoryCode = okText(args?.statutoryCode);\n    const statutoryName = okText(args?.statutoryName);\n\n    const returnAll = isTruthy(args?.returnAll || args?.showAll);\n    const autoFetchAllPages =\n      args?.autoFetchAllPages === undefined ? (returnAll ? \"true\" : \"false\") : okText(args?.autoFetchAllPages);\n\n    const shouldAutoFetch = isTruthy(autoFetchAllPages);\n\n    const pageNumber = safeInt(args?.pageNumber, 1);\n    const pageSize = safeInt(args?.pageSize, 100);\n    const maxPages = safeInt(args?.maxPages, 50);\n\n    if (!returnAll && !statutoryCode && !statutoryName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message:\n          \"Please provide either statutoryCode or statutoryName. To return all records, pass returnAll as 'true'/'all'/'available'/'existing'/'list'.\",\n        examples: {\n          searchByCode: { statutoryCode: \"000001\" },\n          searchByName: { statutoryName: \"Tax\" },\n          returnAll: { returnAll: \"all\" }\n        }\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Initial page hidden fields\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"StatutoryItems\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/StatutoryItems.aspx\");\n    const url = updateUrl?.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/StatutoryItems.aspx`;\n\n    /* -------------------------------------------------\n     * 4) Determine criteria\n     * ------------------------------------------------- */\n    let searchCriteria = \"STA_CODE\";\n    let searchValue = \"\";\n\n    if (!returnAll) {\n      if (statutoryCode) {\n        searchCriteria = \"STA_CODE\";\n        searchValue = statutoryCode;\n      } else {\n        searchCriteria = \"STA_NAME\";\n        searchValue = statutoryName;\n      }\n    } else {\n      // keep a stable criteria for show-all\n      searchCriteria = \"STA_CODE\";\n      searchValue = \"\";\n    }\n\n    /* -------------------------------------------------\n     * 5) POST #1 (Search or Show All) -> page 1\n     * ------------------------------------------------- */\n    const postPage = async (state, eventTarget, gotoPageValue) => {\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", eventTarget || \"\");\n      formData.append(\"__EVENTARGUMENT\", \"\");\n      formData.append(\"__VIEWSTATE\", state.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", state.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      // IMPORTANT: Only on first call we click Search/Show All.\n      // On later paging calls, we just postback via GoToPageLinkButton.\n      if (!eventTarget) {\n        if (returnAll) formData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n        else formData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n      }\n\n      // RadGrid paging fields\n      const pageToSet = gotoPageValue ? String(gotoPageValue) : \"1\";\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", pageToSet);\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n\n      // Use bigger page size but server may cap; still fine (we will page-loop anyway)\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const resp = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await resp.text();\n      return extractState(html);\n    };\n\n    // initial state from getApiList\n    let state = {\n      viewState: details.viewState,\n      viewStateGen: details.viewStateGen,\n      eventValidation: details.eventValidation\n    };\n\n    // 1st request\n    let pageState = await postPage(state, \"\", \"1\");\n    state = pageState;\n\n    /* -------------------------------------------------\n     * 6) Decide paging approach\n     * ------------------------------------------------- */\n    const { total } = parseTotalPages(state.doc);\n    const boundedTotal = Math.min(total, maxPages);\n\n    // If not returnAll, we only need the current page’s content (already page 1).\n    // But user may request a specific pageNumber (without returnAll)\n    // -> go to that page using GoToPageLinkButton.\n    const goToButtonTarget = \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\";\n\n    const fetchSpecificPageIfNeeded = async () => {\n      if (pageNumber <= 1) return state;\n      const nextState = await postPage(state, goToButtonTarget, pageNumber);\n      state = nextState;\n      return state;\n    };\n\n    if (!returnAll) {\n      await fetchSpecificPageIfNeeded();\n\n      // extract + filter within that page\n      const rows = extractRows(state.doc);\n\n      const final = rows.filter((r) => {\n        if (statutoryCode) return r.code === statutoryCode; // exact\n        if (statutoryName) return r.statutoryName.toLowerCase().includes(statutoryName.toLowerCase()); // partial\n        return true;\n      });\n\n      if (final.length === 0) {\n        return {\n          status: \"NOT_FOUND\",\n          message: `No Statutory Items found matching \"${searchValue}\"`,\n          searchCriteria,\n          searchValue\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: `Found ${final.length} Statutory Item(s).`,\n        mode: statutoryCode ? \"CODE_SEARCH\" : \"NAME_SEARCH\",\n        pageNumber: String(pageNumber),\n        count: final.length,\n        statutoryItems: final\n      };\n    }\n\n    // returnAll mode:\n    // - if autoFetchAllPages true => loop all pages and aggregate\n    // - else => return only current page and provide nextPage + moreAvailable\n    if (!shouldAutoFetch) {\n      const pageRows = extractRows(state.doc);\n      return {\n        status: \"SUCCESS\",\n        message: `Returned ${pageRows.length} Statutory Item(s) from page 1.`,\n        mode: \"ALL_PAGE\",\n        pageNumber: \"1\",\n        totalPages: String(total),\n        moreAvailable: total > 1 ? \"true\" : \"false\",\n        nextPage: total > 1 ? \"2\" : \"\",\n        count: pageRows.length,\n        statutoryItems: pageRows\n      };\n    }\n\n    /* -------------------------------------------------\n     * 7) Auto-loop pages (FIX for “page 1 only”)\n     * ------------------------------------------------- */\n    const map = new Map();\n    const addRows = (arr) => {\n      for (const it of arr) {\n        if (!map.has(it.code)) map.set(it.code, it);\n      }\n    };\n\n    // page 1\n    addRows(extractRows(state.doc));\n\n    // pages 2..N\n    for (let p = 2; p <= boundedTotal; p++) {\n      const nextState = await postPage(state, goToButtonTarget, p);\n      state = nextState;\n\n      addRows(extractRows(state.doc));\n    }\n\n    const allItems = Array.from(map.values());\n\n    return {\n      status: \"SUCCESS\",\n      message: `Returned ${allItems.length} Statutory Item(s) across ${boundedTotal} page(s).`,\n      mode: \"ALL\",\n      totalPages: String(total),\n      fetchedPages: String(boundedTotal),\n      count: allItems.length,\n      statutoryItems: allItems\n    };\n\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unexpected error\",\n      error: err?.toString?.() || String(err)\n    };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "CensusInformation"
+      ],
+      "taskName": "Fetching Statutory Items",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-30T20:06:53.673Z",
+      "updatedAt": "2026-02-02T15:00:11.455Z",
+      "__v": 3,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getStatutoryItems",
+      "args": [
+        {
+          "name": "statutoryCode",
+          "type": "string",
+          "description": "When the user provides a statutory item code, this is used for an exact match search.\nTriggers the Search action with criteria = STA_CODE and returns the matching grid record(s). (e.g., \"000005\").",
+          "required": false,
+          "_id": "695430ddec34eb2090d6af5f"
+        },
+        {
+          "name": "statutoryName",
+          "type": "string",
+          "description": "When the user provides a statutory item name (full or partial), this performs a case-insensitive partial match search.\nTriggers the Search action with criteria = STA_NAME and returns all matching grid rows. (e.g., \"Gratuity\", \"EPF\").  ",
+          "required": false,
+          "_id": "695430ddec34eb2090d6af60"
+        },
+        {
+          "name": "returnAll",
+          "type": "string",
+          "description": "When user asks to return all/available/existing statutory items, set this to one of:\n\"true\", \"yes\", \"all\", \"1\", \"showall\", \"returnall\", \"available\", \"existing\", \"list\"\nTriggers Show All and returns every grid row.",
+          "required": false,
+          "_id": "697e47e442b57a258adca036"
+        },
+        {
+          "name": "showAll",
+          "type": "string",
+          "description": "Alias of returnAll. Example: \"true\"",
+          "required": false,
+          "_id": "6980bbfb65468510eaea3212"
+        },
+        {
+          "name": "autoFetchAllPages",
+          "type": "string",
+          "description": "Controls paging behavior when returnAll is used.\n\"true\" = loop all pages (default when returnAll is truthy)\n\"false\" = return only page 1 and provide nextPage + moreAvailable",
+          "required": false,
+          "_id": "6980bbfb65468510eaea3213"
+        },
+        {
+          "name": "pageNumber",
+          "type": "string",
+          "description": "Page to fetch when not auto-looping (default \"1\"). Example: \"2\"",
+          "required": false,
+          "_id": "6980bbfb65468510eaea3214"
+        },
+        {
+          "name": "pageSize",
+          "type": "string",
+          "description": "Page size sent to the grid pager (server may cap it). Default: \"100\". Example: \"200\"",
+          "required": false,
+          "_id": "6980bbfb65468510eaea3215"
+        },
+        {
+          "name": "maxPages",
+          "type": "string",
+          "description": "Safety cap to prevent infinite loops. Default: \"50\". Example: \"10\"",
+          "required": false,
+          "_id": "6980bbfb65468510eaea3216"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "695430ddec34eb2090d6af5e"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 0) Helpers (STRING ARGS ONLY)\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const lower = (v) => okText(v).toLowerCase();\n\n    const isTruthy = (v) => {\n      const t = lower(v);\n      return [\n        \"true\", \"1\", \"yes\", \"y\",\n        \"all\", \"available\", \"existing\", \"list\",\n        \"showall\", \"show all\", \"returnall\"\n      ].includes(t);\n    };\n\n    const safeInt = (v, def) => {\n      const n = Number(okText(v));\n      return Number.isFinite(n) && n > 0 ? Math.floor(n) : def;\n    };\n\n    const extractHidden = (doc, name) =>\n      doc.querySelector(`input[name=\"${name}\"]`)?.getAttribute(\"value\") || \"\";\n\n    const extractState = (html) => {\n      const parser = new DOMParser();\n      const doc = parser.parseFromString(html, \"text/html\");\n      return {\n        doc,\n        viewState: extractHidden(doc, \"__VIEWSTATE\"),\n        viewStateGen: extractHidden(doc, \"__VIEWSTATEGENERATOR\"),\n        eventValidation: extractHidden(doc, \"__EVENTVALIDATION\")\n      };\n    };\n\n    const parseTotalPages = (doc) => {\n      // Example: \"Displaying page 1 of 3, items 1 to 2 of 6.\"\n      const pagerText =\n        doc.querySelector(\".PagerRight_Default\")?.textContent ||\n        doc.querySelector(\"tr.GridPager_Default\")?.textContent ||\n        \"\";\n\n      const m = pagerText.match(/Displaying\\s+page\\s+(\\d+)\\s+of\\s+(\\d+)/i);\n      if (!m) return { current: 1, total: 1 };\n\n      const current = safeInt(m[1], 1);\n      const total = safeInt(m[2], 1);\n      return { current, total };\n    };\n\n    const extractRows = (doc) => {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const out = [];\n\n      for (const row of rows) {\n        const cells = row.querySelectorAll(\"td\");\n        if (cells.length < 2) continue;\n\n        const code = okText(cells[0]?.textContent);\n        const name = okText(cells[1]?.textContent);\n        if (!code && !name) continue;\n\n        out.push({ code, statutoryName: name });\n      }\n      return out;\n    };\n\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/StatutoryItems.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Statutory Items screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Args (string-only)\n     * ------------------------------------------------- */\n    const statutoryCode = okText(args?.statutoryCode);\n    const statutoryName = okText(args?.statutoryName);\n\n    const returnAll = isTruthy(args?.returnAll || args?.showAll);\n    const autoFetchAllPages =\n      args?.autoFetchAllPages === undefined ? (returnAll ? \"true\" : \"false\") : okText(args?.autoFetchAllPages);\n\n    const shouldAutoFetch = isTruthy(autoFetchAllPages);\n\n    const pageNumber = safeInt(args?.pageNumber, 1);\n    const pageSize = safeInt(args?.pageSize, 100);\n    const maxPages = safeInt(args?.maxPages, 50);\n\n    if (!returnAll && !statutoryCode && !statutoryName) {\n      return {\n        status: \"INVALID_ARGS\",\n        message:\n          \"Please provide either statutoryCode or statutoryName. To return all records, pass returnAll as 'true'/'all'/'available'/'existing'/'list'.\",\n        examples: {\n          searchByCode: { statutoryCode: \"000001\" },\n          searchByName: { statutoryName: \"Tax\" },\n          returnAll: { returnAll: \"all\" }\n        }\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Initial page hidden fields\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"StatutoryItems\");\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/StatutoryItems.aspx\");\n    const url = updateUrl?.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/StatutoryItems.aspx`;\n\n    /* -------------------------------------------------\n     * 4) Determine criteria\n     * ------------------------------------------------- */\n    let searchCriteria = \"STA_CODE\";\n    let searchValue = \"\";\n\n    if (!returnAll) {\n      if (statutoryCode) {\n        searchCriteria = \"STA_CODE\";\n        searchValue = statutoryCode;\n      } else {\n        searchCriteria = \"STA_NAME\";\n        searchValue = statutoryName;\n      }\n    } else {\n      // keep a stable criteria for show-all\n      searchCriteria = \"STA_CODE\";\n      searchValue = \"\";\n    }\n\n    /* -------------------------------------------------\n     * 5) POST #1 (Search or Show All) -> page 1\n     * ------------------------------------------------- */\n    const postPage = async (state, eventTarget, gotoPageValue) => {\n      const formData = new FormData();\n      formData.append(\"scrollLeft\", \"0\");\n      formData.append(\"scrollTop\", \"0\");\n      formData.append(\"__EVENTTARGET\", eventTarget || \"\");\n      formData.append(\"__EVENTARGUMENT\", \"\");\n      formData.append(\"__VIEWSTATE\", state.viewState);\n      formData.append(\"__VIEWSTATEGENERATOR\", state.viewStateGen);\n      formData.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      formData.append(\"__EVENTVALIDATION\", state.eventValidation);\n\n      formData.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      formData.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n      formData.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      formData.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      // IMPORTANT: Only on first call we click Search/Show All.\n      // On later paging calls, we just postback via GoToPageLinkButton.\n      if (!eventTarget) {\n        if (returnAll) formData.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n        else formData.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n      }\n\n      // RadGrid paging fields\n      const pageToSet = gotoPageValue ? String(gotoPageValue) : \"1\";\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", pageToSet);\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n\n      // Use bigger page size but server may cap; still fine (we will page-loop anyway)\n      formData.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      formData.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      formData.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const resp = await fetch(url, { method: \"POST\", headers, body: formData });\n      const html = await resp.text();\n      return extractState(html);\n    };\n\n    // initial state from getApiList\n    let state = {\n      viewState: details.viewState,\n      viewStateGen: details.viewStateGen,\n      eventValidation: details.eventValidation\n    };\n\n    // 1st request\n    let pageState = await postPage(state, \"\", \"1\");\n    state = pageState;\n\n    /* -------------------------------------------------\n     * 6) Decide paging approach\n     * ------------------------------------------------- */\n    const { total } = parseTotalPages(state.doc);\n    const boundedTotal = Math.min(total, maxPages);\n\n    // If not returnAll, we only need the current page’s content (already page 1).\n    // But user may request a specific pageNumber (without returnAll)\n    // -> go to that page using GoToPageLinkButton.\n    const goToButtonTarget = \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\";\n\n    const fetchSpecificPageIfNeeded = async () => {\n      if (pageNumber <= 1) return state;\n      const nextState = await postPage(state, goToButtonTarget, pageNumber);\n      state = nextState;\n      return state;\n    };\n\n    if (!returnAll) {\n      await fetchSpecificPageIfNeeded();\n\n      // extract + filter within that page\n      const rows = extractRows(state.doc);\n\n      const final = rows.filter((r) => {\n        if (statutoryCode) return r.code === statutoryCode; // exact\n        if (statutoryName) return r.statutoryName.toLowerCase().includes(statutoryName.toLowerCase()); // partial\n        return true;\n      });\n\n      if (final.length === 0) {\n        return {\n          status: \"NOT_FOUND\",\n          message: `No Statutory Items found matching \"${searchValue}\"`,\n          searchCriteria,\n          searchValue\n        };\n      }\n\n      return {\n        status: \"SUCCESS\",\n        message: `Found ${final.length} Statutory Item(s).`,\n        mode: statutoryCode ? \"CODE_SEARCH\" : \"NAME_SEARCH\",\n        pageNumber: String(pageNumber),\n        count: final.length,\n        statutoryItems: final\n      };\n    }\n\n    // returnAll mode:\n    // - if autoFetchAllPages true => loop all pages and aggregate\n    // - else => return only current page and provide nextPage + moreAvailable\n    if (!shouldAutoFetch) {\n      const pageRows = extractRows(state.doc);\n      return {\n        status: \"SUCCESS\",\n        message: `Returned ${pageRows.length} Statutory Item(s) from page 1.`,\n        mode: \"ALL_PAGE\",\n        pageNumber: \"1\",\n        totalPages: String(total),\n        moreAvailable: total > 1 ? \"true\" : \"false\",\n        nextPage: total > 1 ? \"2\" : \"\",\n        count: pageRows.length,\n        statutoryItems: pageRows\n      };\n    }\n\n    /* -------------------------------------------------\n     * 7) Auto-loop pages (FIX for “page 1 only”)\n     * ------------------------------------------------- */\n    const map = new Map();\n    const addRows = (arr) => {\n      for (const it of arr) {\n        if (!map.has(it.code)) map.set(it.code, it);\n      }\n    };\n\n    // page 1\n    addRows(extractRows(state.doc));\n\n    // pages 2..N\n    for (let p = 2; p <= boundedTotal; p++) {\n      const nextState = await postPage(state, goToButtonTarget, p);\n      state = nextState;\n\n      addRows(extractRows(state.doc));\n    }\n\n    const allItems = Array.from(map.values());\n\n    return {\n      status: \"SUCCESS\",\n      message: `Returned ${allItems.length} Statutory Item(s) across ${boundedTotal} page(s).`,\n      mode: \"ALL\",\n      totalPages: String(total),\n      fetchedPages: String(boundedTotal),\n      count: allItems.length,\n      statutoryItems: allItems\n    };\n\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unexpected error\",\n      error: err?.toString?.() || String(err)\n    };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

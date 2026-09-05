@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "selectedClassification",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "selectedClassification , Ex:-  \"Supermarket\" takes only id \"000051\"",
+      "advanced": false,
+      "raw": {
+        "name": "selectedClassification",
+        "type": "string",
+        "description": "selectedClassification , Ex:-  \"Supermarket\" takes only id \"000051\"",
+        "required": true,
+        "_id": "683ff64013cd1b013377aded"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

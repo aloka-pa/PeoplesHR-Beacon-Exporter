@@ -1,0 +1,24 @@
+{
+  "id": "690dc57a931a2d61ba0b224d",
+  "slug": "application",
+  "name": "application",
+  "status": "live",
+  "createdAt": "2025-05-11T09:28:23.058Z",
+  "updatedAt": "2026-05-01T18:07:55.275Z",
+  "contentHash": "7153ee278471903e9ff9da00c9aa85525adba74325c42cd9c566638aacb8c22b",
+  "lastExportedAt": "2026-09-05T19:41:26.933Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57a931a2d61ba0b224d",
+    "name": "application",
+    "status": "live",
+    "code": "(async function () {\n    //done\n    // const menus = BeaconBar?.user?.metaData?.menus || [];\n    // const targetUrl = \"AbsenceV9/LeaveApplication/LeaveApplication?mvc=1&isAllEmployee=1\";\n\n    // const result = menus.find(url => url.includes(targetUrl));\n    // const updateParams = result?.split('?')[1] || null;\n\n    const url = await BeaconBar.executeFunction(\"updateUrlParams\")(\"AbsenceV9/LeaveApplication/LeaveApplication?mvc=1&isAllEmployee=1\")\n\n\n    const digest1 = await BeaconBar.executeFunction('getDigest')(url.updateParams);\n    const sl = await BeaconBar.getSharedData('sl');\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"text/html, */*; q=0.01\");\n    myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\")\n\n\n    const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n\n    const response1 = await fetch(`${location.origin}/${sl}/${url.updateUrl}&digest=${digest1.digest}`, requestOptions);\n    const data1 = await response1.text();\n\n    const parse = new DOMParser();\n    const dom = parse.parseFromString(data1, \"text/html\");\n\n    const csrfElement = dom.querySelector(\"#hdbAbsenceV9AFToken\");\n    const csrf = csrfElement ? csrfElement.value : null;\n    window.csrf = csrf;\n\n    const empNumberMatch = data1.match(/empNumber=([^&]*)/);\n    const searchTokenMatch = data1.match(/searchToken=([^&]*)/);\n    const digestMatch = data1.match(/digest=([A-Za-z0-9+/=]+)/);\n\n    const empNumber = empNumberMatch ? decodeURIComponent(empNumberMatch[1]) : null;\n    const searchToken = searchTokenMatch ? decodeURIComponent(searchTokenMatch[1]) : null;\n    const digest = digestMatch ? digestMatch[1] : null;\n\n    window.empLog = empNumber;\n\n    if (!empNumber) return;\n\n    const searchUrl = `${location.origin}/${sl}/CommonComponents/Search/Search?empNumber=${empNumber}&callBack=MQA0ACwAMgA=&searchMode=2&searchQueryMode=all&searchQueryState=all&isMultiple=0&breadCrumbEnable=0&isDivLoading=1&elgmodid=14&searchToken=${searchToken}&digest=${digest}&_=${Date.now()}`;\n    const response2 = await fetch(searchUrl, requestOptions);\n    const data2 = await response2.text();\n    const empNumberMatch2 = data2.match(/\"EmpNumber\":\"([^\"]+)\"/);\n    const keyValueMatch = data2.match(/\"KeyValue\":\"([^\"]+)\"/);\n\n    return {\n        empNumber2: empNumberMatch2 ? empNumberMatch2[1] : null,\n        keyValue: keyValueMatch ? keyValueMatch[1] : null\n    }\n})",
+    "by": "10308",
+    "__v": 9
+  }
+}

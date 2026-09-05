@@ -1,0 +1,105 @@
+{
+  "id": "690dc568931a2d61ba0b18e8",
+  "slug": "specificcreditcarddetails",
+  "name": "specificCreditCardDetails",
+  "description": "Before executing this API, first run the \"getEmployeeCreditCardDetails\" tool to fetch the user's credit card options. Use the selected card's editId from that response as a payload argument for this API to then after execute in this tool generate the specific credit card details. The response from this API should then be passed to the \"updateEmployeeInformationDetails\" tool, which should be executed last to complete the update process.",
+  "instructions": null,
+  "taskName": "Fetching The Credit Card Details",
+  "tags": [
+    "EmployeeInfromation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "specificCreditCardDetails",
+  "createdAt": "2025-06-02T07:36:15.235Z",
+  "updatedAt": "2025-06-02T07:36:15.235Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "31ec1097c75fef73844ddce54e56a551253b4e165a95f25c5120933b0b100493",
+  "lastExportedAt": "2026-09-05T19:39:23.768Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b18e8",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "specificCreditCardDetails",
+      "description": "Before executing this API, first run the \"getEmployeeCreditCardDetails\" tool to fetch the user's credit card options. Use the selected card's editId from that response as a payload argument for this API to then after execute in this tool generate the specific credit card details. The response from this API should then be passed to the \"updateEmployeeInformationDetails\" tool, which should be executed last to complete the update process.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "specificCreditCardDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "employee specific id",
+            "required": true,
+            "_id": "683d546fd074180fdcd47256"
+          },
+          {
+            "name": "editId",
+            "type": "string",
+            "description": "to get edit id for \"getEmployeeCreditCardDetails\" tool user selected card edit id get.",
+            "required": true,
+            "_id": "683d546fd074180fdcd47257"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "683d546fd074180fdcd47255"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignCreditCard.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const empEncId = await BeaconBar.executeFunction(\"employeeEncryptId\")(window.ccd.publicKey, args.id);\n\n  const editResponse = await BeaconBar.executeFunction('module')({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.editId,\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: window.ccd.viewState,\n    __VIEWSTATEGENERATOR: window.ccd.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.ccd.eventValidation,\n    \"ctl00$hdnDateFormat\": \"m/d/yy\",\n    \"ctl00$hdnQuickmenu\": \"\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00$body$cboBank\": \"\",\n    \"ctl00$body$txtCCNo\": \"\",\n    \"ctl00$body$rbCCType\": \"1\",\n    \"ctl00$body$txtIssueDate\": \"\",\n    \"ctl00$body$txtExpDate\": \"\",\n    \"ctl00$body$grdCC$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdCC_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdCC$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"2\",\n    \"ctl00_body_grdCC_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdCC_ClientState\": \"\",\n    \"ctl00$body$txtPublicKey\": window.ccd.publicKey,\n    \"ctl00$body$txtCCard\": \"\",\n    \"ctl00$body$txtempnumber\": empEncId\n  }, `${reqOptions.sl}/EIM/AssignCreditCard.aspx`);\n\n  window.ccdv = editResponse;\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(editResponse.rawData, \"text/html\");\n\n  const creditCardTypes = Array.from(\n    document.querySelectorAll('#ctl00_body_rbCCType input[type=\"radio\"]')\n  ).map(radio => {\n    const label = document.querySelector(`label[for=\"${radio.id}\"]`);\n    return {\n      name: label?.textContent.trim() || \"\",\n      value: radio.value\n    };\n  });\n\n  const creditCardDetails = {};\n\n  const bankSelect = document.querySelector(\"#ctl00_body_cboBank\");\n  const selectedBankOption = bankSelect?.selectedOptions[0];\n  creditCardDetails[\"Bank Name\"] = {\n    name: selectedBankOption?.textContent.trim() || \"\",\n    value: selectedBankOption?.value || \"\"\n  };\n\n  const ccNumber = document.querySelector(\"#ctl00_body_txtCCNo\")?.value || \"\";\n  creditCardDetails[\"Credit Card Number\"] = ccNumber.trim();\n\n  const selectedCardType = document.querySelector('input[name=\"ctl00$body$rbCCType\"]:checked');\n  const selectedCardTypeLabel = document.querySelector(`label[for=\"${selectedCardType?.id}\"]`);\n  creditCardDetails[\"Credit Card Type\"] = {\n    name: selectedCardTypeLabel?.textContent.trim() || \"\",\n    value: selectedCardType?.value || \"\"\n  };\n\n  const issueDate = document.querySelector(\"#ctl00_body_txtIssueDate\")?.value || \"\";\n  creditCardDetails[\"Issued Date\"] = issueDate.trim();\n\n  const expiryDate = document.querySelector(\"#ctl00_body_txtExpDate\")?.value || \"\";\n  creditCardDetails[\"Expiry Date\"] = expiryDate.trim();\n\n  return {\n    creditCardDetails,\n    creditCardTypes\n  };\n});\n",
+      "groupName": "",
+      "tags": [
+        "EmployeeInfromation",
+        "Headers"
+      ],
+      "taskName": "Fetching The Credit Card Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-02T07:36:15.235Z",
+      "updatedAt": "2025-06-02T07:36:15.235Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "specificCreditCardDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "employee specific id",
+          "required": true,
+          "_id": "683d546fd074180fdcd47256"
+        },
+        {
+          "name": "editId",
+          "type": "string",
+          "description": "to get edit id for \"getEmployeeCreditCardDetails\" tool user selected card edit id get.",
+          "required": true,
+          "_id": "683d546fd074180fdcd47257"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "683d546fd074180fdcd47255"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/AssignCreditCard.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const empEncId = await BeaconBar.executeFunction(\"employeeEncryptId\")(window.ccd.publicKey, args.id);\n\n  const editResponse = await BeaconBar.executeFunction('module')({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: args.editId,\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: window.ccd.viewState,\n    __VIEWSTATEGENERATOR: window.ccd.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.ccd.eventValidation,\n    \"ctl00$hdnDateFormat\": \"m/d/yy\",\n    \"ctl00$hdnQuickmenu\": \"\",\n    \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n    \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n    \"ctl00$body$cboBank\": \"\",\n    \"ctl00$body$txtCCNo\": \"\",\n    \"ctl00$body$rbCCType\": \"1\",\n    \"ctl00$body$txtIssueDate\": \"\",\n    \"ctl00$body$txtExpDate\": \"\",\n    \"ctl00$body$grdCC$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdCC_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdCC$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"2\",\n    \"ctl00_body_grdCC_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdCC_ClientState\": \"\",\n    \"ctl00$body$txtPublicKey\": window.ccd.publicKey,\n    \"ctl00$body$txtCCard\": \"\",\n    \"ctl00$body$txtempnumber\": empEncId\n  }, `${reqOptions.sl}/EIM/AssignCreditCard.aspx`);\n\n  window.ccdv = editResponse;\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(editResponse.rawData, \"text/html\");\n\n  const creditCardTypes = Array.from(\n    document.querySelectorAll('#ctl00_body_rbCCType input[type=\"radio\"]')\n  ).map(radio => {\n    const label = document.querySelector(`label[for=\"${radio.id}\"]`);\n    return {\n      name: label?.textContent.trim() || \"\",\n      value: radio.value\n    };\n  });\n\n  const creditCardDetails = {};\n\n  const bankSelect = document.querySelector(\"#ctl00_body_cboBank\");\n  const selectedBankOption = bankSelect?.selectedOptions[0];\n  creditCardDetails[\"Bank Name\"] = {\n    name: selectedBankOption?.textContent.trim() || \"\",\n    value: selectedBankOption?.value || \"\"\n  };\n\n  const ccNumber = document.querySelector(\"#ctl00_body_txtCCNo\")?.value || \"\";\n  creditCardDetails[\"Credit Card Number\"] = ccNumber.trim();\n\n  const selectedCardType = document.querySelector('input[name=\"ctl00$body$rbCCType\"]:checked');\n  const selectedCardTypeLabel = document.querySelector(`label[for=\"${selectedCardType?.id}\"]`);\n  creditCardDetails[\"Credit Card Type\"] = {\n    name: selectedCardTypeLabel?.textContent.trim() || \"\",\n    value: selectedCardType?.value || \"\"\n  };\n\n  const issueDate = document.querySelector(\"#ctl00_body_txtIssueDate\")?.value || \"\";\n  creditCardDetails[\"Issued Date\"] = issueDate.trim();\n\n  const expiryDate = document.querySelector(\"#ctl00_body_txtExpDate\")?.value || \"\";\n  creditCardDetails[\"Expiry Date\"] = expiryDate.trim();\n\n  return {\n    creditCardDetails,\n    creditCardTypes\n  };\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

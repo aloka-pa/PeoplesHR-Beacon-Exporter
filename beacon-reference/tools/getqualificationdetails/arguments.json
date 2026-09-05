@@ -1,0 +1,125 @@
+{
+  "arguments": [
+    {
+      "name": "qualificationCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Search qualifications by code. Supports partial matching and returns all matching rows. Ignored when fetchMode is set to return all records.\n  ",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationCode",
+        "type": "string",
+        "description": "Search qualifications by code. Supports partial matching and returns all matching rows. Ignored when fetchMode is set to return all records.\n  ",
+        "required": false,
+        "_id": "6952ab2a0ae74b035097924e"
+      }
+    },
+    {
+      "name": "qualificationName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Search qualifications by name. Supports partial matching (case-insensitive) and returns all matching rows. Ignored when fetchMode is set to return all records.",
+      "advanced": false,
+      "raw": {
+        "name": "qualificationName",
+        "type": "string",
+        "description": "Search qualifications by name. Supports partial matching (case-insensitive) and returns all matching rows. Ignored when fetchMode is set to return all records.",
+        "required": false,
+        "_id": "6952ab2a0ae74b035097924f"
+      }
+    },
+    {
+      "name": "fetchMode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Controls list retrieval. Use \"ALL\", \"AVAILABLE\", \"EXISTING\", or \"LIST\" to return all qualification records via Show All. When set, code/name search is skipped and all rows are returned.",
+      "advanced": false,
+      "raw": {
+        "name": "fetchMode",
+        "type": "string",
+        "description": "Controls list retrieval. Use \"ALL\", \"AVAILABLE\", \"EXISTING\", or \"LIST\" to return all qualification records via Show All. When set, code/name search is skipped and all rows are returned.",
+        "required": false,
+        "_id": "697e162f972f5a0a65f6e126"
+      }
+    },
+    {
+      "name": "returnAll",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "\"all\" | \"available\" | \"existing\" | \"list\" triggers show-all behavior (your existing style); truthy strings also trigger show-all (optional; supported)",
+      "advanced": false,
+      "raw": {
+        "name": "returnAll",
+        "type": "string",
+        "description": "\"all\" | \"available\" | \"existing\" | \"list\" triggers show-all behavior (your existing style); truthy strings also trigger show-all (optional; supported)",
+        "required": false,
+        "_id": "69808959af9f26f53d412c12"
+      }
+    },
+    {
+      "name": "pageNumber",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "fetch a single page (default \"1\")",
+      "advanced": false,
+      "raw": {
+        "name": "pageNumber",
+        "type": "string",
+        "description": "fetch a single page (default \"1\")",
+        "required": false,
+        "_id": "69808959af9f26f53d412c13"
+      }
+    },
+    {
+      "name": "pageSize",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "requested size (default \"100\")",
+      "advanced": false,
+      "raw": {
+        "name": "pageSize",
+        "type": "string",
+        "description": "requested size (default \"100\")",
+        "required": false,
+        "_id": "69808959af9f26f53d412c14"
+      }
+    },
+    {
+      "name": "autoFetchAllPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "truthy → fetch all pages and return all rows (default \"true\" when wantsAll)",
+      "advanced": false,
+      "raw": {
+        "name": "autoFetchAllPages",
+        "type": "string",
+        "description": "truthy → fetch all pages and return all rows (default \"true\" when wantsAll)",
+        "required": false,
+        "_id": "69808959af9f26f53d412c15"
+      }
+    },
+    {
+      "name": "maxPages",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "safety limit (default \"50\")",
+      "advanced": false,
+      "raw": {
+        "name": "maxPages",
+        "type": "string",
+        "description": "safety limit (default \"50\")",
+        "required": false,
+        "_id": "69808959af9f26f53d412c16"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

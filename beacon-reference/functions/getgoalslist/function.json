@@ -1,0 +1,24 @@
+{
+  "id": "690dc581931a2d61ba0b2942",
+  "slug": "getgoalslist",
+  "name": "getGoalslist",
+  "status": "live",
+  "createdAt": "2025-06-16T09:34:30.731Z",
+  "updatedAt": "2025-06-16T09:34:30.731Z",
+  "contentHash": "6160bc2bb078e10d3a293522afae138f23fe56ca8f596649cb39ddb692c67ef5",
+  "lastExportedAt": "2026-09-05T19:41:33.648Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc581931a2d61ba0b2942",
+    "name": "getGoalslist",
+    "status": "live",
+    "code": "(async function(){\n    const myHeaders = new Headers();\nmyHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\nmyHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\nconst requestOptions = {\n  method: \"GET\",\n  headers: myHeaders,\n  redirect: \"follow\"\n};\nconst reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\nconst response = await fetch(`${reqOptions}PerfV8/api/GoalPlanning/AddEmptyGoal?Eval_id=${args.evalid}&Emp_number=${args.employeenumber}&GoalGroup=1&aptype=1&GoalVersion=1&_=${Date.now()}`, requestOptions)\n  const data = await response.text();\n return data ; \n })",
+    "by": "1927",
+    "__v": 0
+  }
+}

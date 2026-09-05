@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "year",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to give the Leave Statistics year.",
+      "advanced": false,
+      "raw": {
+        "name": "year",
+        "type": "string",
+        "description": "to give the Leave Statistics year.",
+        "required": true,
+        "_id": "68a3042428722f48ed6f7c1a"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

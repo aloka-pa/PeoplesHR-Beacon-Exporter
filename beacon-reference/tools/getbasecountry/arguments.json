@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "mode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "\"showAll\" (default)",
+      "advanced": false,
+      "raw": {
+        "name": "mode",
+        "type": "string",
+        "description": "\"showAll\" (default)",
+        "required": false,
+        "_id": "69855f0cf88a0de2d0e5ad27"
+      }
+    },
+    {
+      "name": "fallbackToFirstRow",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "\"true\" or \"false\" (default \"false\"). If highlight row not found, optionally return first row.",
+      "advanced": false,
+      "raw": {
+        "name": "fallbackToFirstRow",
+        "type": "string",
+        "description": "\"true\" or \"false\" (default \"false\"). If highlight row not found, optionally return first row.",
+        "required": false,
+        "_id": "69855f0cf88a0de2d0e5ad28"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

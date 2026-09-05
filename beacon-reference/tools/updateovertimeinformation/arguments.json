@@ -1,0 +1,65 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "OTTypeName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "take user given OT type name for updating its details",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "take user given OT type name for updating its details"
+      }
+    },
+    {
+      "name": "overtTimeName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "take user given new overtime name",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "take user given new overtime name"
+      }
+    },
+    {
+      "name": "defaultRoundingPattern",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "take user given Default Rounding Pattern example (Round Up 30) (Round UP Late Arrival) ( contains spaces take total pattern given by user",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "take user given Default Rounding Pattern example (Round Up 30) (Round UP Late Arrival) ( contains spaces take total pattern given by user"
+      }
+    },
+    {
+      "name": "baseType",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "take user given basetype for example (post ot rate 1) (pre ot rate 2) contains spaces take total basetype given by user",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "take user given basetype for example (post ot rate 1) (pre ot rate 2) contains spaces take total basetype given by user"
+      }
+    },
+    {
+      "name": "customMultiplier",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "take user given Custom Multiplier value this should be lessthan or equal to 10 should not take more than 10 is provided more than 10 tell user value not accepted",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "take user given Custom Multiplier value this should be lessthan or equal to 10 should not take more than 10 is provided more than 10 tell user value not accepted"
+      }
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "id": "690dc567931a2d61ba0b1712",
+  "slug": "getshortlistingdetails",
+  "name": "getShortListingDetails",
+  "description": "In this tool, generate a sorted list of candidates. Candidates with a \"ProStatus\" value of 2 are marked as \"Under Consideration or On Hold,\" while those with a \"ProStatus\" value of 0 are marked as \"Pending.\" if there is no given user query single statement return dont show the available date.",
+  "instructions": null,
+  "taskName": "Short Listing Details",
+  "tags": [
+    "Recruitment ",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getShortListingDetails",
+  "createdAt": "2025-05-14T05:51:36.953Z",
+  "updatedAt": "2025-05-14T05:51:36.953Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bef",
+      "name": "Recruitment"
+    }
+  ],
+  "contentHash": "c6179d0190f4deb04648d5d0c0bcc2b5ba840020fef00a534cb9ba50c0c0e4e4",
+  "lastExportedAt": "2026-09-05T19:39:24.025Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc567931a2d61ba0b1712",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getShortListingDetails",
+      "description": "In this tool, generate a sorted list of candidates. Candidates with a \"ProStatus\" value of 2 are marked as \"Under Consideration or On Hold,\" while those with a \"ProStatus\" value of 0 are marked as \"Pending.\" if there is no given user query single statement return dont show the available date.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getShortListingDetails",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68242f68581c38cc6614d898"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.some(x => x.includes(\"RecruitmentV9/ShortListing/Index?mvc=1\"))) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  return {\n    url: `${location.origin}/${reqOptions.sl}/recruitmentv9/ShortListing/GetCandidates`,\n    method: \"GET\",\n    headers: {\n      \"Content-Type\": \"application/json\"\n    },\n    params: {\n      filter: 0,\n      _: Date.now()\n    }\n  };\n})\n",
+      "transformer": "(function(data, args, reqOptions) {\n  return data;\n})",
+      "groupName": "",
+      "tags": [
+        "Recruitment ",
+        "Headers"
+      ],
+      "taskName": "Short Listing Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-14T05:51:36.953Z",
+      "updatedAt": "2025-05-14T05:51:36.953Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bef",
+          "name": "Recruitment"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getShortListingDetails",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68242f68581c38cc6614d898"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.some(x => x.includes(\"RecruitmentV9/ShortListing/Index?mvc=1\"))) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  return {\n    url: `${location.origin}/${reqOptions.sl}/recruitmentv9/ShortListing/GetCandidates`,\n    method: \"GET\",\n    headers: {\n      \"Content-Type\": \"application/json\"\n    },\n    params: {\n      filter: 0,\n      _: Date.now()\n    }\n  };\n})\n",
+    "transformer": "(function(data, args, reqOptions) {\n  return data;\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

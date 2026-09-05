@@ -1,0 +1,105 @@
+{
+  "id": "690dc561931a2d61ba0b11be",
+  "slug": "getcompanydefinationupdate",
+  "name": "getCompanyDefinationUpdate",
+  "description": "This tool is used to update the company definitions. When a user updates a level name, the corresponding ID is fetched data for this getCompanyDefinatio tool and passed as an argument.",
+  "instructions": null,
+  "taskName": "Update Company Defination",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getCompanyDefinationUpdate",
+  "createdAt": "2025-04-26T11:03:03.969Z",
+  "updatedAt": "2025-04-26T11:03:03.969Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "d45a4b31bca3f8f04e1c254dfddc2099947171a933f7f63d146b1614002eff33",
+  "lastExportedAt": "2026-09-05T19:39:24.523Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc561931a2d61ba0b11be",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getCompanyDefinationUpdate",
+      "description": "This tool is used to update the company definitions. When a user updates a level name, the corresponding ID is fetched data for this getCompanyDefinatio tool and passed as an argument.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getCompanyDefinationUpdate",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to get the ID for getCompanyDefination tool.",
+            "required": true,
+            "_id": "680cbd67f6ef15e616449643"
+          },
+          {
+            "name": "updateName",
+            "type": "string",
+            "description": "what you want update name to give the user prompt.",
+            "required": true,
+            "_id": "680cbd67f6ef15e616449644"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "680cbd67f6ef15e616449642"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/CompanyHierarchyDefine.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const myHeaders = new Headers(reqOptions?.headers || {\n    \"Content-Type\": \"application/x-www-form-urlencoded\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n  });\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", args.id);\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", window.company.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", window.company.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", window.company.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ClientState\", \"\");\n\n  const response1 = await fetch(`${location.origin}/${reqOptions.sl}/EIM/CompanyHierarchyDefine.aspx`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  });\n  const html1 = await response1.text();\n  const details1 = await BeaconBar.executeFunction('getDomExtract')(html1);\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", \"\");\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", details1.viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", details1.viewStateGen);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", details1.eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$butEdit\", \"Edit\");\n\n  const response2 = await fetch(`${location.origin}/${reqOptions.sl}/EIM/CompanyHierarchyDefine.aspx`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  });\n  const html2 = await response2.text();\n  const details2 = await BeaconBar.executeFunction('getDomExtract')(html2);\n\n  const urlencoded3 = new URLSearchParams();\n  urlencoded3.append(\"scrollLeft\", \"0\");\n  urlencoded3.append(\"scrollTop\", \"0\");\n  urlencoded3.append(\"__EVENTTARGET\", \"\");\n  urlencoded3.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded3.append(\"__VIEWSTATE\", details2.viewState);\n  urlencoded3.append(\"__VIEWSTATEGENERATOR\", details2.viewStateGen);\n  urlencoded3.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded3.append(\"__EVENTVALIDATION\", details2.eventValidation);\n  urlencoded3.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded3.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded3.append(\"ctl00$body$txtName\", args.updateName);\n  urlencoded3.append(\"ctl00$body$butSave\", \"Save\");\n\n  const response3 = await fetch(`${location.origin}/${reqOptions.sl}/EIM/CompanyHierarchyDefine.aspx`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded3,\n    redirect: \"follow\"\n  });\n  const html3 = await response3.text();\n\n  return \"Update successfully!\";\n})\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update Company Defination",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-04-26T11:03:03.969Z",
+      "updatedAt": "2025-04-26T11:03:03.969Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getCompanyDefinationUpdate",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to get the ID for getCompanyDefination tool.",
+          "required": true,
+          "_id": "680cbd67f6ef15e616449643"
+        },
+        {
+          "name": "updateName",
+          "type": "string",
+          "description": "what you want update name to give the user prompt.",
+          "required": true,
+          "_id": "680cbd67f6ef15e616449644"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "680cbd67f6ef15e616449642"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/CompanyHierarchyDefine.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n  const myHeaders = new Headers(reqOptions?.headers || {\n    \"Content-Type\": \"application/x-www-form-urlencoded\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n  });\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", args.id);\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", window.company.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", window.company.viewStateGen);\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", window.company.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdSummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"100\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdSummary_ClientState\", \"\");\n\n  const response1 = await fetch(`${location.origin}/${reqOptions.sl}/EIM/CompanyHierarchyDefine.aspx`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  });\n  const html1 = await response1.text();\n  const details1 = await BeaconBar.executeFunction('getDomExtract')(html1);\n\n  const urlencoded2 = new URLSearchParams();\n  urlencoded2.append(\"scrollLeft\", \"0\");\n  urlencoded2.append(\"scrollTop\", \"0\");\n  urlencoded2.append(\"__EVENTTARGET\", \"\");\n  urlencoded2.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded2.append(\"__VIEWSTATE\", details1.viewState);\n  urlencoded2.append(\"__VIEWSTATEGENERATOR\", details1.viewStateGen);\n  urlencoded2.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded2.append(\"__EVENTVALIDATION\", details1.eventValidation);\n  urlencoded2.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded2.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded2.append(\"ctl00$body$butEdit\", \"Edit\");\n\n  const response2 = await fetch(`${location.origin}/${reqOptions.sl}/EIM/CompanyHierarchyDefine.aspx`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  });\n  const html2 = await response2.text();\n  const details2 = await BeaconBar.executeFunction('getDomExtract')(html2);\n\n  const urlencoded3 = new URLSearchParams();\n  urlencoded3.append(\"scrollLeft\", \"0\");\n  urlencoded3.append(\"scrollTop\", \"0\");\n  urlencoded3.append(\"__EVENTTARGET\", \"\");\n  urlencoded3.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded3.append(\"__VIEWSTATE\", details2.viewState);\n  urlencoded3.append(\"__VIEWSTATEGENERATOR\", details2.viewStateGen);\n  urlencoded3.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded3.append(\"__EVENTVALIDATION\", details2.eventValidation);\n  urlencoded3.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded3.append(\"ctl00_body_RadWindowManager1_ClientState\", \"\");\n  urlencoded3.append(\"ctl00$body$txtName\", args.updateName);\n  urlencoded3.append(\"ctl00$body$butSave\", \"Save\");\n\n  const response3 = await fetch(`${location.origin}/${reqOptions.sl}/EIM/CompanyHierarchyDefine.aspx`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded3,\n    redirect: \"follow\"\n  });\n  const html3 = await response3.text();\n\n  return \"Update successfully!\";\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

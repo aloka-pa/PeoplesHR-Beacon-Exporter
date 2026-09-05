@@ -1,0 +1,24 @@
+{
+  "id": "690dc584931a2d61ba0b2bb5",
+  "slug": "getgoaleval",
+  "name": "getgoalEval",
+  "status": "live",
+  "createdAt": "2025-06-16T09:23:33.859Z",
+  "updatedAt": "2025-06-16T09:23:33.859Z",
+  "contentHash": "68c233fcea3ef01915e0c1910e9472591718eac0d4825c6e4889f8b07d8b1c8d",
+  "lastExportedAt": "2026-09-05T19:41:33.937Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc584931a2d61ba0b2bb5",
+    "name": "getgoalEval",
+    "status": "live",
+    "code": "(async function(args){\n    const myHeaders = new Headers();\nmyHeaders.append(\"accept\", \"*/*\");\nmyHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\nmyHeaders.append(\"content-type\", \"application/x-www-form-urlencoded; charset=UTF-8\");\n\nconst raw = `Eval_id=${args}&Apppage=1`;\n\nconst requestOptions = {\n  method: \"POST\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\nconst reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\nconst response = await fetch(`${reqOptions}PerfV8/GoalPlanning/LoadEvaluationDetails`, requestOptions)\n const data = await  response.json();\n return data ;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

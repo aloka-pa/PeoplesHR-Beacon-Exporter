@@ -1,0 +1,91 @@
+{
+  "id": "690dc565931a2d61ba0b15e4",
+  "slug": "updateemployeegroupdetails",
+  "name": "updateEmployeeGroupDetails",
+  "description": "In this tool, begin by executing the \"getEIMAttributeList\" API to retrieve existing data. Then, compare the updated employe group name with the previous name from the  getEIMAttributeList  response before proceeding with the update.",
+  "instructions": null,
+  "taskName": "Update Employee Group Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateEmployeeGroupDetails",
+  "createdAt": "2025-05-03T11:05:30.215Z",
+  "updatedAt": "2025-05-03T11:05:30.215Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "bb2ab61971b6bed871c536f336ee69092d07f3c27fc707e907b9e555b6478d43",
+  "lastExportedAt": "2026-09-05T19:39:24.178Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc565931a2d61ba0b15e4",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateEmployeeGroupDetails",
+      "description": "In this tool, begin by executing the \"getEIMAttributeList\" API to retrieve existing data. Then, compare the updated employe group name with the previous name from the  getEIMAttributeList  response before proceeding with the update.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateEmployeeGroupDetails",
+        "args": [
+          {
+            "name": "empGroupName",
+            "type": "string",
+            "description": "to give the employee group Name or description.",
+            "required": true,
+            "_id": "6815f87a79ebe9607c188d38"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6815f87a79ebe9607c188d37"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/StaffGroup.aspx');\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n  } else {\n    url = \"StaffGroup\"\n  }\n\n  const editInit = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.eg.viewState,\n    __VIEWSTATEGENERATOR: window.eg.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.eg.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butEdit\": \"Edit\"\n  }, url);\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtName\": args.empGroupName || \"\",\n    \"ctl00$body$butSave\": \"Save\"\n  }, url);\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const employeeGroupname = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const result = {\n    code,\n    employeeGroupname\n  };\n  if (saveResponse === false) {\n    return \"try again api is fail.\"\n  } else {\n    return result;\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update Employee Group Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-03T11:05:30.215Z",
+      "updatedAt": "2025-05-03T11:05:30.215Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateEmployeeGroupDetails",
+      "args": [
+        {
+          "name": "empGroupName",
+          "type": "string",
+          "description": "to give the employee group Name or description.",
+          "required": true,
+          "_id": "6815f87a79ebe9607c188d38"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6815f87a79ebe9607c188d37"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('EIM/StaffGroup.aspx');\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl\n  } else {\n    url = \"StaffGroup\"\n  }\n\n  const editInit = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: window.eg.viewState,\n    __VIEWSTATEGENERATOR: window.eg.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: window.eg.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butEdit\": \"Edit\"\n  }, url);\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: editInit.viewState,\n    __VIEWSTATEGENERATOR: editInit.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: editInit.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtName\": args.empGroupName || \"\",\n    \"ctl00$body$butSave\": \"Save\"\n  }, url);\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code = doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n  const employeeGroupname = doc.querySelector(\"#ctl00_body_txtName\")?.value?.trim() || \"\";\n\n  const result = {\n    code,\n    employeeGroupname\n  };\n  if (saveResponse === false) {\n    return \"try again api is fail.\"\n  } else {\n    return result;\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

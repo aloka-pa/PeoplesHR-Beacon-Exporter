@@ -1,0 +1,192 @@
+[
+  {
+    "toolId": "6a82e376462b20b27700e67e",
+    "toolName": "submitSubordinatesManualInAndOut",
+    "path": "tools/submitsubordinatesmanualinandout"
+  },
+  {
+    "toolId": "6a7d652bdf5557a058554c33",
+    "toolName": "submitSelfManualInAndOut",
+    "path": "tools/submitselfmanualinandout"
+  },
+  {
+    "toolId": "6a8fec0523d5d8fe14b0f829",
+    "toolName": "submitManualInAndOutByAdmin",
+    "path": "tools/submitmanualinandoutbyadmin"
+  },
+  {
+    "toolId": "6a8ee7dd4297aa961cef45dc",
+    "toolName": "editSubordinatesManualInAndOut",
+    "path": "tools/editsubordinatesmanualinandout"
+  },
+  {
+    "toolId": "6a8ea65237b20ee9436a5da9",
+    "toolName": "editSelfManualInAndOut",
+    "path": "tools/editselfmanualinandout"
+  },
+  {
+    "toolId": "6a90108b5238e7bab3688f48",
+    "toolName": "editManualInAndOutByAdmin",
+    "path": "tools/editmanualinandoutbyadmin"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1af5",
+    "toolName": "selfEmployeeManualInAndOutDetails",
+    "path": "tools/selfemployeemanualinandoutdetails"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b1937",
+    "toolName": "updateOvertimeInformation",
+    "path": "tools/updateovertimeinformation"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b181a",
+    "toolName": "getRoundingInformationDetails",
+    "path": "tools/getroundinginformationdetails"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b17fb",
+    "toolName": "getPriorOvertimeApplicationDetails",
+    "path": "tools/getpriorovertimeapplicationdetails"
+  },
+  {
+    "toolId": "6a4f562183026e3d233dd849",
+    "toolName": "errorHandlingTool",
+    "path": "tools/errorhandlingtool"
+  },
+  {
+    "toolId": "690dc561931a2d61ba0b11c3",
+    "toolName": "getCoveringEmployee",
+    "path": "tools/getcoveringemployee"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b1991",
+    "toolName": "getRoundingInformation",
+    "path": "tools/getroundinginformation"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b16a0",
+    "toolName": "updateAttendanceModule",
+    "path": "tools/updateattendancemodule"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b1869",
+    "toolName": "getAdminInformationDetails",
+    "path": "tools/getadmininformationdetails"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a67",
+    "toolName": "getGlobalEmployeeSearch",
+    "path": "tools/getglobalemployeesearch"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b17c6",
+    "toolName": "getAttendanceSummaryDetails",
+    "path": "tools/getattendancesummarydetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b1715",
+    "toolName": "getPaginatedTypeaheadList",
+    "path": "tools/getpaginatedtypeaheadlist"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b169d",
+    "toolName": "getAttendanceModule",
+    "path": "tools/getattendancemodule"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1aea",
+    "toolName": "selfEmployeeShiftAdjustmentDetails",
+    "path": "tools/selfemployeeshiftadjustmentdetails"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1ae4",
+    "toolName": "selfEmployeeAttendanceSummaryDetails",
+    "path": "tools/selfemployeeattendancesummarydetails"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b8f",
+    "toolName": "changeOrUpdateShiftAdjustment",
+    "path": "tools/changeorupdateshiftadjustment"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1aef",
+    "toolName": "selfEmployeePriorOvertimeApplicationDetails",
+    "path": "tools/selfemployeepriorovertimeapplicationdetails"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a5f",
+    "toolName": "dateFormat",
+    "path": "tools/dateformat"
+  },
+  {
+    "toolId": "690dc56b931a2d61ba0b1a6b",
+    "toolName": "updateGracePeriodInformationDetails",
+    "path": "tools/updategraceperiodinformationdetails"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b19af",
+    "toolName": "updateRoundingInformation",
+    "path": "tools/updateroundinginformation"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b198d",
+    "toolName": "rostersDetails",
+    "path": "tools/rostersdetails"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b1982",
+    "toolName": "rosterGroups",
+    "path": "tools/rostergroups"
+  },
+  {
+    "toolId": "690dc569931a2d61ba0b1985",
+    "toolName": "updatethePriorOvertimeApplication",
+    "path": "tools/updatethepriorovertimeapplication"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b17e8",
+    "toolName": "getTeamAttendanceInAndOutDetails",
+    "path": "tools/getteamattendanceinandoutdetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b17cd",
+    "toolName": "getShiftAdjustmentDetails",
+    "path": "tools/getshiftadjustmentdetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b173e",
+    "toolName": "getTeamShiftAdjustmentDetails",
+    "path": "tools/getteamshiftadjustmentdetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b1723",
+    "toolName": "getTeamAttendanceSummaryDetails",
+    "path": "tools/getteamattendancesummarydetails"
+  },
+  {
+    "toolId": "690dc567931a2d61ba0b171c",
+    "toolName": "getEmployeeAttendanceInAndOutDetails",
+    "path": "tools/getemployeeattendanceinandoutdetails"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b16c4",
+    "toolName": "gracePeriodandRoundingPatternDetails",
+    "path": "tools/graceperiodandroundingpatterndetails"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b16c1",
+    "toolName": "createAttendanceModule",
+    "path": "tools/createattendancemodule"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b169a",
+    "toolName": "defaultRoundingPatternandBaseTypeDetails",
+    "path": "tools/defaultroundingpatternandbasetypedetails"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b1685",
+    "toolName": "getAdminPanelDetails",
+    "path": "tools/getadminpaneldetails"
+  }
+]

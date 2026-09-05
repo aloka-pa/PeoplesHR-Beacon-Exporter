@@ -1,0 +1,60 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "entity",
+      "type": null,
+      "required": true,
+      "defaultValue": null,
+      "description": "Specifies the entity based on the query.",
+      "advanced": true,
+      "raw": {
+        "enum": [
+          "location",
+          "companyHierarchy",
+          "costCentre",
+          "subLocation",
+          "salaryGrade",
+          "corporateTitle",
+          "designation",
+          "jobDescriptionCategory",
+          "jobDescriptionType",
+          "qualificationClassification",
+          "ratingMethod",
+          "membershipType",
+          "membershipDetails",
+          "membershipTitle",
+          "bargainingUnit",
+          "cashBenefit",
+          "nonCashBenefitCategory",
+          "nonCashBenefit",
+          "employeeCategory",
+          "statutoryClassification",
+          "function",
+          "functionalRoles",
+          "classification",
+          "employeeGroup",
+          "employmentType",
+          "employeeTitle",
+          "genderType",
+          "maritalStatus",
+          "bloodGroup",
+          "attachmentType"
+        ],
+        "description": "Specifies the entity based on the query."
+      }
+    },
+    {
+      "name": "codeId",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "user give the code id then get the corresponding details we will get Example code ids '000001','000010','0' etc... to get for code id for 'getEIMModuleLists' api. is provide.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "user give the code id then get the corresponding details we will get Example code ids '000001','000010','0' etc... to get for code id for 'getEIMModuleLists' api. is provide."
+      }
+    }
+  ]
+}

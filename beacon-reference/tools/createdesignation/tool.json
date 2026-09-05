@@ -1,0 +1,72 @@
+{
+  "id": "690dc563931a2d61ba0b143f",
+  "slug": "createdesignation",
+  "name": "createDesignation",
+  "description": "This tool is used to create a Designation. First, it executes the gradeDetails API to retrieve and select the appropriate salary grade value. After selecting the salary grade, it then executes the getTitle API to retrieve and select the corresponding corporate title value. The steps must be followed in sequence: first execute gradeDetails, then execute getTitle.",
+  "instructions": null,
+  "taskName": "Create Designation",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createDesignation",
+  "createdAt": "2025-04-29T14:18:48.997Z",
+  "updatedAt": "2026-05-15T06:53:49.422Z",
+  "assignedAgents": [],
+  "contentHash": "200eb5a9e9d87083ec70a9831a9594951c12c6e2989e5c64171a17af46f51dd9",
+  "lastExportedAt": "2026-09-05T19:39:22.687Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc563931a2d61ba0b143f",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createDesignation",
+      "description": "This tool is used to create a Designation. First, it executes the gradeDetails API to retrieve and select the appropriate salary grade value. After selecting the salary grade, it then executes the getTitle API to retrieve and select the corresponding corporate title value. The steps must be followed in sequence: first execute gradeDetails, then execute getTitle.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createDesignation",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"Designation name (e.g., 'Human Resources Manager').\"\n    },\n    \"ctl00_body_chksenior\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\", \"off\"],\n      \"description\": \"selsect senior management 'on' or 'off'.\"\n    },\n    \"ctl00_body_dpSalary\": {\n      \"type\": \"string\",\n      \"description\": \"Selected Salary Grade code (e.g., '000005').\"\n    },\n    \"ctl00_body_dpNextUpgrade\": {\n      \"type\": \"string\",\n      \"description\": \"Selected Corporate Title or Next Upgrade Level code (e.g., '000001').\"\n    },\n    \"ctl00_body_dpnextupgradedsg\": {\n      \"type\": \"string\",\n      \"description\": \"Selected Next Designation in Career Progression code (e.g., '000034').if the user missing fields to get data for gradeDetails api.\"\n    },\n    \"ctl00_body_cbofunctionRole\": {\n      \"type\": \"string\",\n      \"description\": \"Selected Functional Role code (e.g., '000001').if the user missing fields to get data for getTitle api\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_chksenior\",\n    \"ctl00_body_dpSalary\",\n    \"ctl00_body_dpNextUpgrade\"\n  ]\n}",
+        "_id": "6810dfc879ebe9607c12a4ac"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n\n  myHeaders.append(\n    \"accept\",\n    \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\"\n  );\n\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded = new URLSearchParams();\n\n  // urlencoded.append(\"ctl00_body_RadScriptManager_HiddenField\", \";;HBS:en-GB:1bf6bb2e-a9e3-48c2-8258-789b8d94ae17:64806b3a\");\n\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__LASTFOCUS\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", window.cd.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", window.cd.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", window.cd.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n\n  urlencoded.append(\n    \"ctl00$body$txtName\",\n    args[\"ctl00_body_txtName\"]\n  );\n\n  urlencoded.append(\n    \"ctl00$body$chksenior\",\n    args[\"ctl00_body_chksenior\"]\n  );\n\n  urlencoded.append(\n    \"ctl00$body$dpSalary\",\n    args[\"ctl00_body_dpSalary\"]\n  );\n\n  urlencoded.append(\n    \"ctl00$body$dpNextUpgrade\",\n    args[\"ctl00_body_dpNextUpgrade\"] || \"-1\"\n  );\n\n  urlencoded.append(\n    \"ctl00$body$dpnextupgradedsg\",\n    args[\"ctl00_body_dpnextupgradedsg\"] || \"-1\"\n  );\n\n  urlencoded.append(\n    \"ctl00$body$cbofunctionRole\",\n    args[\"ctl00_body_cbofunctionRole\"] || \"-1\"\n  );\n\n  urlencoded.append(\"ctl00$body$butSave\", \"Save\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(\n    `${location.origin}/hr/EIM/Designation.aspx`,\n    requestOptions\n  );\n\n  const html = await response.text();\n\n  return \"create sucessfully!!\";\n})",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create Designation",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-04-29T14:18:48.997Z",
+      "updatedAt": "2026-05-15T06:53:49.422Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createDesignation",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtName\": {\n      \"type\": \"string\",\n      \"description\": \"Designation name (e.g., 'Human Resources Manager').\"\n    },\n    \"ctl00_body_chksenior\": {\n      \"type\": \"string\",\n      \"enum\": [\"on\", \"off\"],\n      \"description\": \"selsect senior management 'on' or 'off'.\"\n    },\n    \"ctl00_body_dpSalary\": {\n      \"type\": \"string\",\n      \"description\": \"Selected Salary Grade code (e.g., '000005').\"\n    },\n    \"ctl00_body_dpNextUpgrade\": {\n      \"type\": \"string\",\n      \"description\": \"Selected Corporate Title or Next Upgrade Level code (e.g., '000001').\"\n    },\n    \"ctl00_body_dpnextupgradedsg\": {\n      \"type\": \"string\",\n      \"description\": \"Selected Next Designation in Career Progression code (e.g., '000034').if the user missing fields to get data for gradeDetails api.\"\n    },\n    \"ctl00_body_cbofunctionRole\": {\n      \"type\": \"string\",\n      \"description\": \"Selected Functional Role code (e.g., '000001').if the user missing fields to get data for getTitle api\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtName\",\n    \"ctl00_body_chksenior\",\n    \"ctl00_body_dpSalary\",\n    \"ctl00_body_dpNextUpgrade\"\n  ]\n}",
+      "_id": "6810dfc879ebe9607c12a4ac"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n\n  myHeaders.append(\n    \"accept\",\n    \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\"\n  );\n\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n\n  const urlencoded = new URLSearchParams();\n\n  // urlencoded.append(\"ctl00_body_RadScriptManager_HiddenField\", \";;HBS:en-GB:1bf6bb2e-a9e3-48c2-8258-789b8d94ae17:64806b3a\");\n\n  urlencoded.append(\"scrollLeft\", \"0\");\n  urlencoded.append(\"scrollTop\", \"0\");\n  urlencoded.append(\"__EVENTTARGET\", \"\");\n  urlencoded.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded.append(\"__LASTFOCUS\", \"\");\n  urlencoded.append(\"__VIEWSTATE\", window.cd.viewState);\n  urlencoded.append(\"__VIEWSTATEGENERATOR\", window.cd.viewStateGen);\n  urlencoded.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded.append(\"__EVENTVALIDATION\", window.cd.eventValidation);\n  urlencoded.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n\n  urlencoded.append(\n    \"ctl00$body$txtName\",\n    args[\"ctl00_body_txtName\"]\n  );\n\n  urlencoded.append(\n    \"ctl00$body$chksenior\",\n    args[\"ctl00_body_chksenior\"]\n  );\n\n  urlencoded.append(\n    \"ctl00$body$dpSalary\",\n    args[\"ctl00_body_dpSalary\"]\n  );\n\n  urlencoded.append(\n    \"ctl00$body$dpNextUpgrade\",\n    args[\"ctl00_body_dpNextUpgrade\"] || \"-1\"\n  );\n\n  urlencoded.append(\n    \"ctl00$body$dpnextupgradedsg\",\n    args[\"ctl00_body_dpnextupgradedsg\"] || \"-1\"\n  );\n\n  urlencoded.append(\n    \"ctl00$body$cbofunctionRole\",\n    args[\"ctl00_body_cbofunctionRole\"] || \"-1\"\n  );\n\n  urlencoded.append(\"ctl00$body$butSave\", \"Save\");\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(\n    `${location.origin}/hr/EIM/Designation.aspx`,\n    requestOptions\n  );\n\n  const html = await response.text();\n\n  return \"create sucessfully!!\";\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

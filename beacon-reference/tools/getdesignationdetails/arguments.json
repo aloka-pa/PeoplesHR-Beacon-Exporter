@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "designationCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the designation details for to search designation Code.",
+      "advanced": false,
+      "raw": {
+        "name": "designationCode",
+        "type": "string",
+        "description": "to get the designation details for to search designation Code.",
+        "required": true,
+        "_id": "6810b20841244a9478da2629"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

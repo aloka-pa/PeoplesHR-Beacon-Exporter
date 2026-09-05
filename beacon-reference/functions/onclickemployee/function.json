@@ -1,0 +1,24 @@
+{
+  "id": "690dc586931a2d61ba0b2e18",
+  "slug": "onclickemployee",
+  "name": "onclickEmployee",
+  "status": "live",
+  "createdAt": "2025-05-22T08:20:01.559Z",
+  "updatedAt": "2025-05-22T08:20:01.559Z",
+  "contentHash": "4eb0cdebab94c51a932a8f55679b2159cc774cd34d1fef3abcccde17fe3adaa9",
+  "lastExportedAt": "2026-09-05T19:41:41.067Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc586931a2d61ba0b2e18",
+    "name": "onclickEmployee",
+    "status": "live",
+    "code": "(async function (args) {\n    //done\n    const sl = await BeaconBar.getSharedData(\"sl\");\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n    myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n    const response = await fetch(`${location.origin}/${sl}/EIM/AssignBankInformation.aspx`, {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    });\n\n    const detailsText = await response.text();\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(detailsText, \"text/html\");\n\n    const empNumber = doc.querySelector('input[id=\"ctl00_body_EmpSearch_txtEmpDisplayNumber\"]')?.value || \"\";\n    window.pqn = empNumber;\n\n    const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n    const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n    const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n    await BeaconBar.executeFunction(\"censusInformation\")(args);\n\n    const urlencoded = new URLSearchParams({\n        scrollLeft: \"\",\n        scrollTop: \"\",\n        __EVENTTARGET: \"GetSearchResult\",\n        __EVENTARGUMENT: \"\",\n        __VIEWSTATE: viewState,\n        __VIEWSTATEGENERATOR: viewStateGenerator,\n        __SCROLLPOSITIONX: \"0\",\n        __SCROLLPOSITIONY: \"0\",\n        __VIEWSTATEENCRYPTED: \"\",\n        __EVENTVALIDATION: eventValidation,\n        \"ctl00$hdnDateFormat\": \"m/d/yy\",\n        \"ctl00$body$EmpSearch$hdnEmpNumber\": empNumber,\n        \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n        \"ctl00$body$txtAccount\": \"\",\n        \"ctl00$body$txtempnumber\": empNumber,\n        \"ctl00$body$grdEmpBank$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n        \"ctl00_body_grdEmpBank_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n        \"ctl00$body$grdEmpBank$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"2\",\n        \"ctl00_body_grdEmpBank_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n        \"ctl00_body_grdEmpBank_ClientState\": \"\",\n        \"ctl00$body$hdnCurrentAmount\": \"\",\n        \"ctl00$body$hdnAmountType\": \"\",\n        \"ctl00$body$txtEmpNo\": empNumber\n    });\n\n    await fetch(`${location.origin}/${sl}/EIM/AssignBankInformation.aspx`, {\n        method: \"POST\",\n        headers: myHeaders,\n        body: urlencoded,\n        redirect: \"follow\"\n    });\n\n    const digest2 = await BeaconBar.executeFunction('getDigest')(\"mvc=1\");\n\n    const myHeaders2 = new Headers();\n    myHeaders2.append(\"accept\", \"*/*\");\n    myHeaders2.append(\"accept-language\", \"en-US,en;q=0.9\");\n    myHeaders2.append(\"cache-control\", \"no-cache\");\n    myHeaders2.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n    const response2 = await fetch(`${location.origin}/${sl}/eimv9/employee/employee?mvc=1&digest=${digest2.digest}&_=${Date.now()}`, {\n        method: \"GET\",\n        headers: myHeaders2,\n        redirect: \"follow\"\n    });\n\n    const text = await response2.text();\n    const doc2 = parser.parseFromString(text, \"text/html\");\n    const scriptTags = doc2.querySelectorAll(\"script\");\n    let modelObject = null;\n\n    scriptTags.forEach(script => {\n        if (script.textContent.includes(\"var model = {\")) {\n            const scriptContent = script.textContent;\n            const modelStart = scriptContent.indexOf(\"var model = {\");\n            const modelEnd = scriptContent.indexOf(\"};\", modelStart) + 1;\n            const modelString = scriptContent.substring(modelStart + 12, modelEnd).trim();\n            modelObject = JSON.parse(modelString);\n        }\n    });\n\n    return {\n        personalDetails: modelObject?.EmployeeDetails?.EmployeePersonalInfo,\n        Emp_number: modelObject?.Emp_number\n    };\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

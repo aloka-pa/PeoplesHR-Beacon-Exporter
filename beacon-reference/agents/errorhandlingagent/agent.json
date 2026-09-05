@@ -1,0 +1,137 @@
+{
+  "id": "6a4f55bb83026e3d233dceb1",
+  "slug": "errorhandlingagent",
+  "name": "errorHandlingAgent",
+  "description": "errorHandlingAgent",
+  "exportedAt": "2026-09-05T19:41:12.197Z",
+  "raw": {
+    "_id": "6a4f55bb83026e3d233dceb1",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "errorHandlingAgent",
+    "description": "errorHandlingAgent",
+    "by": "7854",
+    "prompt": "# Out-of-Scope Request Handling\n\n## Objective\n\nIf a user's request does not match any available sub-agent under the Main Orchestrator Agent (MAO), the request must be treated as **Out of Scope**.\n\n## Routing Rules\n\n1. The Coordinator (MAO) agent **must first determine** whether the user's request maps to a valid and available sub-agent.\n2. If a matching sub-agent exists, route the request to that sub-agent.\n3. If **no matching sub-agent exists**, **do not** attempt to interpret, answer, or reroute the request. Instead, immediately invoke the Agent Tool **`errorHandlingTool`**.\n\n## Required Behavior\n\nWhen **`errorHandlingTool`** is invoked:\n\n* Return **only** the tool's output.\n* The expected tool response is:\n\n```\nOut Of Scope\n```\n\n* End the interaction immediately after returning the tool response.\n\n## Strict Constraints\n\nWhen handling an out-of-scope request, the system **must not**:\n\n* Invoke any other sub-agent.\n* Retry routing the request.\n* Perform additional reasoning or processing.\n* Generate its own response.\n* Modify, append, prepend, summarize, or explain the tool output.\n* Ask follow-up or clarifying questions.\n* Request additional information from the user.\n* Suggest alternative queries, prompts, or actions.\n* Recommend another sub-agent.\n* Infer user intent or make assumptions.\n* Generate hallucinated, fabricated, or speculative content.\n\n## Priority\n\nThese instructions have **higher priority** than any default conversational behavior. If there is no valid sub-agent, the **only permitted action** is to invoke **`errorHandlingTool`** and return its response exactly as received.\n\n## Example\n\n**User Query:**\n\n> Configure Absence Management.\n\n**Available Sub-Agent:**\n\n> None\n\n**System Action:**\n\n* Invoke **`errorHandlingTool`**.\n\n**Final Response:**\n\n```\nOut Of Scope\n```\n\nNo other sub-agent may be invoked. No reasoning, explanation, suggestions, clarifying questions, or follow-up prompts are permitted.\n",
+    "notes": [],
+    "llmConfig": [],
+    "maxTokens": "[REDACTED]",
+    "status": "live",
+    "toolIds": [
+      "6a4f562183026e3d233dd849"
+    ],
+    "scenarioIds": [],
+    "skillIds": [],
+    "defaultAgents": {
+      "analyticsAgent": false
+    },
+    "analyticsPrompt": "",
+    "domAgent": {
+      "prompt": "",
+      "llmConfig": []
+    },
+    "cache": {
+      "enabled": false
+    },
+    "metaReasoning": false,
+    "toon": {
+      "enabled": false
+    },
+    "contextCompaction": {
+      "enabled": false,
+      "lastNInteractions": 10,
+      "windowSize": 20,
+      "tokenLimitSize": "[REDACTED]",
+      "summarization": false,
+      "prompt": "",
+      "batchSize": 10,
+      "llmConfig": []
+    },
+    "subTasks": {
+      "enabled": false
+    },
+    "todoList": {
+      "enabled": false,
+      "config": {}
+    },
+    "userInput": {
+      "enabled": false
+    },
+    "schematicLoading": {
+      "enabled": false,
+      "tools": [],
+      "agents": [],
+      "connectors": [],
+      "connectorTools": [],
+      "topK": 10
+    },
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "callKnowledgeBase",
+        "args": [
+          {
+            "name": "query",
+            "type": "string",
+            "description": "The query to be executed by the agent",
+            "required": true,
+            "_id": "6a4f55bb83026e3d233dceb3"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n       \"type\":  \"object\",\n       \"properties\": {},\n       \"required\": []\n       }",
+        "_id": "6a4f563283026e3d233de0d2"
+      },
+      "target": {
+        "entityValue": "",
+        "shardKey1": "",
+        "shardKey2": "",
+        "shardKey3": ""
+      }
+    },
+    "vis": false,
+    "piiConfig": {
+      "piiEnabled": false,
+      "predefinedEntities": [
+        {
+          "name": "PERSON",
+          "enabled": false
+        },
+        {
+          "name": "LOCATION",
+          "enabled": false
+        },
+        {
+          "name": "DATE_TIME",
+          "enabled": false
+        },
+        {
+          "name": "EMAIL_ADDRESS",
+          "enabled": false
+        },
+        {
+          "name": "PHONE_NUMBER",
+          "enabled": false
+        }
+      ],
+      "customEntities": []
+    },
+    "connectorTools": [],
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "knowledgeGraphs": [],
+    "createdAt": "2026-07-09T08:03:07.419Z",
+    "updatedAt": "2026-07-09T08:05:06.179Z",
+    "__v": 1
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "code",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Unique identifier for the cost centre.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Unique identifier for the cost centre."
+      }
+    },
+    {
+      "name": "costCentreName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Name of the cost centre.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Name of the cost centre."
+      }
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Short description of the cost centre.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Short description of the cost centre."
+      }
+    },
+    {
+      "name": "costReferenceNumber",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "in this cost reference number.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "in this cost reference number."
+      }
+    }
+  ]
+}

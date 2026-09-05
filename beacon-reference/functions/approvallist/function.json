@@ -1,0 +1,24 @@
+{
+  "id": "690dc57a931a2d61ba0b224f",
+  "slug": "approvallist",
+  "name": "approvalList",
+  "status": "live",
+  "createdAt": "2025-05-27T12:32:53.452Z",
+  "updatedAt": "2025-05-27T12:32:53.452Z",
+  "contentHash": "87a5dd260e44c5c2df90597ee9b121eea1c69e4a933c8b7de6a8daf5301b8ddb",
+  "lastExportedAt": "2026-09-05T19:41:39.564Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57a931a2d61ba0b224f",
+    "name": "approvalList",
+    "status": "live",
+    "code": "(async function (args) {\n  //\n  const myHeaders = new Headers();\n  const employeenumber = await BeaconBar.executeFunction(\"onclickEmployee\")(args)\n  const csrftoken = await BeaconBar.executeFunction(\"csrftoken\")();\n\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"content-type\", \"application/json\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n  myHeaders.append(\"__cfafvalue\", csrftoken.token);\n\n  BeaconBar.setSharedData(\"token\", csrftoken.token)\n\n  const raw = JSON.stringify({\n    \"EmpNumber\": csrftoken.match.EmpNumber\n  });\n  BeaconBar.setSharedData(\"EmpNumber\", csrftoken.match.EmpNumber)\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw,\n    redirect: \"follow\"\n  };\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  const response = await fetch(`${reqOptions}AbsenceV9/api/ShortLeaveApplication/GetAppovalPersonList/`, requestOptions)\n  const data = await response.text();\n  const dataparse = JSON.parse(data)\n  return { approveremployeeNumberdata: dataparse, reasons: csrftoken.match.ReasonList };\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

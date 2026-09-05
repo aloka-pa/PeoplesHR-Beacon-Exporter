@@ -1,0 +1,102 @@
+{
+  "id": "690dc568931a2d61ba0b18ca",
+  "slug": "fillingjobdescriptiondata",
+  "name": "fillingJobDescriptionData",
+  "description": "fillingJobDescriptionData ",
+  "instructions": null,
+  "taskName": "fillingJobDescriptionData",
+  "tags": [],
+  "status": "live",
+  "signature": "fillingJobDescriptionData",
+  "createdAt": "2025-06-01T13:12:34.229Z",
+  "updatedAt": "2025-11-12T11:56:08.859Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c30",
+      "name": "genearateJobDescription"
+    }
+  ],
+  "contentHash": "d21ee99cd18a11dd9ced04c38bee9355838a9c538ec7b4a5d447f3dfc0ae8705",
+  "lastExportedAt": "2026-09-05T19:39:23.211Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc568931a2d61ba0b18ca",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "fillingJobDescriptionData",
+      "description": "fillingJobDescriptionData ",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "fillingJobDescriptionData",
+        "args": [
+          {
+            "name": "descriptionFinaced",
+            "type": "string",
+            "description": "descriptionFinaced for the financed Responsibility user does not provided , generate 2000 characters",
+            "required": true,
+            "_id": "683c51c2d9dba9360725596f"
+          },
+          {
+            "name": "OtherDescription",
+            "type": "string",
+            "description": "OtherDescription for the Other Related Information user does not provided generate 2000 characters \n",
+            "required": true,
+            "_id": "683c51c2d9dba93607255970"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "683c51c2d9dba9360725596e"
+      },
+      "by": "7829",
+      "fetcher": "(function(args){\n    return{\n        code:`(function(){\n            return {}\n        })`\n    }\n});\n\n\n",
+      "transformer": "(function (_data, args, reqOptions) {\n  const descriptionFinaced = args.descriptionFinaced.replace(/\\*\\*(.*?)\\*\\*/g, \"<b>$1</b>\").replace(/\\n/g, \"<br>\");\n  const otherDescription = args.OtherDescription.replace(/\\*\\*(.*?)\\*\\*/g, \"<b>$1</b>\").replace(/\\n/g, \"<br>\");\n  const iframeDoc = document.querySelector('#ifrmPage')?.contentDocument;\n  if (!iframeDoc) {\n    return {\n      success: false,\n      message: \"iframe not found\"\n    };\n  }\n\n  const finaceField = iframeDoc.querySelector('#ctl00_body_txtFinace');\n  const otherField = iframeDoc.querySelector('#ctl00_body_txtOther');\n\n  if (finaceField) finaceField.value = \"\";\n  if (otherField) otherField.value = \"\";\n\n  \n  let i = 0, j = 0;\n\n  const typeInterval1 = setInterval(() => {\n    if (i < descriptionFinaced.length) {\n      finaceField.value = descriptionFinaced.slice(0, i + 1);\n      i++;\n    } else {\n      clearInterval(typeInterval1);\n    }\n  }, 20); \n\n  const typeInterval2 = setInterval(() => {\n    if (j < otherDescription.length) {\n      otherField.value = otherDescription.slice(0, j + 1);\n      j++;\n    } else {\n      clearInterval(typeInterval2);\n    }\n  }, 20); \n\n  return {\n    success: true,\n    Importantmessage: \"Typing simulated character-by-character. Let me know if formatting is needed.\"\n  };\n}) ",
+      "groupName": "",
+      "tags": [],
+      "taskName": "fillingJobDescriptionData",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-01T13:12:34.229Z",
+      "updatedAt": "2025-11-12T11:56:08.859Z",
+      "__v": 1,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c30",
+          "name": "genearateJobDescription"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "fillingJobDescriptionData",
+      "args": [
+        {
+          "name": "descriptionFinaced",
+          "type": "string",
+          "description": "descriptionFinaced for the financed Responsibility user does not provided , generate 2000 characters",
+          "required": true,
+          "_id": "683c51c2d9dba9360725596f"
+        },
+        {
+          "name": "OtherDescription",
+          "type": "string",
+          "description": "OtherDescription for the Other Related Information user does not provided generate 2000 characters \n",
+          "required": true,
+          "_id": "683c51c2d9dba93607255970"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "683c51c2d9dba9360725596e"
+    },
+    "fetcher": "(function(args){\n    return{\n        code:`(function(){\n            return {}\n        })`\n    }\n});\n\n\n",
+    "transformer": "(function (_data, args, reqOptions) {\n  const descriptionFinaced = args.descriptionFinaced.replace(/\\*\\*(.*?)\\*\\*/g, \"<b>$1</b>\").replace(/\\n/g, \"<br>\");\n  const otherDescription = args.OtherDescription.replace(/\\*\\*(.*?)\\*\\*/g, \"<b>$1</b>\").replace(/\\n/g, \"<br>\");\n  const iframeDoc = document.querySelector('#ifrmPage')?.contentDocument;\n  if (!iframeDoc) {\n    return {\n      success: false,\n      message: \"iframe not found\"\n    };\n  }\n\n  const finaceField = iframeDoc.querySelector('#ctl00_body_txtFinace');\n  const otherField = iframeDoc.querySelector('#ctl00_body_txtOther');\n\n  if (finaceField) finaceField.value = \"\";\n  if (otherField) otherField.value = \"\";\n\n  \n  let i = 0, j = 0;\n\n  const typeInterval1 = setInterval(() => {\n    if (i < descriptionFinaced.length) {\n      finaceField.value = descriptionFinaced.slice(0, i + 1);\n      i++;\n    } else {\n      clearInterval(typeInterval1);\n    }\n  }, 20); \n\n  const typeInterval2 = setInterval(() => {\n    if (j < otherDescription.length) {\n      otherField.value = otherDescription.slice(0, j + 1);\n      j++;\n    } else {\n      clearInterval(typeInterval2);\n    }\n  }, 20); \n\n  return {\n    success: true,\n    Importantmessage: \"Typing simulated character-by-character. Let me know if formatting is needed.\"\n  };\n}) ",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

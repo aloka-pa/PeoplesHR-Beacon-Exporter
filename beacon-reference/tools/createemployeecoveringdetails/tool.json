@@ -1,0 +1,189 @@
+{
+  "id": "690dc569931a2d61ba0b19db",
+  "slug": "createemployeecoveringdetails",
+  "name": "createEmployeeCoveringDetails",
+  "description": "This tool is used to create or add covering employee details.To validate this, execute the \"getCoveringDetails\"api to retrieve the latest covering data. then Begin by executing the \"subGroupLevelDetails\" tool to retrieve the required reference values. After fetching these, proceed with the remaining steps. The user must provide an effective start date and end date for the covering period, which should come after the most recently recorded period. The new effective from and to dates must be later than the previous effective from date—if not, the update should be halted. While creating the covering details, first display the personal grade and group level to the user. Once selections are made, call the \"positionTitle\" tool to show all matching position titles and subgroup levels. Finally, prompt the user to enter the effective dates. and ai not auto filling fields this secure reasion user proced action then you will proced. date format must execute to get the format date example \"22/10/2025\" - \"dd/mm/yyyy\".",
+  "instructions": null,
+  "taskName": "Added New Covering Details",
+  "tags": [
+    "EmployeeInformation",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "createEmployeeCoveringDetails",
+  "createdAt": "2025-06-10T08:09:28.292Z",
+  "updatedAt": "2025-06-10T08:09:28.292Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bf4",
+      "name": "Employee Information"
+    }
+  ],
+  "contentHash": "ddb4ed8e8c6e545fa6561d737154a603b90345760df1574abd7abc9e31ff90c7",
+  "lastExportedAt": "2026-09-05T19:39:23.588Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b19db",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createEmployeeCoveringDetails",
+      "description": "This tool is used to create or add covering employee details.To validate this, execute the \"getCoveringDetails\"api to retrieve the latest covering data. then Begin by executing the \"subGroupLevelDetails\" tool to retrieve the required reference values. After fetching these, proceed with the remaining steps. The user must provide an effective start date and end date for the covering period, which should come after the most recently recorded period. The new effective from and to dates must be later than the previous effective from date—if not, the update should be halted. While creating the covering details, first display the personal grade and group level to the user. Once selections are made, call the \"positionTitle\" tool to show all matching position titles and subgroup levels. Finally, prompt the user to enter the effective dates. and ai not auto filling fields this secure reasion user proced action then you will proced. date format must execute to get the format date example \"22/10/2025\" - \"dd/mm/yyyy\".",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createEmployeeCoveringDetails",
+        "args": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "to give the employee id Example:- \"000001\" etc...",
+            "required": true,
+            "_id": "6847e8385ddf8f03edf3189c"
+          },
+          {
+            "name": "personalGradeValue",
+            "type": "string",
+            "description": "in this personal Grade Value to get for user selected personal grade name corresponding value will be take \"GCB Grade 05\" corresponding value \"000004\"",
+            "required": true,
+            "_id": "6847e8385ddf8f03edf3189d"
+          },
+          {
+            "name": "groupLevelValue",
+            "type": "string",
+            "description": "in this group value to get for user selected group level name corresponding value will be take example \"beacon class 02\" corresponding value \"000001\"",
+            "required": true,
+            "_id": "6847e8385ddf8f03edf3189e"
+          },
+          {
+            "name": "positionTitleValue",
+            "type": "string",
+            "description": "in this position Title Value to get for user selected position Title name corresponding value will be take example \"asdfg\" corresponding value \"000001\"",
+            "required": true,
+            "_id": "6847e8385ddf8f03edf3189f"
+          },
+          {
+            "name": "subGroupLevelValue",
+            "type": "string",
+            "description": "in this sub Group Level Value to get for user selected position sub Group Level name corresponding value will be take example \"beacon text book\" corresponding value \"000001\"",
+            "required": true,
+            "_id": "6847e8385ddf8f03edf318a0"
+          },
+          {
+            "name": "effectFromDate",
+            "type": "string",
+            "description": "to give effect from date example format  \"22/10/2025\" - \"dd/mm/yyyy\" from date must be feature date.\n",
+            "required": true,
+            "_id": "6847e8385ddf8f03edf318a1"
+          },
+          {
+            "name": "effectToDate",
+            "type": "string",
+            "description": "to give effect to date example format  \"22/10/2025\" - \"dd/mm/yyyy\" and to date is greater then from date",
+            "required": true,
+            "_id": "6847e8385ddf8f03edf318a2"
+          },
+          {
+            "name": "remarks",
+            "type": "string",
+            "description": "remark is optional field if user file get the value dont ask the user for remarks field this is optional.",
+            "required": false,
+            "_id": "6847e8385ddf8f03edf318a3"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6847e8385ddf8f03edf3189b"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/empCoveringDetails.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/empCoveringDetails.aspx\");\n\n  const addResponse = await BeaconBar.executeFunction(\"module\")(\n    {\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __LASTFOCUS: \"\",\n      __VIEWSTATE: window.emp2.viewState,\n      __VIEWSTATEGENERATOR: window.emp2.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.emp2.eventValidation,\n      \"ctl00$hdnDateFormat\": \"m/d/yy\",\n      \"ctl00$hdnQuickmenu\": \"\",\n      \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n      \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n      \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n      \"ctl00$body$drpSalaryGrade\": args.personalGradeValue,\n      \"ctl00$body$drpClassification\": args.groupLevelValue,\n      \"ctl00$body$drpCorporateTitle\": args.positionTitleValue,\n      \"ctl00$body$drpdsg\": args.subGroupLevelValue,\n      \"ctl00$body$hdnDisplayMethod\": \"1\",\n      \"ctl00$body$txtactfrom\": args.effectFromDate,\n      \"ctl00$body$txtactto\": args.effectToDate,\n      \"ctl00$body$fileAttatchment\": \"\",\n      \"ctl00$body$payable\": \"rbpayable\",\n      \"ctl00$body$txtCmmt\": args.remarks || \"\",\n      \"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"10\",\n      \"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdCovringDtl_ClientState\": \"\",\n      \"ctl00$body$grdCovringDtl$ctl00$ctl04$Txt_comment\": \"\",\n      \"ctl00$body$butSave\": \"Save\",\n      \"ctl00$footers$hdnIsDateChanged\": \"1\",\n      \"ctl00$footers$txtPublicKey\": window.emp.publicKey1,\n      \"ctl00$footers$txtempNo\": window.emp.empEnc\n    },\n    `${reqOptions.sl}/${updateUrlData.pageUrl}`\n  );\n\n  const parser = new DOMParser();\n  const parsedDoc = parser.parseFromString(addResponse.rawData, \"text/html\");\n  const validation = parsedDoc.getElementById(\"ctl00_body_butNew\");\n  if (validation?.disabled) {\n    const scriptContent = parsedDoc.querySelector(\"script\")?.textContent || \"\";\n    const match = scriptContent.match(/HbsAlert\\('(.*?)'\\)/);\n    const alertMessage = match ? match[1] : null;\n    return alertMessage || \"The specified period will overlap with an existing period. Please specify another date range.\";\n  } else {\n    return \"Successfully created — returning all created values.\";\n  }\n\n})",
+      "groupName": "",
+      "tags": [
+        "EmployeeInformation",
+        "Headers"
+      ],
+      "taskName": "Added New Covering Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-10T08:09:28.292Z",
+      "updatedAt": "2025-06-10T08:09:28.292Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bf4",
+          "name": "Employee Information"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "createEmployeeCoveringDetails",
+      "args": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "to give the employee id Example:- \"000001\" etc...",
+          "required": true,
+          "_id": "6847e8385ddf8f03edf3189c"
+        },
+        {
+          "name": "personalGradeValue",
+          "type": "string",
+          "description": "in this personal Grade Value to get for user selected personal grade name corresponding value will be take \"GCB Grade 05\" corresponding value \"000004\"",
+          "required": true,
+          "_id": "6847e8385ddf8f03edf3189d"
+        },
+        {
+          "name": "groupLevelValue",
+          "type": "string",
+          "description": "in this group value to get for user selected group level name corresponding value will be take example \"beacon class 02\" corresponding value \"000001\"",
+          "required": true,
+          "_id": "6847e8385ddf8f03edf3189e"
+        },
+        {
+          "name": "positionTitleValue",
+          "type": "string",
+          "description": "in this position Title Value to get for user selected position Title name corresponding value will be take example \"asdfg\" corresponding value \"000001\"",
+          "required": true,
+          "_id": "6847e8385ddf8f03edf3189f"
+        },
+        {
+          "name": "subGroupLevelValue",
+          "type": "string",
+          "description": "in this sub Group Level Value to get for user selected position sub Group Level name corresponding value will be take example \"beacon text book\" corresponding value \"000001\"",
+          "required": true,
+          "_id": "6847e8385ddf8f03edf318a0"
+        },
+        {
+          "name": "effectFromDate",
+          "type": "string",
+          "description": "to give effect from date example format  \"22/10/2025\" - \"dd/mm/yyyy\" from date must be feature date.\n",
+          "required": true,
+          "_id": "6847e8385ddf8f03edf318a1"
+        },
+        {
+          "name": "effectToDate",
+          "type": "string",
+          "description": "to give effect to date example format  \"22/10/2025\" - \"dd/mm/yyyy\" and to date is greater then from date",
+          "required": true,
+          "_id": "6847e8385ddf8f03edf318a2"
+        },
+        {
+          "name": "remarks",
+          "type": "string",
+          "description": "remark is optional field if user file get the value dont ask the user for remarks field this is optional.",
+          "required": false,
+          "_id": "6847e8385ddf8f03edf318a3"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6847e8385ddf8f03edf3189b"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/empCoveringDetails.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  async function payload(url) {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")(url);\n\n    if (updateurl.updateUrl) {\n      return {\n        pageUrl: updateurl.updateUrl,\n        param: updateurl.updateParams\n      }\n    } else {\n      return {\n        pageUrl: url,\n        param: \"\"\n      }\n    }\n  }\n\n  const updateUrlData = await payload(\"EIM/empCoveringDetails.aspx\");\n\n  const addResponse = await BeaconBar.executeFunction(\"module\")(\n    {\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __LASTFOCUS: \"\",\n      __VIEWSTATE: window.emp2.viewState,\n      __VIEWSTATEGENERATOR: window.emp2.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.emp2.eventValidation,\n      \"ctl00$hdnDateFormat\": \"m/d/yy\",\n      \"ctl00$hdnQuickmenu\": \"\",\n      \"ctl00_body_RadWindowManager1_ClientState\": \"\",\n      \"ctl00$body$EmpSearch$hdnEmpNumber\": args.id,\n      \"ctl00$body$EmpSearch$hdnActiveInactiveToolbar\": \"\",\n      \"ctl00$body$drpSalaryGrade\": args.personalGradeValue,\n      \"ctl00$body$drpClassification\": args.groupLevelValue,\n      \"ctl00$body$drpCorporateTitle\": args.positionTitleValue,\n      \"ctl00$body$drpdsg\": args.subGroupLevelValue,\n      \"ctl00$body$hdnDisplayMethod\": \"1\",\n      \"ctl00$body$txtactfrom\": args.effectFromDate,\n      \"ctl00$body$txtactto\": args.effectToDate,\n      \"ctl00$body$fileAttatchment\": \"\",\n      \"ctl00$body$payable\": \"rbpayable\",\n      \"ctl00$body$txtCmmt\": args.remarks || \"\",\n      \"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdCovringDtl$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"10\",\n      \"ctl00_body_grdCovringDtl_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdCovringDtl_ClientState\": \"\",\n      \"ctl00$body$grdCovringDtl$ctl00$ctl04$Txt_comment\": \"\",\n      \"ctl00$body$butSave\": \"Save\",\n      \"ctl00$footers$hdnIsDateChanged\": \"1\",\n      \"ctl00$footers$txtPublicKey\": window.emp.publicKey1,\n      \"ctl00$footers$txtempNo\": window.emp.empEnc\n    },\n    `${reqOptions.sl}/${updateUrlData.pageUrl}`\n  );\n\n  const parser = new DOMParser();\n  const parsedDoc = parser.parseFromString(addResponse.rawData, \"text/html\");\n  const validation = parsedDoc.getElementById(\"ctl00_body_butNew\");\n  if (validation?.disabled) {\n    const scriptContent = parsedDoc.querySelector(\"script\")?.textContent || \"\";\n    const match = scriptContent.match(/HbsAlert\\('(.*?)'\\)/);\n    const alertMessage = match ? match[1] : null;\n    return alertMessage || \"The specified period will overlap with an existing period. Please specify another date range.\";\n  } else {\n    return \"Successfully created — returning all created values.\";\n  }\n\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

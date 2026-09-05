@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "dwellingType",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The name of the dwelling type to create (e.g., \"Temporary Shelter\", \"Condominium\", \"Villa\")",
+      "advanced": false,
+      "raw": {
+        "name": "dwellingType",
+        "type": "string",
+        "description": "The name of the dwelling type to create (e.g., \"Temporary Shelter\", \"Condominium\", \"Villa\")",
+        "required": true,
+        "_id": "69542d700eece7a2ce8dbbc5"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

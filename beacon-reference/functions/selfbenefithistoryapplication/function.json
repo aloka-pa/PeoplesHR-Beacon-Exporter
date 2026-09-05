@@ -1,0 +1,24 @@
+{
+  "id": "690dc589931a2d61ba0b30c1",
+  "slug": "selfbenefithistoryapplication",
+  "name": "selfBenefitHistoryApplication",
+  "status": "live",
+  "createdAt": "2025-08-21T10:33:14.939Z",
+  "updatedAt": "2025-08-21T10:33:14.939Z",
+  "contentHash": "8a7115a2943769d0ecc06ec8392479c26eafaa2445c3c0011412219d720068bf",
+  "lastExportedAt": "2026-09-05T19:41:29.278Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc589931a2d61ba0b30c1",
+    "name": "selfBenefitHistoryApplication",
+    "status": "live",
+    "code": "(async function () {\n    const updateurl = await BeaconBar.executeFunction(\"updateUrlParams\")('Benefitv9/History/BenefitHistory/?mvc=1&bs=4');\n    let url = updateurl.updateUrl || \"Benefitv9/History/BenefitHistory/?mvc=1&bs=4\";\n\n    const digestkey1 = await BeaconBar.executeFunction('getDigest')(updateurl.updateParams);\n    const sl = await BeaconBar.getSharedData(\"sl\");\n\n    const myHeaders = new Headers({\n        \"accept\": \"*/*\",\n        \"accept-language\": \"en-US,en;q=0.9\",\n        \"Content-Type\": \"application/x-www-form-urlencoded\"\n    });\n\n    const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n\n    const response1 = await fetch(`${location.origin}/${sl}/${url}&digest=${digestkey1.digest}`, requestOptions);\n    const data1 = await response1.text();\n\n    const match = data1.match(/\"CurrentEmployeeNumber\"\\s*:\\s*\"([^\"]+)\"/);\n\n    return match ? match[1] : null;\n});\n",
+    "by": "2414",
+    "__v": 0
+  }
+}

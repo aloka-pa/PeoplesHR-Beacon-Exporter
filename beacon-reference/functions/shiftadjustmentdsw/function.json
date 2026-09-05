@@ -1,0 +1,24 @@
+{
+  "id": "690dc58b931a2d61ba0b3220",
+  "slug": "shiftadjustmentdsw",
+  "name": "shiftadjustmentDSW",
+  "status": "live",
+  "createdAt": "2025-06-16T07:03:10.056Z",
+  "updatedAt": "2025-06-16T07:03:10.056Z",
+  "contentHash": "5638470c50d235b5b74e8f5806b8d79ae6cbcedfec95e2a7a48be9c265c9ccb5",
+  "lastExportedAt": "2026-09-05T19:41:34.207Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc58b931a2d61ba0b3220",
+    "name": "shiftadjustmentDSW",
+    "status": "live",
+    "code": "(async function(args){\n  const myHeaders = new Headers();\nmyHeaders.append(\"accept\", \"*/*\");\nmyHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\nmyHeaders.append(\"priority\", \"u=1, i\");\n\nconst requestOptions = {\n  method: \"GET\",\n  headers: myHeaders,\n  redirect: \"follow\"\n};\n  const digest = await BeaconBar.executeFunction(\"getDigest\")(`mvc=1&WFMainID=${args.WFMainID}&Allowedit=${args.Allowedit}&CATID=${args.CATID}`)\n\nconst reqOptions = await BeaconBar.executeFunction(\"reqOptions\")()\nconst response = await fetch(`${reqOptions}TNAVUE/app/ShiftAdjustmentApproval?mvc=1&WFMainID=${args.WFMainID}&Allowedit=${args.Allowedit}&CATID=${args.CATID}&digest=${digest.digest}&_=${Date.now()}`, requestOptions)\nconst data = await  response.text()\n  return data ;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

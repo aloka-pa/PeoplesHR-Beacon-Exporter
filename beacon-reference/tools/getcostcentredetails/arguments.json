@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "searchCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "to get the Cost Center details for user prompt for cost Center Code.",
+      "advanced": false,
+      "raw": {
+        "name": "searchCode",
+        "type": "string",
+        "description": "to get the Cost Center details for user prompt for cost Center Code.",
+        "required": true,
+        "_id": "680dd51186df9af1abb3f0cc"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

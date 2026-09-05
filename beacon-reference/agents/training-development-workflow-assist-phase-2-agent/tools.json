@@ -1,0 +1,12 @@
+[
+  {
+    "toolId": "6956293bab9dbe6266aec3e1",
+    "toolName": "traininingDevCreateCourseDescFilling",
+    "path": "tools/traininingdevcreatecoursedescfilling"
+  },
+  {
+    "toolId": "694a7a05d1084e089f1f6b53",
+    "toolName": "getTeamAttendanceApprovalDetails",
+    "path": "tools/getteamattendanceapprovaldetails-2"
+  }
+]

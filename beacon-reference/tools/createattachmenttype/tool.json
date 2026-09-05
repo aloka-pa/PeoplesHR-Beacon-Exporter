@@ -1,0 +1,72 @@
+{
+  "id": "690dc566931a2d61ba0b167f",
+  "slug": "createattachmenttype",
+  "name": "createAttachmentType",
+  "description": "in this tool Create the Attachment Type.",
+  "instructions": null,
+  "taskName": "Create Attachment Type",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createAttachmentType",
+  "createdAt": "2025-05-05T06:00:35.385Z",
+  "updatedAt": "2026-05-15T06:48:21.544Z",
+  "assignedAgents": [],
+  "contentHash": "58d0c2a4e8c0d9e5331fde7d0435203f056e3e84dac7e6dfc102ae1ee8bf2af5",
+  "lastExportedAt": "2026-09-05T19:39:22.710Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b167f",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createAttachmentType",
+      "description": "in this tool Create the Attachment Type.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createAttachmentType",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"description\": {\n      \"type\": \"string\",\n      \"description\": \"Description or name of the attachment type (e.g., 'Attachment from Template Designer Module').\"\n    },\n    \"isExpire\": {\n      \"type\": \"boolean\",\n      \"description\": \"Whether the attachment has an expiration.\"\n    }\n  },\n  \"required\": [\n    \"description\",\n    \"isExpire\"\n  ]\n}",
+        "_id": "68185403fc879b0ec3842485"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"AttachmentType\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"AttachmentType\");\n\n  const payload = {\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: newInt.viewState,\n    __VIEWSTATEGENERATOR: newInt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: newInt.eventValidation,\n\n    // mapped fields\n    \"ctl00$body$txtDesc\": args.description || \"\",\n\n    \"ctl00$body$butSave\": \"Save\"\n  };\n\n  if (args.isExpire === true) {\n    payload[\"ctl00$body$ChkisExpire\"] = \"on\";\n  }\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")(\n    payload,\n    \"AttachmentType\"\n  );\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code =\n    doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n\n  const attachmentType =\n    doc.querySelector(\"#ctl00_body_txtDesc\")?.value?.trim() || \"\";\n\n  const expiration =\n    doc.querySelector(\"#ctl00_body_ChkisExpire\")?.checked || false;\n\n  return {\n    code,\n    attachmentType,\n    expiration\n  };\n\n});",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create Attachment Type",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-05T06:00:35.385Z",
+      "updatedAt": "2026-05-15T06:48:21.544Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createAttachmentType",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"description\": {\n      \"type\": \"string\",\n      \"description\": \"Description or name of the attachment type (e.g., 'Attachment from Template Designer Module').\"\n    },\n    \"isExpire\": {\n      \"type\": \"boolean\",\n      \"description\": \"Whether the attachment has an expiration.\"\n    }\n  },\n  \"required\": [\n    \"description\",\n    \"isExpire\"\n  ]\n}",
+      "_id": "68185403fc879b0ec3842485"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"AttachmentType\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$butNew\": \"New\"\n  }, \"AttachmentType\");\n\n  const payload = {\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __LASTFOCUS: \"\",\n    __VIEWSTATE: newInt.viewState,\n    __VIEWSTATEGENERATOR: newInt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: newInt.eventValidation,\n\n    // mapped fields\n    \"ctl00$body$txtDesc\": args.description || \"\",\n\n    \"ctl00$body$butSave\": \"Save\"\n  };\n\n  if (args.isExpire === true) {\n    payload[\"ctl00$body$ChkisExpire\"] = \"on\";\n  }\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")(\n    payload,\n    \"AttachmentType\"\n  );\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const code =\n    doc.querySelector(\"#ctl00_body_txtCode\")?.value?.trim() || \"\";\n\n  const attachmentType =\n    doc.querySelector(\"#ctl00_body_txtDesc\")?.value?.trim() || \"\";\n\n  const expiration =\n    doc.querySelector(\"#ctl00_body_ChkisExpire\")?.checked || false;\n\n  return {\n    code,\n    attachmentType,\n    expiration\n  };\n\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "690dc584931a2d61ba0b2bb7",
+  "slug": "getkeysforleave",
+  "name": "getkeysforLeave",
+  "status": "live",
+  "createdAt": "2025-05-27T07:42:16.960Z",
+  "updatedAt": "2025-05-27T07:42:16.960Z",
+  "contentHash": "44268bcbb6754be19ef5a7f3d9ca9321eaa61bbfe8779a24f97b8d2159839f7d",
+  "lastExportedAt": "2026-09-05T19:41:39.866Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc584931a2d61ba0b2bb7",
+    "name": "getkeysforLeave",
+    "status": "live",
+    "code": "(async function () {\n    //done\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n    myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n    myHeaders.append(\"content-type\", \"application/json; charset=utf-8\");\n    myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const reqOptions = BeaconBar.executeFunction(\"reqOptions\")();\n    const requestOptions = {\n        method: \"GET\",\n        headers: myHeaders,\n        redirect: \"follow\"\n    };\n\n    const response = await fetch(`${reqOptions}CommonComponents/Search/GetKey/?_=${Date.now()}`, requestOptions)\n    const data = await response.text()\n    const message = JSON.parse(data);\n    const messages = message.Message;\n    return messages;\n\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "arguments": [
+    {
+      "name": "dsDivisionCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The DS Division code to identify the record to edit. Either dsDivisionCode or dsDivisionName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "dsDivisionCode",
+        "type": "string",
+        "description": "The DS Division code to identify the record to edit. Either dsDivisionCode or dsDivisionName must be provided.",
+        "required": true,
+        "_id": "69537430fbe9c497d06dd9c2"
+      }
+    },
+    {
+      "name": "dsDivisionName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The DS Division name to identify the record to edit. Either dsDivisionCode or dsDivisionName must be provided.",
+      "advanced": false,
+      "raw": {
+        "name": "dsDivisionName",
+        "type": "string",
+        "description": "The DS Division name to identify the record to edit. Either dsDivisionCode or dsDivisionName must be provided.",
+        "required": true,
+        "_id": "69537430fbe9c497d06dd9c3"
+      }
+    },
+    {
+      "name": "newDSDivisionName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The new name for the DS Division. If not provided, the current name remains unchanged.",
+      "advanced": false,
+      "raw": {
+        "name": "newDSDivisionName",
+        "type": "string",
+        "description": "The new name for the DS Division. If not provided, the current name remains unchanged.",
+        "required": false,
+        "_id": "69537430fbe9c497d06dd9c4"
+      }
+    },
+    {
+      "name": "districtCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The district code to assign to the DS Division. If not provided, the current district remains unchanged.",
+      "advanced": false,
+      "raw": {
+        "name": "districtCode",
+        "type": "string",
+        "description": "The district code to assign to the DS Division. If not provided, the current district remains unchanged.",
+        "required": false,
+        "_id": "69537430fbe9c497d06dd9c5"
+      }
+    },
+    {
+      "name": "districtName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The district name to assign to the DS Division. The system will look up the corresponding code from the dropdown (case-insensitive exact match). If not provided, the current district remains unchanged.",
+      "advanced": false,
+      "raw": {
+        "name": "districtName",
+        "type": "string",
+        "description": "The district name to assign to the DS Division. The system will look up the corresponding code from the dropdown (case-insensitive exact match). If not provided, the current district remains unchanged.",
+        "required": false,
+        "_id": "69537430fbe9c497d06dd9c6"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

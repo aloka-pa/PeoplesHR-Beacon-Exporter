@@ -1,0 +1,93 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "previousShiftDetails",
+      "type": "array",
+      "required": true,
+      "defaultValue": null,
+      "description": "Details of previously assigned shifts. Retrieved from the 'getShiftAdjustmentDetails' API. Only non-pending shifts can be updated. Pending shifts are displayed for reference. For each shift, store the abbreviation and corresponding code.",
+      "advanced": true,
+      "raw": {
+        "type": "array",
+        "description": "Details of previously assigned shifts. Retrieved from the 'getShiftAdjustmentDetails' API. Only non-pending shifts can be updated. Pending shifts are displayed for reference. For each shift, store the abbreviation and corresponding code.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "preShiftAbbreviation": {
+              "type": "string",
+              "description": "Abbreviation of the existing shift (e.g., 'GEN', 'NIGHT')."
+            },
+            "preShiftCode": {
+              "type": "string",
+              "description": "Unique code representing the existing shift."
+            },
+            "date": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The roster date on which the user wants to update the shift. Example: '2025-09-02T00:00:00'."
+            }
+          },
+          "required": [
+            "preShiftAbbreviation",
+            "preShiftCode",
+            "date"
+          ]
+        }
+      }
+    },
+    {
+      "name": "updateShiftDetails",
+      "type": "array",
+      "required": true,
+      "defaultValue": null,
+      "description": "New or updated shift details assigned to replace or update existing shifts. This is derived using scheduling modes. Each item maps a new abbreviation and its corresponding code.",
+      "advanced": true,
+      "raw": {
+        "type": "array",
+        "description": "New or updated shift details assigned to replace or update existing shifts. This is derived using scheduling modes. Each item maps a new abbreviation and its corresponding code.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "newShiftAbbreviation": {
+              "type": "string",
+              "description": "Abbreviation of the new shift to be assigned."
+            },
+            "newShiftCode": {
+              "type": "string",
+              "description": "Unique code representing the new shift."
+            }
+          },
+          "required": [
+            "newShiftAbbreviation",
+            "newShiftCode"
+          ]
+        }
+      }
+    },
+    {
+      "name": "reason",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "in this optional field,Before provide the reasons user selected reason corresponding id will be take no need to take name only id will be take",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "in this optional field,Before provide the reasons user selected reason corresponding id will be take no need to take name only id will be take"
+      }
+    },
+    {
+      "name": "comment",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "in this optional field if any user given comment value will be take",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "in this optional field if any user given comment value will be take"
+      }
+    }
+  ]
+}

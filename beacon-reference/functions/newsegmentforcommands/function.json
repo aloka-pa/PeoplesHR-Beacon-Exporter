@@ -1,0 +1,24 @@
+{
+  "id": "6a427b0f26124bbad78b9fce",
+  "slug": "newsegmentforcommands",
+  "name": "newSegmentForCommands",
+  "status": "live",
+  "createdAt": "2026-06-29T14:02:55.137Z",
+  "updatedAt": "2026-06-30T07:37:32.887Z",
+  "contentHash": "b2dad13a7016b80273b90b6bb16959af7bd4d930c3e6b4d2bd27c7aaeae49eac",
+  "lastExportedAt": "2026-09-05T19:41:25.269Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "6a427b0f26124bbad78b9fce",
+    "name": "newSegmentForCommands",
+    "status": "live",
+    "code": "(function (arg) {\n  const menus = window.BeaconBar.user.metaData.menus;\n  const commandMenu = arg.metaData.menu;\n\n  // Normalize a URL by removing mvc and bs query params\n  function normalizeUrl(url) {\n    try {\n      // Handle relative URLs by prepending a dummy base\n      const fullUrl = new URL(url, window.origin);\n      fullUrl.searchParams.delete('mvc');\n      fullUrl.searchParams.delete('bs');\n\n      // Reconstruct: pathname + remaining search + hash\n      let normalized = fullUrl.pathname.replace(/^\\//, ''); // remove leading slash from dummy base\n      if (fullUrl.search) normalized += fullUrl.search;\n      if (fullUrl.hash) normalized += fullUrl.hash;\n\n      return normalized.toLowerCase();\n    } catch (e) {\n      // Fallback: manual strip\n      return url\n        .replace(/[?&]mvc=[^&]*/g, '')\n        .replace(/[?&]bs=[^&]*/g, '')\n        .replace(/\\?&/, '?')\n        .replace(/&&/g, '&')\n        .replace(/[?&]$/, '')\n        .toLowerCase();\n    }\n  }\n\n  const normalizedInput = normalizeUrl(commandMenu);\n\n  const matched = menus.some(menuUrl => {\n    const normalizedMenu = normalizeUrl(menuUrl);\n    return normalizedMenu === normalizedInput;\n  });\n  return matched;\n});",
+    "by": "7854",
+    "__v": 5
+  }
+}

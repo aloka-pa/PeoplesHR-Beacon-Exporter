@@ -1,0 +1,24 @@
+{
+  "id": "690dc582931a2d61ba0b2991",
+  "slug": "getsearchcreteria",
+  "name": "getSearchCreteria",
+  "status": "live",
+  "createdAt": "2025-05-29T07:17:34.078Z",
+  "updatedAt": "2025-05-29T07:17:34.078Z",
+  "contentHash": "913e556a048163a996fd4d1826e1a4ded3b65b8648e4833eb2c2070fad64c090",
+  "lastExportedAt": "2026-09-05T19:41:39.117Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc582931a2d61ba0b2991",
+    "name": "getSearchCreteria",
+    "status": "live",
+    "code": "(async function(args){\n    const myHeaders = new Headers();\nmyHeaders.append(\"accept\", \"*/*\");\nmyHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\nmyHeaders.append(\"priority\", \"u=1, i\");\n\nconst requestOptions = {\n  method: \"GET\",\n  headers: myHeaders,\n  redirect: \"follow\"\n};\nconst reqOptions = await BeaconBar.executeFunction(\"reqOptions\")()\nconst response = await fetch(`${reqOptions}CommonComponents/Search/GetSearchCriteria/?key=${args}&_=${Date.now()}`, requestOptions)\n  const data =  await response.text()\n  return data ;\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

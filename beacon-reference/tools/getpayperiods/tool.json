@@ -1,0 +1,153 @@
+{
+  "id": "69eeb94f6dd27c2ac5c49250",
+  "slug": "getpayperiods",
+  "name": "getPayPeriods",
+  "description": "getPayPeriods - Requires PayType and PayYear from previous steps. Do not display any hyperlinks in the output",
+  "instructions": null,
+  "taskName": "Fetching Pay Periods",
+  "tags": [
+    "PayRoll",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getPayPeriods",
+  "createdAt": "2026-04-27T01:18:07.792Z",
+  "updatedAt": "2026-07-17T12:53:34.257Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c51",
+      "name": "PayRoll"
+    }
+  ],
+  "contentHash": "89d8025f0c101340fe3f93b6eb9359cc63b4d39bd77511b76c7a0dad5d3acd46",
+  "lastExportedAt": "2026-09-05T19:39:22.103Z",
+  "raw": {
+    "basic": {
+      "_id": "69eeb94f6dd27c2ac5c49250",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getPayPeriods",
+      "description": "getPayPeriods - Requires PayType and PayYear from previous steps. Do not display any hyperlinks in the output",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getPayPeriods",
+        "args": [
+          {
+            "name": "PayType",
+            "type": "string",
+            "description": "Selected Pay Type",
+            "required": true,
+            "_id": "69eeb94f6dd27c2ac5c49252"
+          },
+          {
+            "name": "PayYear",
+            "type": "number",
+            "description": "Selected Pay Year",
+            "required": true,
+            "_id": "69eeb94f6dd27c2ac5c49253"
+          },
+          {
+            "name": "EmpNumber",
+            "type": "string",
+            "description": "Employee Number",
+            "required": false,
+            "_id": "69eeb94f6dd27c2ac5c49254"
+          },
+          {
+            "name": "PaySchId",
+            "type": "string",
+            "description": "Pay Schedule Id",
+            "required": false,
+            "_id": "69eeb94f6dd27c2ac5c49255"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a5a25ceb0bb69ec2e1d134a"
+      },
+      "by": "34476",
+      "fetcher": "(async function (args, reqOptions) {\n  const baseUrl = await BeaconBar.executeFunction(\"reqOptions\")();\n\n  const finalUrl = `${baseUrl}GPAdding/Api/widgets/ExternalSlipApi/GetPayPeriod`;\n\n\n  if (!args?.PayType || !args?.PayYear) {\n    throw new Error(\"PayType and PayYear are required\");\n  }\n\n  return {\n    url: finalUrl,\n    method: \"POST\",\n    headers: {\n      \"x-requested-with\": \"XMLHttpRequest\",\n      \"Content-Type\": \"application/json\"\n    },\n    credentials: \"include\",\n    body: JSON.stringify({\n      EmpNumber: args?.EmpNumber || \"\",\n      PayType: args?.PayType,\n      PayYear: args?.PayYear,\n      PaySchId: args?.PaySchId || \"\",\n      PayPeriod: \"\",\n      PayStartDate: \"\",\n      PayEndDate: \"\"\n    })\n  };\n})",
+      "transformer": "(function (data) {\n  return data.map(item => ({\n    PayGrpCode: item.PayGrpCode,\n    PayStartDate: item.PayStartDate,\n    PayEndDate: item.PayEndDate,\n    PayGrpNum: item.PayType,\n    PayPeriod: item.PayPeriod\n  }));\n})",
+      "groupName": "",
+      "tags": [
+        "PayRoll",
+        "Headers"
+      ],
+      "taskName": "Fetching Pay Periods",
+      "etl": false,
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return data.map(item => ({\n    url: \"\",\n    title: item.PayPeriod,\n    subTitle: `Year: ${item.PayYear}`,\n    icon: \"\"\n  }));\n})",
+      "toolType": "code",
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "status": "live",
+      "createdAt": "2026-04-27T01:18:07.792Z",
+      "updatedAt": "2026-07-17T12:53:34.257Z",
+      "__v": 3,
+      "outputExample": {},
+      "sampleRequest": {},
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "isFromKG": false,
+      "sanity": {
+        "apiResponse": []
+      },
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c51",
+          "name": "PayRoll"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getPayPeriods",
+      "args": [
+        {
+          "name": "PayType",
+          "type": "string",
+          "description": "Selected Pay Type",
+          "required": true,
+          "_id": "69eeb94f6dd27c2ac5c49252"
+        },
+        {
+          "name": "PayYear",
+          "type": "number",
+          "description": "Selected Pay Year",
+          "required": true,
+          "_id": "69eeb94f6dd27c2ac5c49253"
+        },
+        {
+          "name": "EmpNumber",
+          "type": "string",
+          "description": "Employee Number",
+          "required": false,
+          "_id": "69eeb94f6dd27c2ac5c49254"
+        },
+        {
+          "name": "PaySchId",
+          "type": "string",
+          "description": "Pay Schedule Id",
+          "required": false,
+          "_id": "69eeb94f6dd27c2ac5c49255"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a5a25ceb0bb69ec2e1d134a"
+    },
+    "fetcher": "(async function (args, reqOptions) {\n  const baseUrl = await BeaconBar.executeFunction(\"reqOptions\")();\n\n  const finalUrl = `${baseUrl}GPAdding/Api/widgets/ExternalSlipApi/GetPayPeriod`;\n\n\n  if (!args?.PayType || !args?.PayYear) {\n    throw new Error(\"PayType and PayYear are required\");\n  }\n\n  return {\n    url: finalUrl,\n    method: \"POST\",\n    headers: {\n      \"x-requested-with\": \"XMLHttpRequest\",\n      \"Content-Type\": \"application/json\"\n    },\n    credentials: \"include\",\n    body: JSON.stringify({\n      EmpNumber: args?.EmpNumber || \"\",\n      PayType: args?.PayType,\n      PayYear: args?.PayYear,\n      PaySchId: args?.PaySchId || \"\",\n      PayPeriod: \"\",\n      PayStartDate: \"\",\n      PayEndDate: \"\"\n    })\n  };\n})",
+    "transformer": "(function (data) {\n  return data.map(item => ({\n    PayGrpCode: item.PayGrpCode,\n    PayStartDate: item.PayStartDate,\n    PayEndDate: item.PayEndDate,\n    PayGrpNum: item.PayType,\n    PayPeriod: item.PayPeriod\n  }));\n})",
+    "source": "(function(data, args, reqOptions) {\n  return data.map(item => ({\n    url: \"\",\n    title: item.PayPeriod,\n    subTitle: `Year: ${item.PayYear}`,\n    icon: \"\"\n  }));\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

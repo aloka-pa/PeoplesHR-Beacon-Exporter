@@ -1,0 +1,157 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "ctl00_body_chkGenderValid",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Checkbox indicating whether gender validation is enabled.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on"
+        ],
+        "description": "Checkbox indicating whether gender validation is enabled."
+      }
+    },
+    {
+      "name": "ctl00_body_cboGender",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Selected gender value (0: Female, 1: Male, 2: Other).",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "0",
+          "1",
+          "2"
+        ],
+        "description": "Selected gender value (0: Female, 1: Male, 2: Other)."
+      }
+    },
+    {
+      "name": "ctl00_body_chkMaritalStatus_0",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Undisclosed marital status selected.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on"
+        ],
+        "description": "Undisclosed marital status selected."
+      }
+    },
+    {
+      "name": "ctl00_body_chkMaritalStatus_1",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Unmarried marital status selected.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on"
+        ],
+        "description": "Unmarried marital status selected."
+      }
+    },
+    {
+      "name": "ctl00_body_chkMaritalStatus_2",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Married marital status selected.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on"
+        ],
+        "description": "Married marital status selected."
+      }
+    },
+    {
+      "name": "ctl00_body_chkMaritalStatus_3",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Divorced marital status selected.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on"
+        ],
+        "description": "Divorced marital status selected."
+      }
+    },
+    {
+      "name": "ctl00_body_chkMaritalStatus_4",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Others marital status selected.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on"
+        ],
+        "description": "Others marital status selected."
+      }
+    },
+    {
+      "name": "ctl00_body_chkMaritalStatus_5",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Solo Parent marital status selected.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on"
+        ],
+        "description": "Solo Parent marital status selected."
+      }
+    },
+    {
+      "name": "ctl00_body_chkMaritalStatus_6",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Single marital status selected.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on"
+        ],
+        "description": "Single marital status selected."
+      }
+    },
+    {
+      "name": "ctl00_body_chkMaritalStatus_7",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "It Is Complicated marital status selected.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on"
+        ],
+        "description": "It Is Complicated marital status selected."
+      }
+    }
+  ]
+}

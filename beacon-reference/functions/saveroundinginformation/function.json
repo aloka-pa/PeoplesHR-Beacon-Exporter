@@ -1,0 +1,24 @@
+{
+  "id": "690dc587931a2d61ba0b2f4e",
+  "slug": "saveroundinginformation",
+  "name": "saveRoundinginformation",
+  "status": "live",
+  "createdAt": "2025-06-05T12:56:43.100Z",
+  "updatedAt": "2026-07-17T12:55:59.880Z",
+  "contentHash": "1f43b783cfd4459c35b8154c6337960092ca8c7a8901d69aa25c858304b19ec9",
+  "lastExportedAt": "2026-09-05T19:41:16.208Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc587931a2d61ba0b2f4e",
+    "name": "saveRoundinginformation",
+    "status": "live",
+    "code": "(async function (args) {\n  //done\n  const myHeaders = new Headers({\n    \"accept\": \"*/*\",\n    \"accept-language\": \"en-GB,en-US;q=0.9,en;q=0.8\",\n    \"cache-control\": \"no-cache\",\n    \"content-type\": \"application/x-www-form-urlencoded; charset=UTF-8\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n  });\n  let views;\n  if (args.pattern === \"Range\") {\n    const viewss = await BeaconBar.executeFunction(\"submitrange\")(BeaconBar.getSharedData(\"extractViewStates\"), args);\n    views = await BeaconBar.executeFunction(\"addRoundingRangeInfor\")(viewss, args)\n  } else {\n    views = BeaconBar.getSharedData(\"extractViewStates\");\n    //  views  = await BeaconBar.executeFunction(\"generalpatternroundInfor\")(viewssss , args)\n  }\n\n  const data = {\n    \"ctl00_main_RadScriptManager_HiddenField\": \"\",\n    \"ctl00$body$txtRoundingPatternName\": args.roundingPatternName || \"\",\n    \"ctl00$body$tpTest$txtTime\": \"\",\n    \"ctl00$action$ButtonPanel$butDelete$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butReset$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSave$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSummary$isControlEnabled\": \"True\",\n    \"ctl00$hdnCulturDateFormat\": \"M/d/yyyy\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": views.viewState,\n    \"__VIEWSTATEGENERATOR\": views.viewStateGenerator,\n    \"__SCROLLPOSITIONX\": \"0\",\n    \"__SCROLLPOSITIONY\": \"0\",\n    \"__EVENTVALIDATION\": views.eventValidation,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__ASYNCPOST\": \"true\",\n    \"ctl00$action$ButtonPanel$butSave$imgbtnSave\": \"Save\"\n  };\n\n  if (args.pattern === \"General\") {\n    data[\"ctl00$main$RadScriptManager\"] = \"ctl00$body$upPnlDetailView|ctl00$body$cboMethod\";\n    data[\"__EVENTTARGET\"] = \"ctl00$body$cboMethod\";\n    data[\"ctl00$body$Rounding_pattern\"] = \"rbtnGeneral\";\n    data[\"ctl00$body$cboMethod\"] = args.method || \"\";\n    data[\"ctl00$body$txtNumVal\"] = args.numVal || \"\";\n  } else if (args.pattern === \"Range\") {\n    data[\"ctl00$main$RadScriptManager\"] = \"ctl00$action$upPnlBtn|ctl00$action$ButtonPanel$butSave$imgbtnSave\";\n    data[\"__EVENTTARGET\"] = \"\";\n    data[\"ctl00$body$Rounding_pattern\"] = \"rbtnRange\";\n    data[\"ctl00$body$txtNumFrom$txtTime\"] = args.numFrom || \"\";\n    data[\"ctl00$body$txtNumTo$txtTime\"] = args.numTo || \"\";\n    data[\"ctl00$body$txtNumValue$txtTime\"] = args.textnumValue || \"\";\n  }\n\n  const raw = new URLSearchParams(data).toString();\n\n  const requestOptions = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw,\n    redirect: \"follow\"\n  };\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n  try {\n    const response = await fetch(`${reqOptions}TNA/RoundingInformation.aspx`, requestOptions);\n    const result = await response.text();\n  } catch (error) {\n  }\n})\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "690dc585931a2d61ba0b2d31",
+  "slug": "mobileswipe",
+  "name": "mobileSwipe",
+  "status": "live",
+  "createdAt": "2025-06-14T10:39:20.992Z",
+  "updatedAt": "2025-06-14T10:39:20.992Z",
+  "contentHash": "5fa40aff4f765ab6825e6f9d5405d7a58c3de6b74394f741d3d7f6f6bc7b2338",
+  "lastExportedAt": "2026-09-05T19:41:34.898Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc585931a2d61ba0b2d31",
+    "name": "mobileSwipe",
+    "status": "live",
+    "code": "(async function (args) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n  const digest = await BeaconBar.executeFunction(\"getDigest\")(`WFMainID=${args.WorkflowMainId}&Allowedit=0&CATID=0`);\n  const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")()\n  const response = await fetch(`${reqOptions}TNA/MobileSwipeApproval.aspx?WFMainID=${args.WorkflowMainId}&Allowedit=0&CATID=0&digest=${digest.digest}`, requestOptions)\n  const data = await response.text();\n  function approvepayload(html) {\n    const parser = new DOMParser();\n    const document = parser.parseFromString(html, 'text/html');\n\n    const details = {\n      viewState: document.querySelector('#__VIEWSTATE')?.value || '',\n      eventValidation: document.querySelector('#__EVENTVALIDATION')?.value || '',\n      viewStateGen: document.querySelector('#__VIEWSTATEGENERATOR')?.value || '',\n      longitude: document.querySelector(\"#ctl00_body_hdnLongi\")?.value || \"\",\n      latitude: document.querySelector(\"#ctl00_body_hdnLat\")?.value || \"\",\n      JSON_DataHolder: document.querySelector(\"#ctl00_body_hdnJSON_DataHolder\")?.value || \"\",\n      HdnGeoUrl: document.querySelector(\"#ctl00_body_HdnGeoUrl\")?.value || \"\",\n      DateFormat: document.querySelector(\"#ctl00_hdnCulturDateFormat\")?.value || \"\",\n      ctl00_body_Hdngeo : document.querySelector(\"#ctl00_body_Hdngeo\")?.value || \"\",\n      rawData: html\n    }\n\n    return details\n  }\n  const payload = approvepayload(data);\n  const util = { payload, args, digest };\n  BeaconBar.setSharedData(\"util\", util)\n  function extractEmployeeDataFromHTML(htmlString) {\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(htmlString, 'text/html');\n\n  const table = doc.getElementById(\"ctl00_body_grdEmployees_ctl00\");\n  if (!table) return [];\n\n  const rows = table.querySelectorAll(\"tbody tr\");\n  const result = [];\n\n  rows.forEach(row => {\n    const cells = row.querySelectorAll(\"td\");\n    if (cells.length < 8) return; \n\n    const name = cells[0]?.textContent.trim();\n    if (!name) return;\n\n    const employee = {\n      name,\n      date: cells[1]?.querySelector(\"span\")?.textContent.trim() || \"\",\n      time: cells[2]?.querySelector(\"span\")?.textContent.trim() || \"\",\n      shift: cells[3]?.querySelector(\"span\")?.textContent.trim() || \"\",\n      location: cells[4]?.querySelector(\"span\")?.textContent.trim() || \"\",\n      distance: cells[5]?.querySelector(\"span\")?.textContent.trim() || \"\",\n      comment: cells[6]?.textContent.trim() || \"\",\n      approvalComment: cells[7]?.querySelector(\"input\")?.value.trim() || \"\"\n    };\n\n    result.push(employee);\n  });\n\n  return result;\n}\n\n\n  const extractEmployeeData = extractEmployeeDataFromHTML(data)\n  return extractEmployeeData;\n\n})",
+    "by": "1927",
+    "__v": 0
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "id": "6a7d63c39e5e6b8f7e82381a",
+  "slug": "getcopilotsessions",
+  "name": "GetCopilotSessions",
+  "description": "Fetches a list of Copilot chat sessions for a given user from Beacon's Copilot API. Supports pagination limit and filtering out Run Agent API sessions. Use this to retrieve recent session history for a user.",
+  "instructions": null,
+  "taskName": null,
+  "tags": [],
+  "status": "live",
+  "signature": "GetCopilotSessions",
+  "createdAt": "2026-08-13T06:27:15.101Z",
+  "updatedAt": "2026-08-13T06:27:15.101Z",
+  "assignedAgents": [],
+  "contentHash": "8db5ad5ade55752f8e11ff2ad615cfc98932ec63688843f80f286a8d0bcca0fd",
+  "lastExportedAt": "2026-09-05T19:39:21.976Z",
+  "raw": {
+    "basic": {
+      "_id": "6a7d63c39e5e6b8f7e82381a",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "GetCopilotSessions",
+      "description": "Fetches a list of Copilot chat sessions for a given user from Beacon's Copilot API. Supports pagination limit and filtering out Run Agent API sessions. Use this to retrieve recent session history for a user.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "GetCopilotSessions",
+        "args": [
+          {
+            "name": "userId",
+            "type": "string",
+            "description": "userId",
+            "required": false,
+            "_id": "6a7d63c39e5e6b8f7e82381c"
+          },
+          {
+            "name": "limit",
+            "type": "string",
+            "description": "limit",
+            "required": false,
+            "_id": "6a7d63c39e5e6b8f7e82381d"
+          },
+          {
+            "name": "includeRunAgentApiSessions",
+            "type": "string",
+            "description": "includeRunAgentApiSessions",
+            "required": false,
+            "_id": "6a7d63c39e5e6b8f7e82381e"
+          }
+        ],
+        "isAdvanced": false,
+        "_id": "6a7d63c39e5e6b8f7e82381b"
+      },
+      "by": "7854",
+      "groupName": "",
+      "tags": [],
+      "etl": false,
+      "toolType": "api",
+      "apiConfig": {
+        "url": "https://api.beacon.beeline.com/api/v1/copilot/6a44ba6851b3787fc1f10378/sessions?userId=bkn-ext%3Ark%40beacon.li&limit=10&includeRunAgentApiSessions=false",
+        "method": "GET",
+        "headers": {
+          "Accept": "*/*",
+          "Content-Type": "application/json",
+          "Origin": "https://projects.beeline.com"
+        }
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "status": "live",
+      "isFromKG": false,
+      "branch": {
+        "id": null,
+        "sourceId": null,
+        "sourceVersion": null,
+        "discardedByConflictResolution": false
+      },
+      "sanity": {
+        "apiResponse": []
+      },
+      "createdAt": "2026-08-13T06:27:15.101Z",
+      "updatedAt": "2026-08-13T06:27:15.101Z",
+      "__v": 0,
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "GetCopilotSessions",
+      "args": [
+        {
+          "name": "userId",
+          "type": "string",
+          "description": "userId",
+          "required": false,
+          "_id": "6a7d63c39e5e6b8f7e82381c"
+        },
+        {
+          "name": "limit",
+          "type": "string",
+          "description": "limit",
+          "required": false,
+          "_id": "6a7d63c39e5e6b8f7e82381d"
+        },
+        {
+          "name": "includeRunAgentApiSessions",
+          "type": "string",
+          "description": "includeRunAgentApiSessions",
+          "required": false,
+          "_id": "6a7d63c39e5e6b8f7e82381e"
+        }
+      ],
+      "isAdvanced": false,
+      "_id": "6a7d63c39e5e6b8f7e82381b"
+    },
+    "fetcher": null,
+    "transformer": null,
+    "source": null,
+    "test": {
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

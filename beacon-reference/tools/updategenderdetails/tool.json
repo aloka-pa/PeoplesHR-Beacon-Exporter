@@ -1,0 +1,88 @@
+{
+  "id": "690dc566931a2d61ba0b1628",
+  "slug": "updategenderdetails",
+  "name": "updateGenderDetails",
+  "description": "Before calling this api, must and should be first execute for \"getEIMAttributeList\" API, then after retrieve the data. If any required fields are missing from the user input, to get existing data. then after execute for in the api. first execute for \"getEIMAttributeList\" api. then after execute for \"updateGenderDetails\" api.\nno need take the description ai automatically . if the user specific  change the description that only change.",
+  "instructions": null,
+  "taskName": "Update Gender Details",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "updateGenderDetails",
+  "createdAt": "2025-05-04T16:37:58.459Z",
+  "updatedAt": "2026-05-15T07:10:57.835Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "59e2decaeaef1bcc5d80e5c7b67229b386af9bc41897ac1c739a036d4c2a12dd",
+  "lastExportedAt": "2026-09-05T19:39:22.509Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc566931a2d61ba0b1628",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "updateGenderDetails",
+      "description": "Before calling this api, must and should be first execute for \"getEIMAttributeList\" API, then after retrieve the data. If any required fields are missing from the user input, to get existing data. then after execute for in the api. first execute for \"getEIMAttributeList\" api. then after execute for \"updateGenderDetails\" api.\nno need take the description ai automatically . if the user specific  change the description that only change.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "updateGenderDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"description\": \"if the user specific change the description or name that only change other wise no need to change. existing before api provide all details\",\n  \"properties\": {\n    \"ctl00_body_txtGenName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the gender (e.g., Male, Female, Other).\"\n    },\n    \"ctl00_body_txtdesc\": {\n      \"type\": \"string\",\n      \"description\": \"Description or label for the gender (can be the same as the name or a more detailed label).no ai no need take the description. if the user spacific change the description that only change\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtGenName\",\n    \"ctl00_body_txtdesc\"\n  ]\n}",
+        "_id": "681797e6ea5a48ef0a51844d"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/GenderType.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/GenderType.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"GenderType\";\n  }\n\n  const editInit =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.ge.viewState,\n      __VIEWSTATEGENERATOR: window.ge.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.ge.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$butEdit\": \"Edit\"\n\n    }, url);\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __LASTFOCUS: \"\",\n\n      __VIEWSTATE: editInit.viewState,\n      __VIEWSTATEGENERATOR: editInit.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: editInit.eventValidation,\n\n      \"ctl00$body$txtGenName\":\n        args[\"ctl00_body_txtGenName\"],\n\n      \"ctl00$body$txtdesc\":\n        args[\"ctl00_body_txtdesc\"],\n\n      \"ctl00$body$butSave\": \"Save\"\n\n    }, url);\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const code =\n    doc.querySelector(\"#ctl00_body_txtCode\")\n      ?.value?.trim() || \"\";\n\n  const gender =\n    doc.querySelector(\"#ctl00_body_txtGenName\")\n      ?.value?.trim() || \"\";\n\n  const description =\n    doc.querySelector(\"#ctl00_body_txtdesc\")\n      ?.value?.trim() || \"\";\n\n  const updatedetails = {\n    code,\n    gender,\n    description\n  };\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\";\n  } else {\n    return updatedetails;\n  }\n\n});",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Update Gender Details",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-05-04T16:37:58.459Z",
+      "updatedAt": "2026-05-15T07:10:57.835Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "updateGenderDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"description\": \"if the user specific change the description or name that only change other wise no need to change. existing before api provide all details\",\n  \"properties\": {\n    \"ctl00_body_txtGenName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the gender (e.g., Male, Female, Other).\"\n    },\n    \"ctl00_body_txtdesc\": {\n      \"type\": \"string\",\n      \"description\": \"Description or label for the gender (can be the same as the name or a more detailed label).no ai no need take the description. if the user spacific change the description that only change\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtGenName\",\n    \"ctl00_body_txtdesc\"\n  ]\n}",
+      "_id": "681797e6ea5a48ef0a51844d"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (\n    !BeaconBar.user.metaData.menus.includes(\n      \"EIM/GenderType.aspx\"\n    )\n  ) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const updateurl =\n    await BeaconBar.executeFunction(\n      \"updateUrlParams\"\n    )(\"EIM/GenderType.aspx\");\n\n  let url;\n\n  if (updateurl.updateUrl) {\n    url = updateurl.updateUrl;\n  } else {\n    url = \"GenderType\";\n  }\n\n  const editInit =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n\n      __VIEWSTATE: window.ge.viewState,\n      __VIEWSTATEGENERATOR: window.ge.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: window.ge.eventValidation,\n\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n\n      \"ctl00$body$butEdit\": \"Edit\"\n\n    }, url);\n\n  const saveResponse =\n    await BeaconBar.executeFunction(\n      \"getEIMApii\"\n    )({\n\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __LASTFOCUS: \"\",\n\n      __VIEWSTATE: editInit.viewState,\n      __VIEWSTATEGENERATOR: editInit.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: editInit.eventValidation,\n\n      \"ctl00$body$txtGenName\":\n        args[\"ctl00_body_txtGenName\"],\n\n      \"ctl00$body$txtdesc\":\n        args[\"ctl00_body_txtdesc\"],\n\n      \"ctl00$body$butSave\": \"Save\"\n\n    }, url);\n\n  const parser = new DOMParser();\n\n  const doc = parser.parseFromString(\n    saveResponse.rawData,\n    \"text/html\"\n  );\n\n  const code =\n    doc.querySelector(\"#ctl00_body_txtCode\")\n      ?.value?.trim() || \"\";\n\n  const gender =\n    doc.querySelector(\"#ctl00_body_txtGenName\")\n      ?.value?.trim() || \"\";\n\n  const description =\n    doc.querySelector(\"#ctl00_body_txtdesc\")\n      ?.value?.trim() || \"\";\n\n  const updatedetails = {\n    code,\n    gender,\n    description\n  };\n\n  if (saveResponse === false) {\n    return \"try again api is fail.\";\n  } else {\n    return updatedetails;\n  }\n\n});",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

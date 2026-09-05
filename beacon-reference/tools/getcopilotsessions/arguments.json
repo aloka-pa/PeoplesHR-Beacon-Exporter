@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "userId",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "userId",
+      "advanced": false,
+      "raw": {
+        "name": "userId",
+        "type": "string",
+        "description": "userId",
+        "required": false,
+        "_id": "6a7d63c39e5e6b8f7e82381c"
+      }
+    },
+    {
+      "name": "limit",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "limit",
+      "advanced": false,
+      "raw": {
+        "name": "limit",
+        "type": "string",
+        "description": "limit",
+        "required": false,
+        "_id": "6a7d63c39e5e6b8f7e82381d"
+      }
+    },
+    {
+      "name": "includeRunAgentApiSessions",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "includeRunAgentApiSessions",
+      "advanced": false,
+      "raw": {
+        "name": "includeRunAgentApiSessions",
+        "type": "string",
+        "description": "includeRunAgentApiSessions",
+        "required": false,
+        "_id": "6a7d63c39e5e6b8f7e82381e"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

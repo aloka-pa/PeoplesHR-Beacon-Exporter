@@ -1,0 +1,24 @@
+{
+  "id": "690dc586931a2d61ba0b2e63",
+  "slug": "pdfcv",
+  "name": "pdfcv",
+  "status": "live",
+  "createdAt": "2025-05-05T18:34:42.111Z",
+  "updatedAt": "2026-07-17T12:55:59.069Z",
+  "contentHash": "6e89cc6340b99cb51778695943d7c30cf0253d634bcea1f725d9b7cc2022113a",
+  "lastExportedAt": "2026-09-05T19:41:16.927Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc586931a2d61ba0b2e63",
+    "name": "pdfcv",
+    "status": "live",
+    "code": "(async function(id, outputElementId = 'output') {\n  const sl = await BeaconBar.getSharedData(\"sl\");\n  try {\n    // Step 1: Load PDF.js library if not present\n    if (!window.pdfjsLib || typeof window.pdfjsLib.getDocument !== 'function') {\n      await new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';\n        script.onload = () => resolve();\n        script.onerror = () => reject(new Error('Failed to load PDF.js library'));\n        document.head.appendChild(script);\n      });\n    }\n\n    const pdfjsLib = window.pdfjsLib;\n    if (!pdfjsLib || typeof pdfjsLib.getDocument !== 'function') {\n      throw new Error('PDF.js library not loaded correctly.');\n    }\n\n    // Step 2: Build the PDF URL\n    const pdfUrl = `${location.origin}/${sl}/RecruitmentV9/Common/ViewAttachmentOrCVInPreview?attId=${id}&isCv=True`;\n\n    // Step 3: Fetch the PDF with credentials\n    const response = await fetch(pdfUrl, {\n      method: 'GET',\n      credentials: 'include',\n      headers: { 'Accept': 'application/pdf' }\n    });\n\n    if (!response.ok) throw new Error(`Failed to fetch PDF: ${response.status}`);\n    const pdfBinary = await response.arrayBuffer();\n\n    // Step 4: Extract text using PDF.js\n    const pdf = await pdfjsLib.getDocument({ data: pdfBinary }).promise;\n    let fullText = '';\n\n    for (let i = 1; i <= pdf.numPages; i++) {\n      const page = await pdf.getPage(i);\n      const textContent = await page.getTextContent();\n      const text = textContent.items.map(item => item.str).join(' ');\n      fullText += `\\n\\n--- Page ${i} ---\\n\\n${text}`;\n    }\n\n    // Step 5: Display result\n    const outputElement = document.getElementById(outputElementId);\n    if (outputElement) outputElement.textContent = fullText;\n\n    return fullText;\n  } catch (err) {\n    const outputElement = document.getElementById(outputElementId);\n    if (outputElement) outputElement.textContent = 'Failed to extract PDF text.';\n    return null;\n  }\n});\n",
+    "by": "34476",
+    "__v": 1
+  }
+}

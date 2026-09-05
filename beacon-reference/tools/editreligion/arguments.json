@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "religionCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "religion code to search for and then edit upon user request",
+      "advanced": false,
+      "raw": {
+        "name": "religionCode",
+        "type": "string",
+        "description": "religion code to search for and then edit upon user request",
+        "required": false,
+        "_id": "69521afaf1dea79e6a4bdddb"
+      }
+    },
+    {
+      "name": "searchReligionName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The religion name to search for (e.g., \"Buddhism\")",
+      "advanced": false,
+      "raw": {
+        "name": "searchReligionName",
+        "type": "string",
+        "description": "The religion name to search for (e.g., \"Buddhism\")",
+        "required": false,
+        "_id": "69573a1877101864f6e7eaeb"
+      }
+    },
+    {
+      "name": "religionName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The new religion name to set (required)",
+      "advanced": false,
+      "raw": {
+        "name": "religionName",
+        "type": "string",
+        "description": "The new religion name to set (required)",
+        "required": true,
+        "_id": "69573a1877101864f6e7eaec"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

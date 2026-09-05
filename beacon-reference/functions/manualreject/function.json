@@ -1,0 +1,24 @@
+{
+  "id": "690dc585931a2d61ba0b2cf1",
+  "slug": "manualreject",
+  "name": "manualreject",
+  "status": "live",
+  "createdAt": "2025-06-12T12:52:55.889Z",
+  "updatedAt": "2026-07-17T12:55:57.470Z",
+  "contentHash": "35befe45b467ea4a7ffebfc1103d66c99597efd9bb3c18c002e67ee980a98240",
+  "lastExportedAt": "2026-09-05T19:41:18.096Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc585931a2d61ba0b2cf1",
+    "name": "manualreject",
+    "status": "live",
+    "code": "(async function(ApprovalComment){\n    const myHeaders = new Headers();\n    myHeaders.append(\"accept\", \"*/*\");\n    myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n    myHeaders.append(\"content-type\", \"application/json\");\n    \n    const objects = BeaconBar.getSharedData(\"selected\");\n    \n    const processedData = objects.map((entry, index) => {\n        const updatedEntry = JSON.parse(JSON.stringify(entry));\n        if (index === 0) {\n            updatedEntry.IsSelected = true;\n        }\n        if (updatedEntry.IsSelected && updatedEntry.MClockData) {\n            updatedEntry.MClockData.ApprovalComment = ApprovalComment;\n        } \n        return updatedEntry;\n    });\n        const raw = JSON.stringify(processedData);\n\n    const requestOptions = {\n        method: \"POST\",\n        headers: myHeaders,\n        body: raw,\n        redirect: \"follow\"\n    };\n    \n    const reqOptions = await BeaconBar.executeFunction(\"reqOptions\")();\n    const response = await fetch(`${reqOptions}tnav9/api/ManualInOut/RejectManualData/`, requestOptions);\n    const data = await response.text();\n    \n    return data;\n})",
+    "by": "34476",
+    "__v": 1
+  }
+}

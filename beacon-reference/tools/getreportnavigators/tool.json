@@ -1,0 +1,75 @@
+{
+  "id": "690dc569931a2d61ba0b19ac",
+  "slug": "getreportnavigators",
+  "name": "getReportNavigators",
+  "description": "getReportNavigators",
+  "instructions": null,
+  "taskName": "fetchingReportNavigators",
+  "tags": [
+    "Payroll",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getReportNavigators",
+  "createdAt": "2025-06-09T17:55:14.038Z",
+  "updatedAt": "2025-06-09T17:55:14.038Z",
+  "assignedAgents": [
+    {
+      "id": "690dc572931a2d61ba0b1c51",
+      "name": "PayRoll"
+    }
+  ],
+  "contentHash": "9920453d60299683185d2af95001ae3e7355ddec89123ae4b3a1f183a35343d8",
+  "lastExportedAt": "2026-09-05T19:39:23.618Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc569931a2d61ba0b19ac",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getReportNavigators",
+      "description": "getReportNavigators",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getReportNavigators",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68472002c020a759d09e0349"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  // await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const reqBase = await BeaconBar.executeFunction(\"reqOptions\")();\n  // ReportNavigator\n\n  const response = await fetch(`${reqBase}GP/ReportNavigator.aspx`, requestOptions);\n  const htmlText = await response.text();\n\n  function extractReportLinksFromTable(tableHTML) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(tableHTML, \"text/html\");\n\n    const rows = doc.querySelectorAll(\"tbody tr\");\n    const reports = [];\n\n    rows.forEach(row => {\n      const reportName = row.querySelector(\"td\")?.textContent.trim();\n      const anchor = row.querySelector(\"a\");\n      const onclickRaw = anchor?.getAttribute(\"onclick\") || \"\";\n\n      const urlMatch = onclickRaw.match(/openWinNavigateUrl\\('([^']+)'\\)/);\n      const fullUrl = urlMatch ? urlMatch[1] : \"\";\n\n      if (reportName && fullUrl) {\n        reports.push({\n          name: reportName,\n          link: fullUrl\n        });\n      }\n    });\n\n    return reports;\n  }\n\n  const allData = extractReportLinksFromTable(htmlText);\n  return allData;\n});\n",
+      "groupName": "",
+      "tags": [
+        "Payroll",
+        "Headers"
+      ],
+      "taskName": "fetchingReportNavigators",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-09T17:55:14.038Z",
+      "updatedAt": "2025-06-09T17:55:14.038Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc572931a2d61ba0b1c51",
+          "name": "PayRoll"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getReportNavigators",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68472002c020a759d09e0349"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code:`(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  // await BeaconBar.executeFunction(\"censusInformation\")(args.id);\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const reqBase = await BeaconBar.executeFunction(\"reqOptions\")();\n  // ReportNavigator\n\n  const response = await fetch(`${reqBase}GP/ReportNavigator.aspx`, requestOptions);\n  const htmlText = await response.text();\n\n  function extractReportLinksFromTable(tableHTML) {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString(tableHTML, \"text/html\");\n\n    const rows = doc.querySelectorAll(\"tbody tr\");\n    const reports = [];\n\n    rows.forEach(row => {\n      const reportName = row.querySelector(\"td\")?.textContent.trim();\n      const anchor = row.querySelector(\"a\");\n      const onclickRaw = anchor?.getAttribute(\"onclick\") || \"\";\n\n      const urlMatch = onclickRaw.match(/openWinNavigateUrl\\('([^']+)'\\)/);\n      const fullUrl = urlMatch ? urlMatch[1] : \"\";\n\n      if (reportName && fullUrl) {\n        reports.push({\n          name: reportName,\n          link: fullUrl\n        });\n      }\n    });\n\n    return reports;\n  }\n\n  const allData = extractReportLinksFromTable(htmlText);\n  return allData;\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "690dc57b931a2d61ba0b2354",
+  "slug": "censusinformation",
+  "name": "censusInformation",
+  "status": "live",
+  "createdAt": "2025-04-23T08:51:18.278Z",
+  "updatedAt": "2025-04-23T08:51:18.278Z",
+  "contentHash": "d59c77e7bd46499f73e5bfb7329a69ddcb152fd7620437574ada4c0b10e640bb",
+  "lastExportedAt": "2026-09-05T19:41:44.817Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "690dc57b931a2d61ba0b2354",
+    "name": "censusInformation",
+    "status": "live",
+    "code": "(async function (id) {\n  //done\n  const sl = await BeaconBar.getSharedData(\"sl\");\n  const digest = await BeaconBar.executeFunction('getDigest')(\"sid=0&sln=single&mode=basic&sm=activeonly&table=false&iv=getSearchResult&CloseMethod=getSearchResult()\");\n  const myHeaders = new Headers({\n    \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\",\n    \"accept-language\": \"en-US,en;q=0.9\",\n    \"cache-control\": \"no-cache\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n  });\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const response = await fetch(`${location.origin}/${sl}/eim/EmployeeSearch.aspx?sid=0&sln=single&mode=basic&sm=activeonly&table=false&iv=getSearchResult&CloseMethod=getSearchResult()&digest=${digest.digest}`, requestOptions);\n  const text = await response.text();\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(text, \"text/html\");\n\n  const viewState = doc.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator = doc.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation = doc.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  const urlencoded = new URLSearchParams({\n    \"__EVENTTARGET\": \"\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": viewState,\n    \"__VIEWSTATEGENERATOR\": viewStateGenerator,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": eventValidation,\n    \"EmployeeSearch$ctl05$RadioButtonGroup1\": \"ctl12\",\n    \"EmployeeSearch$ctl05$ctl14\": \"0\",\n    \"EmployeeSearch$ctl05$ctl16\": id,\n    \"EmployeeSearch$ctl05$ctl37\": \"Search\",\n    \"EmployeeSearch_ctl06_ClientState\": \"\",\n    \"hdnReturnId\": \"\"\n  });\n\n  const response1 = await fetch(`${location.origin}/${sl}/eim/EmployeeSearch.aspx?sid=0&sln=single&mode=basic&sm=activeonly&table=false&iv=getSearchResult&CloseMethod=getSearchResult()&digest=${digest.digest}`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded,\n    redirect: \"follow\"\n  });\n\n  const doc1 = new DOMParser().parseFromString(await response1.text(), \"text/html\");\n\n  const viewState1 = doc1.querySelector(\"#__VIEWSTATE\")?.value || \"\";\n  const viewStateGenerator1 = doc1.querySelector(\"#__VIEWSTATEGENERATOR\")?.value || \"\";\n  const eventValidation1 = doc1.querySelector(\"#__EVENTVALIDATION\")?.value || \"\";\n\n  const hrefValue = [...doc1.querySelectorAll('a[href*=\"__doPostBack\"]')]\n    .find(a => a.textContent.includes(\"Select\"))?.getAttribute(\"href\") || \"\";\n  const selectedEmployeeKey = hrefValue.match(/EmployeeSearch\\$[^\\']+/)?.[0] || \"\";\n\n  const urlencoded2 = new URLSearchParams({\n    \"__EVENTTARGET\": selectedEmployeeKey,\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": viewState1,\n    \"__VIEWSTATEGENERATOR\": viewStateGenerator1,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"__EVENTVALIDATION\": eventValidation1,\n    \"EmployeeSearch$ctl05$RadioButtonGroup1\": \"ctl12\",\n    \"EmployeeSearch$ctl05$ctl14\": \"0\",\n    \"EmployeeSearch$ctl05$ctl16\": id,\n    \"EmployeeSearch$ctl05$ctl21\": \"\",\n    \"EmployeeSearch_ctl06_ClientState\": \"\",\n    \"hdnReturnId\": \"\"\n  });\n\n  const response2 = await fetch(`${location.origin}/${sl}/eim/EmployeeSearch.aspx?sid=0&sln=single&mode=basic&sm=activeonly&table=false&iv=getSearchResult&CloseMethod=getSearchResult()&digest=${digest.digest}`, {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded2,\n    redirect: \"follow\"\n  });\n\n  return response2.text();\n});\n",
+    "by": "1927",
+    "__v": 0
+  }
+}

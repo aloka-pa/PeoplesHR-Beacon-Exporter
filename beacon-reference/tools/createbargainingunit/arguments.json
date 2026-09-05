@@ -1,0 +1,66 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "ctl00_body_txtBGNName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Name of the bargaining unit.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Name of the bargaining unit."
+      }
+    },
+    {
+      "name": "ctl00_body_txtAbbreviation",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Abbreviation of the bargaining unit name.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Abbreviation of the bargaining unit name."
+      }
+    },
+    {
+      "name": "ctl00_body_txtRegDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Date when the bargaining unit was registered. data format '05/01/2025'",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "format": "date",
+        "description": "Date when the bargaining unit was registered. data format '05/01/2025'"
+      }
+    },
+    {
+      "name": "ctl00_body_txtRegNumber",
+      "type": "integer",
+      "required": false,
+      "defaultValue": null,
+      "description": "Registration number of the bargaining unit.only numbers access string not access",
+      "advanced": true,
+      "raw": {
+        "type": "integer",
+        "description": "Registration number of the bargaining unit.only numbers access string not access"
+      }
+    },
+    {
+      "name": "ctl00_body_txtRegBody",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Name of the body with which the bargaining unit is registered.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Name of the body with which the bargaining unit is registered."
+      }
+    }
+  ]
+}

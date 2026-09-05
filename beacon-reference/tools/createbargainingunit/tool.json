@@ -1,0 +1,72 @@
+{
+  "id": "690dc564931a2d61ba0b14f7",
+  "slug": "createbargainingunit",
+  "name": "createBargainingUnit",
+  "description": "To create the Bargaining Unit, if any optional fields are left empty by the user, the process will still proceed using only the available input.",
+  "instructions": null,
+  "taskName": "Create Bargaining Unit",
+  "tags": [],
+  "status": "unlive",
+  "signature": "createBargainingUnit",
+  "createdAt": "2025-05-01T07:41:18.222Z",
+  "updatedAt": "2026-05-15T06:51:02.285Z",
+  "assignedAgents": [],
+  "contentHash": "20f21c683bea6a9288c9dc11bf43958e479faa1c528bc87bbfae75f4b901c612",
+  "lastExportedAt": "2026-09-05T19:39:22.705Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc564931a2d61ba0b14f7",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "createBargainingUnit",
+      "description": "To create the Bargaining Unit, if any optional fields are left empty by the user, the process will still proceed using only the available input.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "createBargainingUnit",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtBGNName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the bargaining unit.\"\n    },\n    \"ctl00_body_txtAbbreviation\": {\n      \"type\": \"string\",\n      \"description\": \"Abbreviation of the bargaining unit name.\"\n    },\n    \"ctl00_body_txtRegDate\": {\n      \"type\": \"string\",\n      \"format\": \"date\",\n      \"description\": \"Date when the bargaining unit was registered. data format '05/01/2025'\"\n    },\n    \"ctl00_body_txtRegNumber\": {\n      \"type\": \"integer\",\n      \"description\": \"Registration number of the bargaining unit.only numbers access string not access\"\n    },\n    \"ctl00_body_txtRegBody\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the body with which the bargaining unit is registered.\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtBGNName\"\n  ]\n}",
+        "_id": "6813259e79ebe9607c154231"
+      },
+      "by": "7829",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"BargainingUnit\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"BGN_UNIT_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"3\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\",\n    \"ctl00$body$butNew\": \"New\",\n    \"ctl00$body$hdnEventType\": \"\"\n  }, \"BargainingUnit\");\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: newInt.viewState,\n    __VIEWSTATEGENERATOR: newInt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: newInt.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtBGNName\": args[\"ctl00_body_txtBGNName\"] || \"\",\n    \"ctl00$body$txtAbbreviation\": args[\"ctl00_body_txtAbbreviation\"] || \"\",\n    \"ctl00$body$txtRegDate\": args[\"ctl00_body_txtRegDate\"] || \"\",\n    \"ctl00$body$txtRegNumber\": args[\"ctl00_body_txtRegNumber\"] || \"\",\n    \"ctl00$body$txtRegBody\": args[\"ctl00_body_txtRegBody\"] || \"\",\n    \"ctl00$body$butSave\": \"Save\",\n    \"ctl00$body$hdnEventType\": \"1\"\n  }, \"BargainingUnit\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const getValue = (id) => {\n    const el = doc.getElementById(id);\n    return el ? el.value.trim() : \"\";\n  };\n\n  return {\n    code: getValue(\"ctl00_body_txtBGNCode\"),\n    name: getValue(\"ctl00_body_txtBGNName\"),\n    abbreviation: getValue(\"ctl00_body_txtAbbreviation\"),\n    registeredDate: getValue(\"ctl00_body_txtRegDate\"),\n    registeredNumber: getValue(\"ctl00_body_txtRegNumber\"),\n    registeredBody: getValue(\"ctl00_body_txtRegBody\")\n  };\n})",
+      "groupName": "",
+      "tags": [],
+      "taskName": "Create Bargaining Unit",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "unlive",
+      "createdAt": "2025-05-01T07:41:18.222Z",
+      "updatedAt": "2026-05-15T06:51:02.285Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "toolType": "code",
+      "agents": [],
+      "agentCount": 0
+    },
+    "arguments": {
+      "name": "createBargainingUnit",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"ctl00_body_txtBGNName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the bargaining unit.\"\n    },\n    \"ctl00_body_txtAbbreviation\": {\n      \"type\": \"string\",\n      \"description\": \"Abbreviation of the bargaining unit name.\"\n    },\n    \"ctl00_body_txtRegDate\": {\n      \"type\": \"string\",\n      \"format\": \"date\",\n      \"description\": \"Date when the bargaining unit was registered. data format '05/01/2025'\"\n    },\n    \"ctl00_body_txtRegNumber\": {\n      \"type\": \"integer\",\n      \"description\": \"Registration number of the bargaining unit.only numbers access string not access\"\n    },\n    \"ctl00_body_txtRegBody\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the body with which the bargaining unit is registered.\"\n    }\n  },\n  \"required\": [\n    \"ctl00_body_txtBGNName\"\n  ]\n}",
+      "_id": "6813259e79ebe9607c154231"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"BargainingUnit\");\n\n  const newInt = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: details.viewState,\n    __VIEWSTATEGENERATOR: details.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: details.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$ContentSearch$cboCriteria\": \"BGN_UNIT_CODE\",\n    \"ctl00$body$ContentSearch$txtContent\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n    \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"3\",\n    \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n    \"ctl00_body_grdsummary_ClientState\": \"\",\n    \"ctl00$body$butNew\": \"New\",\n    \"ctl00$body$hdnEventType\": \"\"\n  }, \"BargainingUnit\");\n\n  const saveResponse = await BeaconBar.executeFunction(\"getEIMApii\")({\n    scrollLeft: \"0\",\n    scrollTop: \"0\",\n    __EVENTTARGET: \"\",\n    __EVENTARGUMENT: \"\",\n    __VIEWSTATE: newInt.viewState,\n    __VIEWSTATEGENERATOR: newInt.viewStateGen,\n    __VIEWSTATEENCRYPTED: \"\",\n    __EVENTVALIDATION: newInt.eventValidation,\n    \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n    \"ctl00$body$txtBGNName\": args[\"ctl00_body_txtBGNName\"] || \"\",\n    \"ctl00$body$txtAbbreviation\": args[\"ctl00_body_txtAbbreviation\"] || \"\",\n    \"ctl00$body$txtRegDate\": args[\"ctl00_body_txtRegDate\"] || \"\",\n    \"ctl00$body$txtRegNumber\": args[\"ctl00_body_txtRegNumber\"] || \"\",\n    \"ctl00$body$txtRegBody\": args[\"ctl00_body_txtRegBody\"] || \"\",\n    \"ctl00$body$butSave\": \"Save\",\n    \"ctl00$body$hdnEventType\": \"1\"\n  }, \"BargainingUnit\");\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(saveResponse.rawData, \"text/html\");\n\n  const getValue = (id) => {\n    const el = doc.getElementById(id);\n    return el ? el.value.trim() : \"\";\n  };\n\n  return {\n    code: getValue(\"ctl00_body_txtBGNCode\"),\n    name: getValue(\"ctl00_body_txtBGNName\"),\n    abbreviation: getValue(\"ctl00_body_txtAbbreviation\"),\n    registeredDate: getValue(\"ctl00_body_txtRegDate\"),\n    registeredNumber: getValue(\"ctl00_body_txtRegNumber\"),\n    registeredBody: getValue(\"ctl00_body_txtRegBody\")\n  };\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

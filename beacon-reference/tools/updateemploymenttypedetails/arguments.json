@@ -1,0 +1,107 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "ctl00_body_txtempdesc",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Name or label of the Employment Type (e.g., Permanent, Contractual).",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Name or label of the Employment Type (e.g., Permanent, Contractual)."
+      }
+    },
+    {
+      "name": "ctl00_body_cbisdatelimit",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Indicates if the employment has a date limit (checkbox).",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on"
+        ],
+        "description": "Indicates if the employment has a date limit (checkbox)."
+      }
+    },
+    {
+      "name": "ctl00_body_nuDuration",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Duration of employment (only required if Date Limited is enabled).",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Duration of employment (only required if Date Limited is enabled)."
+      }
+    },
+    {
+      "name": "ctl00_body_dpDurationType",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Duration unit (e.g., Months, Years) (only required if Date Limited is enabled).",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Duration unit (e.g., Months, Years) (only required if Date Limited is enabled)."
+      }
+    },
+    {
+      "name": "ctl00_body_chkRetirementAge",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Indicates if retirement age is applicable (checkbox).",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "on"
+        ],
+        "description": "Indicates if retirement age is applicable (checkbox)."
+      }
+    },
+    {
+      "name": "ctl00_body_nuAgeofMale",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Retirement age for males (required if Retirement Age is enabled).",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Retirement age for males (required if Retirement Age is enabled)."
+      }
+    },
+    {
+      "name": "ctl00_body_nuAgeofFemale",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Retirement age for females (required if Retirement Age is enabled).",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Retirement age for females (required if Retirement Age is enabled)."
+      }
+    },
+    {
+      "name": "ctl00_body_dpempcat",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Employment category (e.g., Full-Time, Part-Time).",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Employment category (e.g., Full-Time, Part-Time)."
+      }
+    }
+  ]
+}

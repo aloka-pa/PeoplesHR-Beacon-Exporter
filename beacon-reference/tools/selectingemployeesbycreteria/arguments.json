@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "creteria",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "creteria ,  Ex:- \"Business Unit\" here takes only value is \"103\".",
+      "advanced": false,
+      "raw": {
+        "name": "creteria",
+        "type": "string",
+        "description": "creteria ,  Ex:- \"Business Unit\" here takes only value is \"103\".",
+        "required": true,
+        "_id": "683ff24334a2f8c7e64a7f1e"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

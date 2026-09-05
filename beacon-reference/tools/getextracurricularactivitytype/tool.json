@@ -1,0 +1,150 @@
+{
+  "id": "6953af48fbe9c497d06f92b1",
+  "slug": "getextracurricularactivitytype",
+  "name": "getExtraCurricularActivityType",
+  "description": "Fetches Extra Curricular Activity Type records from EIM → ExtraCulActivityType screen.\nSupports:\nSearch by code or type name\nPartial matching for both (and returns all matching rows, across pages)\nShow All using returnAll (string) with page-based pagination (page, pageSize, hasMore, nextPage) and returns the entire list (all pages) with code + type.\nString-only args (Beacon requirement)",
+  "instructions": null,
+  "taskName": "Fetching Extra Curricular Activity Types",
+  "tags": [
+    "EIMAdmin",
+    "ExtraCurricularActivities"
+  ],
+  "status": "live",
+  "signature": "getExtraCurricularActivityType",
+  "createdAt": "2025-12-30T10:54:00.429Z",
+  "updatedAt": "2026-02-02T06:50:46.319Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "d1c7aa2c543319389abcb7de6ea320b84db37a188191a464771a090d4ac1f529",
+  "lastExportedAt": "2026-09-05T19:39:23.055Z",
+  "raw": {
+    "basic": {
+      "_id": "6953af48fbe9c497d06f92b1",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getExtraCurricularActivityType",
+      "description": "Fetches Extra Curricular Activity Type records from EIM → ExtraCulActivityType screen.\nSupports:\nSearch by code or type name\nPartial matching for both (and returns all matching rows, across pages)\nShow All using returnAll (string) with page-based pagination (page, pageSize, hasMore, nextPage) and returns the entire list (all pages) with code + type.\nString-only args (Beacon requirement)",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getExtraCurricularActivityType",
+        "args": [
+          {
+            "name": "code",
+            "type": "string",
+            "description": "The activity type code to search for (e.g., \"000001\"). If provided, searches by EATYPE_CODE field.",
+            "required": false,
+            "_id": "6953af48fbe9c497d06f92b3"
+          },
+          {
+            "name": "typeName",
+            "type": "string",
+            "description": "The activity type name to search for (e.g., \"Theatre\", \"Olympiad\"). If provided, searches by EATYPE_NAME field. Either code or typeName must be provided.",
+            "required": false,
+            "_id": "6953af48fbe9c497d06f92b4"
+          },
+          {
+            "name": "returnAll",
+            "type": "string",
+            "description": "If user asks show all / list / available / existing / return all, set this to that phrase to trigger Show All mode.",
+            "required": false,
+            "_id": "697fa8f083883b1ad554f01a"
+          },
+          {
+            "name": "pageSize",
+            "type": "string",
+            "description": "Page size used while paging (string). Default \"10\" (UI default).",
+            "required": false,
+            "_id": "697fa8f083883b1ad554f01c"
+          },
+          {
+            "name": "maxPages",
+            "type": "string",
+            "description": "Safety cap when collecting search results across pages (search mode). String number. Default: \"50\"",
+            "required": false,
+            "_id": "697fa8f083883b1ad554f01d"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6953af48fbe9c497d06f92b2"
+      },
+      "by": "10308",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 0) Helpers\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const isEmpty = (v) => okText(v) === \"\";\n    const toLower = (v) => okText(v).toLowerCase();\n\n    const safeIntFromString = (v, def = 1) => {\n      const t = okText(v);\n      const n = Number(t);\n      return Number.isFinite(n) && n > 0 ? Math.floor(n) : def;\n    };\n\n    function phraseMeansShowAll(v) {\n      const t = toLower(v);\n      if (!t) return false;\n      return (\n        t.includes(\"show all\") ||\n        t.includes(\"view all\") ||\n        t.includes(\"get all\") ||\n        t.includes(\"return all\") ||\n        t.includes(\"available\") ||\n        t.includes(\"existing\") ||\n        t.includes(\"a list\") ||\n        t.includes(\"list\") ||\n        t === \"all\"\n      );\n    }\n\n    function getHidden(doc, sel) {\n      return doc.querySelector(sel)?.value || \"\";\n    }\n\n    function parsePagerInfo(doc) {\n      // Example: \"Displaying page 1 of 2, items 1 to 9 of 10.\"\n      const pagerRight = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\n      const text = pagerRight.replace(/\\s+/g, \" \").trim();\n\n      const m = text.match(\n        /Displaying page\\s+(\\d+)\\s+of\\s+(\\d+),\\s+items\\s+(\\d+)\\s+to\\s+(\\d+)\\s+of\\s+(\\d+)/i\n      );\n\n      if (!m) {\n        return { currentPage: null, totalPages: null, totalItems: null, raw: text };\n      }\n\n      return {\n        currentPage: safeIntFromString(m[1], 1),\n        totalPages: safeIntFromString(m[2], 1),\n        totalItems: safeIntFromString(m[5], 0),\n        raw: text\n      };\n    }\n\n    function extractGridRows(doc) {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const results = [];\n\n      for (const r of rows) {\n        const tds = r.querySelectorAll(\"td\");\n        // Grid columns: Code | Type | (Edit icon)\n        const code = tds[0]?.textContent?.trim() || \"\";\n        const type = tds[1]?.textContent?.trim() || \"\";\n        if (code || type) results.push({ code, type });\n      }\n\n      return results;\n    }\n\n    function filterMatches(items, { code, typeName }) {\n      const hasCode = !isEmpty(code);\n      const hasName = !isEmpty(typeName);\n\n      if (!hasCode && !hasName) return items;\n\n      const codeNeedle = toLower(code);\n      const nameNeedle = toLower(typeName);\n\n      return items.filter((it) => {\n        const codeHay = toLower(it.code);\n        const nameHay = toLower(it.type);\n\n        // partial match for both\n        if (hasCode && hasName) return codeHay.includes(codeNeedle) && nameHay.includes(nameNeedle);\n        if (hasCode) return codeHay.includes(codeNeedle);\n        return nameHay.includes(nameNeedle);\n      });\n    }\n\n    async function postAndParse(url, headers, formData) {\n      const resp = await fetch(url, { method: \"POST\", headers, body: formData, redirect: \"follow\" });\n      const html = await resp.text();\n      const parser = new DOMParser();\n      return parser.parseFromString(html, \"text/html\");\n    }\n\n    function buildBaseForm({ viewState, viewStateGen, eventValidation }) {\n      const fd = new FormData();\n      fd.append(\"scrollLeft\", \"0\");\n      fd.append(\"scrollTop\", \"0\");\n      fd.append(\"__EVENTTARGET\", \"\");\n      fd.append(\"__EVENTARGUMENT\", \"\");\n      fd.append(\"__VIEWSTATE\", viewState);\n      fd.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n      fd.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      fd.append(\"__EVENTVALIDATION\", eventValidation);\n      fd.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      fd.append(\"ctl00$hdnQuickmenu\", \"1\");\n      return fd;\n    }\n\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/ExtraCulActivityType.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Extra Curricular Activity Type screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Args (STRING ONLY)\n     * ------------------------------------------------- */\n    const code = okText(args?.code);\n    const typeName = okText(args?.typeName);\n    const returnAll = okText(args?.returnAll);\n\n    const showAllMode = phraseMeansShowAll(returnAll);\n\n    const pageSize = safeIntFromString(args?.pageSize, 10); // UI default is 10 (your screen can also be 9)\n    const maxPages = safeIntFromString(args?.maxPages, 50);\n\n    if (!showAllMode && isEmpty(code) && isEmpty(typeName)) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Please provide code or typeName (or use returnAll='show all' to return all activity types).\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Build URL + Headers\n     * ------------------------------------------------- */\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/ExtraCulActivityType.aspx\");\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/ExtraCulActivityType.aspx`;\n\n    const headers = new Headers();\n    headers.append(\n      \"Accept\",\n      \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\"\n    );\n    headers.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    /* -------------------------------------------------\n     * 4) Initial hidden fields\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"ExtraCulActivityType\");\n\n    /* -------------------------------------------------\n     * 5) Decide criteria + value\n     *    - For showAll, keep criteria EATYPE_CODE and blank text\n     * ------------------------------------------------- */\n    let searchCriteria = \"EATYPE_CODE\";\n    let searchValue = \"\";\n\n    if (!showAllMode) {\n      if (!isEmpty(code)) {\n        searchCriteria = \"EATYPE_CODE\";\n        searchValue = code;\n      } else {\n        searchCriteria = \"EATYPE_NAME\";\n        searchValue = typeName;\n      }\n    } else {\n      searchCriteria = \"EATYPE_CODE\";\n      searchValue = \"\";\n    }\n\n    /* -------------------------------------------------\n     * 6) Load grid (Search or Show All) on page 1\n     * ------------------------------------------------- */\n    const firstFD = new FormData();\n    firstFD.append(\"scrollLeft\", \"0\");\n    firstFD.append(\"scrollTop\", \"0\");\n    firstFD.append(\"__EVENTTARGET\", \"\");\n    firstFD.append(\"__EVENTARGUMENT\", \"\");\n    firstFD.append(\"__VIEWSTATE\", details.viewState);\n    firstFD.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    firstFD.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    firstFD.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n    firstFD.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    firstFD.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n    firstFD.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n    firstFD.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n    // pager baseline\n    firstFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    firstFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    firstFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n    firstFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    firstFD.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    if (showAllMode) {\n      firstFD.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n    } else {\n      firstFD.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n    }\n\n    let doc = await postAndParse(url, headers, firstFD);\n\n    let vs = getHidden(doc, \"#__VIEWSTATE\");\n    let ev = getHidden(doc, \"#__EVENTVALIDATION\");\n    let vsg = getHidden(doc, \"#__VIEWSTATEGENERATOR\");\n\n    if (!vs || !ev || !vsg) {\n      return { status: \"ERROR\", message: \"Failed to load grid state (missing ASP.NET hidden fields).\" };\n    }\n\n    /* -------------------------------------------------\n     * 7) Collect records across ALL pages\n     *    - In search mode: filter matches each page\n     *    - In showAll mode: collect all items each page\n     * ------------------------------------------------- */\n    const pager = parsePagerInfo(doc);\n    const totalPages = Math.min(pager.totalPages || 1, maxPages);\n\n    const all = [];\n    const page1Items = extractGridRows(doc);\n    const page1Final = showAllMode ? page1Items : filterMatches(page1Items, { code, typeName });\n    all.push(...page1Final);\n\n    for (let p = 2; p <= totalPages; p++) {\n      const gotoFD = buildBaseForm({ viewState: vs, viewStateGen: vsg, eventValidation: ev });\n\n      // Use \"Go\" paging (stable)\n      gotoFD.set(\"__EVENTTARGET\", \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\");\n      gotoFD.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      gotoFD.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      gotoFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", String(p));\n      gotoFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      gotoFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      gotoFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      gotoFD.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const docP = await postAndParse(url, headers, gotoFD);\n\n      // update hidden fields each loop\n      vs = getHidden(docP, \"#__VIEWSTATE\");\n      ev = getHidden(docP, \"#__EVENTVALIDATION\");\n      vsg = getHidden(docP, \"#__VIEWSTATEGENERATOR\");\n\n      const itemsP = extractGridRows(docP);\n      const finalP = showAllMode ? itemsP : filterMatches(itemsP, { code, typeName });\n      all.push(...finalP);\n    }\n\n    if (all.length === 0) {\n      return {\n        status: \"NOT_FOUND\",\n        message: showAllMode\n          ? \"No Extra Curricular Activity Types found.\"\n          : `No Extra Curricular Activity Types found matching \"${searchValue}\".`,\n        criteria: searchCriteria,\n        searchValue: searchValue\n      };\n    }\n\n    return {\n      status: \"SUCCESS\",\n      mode: showAllMode ? \"showAll\" : \"search\",\n      criteria: searchCriteria,\n      searchValue: searchValue,\n      pageSize: String(pageSize),\n      totalPagesScanned: String(totalPages),\n      count: all.length,\n      activityTypes: all // each item = { code, type }\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unknown error\",\n      error: err?.toString?.() || String(err)\n    };\n  }\n});\n",
+      "groupName": "",
+      "tags": [
+        "EIMAdmin",
+        "ExtraCurricularActivities"
+      ],
+      "taskName": "Fetching Extra Curricular Activity Types",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-12-30T10:54:00.429Z",
+      "updatedAt": "2026-02-02T06:50:46.319Z",
+      "__v": 4,
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getExtraCurricularActivityType",
+      "args": [
+        {
+          "name": "code",
+          "type": "string",
+          "description": "The activity type code to search for (e.g., \"000001\"). If provided, searches by EATYPE_CODE field.",
+          "required": false,
+          "_id": "6953af48fbe9c497d06f92b3"
+        },
+        {
+          "name": "typeName",
+          "type": "string",
+          "description": "The activity type name to search for (e.g., \"Theatre\", \"Olympiad\"). If provided, searches by EATYPE_NAME field. Either code or typeName must be provided.",
+          "required": false,
+          "_id": "6953af48fbe9c497d06f92b4"
+        },
+        {
+          "name": "returnAll",
+          "type": "string",
+          "description": "If user asks show all / list / available / existing / return all, set this to that phrase to trigger Show All mode.",
+          "required": false,
+          "_id": "697fa8f083883b1ad554f01a"
+        },
+        {
+          "name": "pageSize",
+          "type": "string",
+          "description": "Page size used while paging (string). Default \"10\" (UI default).",
+          "required": false,
+          "_id": "697fa8f083883b1ad554f01c"
+        },
+        {
+          "name": "maxPages",
+          "type": "string",
+          "description": "Safety cap when collecting search results across pages (search mode). String number. Default: \"50\"",
+          "required": false,
+          "_id": "697fa8f083883b1ad554f01d"
+        }
+      ],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6953af48fbe9c497d06f92b2"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  try {\n    /* -------------------------------------------------\n     * 0) Helpers\n     * ------------------------------------------------- */\n    const okText = (v) => (v ?? \"\").toString().trim();\n    const isEmpty = (v) => okText(v) === \"\";\n    const toLower = (v) => okText(v).toLowerCase();\n\n    const safeIntFromString = (v, def = 1) => {\n      const t = okText(v);\n      const n = Number(t);\n      return Number.isFinite(n) && n > 0 ? Math.floor(n) : def;\n    };\n\n    function phraseMeansShowAll(v) {\n      const t = toLower(v);\n      if (!t) return false;\n      return (\n        t.includes(\"show all\") ||\n        t.includes(\"view all\") ||\n        t.includes(\"get all\") ||\n        t.includes(\"return all\") ||\n        t.includes(\"available\") ||\n        t.includes(\"existing\") ||\n        t.includes(\"a list\") ||\n        t.includes(\"list\") ||\n        t === \"all\"\n      );\n    }\n\n    function getHidden(doc, sel) {\n      return doc.querySelector(sel)?.value || \"\";\n    }\n\n    function parsePagerInfo(doc) {\n      // Example: \"Displaying page 1 of 2, items 1 to 9 of 10.\"\n      const pagerRight = doc.querySelector(\".PagerRight_Default\")?.textContent || \"\";\n      const text = pagerRight.replace(/\\s+/g, \" \").trim();\n\n      const m = text.match(\n        /Displaying page\\s+(\\d+)\\s+of\\s+(\\d+),\\s+items\\s+(\\d+)\\s+to\\s+(\\d+)\\s+of\\s+(\\d+)/i\n      );\n\n      if (!m) {\n        return { currentPage: null, totalPages: null, totalItems: null, raw: text };\n      }\n\n      return {\n        currentPage: safeIntFromString(m[1], 1),\n        totalPages: safeIntFromString(m[2], 1),\n        totalItems: safeIntFromString(m[5], 0),\n        raw: text\n      };\n    }\n\n    function extractGridRows(doc) {\n      const rows = doc.querySelectorAll(\"tr[id^='ctl00_body_grdsummary_ctl00__']\");\n      const results = [];\n\n      for (const r of rows) {\n        const tds = r.querySelectorAll(\"td\");\n        // Grid columns: Code | Type | (Edit icon)\n        const code = tds[0]?.textContent?.trim() || \"\";\n        const type = tds[1]?.textContent?.trim() || \"\";\n        if (code || type) results.push({ code, type });\n      }\n\n      return results;\n    }\n\n    function filterMatches(items, { code, typeName }) {\n      const hasCode = !isEmpty(code);\n      const hasName = !isEmpty(typeName);\n\n      if (!hasCode && !hasName) return items;\n\n      const codeNeedle = toLower(code);\n      const nameNeedle = toLower(typeName);\n\n      return items.filter((it) => {\n        const codeHay = toLower(it.code);\n        const nameHay = toLower(it.type);\n\n        // partial match for both\n        if (hasCode && hasName) return codeHay.includes(codeNeedle) && nameHay.includes(nameNeedle);\n        if (hasCode) return codeHay.includes(codeNeedle);\n        return nameHay.includes(nameNeedle);\n      });\n    }\n\n    async function postAndParse(url, headers, formData) {\n      const resp = await fetch(url, { method: \"POST\", headers, body: formData, redirect: \"follow\" });\n      const html = await resp.text();\n      const parser = new DOMParser();\n      return parser.parseFromString(html, \"text/html\");\n    }\n\n    function buildBaseForm({ viewState, viewStateGen, eventValidation }) {\n      const fd = new FormData();\n      fd.append(\"scrollLeft\", \"0\");\n      fd.append(\"scrollTop\", \"0\");\n      fd.append(\"__EVENTTARGET\", \"\");\n      fd.append(\"__EVENTARGUMENT\", \"\");\n      fd.append(\"__VIEWSTATE\", viewState);\n      fd.append(\"__VIEWSTATEGENERATOR\", viewStateGen);\n      fd.append(\"__VIEWSTATEENCRYPTED\", \"\");\n      fd.append(\"__EVENTVALIDATION\", eventValidation);\n      fd.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n      fd.append(\"ctl00$hdnQuickmenu\", \"1\");\n      return fd;\n    }\n\n    /* -------------------------------------------------\n     * 1) Access validation\n     * ------------------------------------------------- */\n    if (!BeaconBar.user?.metaData?.menus?.includes(\"EIM/ExtraCulActivityType.aspx\")) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"You do not have access to Extra Curricular Activity Type screen. Please contact HR Admin.\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 2) Args (STRING ONLY)\n     * ------------------------------------------------- */\n    const code = okText(args?.code);\n    const typeName = okText(args?.typeName);\n    const returnAll = okText(args?.returnAll);\n\n    const showAllMode = phraseMeansShowAll(returnAll);\n\n    const pageSize = safeIntFromString(args?.pageSize, 10); // UI default is 10 (your screen can also be 9)\n    const maxPages = safeIntFromString(args?.maxPages, 50);\n\n    if (!showAllMode && isEmpty(code) && isEmpty(typeName)) {\n      return {\n        status: \"INVALID_ARGS\",\n        message: \"Please provide code or typeName (or use returnAll='show all' to return all activity types).\"\n      };\n    }\n\n    /* -------------------------------------------------\n     * 3) Build URL + Headers\n     * ------------------------------------------------- */\n    const updateUrl = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIM/ExtraCulActivityType.aspx\");\n    const url = updateUrl.updateUrl\n      ? `${window.origin}/${reqOptions.sl}/${updateUrl.updateUrl}`\n      : `${window.origin}/${reqOptions.sl}/EIM/ExtraCulActivityType.aspx`;\n\n    const headers = new Headers();\n    headers.append(\n      \"Accept\",\n      \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\"\n    );\n    headers.append(\"Accept-Language\", \"en-US,en;q=0.9\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    /* -------------------------------------------------\n     * 4) Initial hidden fields\n     * ------------------------------------------------- */\n    const details = await BeaconBar.executeFunction(\"getApiList\")(\"ExtraCulActivityType\");\n\n    /* -------------------------------------------------\n     * 5) Decide criteria + value\n     *    - For showAll, keep criteria EATYPE_CODE and blank text\n     * ------------------------------------------------- */\n    let searchCriteria = \"EATYPE_CODE\";\n    let searchValue = \"\";\n\n    if (!showAllMode) {\n      if (!isEmpty(code)) {\n        searchCriteria = \"EATYPE_CODE\";\n        searchValue = code;\n      } else {\n        searchCriteria = \"EATYPE_NAME\";\n        searchValue = typeName;\n      }\n    } else {\n      searchCriteria = \"EATYPE_CODE\";\n      searchValue = \"\";\n    }\n\n    /* -------------------------------------------------\n     * 6) Load grid (Search or Show All) on page 1\n     * ------------------------------------------------- */\n    const firstFD = new FormData();\n    firstFD.append(\"scrollLeft\", \"0\");\n    firstFD.append(\"scrollTop\", \"0\");\n    firstFD.append(\"__EVENTTARGET\", \"\");\n    firstFD.append(\"__EVENTARGUMENT\", \"\");\n    firstFD.append(\"__VIEWSTATE\", details.viewState);\n    firstFD.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n    firstFD.append(\"__VIEWSTATEENCRYPTED\", \"\");\n    firstFD.append(\"__EVENTVALIDATION\", details.eventValidation);\n\n    firstFD.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n    firstFD.append(\"ctl00$hdnQuickmenu\", \"1\");\n\n    firstFD.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n    firstFD.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n    // pager baseline\n    firstFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n    firstFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n    firstFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n    firstFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n    firstFD.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n    if (showAllMode) {\n      firstFD.append(\"ctl00$body$ContentSearch$butAll\", \"Show All\");\n    } else {\n      firstFD.append(\"ctl00$body$ContentSearch$butSearch\", \"Search\");\n    }\n\n    let doc = await postAndParse(url, headers, firstFD);\n\n    let vs = getHidden(doc, \"#__VIEWSTATE\");\n    let ev = getHidden(doc, \"#__EVENTVALIDATION\");\n    let vsg = getHidden(doc, \"#__VIEWSTATEGENERATOR\");\n\n    if (!vs || !ev || !vsg) {\n      return { status: \"ERROR\", message: \"Failed to load grid state (missing ASP.NET hidden fields).\" };\n    }\n\n    /* -------------------------------------------------\n     * 7) Collect records across ALL pages\n     *    - In search mode: filter matches each page\n     *    - In showAll mode: collect all items each page\n     * ------------------------------------------------- */\n    const pager = parsePagerInfo(doc);\n    const totalPages = Math.min(pager.totalPages || 1, maxPages);\n\n    const all = [];\n    const page1Items = extractGridRows(doc);\n    const page1Final = showAllMode ? page1Items : filterMatches(page1Items, { code, typeName });\n    all.push(...page1Final);\n\n    for (let p = 2; p <= totalPages; p++) {\n      const gotoFD = buildBaseForm({ viewState: vs, viewStateGen: vsg, eventValidation: ev });\n\n      // Use \"Go\" paging (stable)\n      gotoFD.set(\"__EVENTTARGET\", \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageLinkButton\");\n      gotoFD.append(\"ctl00$body$ContentSearch$cboCriteria\", searchCriteria);\n      gotoFD.append(\"ctl00$body$ContentSearch$txtContent\", searchValue);\n\n      gotoFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", String(p));\n      gotoFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n      gotoFD.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", String(pageSize));\n      gotoFD.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n      gotoFD.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n\n      const docP = await postAndParse(url, headers, gotoFD);\n\n      // update hidden fields each loop\n      vs = getHidden(docP, \"#__VIEWSTATE\");\n      ev = getHidden(docP, \"#__EVENTVALIDATION\");\n      vsg = getHidden(docP, \"#__VIEWSTATEGENERATOR\");\n\n      const itemsP = extractGridRows(docP);\n      const finalP = showAllMode ? itemsP : filterMatches(itemsP, { code, typeName });\n      all.push(...finalP);\n    }\n\n    if (all.length === 0) {\n      return {\n        status: \"NOT_FOUND\",\n        message: showAllMode\n          ? \"No Extra Curricular Activity Types found.\"\n          : `No Extra Curricular Activity Types found matching \"${searchValue}\".`,\n        criteria: searchCriteria,\n        searchValue: searchValue\n      };\n    }\n\n    return {\n      status: \"SUCCESS\",\n      mode: showAllMode ? \"showAll\" : \"search\",\n      criteria: searchCriteria,\n      searchValue: searchValue,\n      pageSize: String(pageSize),\n      totalPagesScanned: String(totalPages),\n      count: all.length,\n      activityTypes: all // each item = { code, type }\n    };\n  } catch (err) {\n    return {\n      status: \"ERROR\",\n      message: err?.message || \"Unknown error\",\n      error: err?.toString?.() || String(err)\n    };\n  }\n});\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {}
+    }
+  }
+}

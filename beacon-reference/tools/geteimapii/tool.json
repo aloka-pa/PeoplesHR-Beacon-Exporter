@@ -1,0 +1,75 @@
+{
+  "id": "690dc56a931a2d61ba0b1a33",
+  "slug": "geteimapii",
+  "name": "getEIMApii",
+  "description": "in this to generate the membership type. if the user create or update for membership details must and should first execute for \"getEIMApii\" api.  and display the all membership details display user selected corresponding value will be take.then after execute for \"createEIMModuleList\" api.",
+  "instructions": null,
+  "taskName": "Fetching The MemberShip Types",
+  "tags": [
+    "EIM",
+    "Headers"
+  ],
+  "status": "live",
+  "signature": "getEIMApii",
+  "createdAt": "2025-06-23T13:40:50.405Z",
+  "updatedAt": "2025-06-23T13:40:50.405Z",
+  "assignedAgents": [
+    {
+      "id": "690dc571931a2d61ba0b1bc2",
+      "name": "EIM Administration"
+    }
+  ],
+  "contentHash": "fa9254464974e2dc39b07f98ee999dab7f8c9ba79347be763d57065657170fc2",
+  "lastExportedAt": "2026-09-05T19:39:23.532Z",
+  "raw": {
+    "basic": {
+      "_id": "690dc56a931a2d61ba0b1a33",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getEIMApii",
+      "description": "in this to generate the membership type. if the user create or update for membership details must and should first execute for \"getEIMApii\" api.  and display the all membership details display user selected corresponding value will be take.then after execute for \"createEIMModuleList\" api.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getEIMApii",
+        "args": [],
+        "isAdvanced": false,
+        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "68595962d9394cfde1afd173"
+      },
+      "by": "1927",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return [];\n    })`\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Membership.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Membership\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__SCROLLPOSITIONX\", \"0\");\n  urlencoded1.append(\"__SCROLLPOSITIONY\", \"0\");\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"MEMBSHIP_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"5\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$butNew\", \"New\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/${reqOptions.sl}/EIM/Membership.aspx`, requestOptions1);\n  const html1 = await response1.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html1, 'text/html');\n\n  window.cm = {\n    viewState: doc.querySelector('#__VIEWSTATE')?.value || '',\n    eventValidation: doc.querySelector('#__EVENTVALIDATION')?.value || '',\n    viewStateGen: doc.querySelector('#__VIEWSTATEGENERATOR')?.value || ''\n  }\n\n  const options = doc.querySelectorAll(\"#ctl00_body_dpcountry option\");\n  const membershipTypes = [];\n\n  options.forEach(option => {\n    const value = option.value;\n    const name = option.textContent.trim();\n    if (value !== \"-1\") {\n      membershipTypes.push({ value, name });\n    }\n  });\n  return membershipTypes\n})",
+      "groupName": "",
+      "tags": [
+        "EIM",
+        "Headers"
+      ],
+      "taskName": "Fetching The MemberShip Types",
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+      "status": "live",
+      "createdAt": "2025-06-23T13:40:50.405Z",
+      "updatedAt": "2025-06-23T13:40:50.405Z",
+      "__v": 0,
+      "agents": [
+        {
+          "_id": "690dc571931a2d61ba0b1bc2",
+          "name": "EIM Administration"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getEIMApii",
+      "args": [],
+      "isAdvanced": false,
+      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "68595962d9394cfde1afd173"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return [];\n    })`\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n\n  if (!BeaconBar.user.metaData.menus.includes(\"EIM/Membership.aspx\")) {\n    return \"It seems you don't have access. Please check with the HR Admin\";\n  }\n\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Membership\");\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const urlencoded1 = new URLSearchParams();\n  urlencoded1.append(\"scrollLeft\", \"0\");\n  urlencoded1.append(\"scrollTop\", \"0\");\n  urlencoded1.append(\"__EVENTTARGET\", \"\");\n  urlencoded1.append(\"__EVENTARGUMENT\", \"\");\n  urlencoded1.append(\"__VIEWSTATE\", details.viewState);\n  urlencoded1.append(\"__VIEWSTATEGENERATOR\", details.viewStateGen);\n  urlencoded1.append(\"__SCROLLPOSITIONX\", \"0\");\n  urlencoded1.append(\"__SCROLLPOSITIONY\", \"0\");\n  urlencoded1.append(\"__VIEWSTATEENCRYPTED\", \"\");\n  urlencoded1.append(\"__EVENTVALIDATION\", details.eventValidation);\n  urlencoded1.append(\"ctl00$hdnDateFormat\", \"dd/mm/yy\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$cboCriteria\", \"MEMBSHIP_CODE\");\n  urlencoded1.append(\"ctl00$body$ContentSearch$txtContent\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\", \"1\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\", \"5\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\", \"\");\n  urlencoded1.append(\"ctl00_body_grdsummary_ClientState\", \"\");\n  urlencoded1.append(\"ctl00$body$butNew\", \"New\");\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: urlencoded1,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/${reqOptions.sl}/EIM/Membership.aspx`, requestOptions1);\n  const html1 = await response1.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(html1, 'text/html');\n\n  window.cm = {\n    viewState: doc.querySelector('#__VIEWSTATE')?.value || '',\n    eventValidation: doc.querySelector('#__EVENTVALIDATION')?.value || '',\n    viewStateGen: doc.querySelector('#__VIEWSTATEGENERATOR')?.value || ''\n  }\n\n  const options = doc.querySelectorAll(\"#ctl00_body_dpcountry option\");\n  const membershipTypes = [];\n\n  options.forEach(option => {\n    const value = option.value;\n    const name = option.textContent.trim();\n    if (value !== \"-1\") {\n      membershipTypes.push({ value, name });\n    }\n  });\n  return membershipTypes\n})",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
+    "test": {}
+  }
+}
