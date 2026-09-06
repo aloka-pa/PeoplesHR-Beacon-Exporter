@@ -25,8 +25,7 @@ not to use what's already here.
 ## How it works, in three phases
 
 1. **Discover** (`npm run beacon:discover`) — opens a real, visible Chromium
-   window with a persistent profile. You log in manually (SSO/MFA, whatever
-   Beacon requires) and click through one representative tool's tabs. While
+   window with a persistent profile. You log in manually and click through one representative tool's tabs. While
    you do that, the tool watches the page's own fetch/XHR traffic, redacts
    anything secret, and writes a sanitized capture plus a best-effort
    **endpoint map** to `discovery-output/` (gitignored).
@@ -61,7 +60,7 @@ A Chromium window opens. Follow the terminal prompts in order:
 
 1. Log in manually. Wait for the Tools page to load.
 2. Open the Tools list.
-3. Open the Agents list (if Beacon has one).
+3. Open the Agents list.
 4. Open **one** representative tool (e.g. `submitSubordinatesManualInAndOut`,
    or set `BEACON_SAMPLE_TOOL_NAME` in `.env`).
 5. Within that tool, visit: Basic Details → Arguments → Fetcher →
