@@ -1,0 +1,13 @@
+{
+  "sampleRequest": {
+    "courseName": "Dev Test Course 02",
+    "subordinate": "mia",
+    "objective": "abcd",
+    "relevanceToJob": "safdgfg",
+    "benefitToEmployee": "jewijwei",
+    "benefitToCompany": "wqr3r3r"
+  },
+  "sanity": {
+    "apiResponse": []
+  }
+}
