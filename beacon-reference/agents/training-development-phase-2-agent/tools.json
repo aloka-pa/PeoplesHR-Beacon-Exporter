@@ -1,13 +1,28 @@
 [
   {
-    "toolId": "6956293bab9dbe6266aec3e1",
-    "toolName": "traininingDevCreateCourseDescFilling",
-    "path": "tools/traininingdevcreatecoursedescfilling"
+    "toolId": "6a9ee8841234b7562210320c",
+    "toolName": "getSelfEmployeeTrainings",
+    "path": "tools/getselfemployeetrainings"
+  },
+  {
+    "toolId": "6a9cf26701c38d9fd8e84a73",
+    "toolName": "getTrainingCalendarCourseDetails",
+    "path": "tools/gettrainingcalendarcoursedetails"
+  },
+  {
+    "toolId": "6a9e99f7311b3fda8a34b356",
+    "toolName": "getSelfEmployeeTrainingHistory",
+    "path": "tools/getselfemployeetraininghistory"
   },
   {
     "toolId": "695524daa4e4f389f90f1d7a",
     "toolName": "getTrainingBudgetAllocation",
     "path": "tools/gettrainingbudgetallocation"
+  },
+  {
+    "toolId": "6956293bab9dbe6266aec3e1",
+    "toolName": "traininingDevCreateCourseDescFilling",
+    "path": "tools/traininingdevcreatecoursedescfilling"
   },
   {
     "toolId": "69552f87921cbb106adf3556",

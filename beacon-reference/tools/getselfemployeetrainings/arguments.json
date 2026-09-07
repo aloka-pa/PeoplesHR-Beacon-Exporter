@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    {
+      "name": "courseName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional. A course name or partial course name (e.g. \\\"Test Course\\\") to search for - matches case-insensitively against any part of the course name. Use this when the user names a course but doesn't know its schedule ID.",
+      "advanced": false,
+      "raw": {
+        "name": "courseName",
+        "type": "string",
+        "description": "Optional. A course name or partial course name (e.g. \\\"Test Course\\\") to search for - matches case-insensitively against any part of the course name. Use this when the user names a course but doesn't know its schedule ID.",
+        "required": false,
+        "_id": "6a9ee8841234b7562210320e"
+      }
+    },
+    {
+      "name": "scheduleId",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional. A specific schedule ID (e.g. from a course previously listed via getTrainingCalendarCourseDetails, or from a prior call to this tool) to view full details for one training. When omitted, all schedules matching courseName (or all available s",
+      "advanced": false,
+      "raw": {
+        "name": "scheduleId",
+        "type": "string",
+        "description": "Optional. A specific schedule ID (e.g. from a course previously listed via getTrainingCalendarCourseDetails, or from a prior call to this tool) to view full details for one training. When omitted, all schedules matching courseName (or all available s",
+        "required": false,
+        "_id": "6a9ee8841234b7562210320f"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

@@ -19,15 +19,15 @@
   "assignedAgents": [
     {
       "id": "6955261cad06de92910e10aa",
-      "name": "Training & Development | Phase 2 | Agent"
+      "name": "Training and Development"
     },
     {
       "id": "69562bd4e05f6cdd1594bd17",
       "name": "Training & Development | Workflow Assist | Phase 2 | Agent"
     }
   ],
-  "contentHash": "49dc5169cecabd0369cb7c98547141610f1e3399746d88227f7bd7f36e219283",
-  "lastExportedAt": "2026-09-05T19:39:22.023Z",
+  "contentHash": "18649498db9b787f59f93408fe76c20e25a49764e6c2c1ad8ad8678be814ed8b",
+  "lastExportedAt": "2026-09-07T16:56:41.387Z",
   "raw": {
     "basic": {
       "_id": "6956293bab9dbe6266aec3e1",
@@ -82,7 +82,7 @@
       "agents": [
         {
           "_id": "6955261cad06de92910e10aa",
-          "name": "Training & Development | Phase 2 | Agent"
+          "name": "Training and Development"
         },
         {
           "_id": "69562bd4e05f6cdd1594bd17",

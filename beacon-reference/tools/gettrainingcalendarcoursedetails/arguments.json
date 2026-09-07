@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    {
+      "name": "courseCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The course code to filter the training calendar by (e.g. `\"000070\"`). Use `\"-1\"` to retrieve all courses.",
+      "advanced": false,
+      "raw": {
+        "name": "courseCode",
+        "type": "string",
+        "description": "The course code to filter the training calendar by (e.g. `\"000070\"`). Use `\"-1\"` to retrieve all courses.",
+        "required": false,
+        "_id": "6a9cf26701c38d9fd8e84a75"
+      }
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Approval status filter for the schedules",
+      "advanced": false,
+      "raw": {
+        "name": "status",
+        "type": "string",
+        "description": "Approval status filter for the schedules",
+        "required": false,
+        "_id": "6a9cf26701c38d9fd8e84a76"
+      }
+    },
+    {
+      "name": "date",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Specific date in `YYYY-MM-DD` format. When provided, only training schedules occurring on that date are returned.",
+      "advanced": false,
+      "raw": {
+        "name": "date",
+        "type": "string",
+        "description": "Specific date in `YYYY-MM-DD` format. When provided, only training schedules occurring on that date are returned.",
+        "required": false,
+        "_id": "6a9cf26701c38d9fd8e84a77"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

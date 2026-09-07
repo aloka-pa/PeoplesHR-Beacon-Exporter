@@ -18,11 +18,11 @@
   "assignedAgents": [
     {
       "id": "6955261cad06de92910e10aa",
-      "name": "Training & Development | Phase 2 | Agent"
+      "name": "Training and Development"
     }
   ],
-  "contentHash": "36b57045dbdb30db90ccbef0ea94b03844cbc461de2fa56e5a130f38ebea452b",
-  "lastExportedAt": "2026-09-05T19:39:22.764Z",
+  "contentHash": "023a316f278ccbfe3e1f52c4955851728b8bd2cfc789e216e36ed5e5cc941bd0",
+  "lastExportedAt": "2026-09-07T16:56:41.395Z",
   "raw": {
     "basic": {
       "_id": "69552f87921cbb106adf3556",
@@ -68,7 +68,7 @@
       "agents": [
         {
           "_id": "6955261cad06de92910e10aa",
-          "name": "Training & Development | Phase 2 | Agent"
+          "name": "Training and Development"
         }
       ],
       "agentCount": 1

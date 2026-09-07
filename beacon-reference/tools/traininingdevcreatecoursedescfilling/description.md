@@ -30,5 +30,5 @@ _None._
 
 ## Assigned agents
 
-- Training & Development | Phase 2 | Agent (`6955261cad06de92910e10aa`)
+- Training and Development (`6955261cad06de92910e10aa`)
 - Training & Development | Workflow Assist | Phase 2 | Agent (`69562bd4e05f6cdd1594bd17`)

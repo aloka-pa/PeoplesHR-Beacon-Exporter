@@ -1,0 +1,8 @@
+{
+  "sampleRequest": {
+    "courseName": "Dev Test Course 01"
+  },
+  "sanity": {
+    "apiResponse": []
+  }
+}
