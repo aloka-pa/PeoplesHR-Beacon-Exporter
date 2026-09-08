@@ -4,6 +4,7 @@ Training & Development is an AI-powered conversational assistant that helps empl
 
 ## Assigned tools
 
+- [supervisorEmployeeTrainingNomination](../../tools/supervisoremployeetrainingnomination) (`6a9f07df3ec32e9ccba63435`)
 - [getSelfEmployeeTrainings](../../tools/getselfemployeetrainings) (`6a9ee8841234b7562210320c`)
 - [getTrainingCalendarCourseDetails](../../tools/gettrainingcalendarcoursedetails) (`6a9cf26701c38d9fd8e84a73`)
 - [getSelfEmployeeTrainingHistory](../../tools/getselfemployeetraininghistory) (`6a9e99f7311b3fda8a34b356`)

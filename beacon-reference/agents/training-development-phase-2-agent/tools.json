@@ -1,5 +1,10 @@
 [
   {
+    "toolId": "6a9f07df3ec32e9ccba63435",
+    "toolName": "supervisorEmployeeTrainingNomination",
+    "path": "tools/supervisoremployeetrainingnomination"
+  },
+  {
     "toolId": "6a9ee8841234b7562210320c",
     "toolName": "getSelfEmployeeTrainings",
     "path": "tools/getselfemployeetrainings"
