@@ -86,32 +86,6 @@
       }
     },
     {
-      "name": "attachment",
-      "type": "object",
-      "required": false,
-      "defaultValue": null,
-      "description": "Required for leave types where attachment is mandatory. The AI should prompt the user to upload a file before submitting. Contains the uploaded file's base64 data and filename.",
-      "advanced": true,
-      "raw": {
-        "type": "object",
-        "description": "Required for leave types where attachment is mandatory. The AI should prompt the user to upload a file before submitting. Contains the uploaded file's base64 data and filename.",
-        "properties": {
-          "fileName": {
-            "type": "string",
-            "description": "Name of the attachment file. Example: 'medical_certificate.pdf'"
-          },
-          "base64Data": {
-            "type": "string",
-            "description": "Base64-encoded content of the file to be uploaded."
-          }
-        },
-        "required": [
-          "fileName",
-          "base64Data"
-        ]
-      }
-    },
-    {
       "name": "isAttachmentMandatory",
       "type": "boolean",
       "required": false,

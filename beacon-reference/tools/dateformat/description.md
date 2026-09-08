@@ -28,9 +28,9 @@ _None._
 
 ## Assigned agents
 
+- AbsenceManagement (`690dc571931a2d61ba0b1be3`)
 - EIM Administration (`690dc571931a2d61ba0b1bc2`)
 - Attendance (`690dc571931a2d61ba0b1bcd`)
-- AbsenceManagement (`690dc571931a2d61ba0b1be3`)
 - Employee Information (`690dc571931a2d61ba0b1bf4`)
 - AbsenceManagementEmployee (`690dc572931a2d61ba0b1c72`)
 - BenefitManagement (`690dc571931a2d61ba0b1be9`)

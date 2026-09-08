@@ -83,21 +83,23 @@
     // ── then fall back to BeaconBar uploaded files.                  ──
     let file1 = null;
 
-    if (args.attachment?.base64Data && args.attachment?.fileName) {
-      const byteChars = atob(args.attachment.base64Data);
-      const byteArr = new Uint8Array(byteChars.length);
-      for (let i = 0; i < byteChars.length; i++) {
-        byteArr[i] = byteChars.charCodeAt(i);
-      }
-      const blob = new Blob([byteArr]);
-      file1 = new File([blob], args.attachment.fileName);
-    } else {
-      const baoFiles = BeaconBar.getUploadedBaoFiles();
-      file1 = baoFiles[0] || null;
-    }
+    // if (args.attachment?.base64Data && args.attachment?.fileName) {
+    //   const byteChars = atob(args.attachment.base64Data);
+    //   const byteArr = new Uint8Array(byteChars.length);
+    //   for (let i = 0; i < byteChars.length; i++) {
+    //     byteArr[i] = byteChars.charCodeAt(i);
+    //   }
+    //   const blob = new Blob([byteArr]);
+    //   file1 = new File([blob], args.attachment.fileName);
+    // } else {
+
+    // }
 
     // ── Guard: block submission if attachment is mandatory but missing ──
-    if (args.isAttachmentMandatory && !file1) {
+    if (args.isAttachmentMandatory) {
+      const baoFiles = BeaconBar.getUploadedBaoFiles();
+      file1 = baoFiles[0] || null;
+    } else {
       return {
         Status: false,
         Message: "This leave type requires a mandatory attachment. Please upload a file and try again."
@@ -185,8 +187,8 @@
           NotificationList: [],
           IsMedicalLeave: false,
           MedicalIssueDateText: "",
-          Attachment: { AttachmentName: file1.name },
-          Attachments: null,
+          Attachments: [{ AttachmentName: file1.name }],
+          Attachment: { AttachmentName: "" },
           Date_1_Text: "",
           Date_2_Text: "",
           Date_3_Text: "",

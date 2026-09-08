@@ -2,7 +2,7 @@
 
 **Task:** Save Leave Application
 
-**Tags:** Absence Management, Headers, BugFix
+**Tags:** Absence Management, Headers, phase 3
 
 **Status:** live
 
@@ -34,7 +34,6 @@ _None._
 - `comment` (string, optional) — Do not ask for comment upfront.Submit first.If SaveLeaveApplication API returns 'Please specify the Comment',then ask the user for comment and retry.
 - `coveringEmployeeCode` (string, optional) — Optional field, call 'getEmpDetails' tool to get the empNumber. Do not take the employeeDisplayNumber. Important only take the empNumber.
 - `year` (integer, required) — User provides the year. Example: 2025, 2024, etc.
-- `attachment` (object, optional) — Required for leave types where attachment is mandatory. The AI should prompt the user to upload a file before submitting. Contains the uploaded file's base64 data and filename.
 - `isAttachmentMandatory` (boolean, optional) — Set to true when the leave type requires a mandatory attachment (e.g., medical leave). When true, prompt the user to upload a file before proceeding. Do not submit without attachment if this is true.
 - `dayModes` (array, required) — Array containing each individual leave date and its corresponding day mode. Based on the from and to date range, the system will generate all dates in between and ask the user to specify the day mode for each date. For example, if user applies for 3-day leave, there will be 3 items in this array - each with a specific date and its day mode selection.
 

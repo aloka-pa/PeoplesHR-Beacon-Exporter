@@ -4,9 +4,10 @@ AbsenceManagement
 
 ## Assigned tools
 
+- [subordinatesLeaveapplication](../../tools/subordinatesleaveapplication) (`6a9fe0e71807392514f4c467`)
+- [employeeLeaveApplication](../../tools/employeeleaveapplication) (`690dc566931a2d61ba0b16ed`)
 - [getCompanyLeaveDetails](../../tools/getcompanyleavedetails) (`690dc568931a2d61ba0b1871`)
 - [getEmpDetails](../../tools/getempdetails) (`6a1fc5b7d30ad4ca3f174ed5`)
-- [employeeLeaveApplication](../../tools/employeeleaveapplication) (`690dc566931a2d61ba0b16ed`)
 - [leaveCancelation](../../tools/leavecancelation) (`690dc56a931a2d61ba0b1a41`)
 - [employeeDetails](../../tools/employeedetails) (`690dc566931a2d61ba0b16c7`)
 - [getAdminInformationDetails](../../tools/getadmininformationdetails) (`690dc568931a2d61ba0b1869`)
