@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "keyword",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Optional. A word or phrase to narrow the results by (e.g. 'MS Excel', 'DevOps') - matched word-by-word (every word here must appear somewhere in the target text, in any order) against both the existing need category names and the individual needs",
+      "advanced": false,
+      "raw": {
+        "name": "keyword",
+        "type": "string",
+        "description": "Optional. A word or phrase to narrow the results by (e.g. 'MS Excel', 'DevOps') - matched word-by-word (every word here must appear somewhere in the target text, in any order) against both the existing need category names and the individual needs",
+        "required": true,
+        "_id": "6aa0296abf91849b7392ccf8"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

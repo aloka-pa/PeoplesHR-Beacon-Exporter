@@ -1,0 +1,8 @@
+{
+  "sampleRequest": {
+    "keyword": "database"
+  },
+  "sanity": {
+    "apiResponse": []
+  }
+}

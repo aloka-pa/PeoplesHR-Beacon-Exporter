@@ -1,0 +1,12 @@
+{
+  "sampleRequest": {
+    "existingNeedName": "Need 01",
+    "objective": "Verify the existing-need submission path works.",
+    "relevanceToJob": "Directly relevant to validating this integration.",
+    "benefitToEmployee": "Confirms the existing-need flow works for the employee.",
+    "benefitToCompany": "Ensures the Training & Development agent can attach applications to existing needs."
+  },
+  "sanity": {
+    "apiResponse": []
+  }
+}

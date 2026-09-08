@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "keyword",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The core topic of what the user described their training requirement as - e.g. 'MS Excel', 'DevOps', 'git version control'. Pass just the topic/phrase itself, not the user's full sentence (e.g. pass 'git version control', not 'I want a course to lear",
+      "advanced": false,
+      "raw": {
+        "name": "keyword",
+        "type": "string",
+        "description": "The core topic of what the user described their training requirement as - e.g. 'MS Excel', 'DevOps', 'git version control'. Pass just the topic/phrase itself, not the user's full sentence (e.g. pass 'git version control', not 'I want a course to lear",
+        "required": true,
+        "_id": "6a9fab381234b756221c4e49"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

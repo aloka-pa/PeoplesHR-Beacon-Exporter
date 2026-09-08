@@ -1,0 +1,15 @@
+{
+  "sampleRequest": {
+    "courseName": "Dev Test Course 01",
+    "employees": [
+      "Justin Timberlake"
+    ],
+    "objective": "wefgwgg",
+    "relevanceToJob": "wefgwgg",
+    "benefitToEmployee": "wefgwgg",
+    "benefitToCompany": "wefgwgg"
+  },
+  "sanity": {
+    "apiResponse": []
+  }
+}
