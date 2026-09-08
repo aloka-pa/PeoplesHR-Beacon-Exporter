@@ -1,7 +1,7 @@
 {
   "agentsDiscovered": 28,
-  "toolsDiscovered": 359,
-  "toolsExported": 6,
+  "toolsDiscovered": 360,
+  "toolsExported": 7,
   "toolsSkippedUnchanged": 0,
   "toolsFailed": [],
   "toolsMissing": [],
@@ -12,5 +12,5 @@
   "functionsFailed": [],
   "functionsMissing": [],
   "functionsPruned": [],
-  "generatedAt": "2026-09-07T16:56:43.240Z"
+  "generatedAt": "2026-09-07T19:57:44.516Z"
 }

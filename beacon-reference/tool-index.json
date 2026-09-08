@@ -5283,7 +5283,7 @@
     "path": "tools/getselfemployeetraininghistory",
     "contentHash": "2b8b0c330ccdb2817150b2a0d5077f502f9f1bb2a0a53e7b1a9abbb393bbc8ad",
     "beaconUpdatedAt": "2026-09-07T16:10:48.374Z",
-    "lastExportedAt": "2026-09-07T16:56:41.368Z"
+    "lastExportedAt": "2026-09-07T19:57:38.704Z"
   },
   {
     "id": "6a9ee8841234b7562210320c",
@@ -5308,7 +5308,7 @@
     "path": "tools/getselfemployeetrainings",
     "contentHash": "ed5214b01e977b9349d19a026bc0b700e6fed37dcec35269dcf74115c3c2e2bf",
     "beaconUpdatedAt": "2026-09-07T16:38:28.912Z",
-    "lastExportedAt": "2026-09-07T16:56:41.351Z"
+    "lastExportedAt": "2026-09-07T19:57:38.692Z"
   },
   {
     "id": "690dc562931a2d61ba0b129b",
@@ -5750,7 +5750,7 @@
     "path": "tools/gettrainingbudgetallocation",
     "contentHash": "0c3de4c9527d83c75d5b665ead1ebbc5928c5713b5b4651d645ed752dfaff95e",
     "beaconUpdatedAt": "2026-09-07T11:34:14.258Z",
-    "lastExportedAt": "2026-09-07T16:56:41.380Z"
+    "lastExportedAt": "2026-09-07T19:57:38.711Z"
   },
   {
     "id": "69552f87921cbb106adf3556",
@@ -5775,7 +5775,7 @@
     "path": "tools/gettrainingbudgetutilization",
     "contentHash": "023a316f278ccbfe3e1f52c4955851728b8bd2cfc789e216e36ed5e5cc941bd0",
     "beaconUpdatedAt": "2026-02-16T14:13:34.349Z",
-    "lastExportedAt": "2026-09-07T16:56:41.395Z"
+    "lastExportedAt": "2026-09-07T19:57:38.722Z"
   },
   {
     "id": "6a9cf26701c38d9fd8e84a73",
@@ -5801,7 +5801,7 @@
     "path": "tools/gettrainingcalendarcoursedetails",
     "contentHash": "3a0ce3b602d4d8e0db198f8fbe2f852aebb91277171120829280189d29a25f88",
     "beaconUpdatedAt": "2026-09-07T16:11:32.427Z",
-    "lastExportedAt": "2026-09-07T16:56:41.360Z"
+    "lastExportedAt": "2026-09-07T19:57:38.699Z"
   },
   {
     "id": "690dc563931a2d61ba0b1393",
@@ -7472,6 +7472,37 @@
     "lastExportedAt": "2026-09-05T19:39:21.911Z"
   },
   {
+    "id": "6a9f07df3ec32e9ccba63435",
+    "name": "supervisorEmployeeTrainingNomination",
+    "shortDescription": "Lets a supervisor nominate one of their subordinates for a specific scheduled training. Resolves the schedule from either scheduleId or courseName, validates the subordinate is actually one this supe…",
+    "tags": [
+      "T&D",
+      "Aloka",
+      "26R2"
+    ],
+    "assignedAgents": [
+      {
+        "id": "6955261cad06de92910e10aa",
+        "name": "Training and Development"
+      }
+    ],
+    "argumentNames": [
+      "scheduleId",
+      "courseName",
+      "subordinate",
+      "objective",
+      "relevanceToJob",
+      "benefitToEmployee",
+      "benefitToCompany",
+      "expectedLearning"
+    ],
+    "peoplesHrModule": null,
+    "path": "tools/supervisoremployeetrainingnomination",
+    "contentHash": "7b0b675612eeecd5d719473e3362f427ada280b8a515c3982a97087ec8b2e20b",
+    "beaconUpdatedAt": "2026-09-07T19:56:24.804Z",
+    "lastExportedAt": "2026-09-07T19:57:38.685Z"
+  },
+  {
     "id": "6956293bab9dbe6266aec3e1",
     "name": "traininingDevCreateCourseDescFilling",
     "shortDescription": "The AI tool assists administrators in creating comprehensive course descriptions for training programs by gathering key information through guided questions. It collects details such as course topic,…",
@@ -7499,7 +7530,7 @@
     "path": "tools/traininingdevcreatecoursedescfilling",
     "contentHash": "18649498db9b787f59f93408fe76c20e25a49764e6c2c1ad8ad8678be814ed8b",
     "beaconUpdatedAt": "2026-07-17T12:55:35.424Z",
-    "lastExportedAt": "2026-09-07T16:56:41.387Z"
+    "lastExportedAt": "2026-09-07T19:57:38.717Z"
   },
   {
     "id": "690dc569931a2d61ba0b1995",

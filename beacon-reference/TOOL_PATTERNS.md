@@ -1,6 +1,6 @@
 # Beacon tool patterns
 
-Auto-generated from 359 exported tool(s) and 180 function(s) by `npm run beacon:export`. Regenerated on every export — do not hand-edit; add durable notes to README.md instead.
+Auto-generated from 360 exported tool(s) and 180 function(s) by `npm run beacon:export`. Regenerated on every export — do not hand-edit; add durable notes to README.md instead.
 
 ## Permission / menu-access checks
 
@@ -10,6 +10,7 @@ Code that gates behavior on a user permission, role, or menu-access flag before 
 - `tools/getselfemployeetrainings/transformer.js`: `const hasAccess = Array.isArray(menus) && menus.some((menu) => typeof menu === "string" && menu.includes("TNDV9/ApplyTraining/Index?mvc=1&bs=4&App=000001"));`
 - `tools/getteamattendanceapprovaldetails/transformer.js`: `const hasAccess = BeaconBar.user.metaData.menus.includes("TNAV9/AttendanceApproval/AttendanceApplication/1?mvc=1");`
 - `tools/gettrainingcalendarcoursedetails/transformer.js`: `const hasAccess = Array.isArray(menus) && menus.some((menu) => typeof menu === "string" && menu.includes("TNDV9/TrainingCalender/Index?mvc=1&bs=4&App=000001"));`
+- `tools/supervisoremployeetrainingnomination/transformer.js`: `const hasAccess = Array.isArray(menus) && menus.some((menu) => typeof menu === "string" && menu.includes("TNDV9/ApplyTraining/Index?mvc=1&bs=4&App=000002"));`
 
 ## Authentication headers
 

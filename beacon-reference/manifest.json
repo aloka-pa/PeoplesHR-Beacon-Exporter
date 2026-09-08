@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-07T16:56:41.408Z",
+  "generatedAt": "2026-09-07T19:57:38.730Z",
   "tools": {
     "6a82e376462b20b27700e67e": {
       "id": "6a82e376462b20b27700e67e",
@@ -134,7 +134,7 @@
       "status": "active",
       "contentHash": "18649498db9b787f59f93408fe76c20e25a49764e6c2c1ad8ad8678be814ed8b",
       "beaconUpdatedAt": "2026-07-17T12:55:35.424Z",
-      "lastExportedAt": "2026-09-07T16:56:41.394Z"
+      "lastExportedAt": "2026-09-07T19:57:38.722Z"
     },
     "690dc562931a2d61ba0b1298": {
       "id": "690dc562931a2d61ba0b1298",
@@ -827,7 +827,7 @@
       "status": "active",
       "contentHash": "0c3de4c9527d83c75d5b665ead1ebbc5928c5713b5b4651d645ed752dfaff95e",
       "beaconUpdatedAt": "2026-09-07T11:34:14.258Z",
-      "lastExportedAt": "2026-09-07T16:56:41.387Z"
+      "lastExportedAt": "2026-09-07T19:57:38.716Z"
     },
     "690dc566931a2d61ba0b16a6": {
       "id": "690dc566931a2d61ba0b16a6",
@@ -1178,7 +1178,7 @@
       "status": "active",
       "contentHash": "023a316f278ccbfe3e1f52c4955851728b8bd2cfc789e216e36ed5e5cc941bd0",
       "beaconUpdatedAt": "2026-02-16T14:13:34.349Z",
-      "lastExportedAt": "2026-09-07T16:56:41.403Z"
+      "lastExportedAt": "2026-09-07T19:57:38.727Z"
     },
     "6952532d9d93d92e5df256c7": {
       "id": "6952532d9d93d92e5df256c7",
@@ -3212,7 +3212,7 @@
       "status": "active",
       "contentHash": "ed5214b01e977b9349d19a026bc0b700e6fed37dcec35269dcf74115c3c2e2bf",
       "beaconUpdatedAt": "2026-09-07T16:38:28.912Z",
-      "lastExportedAt": "2026-09-07T16:56:41.360Z"
+      "lastExportedAt": "2026-09-07T19:57:38.698Z"
     },
     "6a9cf26701c38d9fd8e84a73": {
       "id": "6a9cf26701c38d9fd8e84a73",
@@ -3221,7 +3221,7 @@
       "status": "active",
       "contentHash": "3a0ce3b602d4d8e0db198f8fbe2f852aebb91277171120829280189d29a25f88",
       "beaconUpdatedAt": "2026-09-07T16:11:32.427Z",
-      "lastExportedAt": "2026-09-07T16:56:41.368Z"
+      "lastExportedAt": "2026-09-07T19:57:38.704Z"
     },
     "6a9e99f7311b3fda8a34b356": {
       "id": "6a9e99f7311b3fda8a34b356",
@@ -3230,7 +3230,16 @@
       "status": "active",
       "contentHash": "2b8b0c330ccdb2817150b2a0d5077f502f9f1bb2a0a53e7b1a9abbb393bbc8ad",
       "beaconUpdatedAt": "2026-09-07T16:10:48.374Z",
-      "lastExportedAt": "2026-09-07T16:56:41.379Z"
+      "lastExportedAt": "2026-09-07T19:57:38.710Z"
+    },
+    "6a9f07df3ec32e9ccba63435": {
+      "id": "6a9f07df3ec32e9ccba63435",
+      "slug": "supervisoremployeetrainingnomination",
+      "name": "supervisorEmployeeTrainingNomination",
+      "status": "active",
+      "contentHash": "7b0b675612eeecd5d719473e3362f427ada280b8a515c3982a97087ec8b2e20b",
+      "beaconUpdatedAt": "2026-09-07T19:56:24.804Z",
+      "lastExportedAt": "2026-09-07T19:57:38.692Z"
     }
   },
   "agents": {
@@ -3292,7 +3301,7 @@
       "id": "6955261cad06de92910e10aa",
       "slug": "training-development-phase-2-agent",
       "name": "Training and Development",
-      "lastExportedAt": "2026-09-07T16:56:41.407Z"
+      "lastExportedAt": "2026-09-07T19:57:38.730Z"
     },
     "696baf3fc2b2c4c21130c789": {
       "id": "696baf3fc2b2c4c21130c789",
