@@ -2,7 +2,7 @@
 
 **Task:** Fetching Training Budget Allocation Details
 
-**Tags:** Training&Development, TrainingServices-Budget, BudgetAllocation, phase2
+**Tags:** T&D, phase2
 
 **Status:** live
 

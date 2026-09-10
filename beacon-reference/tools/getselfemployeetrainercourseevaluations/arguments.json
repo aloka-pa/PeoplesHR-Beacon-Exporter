@@ -1,0 +1,17 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "courseName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional. A course name/description fragment (e.g. \"database\") to narrow the trainer & course evaluations down to matching courses - matches case-insensitively against any part of the course name. When omitted, every trainer & course evaluation is returned.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Optional. A course name/description fragment (e.g. \"database\") to narrow the trainer & course evaluations down to matching courses - matches case-insensitively against any part of the course name. When omitted, every trainer & course evaluation is returned."
+      }
+    }
+  ]
+}

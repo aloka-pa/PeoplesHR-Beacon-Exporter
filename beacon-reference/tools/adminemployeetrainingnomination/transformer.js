@@ -255,6 +255,29 @@
     if (!sessionKey) {
       return { status: "ERROR", message: "The employee-search session did not return a KeyValue - cannot continue." };
     }
+    // CONFIRMED LIVE FIX (2026-09-10): the server ROTATES the opaque employee-identity
+    // token as part of establishing the search session - advancedModelObj.EmpNumber (the
+    // value returned by this Search call) is NOT the same token as ownEmpNumber (the
+    // pre-session token read from #tndHdnEmpNumber on the Index page); a live debug trace
+    // showed the two are completely different strings for the same real request. Every
+    // downstream call in this session (GetSearchList's own `empNumber` field,
+    // SaveSearchResults' `loggedEmpNumber`) must use this ROTATED token, not the original
+    // one - confirmed by cross-checking two independently-built, already-live reference
+    // implementations of this exact "establish session -> search -> save selection" flow
+    // elsewhere in this codebase: functions/benefitapplication (extracts `EmpNumber` from
+    // the Search response body via regex and feeds THAT into its own GetSearchList call,
+    // never the pre-session token) and functions/getemployeeutils + functions/
+    // saveemployeeselectresult (getemployeeutils returns {EmpNumber, KeyValue} from this
+    // same Search response and stores it as shared "utils" data; saveemployeeselectresult
+    // then sends that stored EmpNumber - not any other token - as SaveSearchResults'
+    // `loggedEmpNumber`). Using the stale, pre-rotation ownEmpNumber instead is the most
+    // likely reason GetSelectedEmployees kept coming back empty despite SaveSearchResults
+    // reporting Status:true - the save was very likely being recorded against a token the
+    // session key doesn't recognize as its own logged-in user.
+    const rotatedEmpNumber = advancedModel.EmpNumber;
+    if (!rotatedEmpNumber) {
+      return { status: "ERROR", message: "The employee-search session did not return a rotated EmpNumber - cannot continue." };
+    }
 
     // Step 4: for each named employee, search this session by free text (tblSearchText)
     // and record the single matching row. Confirmed live shape of GetSearchList/
@@ -267,7 +290,7 @@
     const resolvedRows = [];
     for (const query of employeeQueries) {
       const searchListResult = await postJson("CommonComponents/Search/GetSearchList/", {
-        empNumber: ownEmpNumber,
+        empNumber: rotatedEmpNumber,
         criteriaValues: [],
         key: sessionKey,
         modeId: "2",
@@ -299,81 +322,85 @@
       resolvedRows.push({ query, employeeNumber: rows[0].Col1, name: (rows[0].Col2 || "").trim(), dateJoined: rows[0].Col3 });
     }
 
-    // Step 5: save the whole batch of resolved selections under the shared session key,
-    // then read them back via GetSelectedEmployees (which mints the encrypted "empno"
-    // token each NomiList entry ultimately needs) - confirmed shapes from
-    // SaveSearchResults.txt / GetSelectedEmployees.txt. Each selection gets its own fresh
-    // uniqueKey from CommonComponents/Search/GetKey/ (matches functions/getkeysforleave).
-    async function getFreshUniqueKey() {
-      const url = `${window.origin}/${reqOptions.sl}/CommonComponents/Search/GetKey/?_=${Date.now()}`;
+    // Step 5: mint each resolved employee's opaque per-session "empno" token directly via
+    // CommonComponents/Search/GetEmpNumber/, instead of the SaveSearchResults ->
+    // GetSelectedEmployees save-then-readback dance. That dance failed live three times in
+    // a row (per-row uniqueKey, then a shared uniqueKey, then the rotated loggedEmpNumber
+    // fix above) - SaveSearchResults always reported Status:true, but GetSelectedEmployees
+    // always came back empty regardless, so the actual missing piece there is still
+    // unconfirmed. GetEmpNumber is a genuinely different, simpler, already-live mechanism
+    // for the exact same underlying need (turning one resolved row into the encrypted
+    // token GetSearchedEmployeeDetails/NomiList require) - confirmed from
+    // functions/benefitapplication, a real, already-live function that resolves one
+    // employee for a different module via `GET CommonComponents/Search/GetEmpNumber/
+    // ?loggedEmpNumber=<rotated token>&empNumber=<plain employee number>&empDisplayName=
+    // <name>&empDateJoined=<date>&key=<session key>` -> `{Message: <opaque token>}` - no
+    // save/readback session state involved at all. Not yet confirmed live for THIS admin
+    // nomination screen specifically (only for the Benefit Application module), but it's a
+    // stronger lead than continuing to debug an already-3x-failed mechanism blindly.
+    async function resolveOpaqueEmpNumber(row) {
+      const url = `${window.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumber/?` +
+        new URLSearchParams({
+          loggedEmpNumber: rotatedEmpNumber,
+          empNumber: row.employeeNumber,
+          empDisplayName: row.name,
+          empDateJoined: row.dateJoined,
+          key: sessionKey,
+          _: String(Date.now())
+        }).toString();
       const text = await getText(url);
       const parsed = JSON.parse(text);
       return parsed.Message;
     }
 
+    // Confirmed by direct decode of a real GetSearchedEmployeeDetails request's own `Key`
+    // field (New_PeoplesHR_Feature/DONE/adminEmployeeTrainingNomination/employee search/
+    // GetSearchedEmployeeDetails.txt): it is exactly the session key GUID, UTF-16LE-encoded
+    // then base64-encoded (e.g. "8b624e7b-ec09-437d-885e-5e3f89bc75c5" -> the captured
+    // "OABiADYAMgA0AGUANwBiAC0A...=" value) - not something that itself requires a network
+    // call to obtain, since GetSelectedEmployees' own `Key` field was confirmed to be
+    // nothing more than a deterministic re-encoding of the `key` it was queried with.
+    function utf16LeBase64(str) {
+      let binary = "";
+      for (let i = 0; i < str.length; i++) {
+        const code = str.charCodeAt(i);
+        binary += String.fromCharCode(code & 0xff, (code >> 8) & 0xff);
+      }
+      return btoa(binary);
+    }
+    const encodedSessionKey = utf16LeBase64(sessionKey);
+
+    const searchedEmployeesPayload = [];
     for (const row of resolvedRows) {
-      const uniqueKey = await getFreshUniqueKey();
-      const saveResult = await postJson("CommonComponents/Search/SaveSearchResults/", {
-        loggedEmpNumber: ownEmpNumber,
-        key: sessionKey,
-        uniqueKey,
-        data: [{
-          SE_UNIQUE_KEY: uniqueKey,
-          SE_EMP_NUMBER: row.employeeNumber,
-          SE_EMP_NAME: row.name,
-          SE_DATE_JOINED: row.dateJoined
-        }],
-        isAdvancedSearch: "1"
-      });
-      if (!saveResult || saveResult.Status !== true) {
+      const opaqueEmpNumber = await resolveOpaqueEmpNumber(row);
+      if (!opaqueEmpNumber) {
         return {
           status: "ERROR",
-          message: `Failed to record the selection for "${row.query}" (${row.employeeNumber}).`
+          message: `Could not resolve an encrypted identity token for "${row.name}" (${row.employeeNumber}) via GetEmpNumber.`,
+          debug_rotatedEmpNumber: rotatedEmpNumber,
+          debug_sessionKey: sessionKey,
+          debug_row: row
         };
       }
-      // TRYING (not yet confirmed to fix anything): the existing
-      // functions/saveemployeeselectresult calls this immediately after SaveSearchResults,
-      // before anything reads the selection back - matches functions/getsearchcreteria's
-      // own GET CommonComponents/Search/GetSearchCriteria/?key=... call exactly. A live
-      // test without this call had GetSelectedEmployees come back as an empty array for a
-      // real, successfully-saved (Status:true) selection - this may be the missing
-      // "finalize" step, or may turn out to be unrelated. Needs a live retest either way.
-      await getText(`${window.origin}/${reqOptions.sl}/CommonComponents/Search/GetSearchCriteria/?key=${sessionKey}&_=${Date.now()}`);
-    }
-
-    const selectedEmployees = await postJson("TNDV9/Common/GetSelectedEmployees", {
-      key: sessionKey,
-      mode: "1",
-      searchid: 3
-    });
-    if (!Array.isArray(selectedEmployees) || selectedEmployees.length === 0) {
-      // TEMPORARY diagnostic (remove once GetSelectedEmployees' real mode/searchid
-      // requirement is confirmed): surface exactly what came back instead of a generic
-      // message, plus the sessionKey/resolvedRows used, so a live failure is debuggable.
-      return {
-        status: "ERROR",
-        message: "Could not read back the selected employee(s) from the search session.",
-        debug_sessionKey: sessionKey,
-        debug_resolvedRows: resolvedRows,
-        debug_getSelectedEmployeesRawResponse: selectedEmployees
-      };
+      searchedEmployeesPayload.push({
+        Key: encodedSessionKey,
+        EmpNumber: opaqueEmpNumber,
+        DisNumber: row.employeeNumber,
+        DisName: row.name,
+        IsExcelFile: 0
+      });
     }
 
     // Step 6: resolve full nomination-ready employee records. Confirmed from
-    // GetSearchedEmployeeDetails.txt: request is just the array from GetSelectedEmployees,
-    // no course/schedule identifier involved.
-    const searchedEmployeesPayload = selectedEmployees.map((e) => ({
-      Key: e.Key,
-      EmpNumber: e.EmpNumber,
-      DisNumber: e.DisNumber,
-      DisName: e.DisName,
-      IsExcelFile: e.IsExcelFile || 0
-    }));
+    // GetSearchedEmployeeDetails.txt: request is just an array of {Key, EmpNumber,
+    // DisNumber, DisName, IsExcelFile} - no course/schedule identifier involved.
     const searchedData = await postJson("TNDV9/ApplyTraining/GetSearchedEmployeeDetails", searchedEmployeesPayload);
     if (!searchedData || !searchedData.Status || searchedData.Status.IsSuccessfull !== true || !Array.isArray(searchedData.SubList)) {
       return {
         status: "ERROR",
-        message: (searchedData && searchedData.Status && searchedData.Status.Message) || "Failed to resolve the given employee(s) for this training."
+        message: (searchedData && searchedData.Status && searchedData.Status.Message) || "Failed to resolve the given employee(s) for this training.",
+        debug_searchedEmployeesPayload: searchedEmployeesPayload,
+        debug_searchedDataRaw: searchedData
       };
     }
     if (searchedData.SubList.length === 0) {
@@ -392,7 +419,7 @@
     if (eligible.length === 0) {
       return {
         status: "NOT_ELIGIBLE",
-        message: "None of the given employees are eligible to be nominated for this training.",
+        message: "None of the given employees are eligible to be nominated for this training or they have already been nominated for this training.",
         courseName: courseItem.cosname,
         scheduleId: String(courseItem.schid),
         ineligibleEmployees: ineligible.map((s) => ({ displayempno: s.displayempno, empname: s.empname, reason: s.status }))

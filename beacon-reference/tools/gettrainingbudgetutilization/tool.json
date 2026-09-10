@@ -6,23 +6,21 @@
   "instructions": null,
   "taskName": "Fetching Training Budget Utilization Details",
   "tags": [
-    "Training&Development ",
-    "TrainingServices-Budget ",
-    "BudgetUtilizationSummary",
+    "T&D",
     "phase2"
   ],
   "status": "live",
   "signature": "getTrainingBudgetUtilization",
   "createdAt": "2025-12-31T14:13:27.351Z",
-  "updatedAt": "2026-02-16T14:13:34.349Z",
+  "updatedAt": "2026-09-08T11:47:50.069Z",
   "assignedAgents": [
     {
       "id": "6955261cad06de92910e10aa",
       "name": "Training and Development"
     }
   ],
-  "contentHash": "023a316f278ccbfe3e1f52c4955851728b8bd2cfc789e216e36ed5e5cc941bd0",
-  "lastExportedAt": "2026-09-07T19:57:38.722Z",
+  "contentHash": "ad7eb089bceb2a9722a5ed2c1452b8ff79022c88668beed6321c4e3503c606a0",
+  "lastExportedAt": "2026-09-10T09:08:50.019Z",
   "raw": {
     "basic": {
       "_id": "69552f87921cbb106adf3556",
@@ -46,25 +44,40 @@
         ],
         "isAdvanced": false,
         "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-        "_id": "69552f87921cbb106adf3557"
+        "_id": "6a9ff5e61234b7562229ceb4"
       },
-      "by": "7829",
+      "by": "27739",
       "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
       "transformer": "(async function (data, args, reqOptions) {\n  try {\n    // Allow user to specify year (empty string \"\" means current/active year)\n    const year = args.year !== undefined ? args.year : \"\";\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"*/*\");\n    headers.append(\"Content-Type\", \"application/json\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const url = `${window.origin}/${reqOptions.sl}/TNDV9/TrainingBudget/GetBudgetUtilizationDetails`;\n\n    const response = await fetch(url, {\n      method: \"POST\",\n      headers: headers,\n      body: JSON.stringify({ year: year })\n    });\n\n    if (!response.ok) {\n      return {\n        status: \"ERROR\",\n        message: `API request failed with status ${response.status}`\n      };\n    }\n\n    const responseData = await response.json();\n\n    // Check if request was successful\n    if (!responseData.Status || !responseData.Status.IsSuccessfull) {\n      return {\n        status: \"ERROR\",\n        message: responseData.Status?.Message || \"Failed to retrieve budget utilization details\"\n      };\n    }\n\n    // Extract key information\n    const utilizationData = responseData.utilbudget || [];\n    const availableYears = responseData.yearlst || [];\n    const activeYear = responseData.year;\n    const period = responseData.period;\n    const totalBudget = responseData.totalbudget;\n    const baseCurrency = responseData.basecurr;\n\n    // Process utilization details\n    const utilization = utilizationData.map(item => {\n      const schedules = item.schlst || [];\n      \n      // Calculate total utilization from schedules\n      const totalScheduleUtilization = schedules.reduce((sum, sch) => sum + (sch.hieutilize || 0), 0);\n      const totalEmployees = schedules.reduce((sum, sch) => sum + (sch.empcount || 0), 0);\n\n      return {\n        year: item.year,\n        hierarchyLevel: item.deflevel,\n        levelName: item.defname,\n        code: item.hiecode,\n        name: item.hiename,\n        parentCode: item.rel_hiecode,\n        parentName: item.rel_hiename,\n        isActive: item.inactive === 1,\n        allocatedAmount: item.alloamount,\n        utilizedAmount: item.utilamount,\n        availableAmount: item.avaiamount,\n        utilizationPercentage: item.alloamount > 0 \n          ? ((item.utilamount / item.alloamount) * 100).toFixed(2)\n          : 0,\n        scheduleCount: schedules.length,\n        totalEmployeesEnrolled: totalEmployees,\n        schedules: schedules.map(sch => ({\n          scheduleId: sch.schid,\n          courseCode: sch.coscode,\n          courseName: sch.cosname,\n          startDate: sch.startdate,\n          endDate: sch.enddate,\n          capacity: sch.capacity,\n          enrolledCount: sch.empcount,\n          budgetHierarchyCode: sch.budhiecode,\n          utilizationAmount: sch.hieutilize,\n          costs: sch.costlst || []\n        }))\n      };\n    });\n\n    // Calculate summary statistics\n    const totalAllocated = utilization.reduce((sum, item) => sum + (item.allocatedAmount || 0), 0);\n    const totalUtilized = utilization.reduce((sum, item) => sum + (item.utilizedAmount || 0), 0);\n    const totalAvailable = utilization.reduce((sum, item) => sum + (item.availableAmount || 0), 0);\n    const totalSchedules = utilization.reduce((sum, item) => sum + item.scheduleCount, 0);\n    const totalEmployees = utilization.reduce((sum, item) => sum + item.totalEmployeesEnrolled, 0);\n\n    return {\n      status: \"SUCCESS\",\n      message: `Budget utilization details retrieved for ${activeYear}`,\n      summary: {\n        year: activeYear,\n        period: period,\n        baseCurrency: baseCurrency,\n        totalBudget: totalBudget,\n        totalAllocated: totalAllocated,\n        totalUtilized: totalUtilized,\n        totalAvailable: totalAvailable,\n        utilizationRate: totalAllocated > 0 \n          ? ((totalUtilized / totalAllocated) * 100).toFixed(2) + '%'\n          : '0%',\n        totalSchedules: totalSchedules,\n        totalEmployeesEnrolled: totalEmployees,\n        itemsCount: utilization.length\n      },\n      utilization: utilization,\n      availableYears: availableYears.map(y => ({ code: y.yearcode, name: y.yearname })),\n      config: responseData.config\n    };\n\n  } catch (error) {\n    return {\n      status: \"ERROR\",\n      message: `Failed to retrieve budget utilization details: ${error.message}`,\n      error: error.toString()\n    };\n  }\n})",
       "groupName": "",
       "tags": [
-        "Training&Development ",
-        "TrainingServices-Budget ",
-        "BudgetUtilizationSummary",
+        "T&D",
         "phase2"
       ],
       "taskName": "Fetching Training Budget Utilization Details",
       "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
       "status": "live",
       "createdAt": "2025-12-31T14:13:27.351Z",
-      "updatedAt": "2026-02-16T14:13:34.349Z",
-      "__v": 3,
+      "updatedAt": "2026-09-08T11:47:50.069Z",
+      "__v": 4,
       "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "strictToolUse": false,
+      "toolType": "code",
       "agents": [
         {
           "_id": "6955261cad06de92910e10aa",
@@ -86,13 +99,16 @@
       ],
       "isAdvanced": false,
       "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-      "_id": "69552f87921cbb106adf3557"
+      "_id": "6a9ff5e61234b7562229ceb4"
     },
     "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
     "transformer": "(async function (data, args, reqOptions) {\n  try {\n    // Allow user to specify year (empty string \"\" means current/active year)\n    const year = args.year !== undefined ? args.year : \"\";\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"*/*\");\n    headers.append(\"Content-Type\", \"application/json\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const url = `${window.origin}/${reqOptions.sl}/TNDV9/TrainingBudget/GetBudgetUtilizationDetails`;\n\n    const response = await fetch(url, {\n      method: \"POST\",\n      headers: headers,\n      body: JSON.stringify({ year: year })\n    });\n\n    if (!response.ok) {\n      return {\n        status: \"ERROR\",\n        message: `API request failed with status ${response.status}`\n      };\n    }\n\n    const responseData = await response.json();\n\n    // Check if request was successful\n    if (!responseData.Status || !responseData.Status.IsSuccessfull) {\n      return {\n        status: \"ERROR\",\n        message: responseData.Status?.Message || \"Failed to retrieve budget utilization details\"\n      };\n    }\n\n    // Extract key information\n    const utilizationData = responseData.utilbudget || [];\n    const availableYears = responseData.yearlst || [];\n    const activeYear = responseData.year;\n    const period = responseData.period;\n    const totalBudget = responseData.totalbudget;\n    const baseCurrency = responseData.basecurr;\n\n    // Process utilization details\n    const utilization = utilizationData.map(item => {\n      const schedules = item.schlst || [];\n      \n      // Calculate total utilization from schedules\n      const totalScheduleUtilization = schedules.reduce((sum, sch) => sum + (sch.hieutilize || 0), 0);\n      const totalEmployees = schedules.reduce((sum, sch) => sum + (sch.empcount || 0), 0);\n\n      return {\n        year: item.year,\n        hierarchyLevel: item.deflevel,\n        levelName: item.defname,\n        code: item.hiecode,\n        name: item.hiename,\n        parentCode: item.rel_hiecode,\n        parentName: item.rel_hiename,\n        isActive: item.inactive === 1,\n        allocatedAmount: item.alloamount,\n        utilizedAmount: item.utilamount,\n        availableAmount: item.avaiamount,\n        utilizationPercentage: item.alloamount > 0 \n          ? ((item.utilamount / item.alloamount) * 100).toFixed(2)\n          : 0,\n        scheduleCount: schedules.length,\n        totalEmployeesEnrolled: totalEmployees,\n        schedules: schedules.map(sch => ({\n          scheduleId: sch.schid,\n          courseCode: sch.coscode,\n          courseName: sch.cosname,\n          startDate: sch.startdate,\n          endDate: sch.enddate,\n          capacity: sch.capacity,\n          enrolledCount: sch.empcount,\n          budgetHierarchyCode: sch.budhiecode,\n          utilizationAmount: sch.hieutilize,\n          costs: sch.costlst || []\n        }))\n      };\n    });\n\n    // Calculate summary statistics\n    const totalAllocated = utilization.reduce((sum, item) => sum + (item.allocatedAmount || 0), 0);\n    const totalUtilized = utilization.reduce((sum, item) => sum + (item.utilizedAmount || 0), 0);\n    const totalAvailable = utilization.reduce((sum, item) => sum + (item.availableAmount || 0), 0);\n    const totalSchedules = utilization.reduce((sum, item) => sum + item.scheduleCount, 0);\n    const totalEmployees = utilization.reduce((sum, item) => sum + item.totalEmployeesEnrolled, 0);\n\n    return {\n      status: \"SUCCESS\",\n      message: `Budget utilization details retrieved for ${activeYear}`,\n      summary: {\n        year: activeYear,\n        period: period,\n        baseCurrency: baseCurrency,\n        totalBudget: totalBudget,\n        totalAllocated: totalAllocated,\n        totalUtilized: totalUtilized,\n        totalAvailable: totalAvailable,\n        utilizationRate: totalAllocated > 0 \n          ? ((totalUtilized / totalAllocated) * 100).toFixed(2) + '%'\n          : '0%',\n        totalSchedules: totalSchedules,\n        totalEmployeesEnrolled: totalEmployees,\n        itemsCount: utilization.length\n      },\n      utilization: utilization,\n      availableYears: availableYears.map(y => ({ code: y.yearcode, name: y.yearname })),\n      config: responseData.config\n    };\n\n  } catch (error) {\n    return {\n      status: \"ERROR\",\n      message: `Failed to retrieve budget utilization details: ${error.message}`,\n      error: error.toString()\n    };\n  }\n})",
     "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
     "test": {
-      "sampleRequest": {}
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
     }
   }
 }

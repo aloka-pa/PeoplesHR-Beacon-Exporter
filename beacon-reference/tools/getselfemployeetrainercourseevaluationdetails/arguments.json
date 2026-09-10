@@ -1,0 +1,29 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "scheduleId",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The schedule ID of the trainer & course evaluation to view, when already known (e.g. carried over from getSelfEmployeeTrainerCourseEvaluations, or from a prior AMBIGUOUS response from this same tool). Either scheduleId or courseName must be provided - prefer courseName when the employee only named a course, since this tool resolves the schedule itself.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The schedule ID of the trainer & course evaluation to view, when already known (e.g. carried over from getSelfEmployeeTrainerCourseEvaluations, or from a prior AMBIGUOUS response from this same tool). Either scheduleId or courseName must be provided - prefer courseName when the employee only named a course, since this tool resolves the schedule itself."
+      }
+    },
+    {
+      "name": "courseName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The course name (or partial name) the employee mentioned, e.g. 'Test Course activity 1'. Matches case-insensitively against the employee's own trainer & course evaluations - do not resolve this to a scheduleId yourself first; pass the course name directly and let this tool resolve it. Either scheduleId or courseName must be provided. If more than one evaluation matches, the tool returns status AMBIGUOUS with a list of candidates (each with its own scheduleId) - ask the employee to pick one and retry with scheduleId.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The course name (or partial name) the employee mentioned, e.g. 'Test Course activity 1'. Matches case-insensitively against the employee's own trainer & course evaluations - do not resolve this to a scheduleId yourself first; pass the course name directly and let this tool resolve it. Either scheduleId or courseName must be provided. If more than one evaluation matches, the tool returns status AMBIGUOUS with a list of candidates (each with its own scheduleId) - ask the employee to pick one and retry with scheduleId."
+      }
+    }
+  ]
+}

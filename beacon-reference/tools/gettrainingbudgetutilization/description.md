@@ -2,7 +2,7 @@
 
 **Task:** Fetching Training Budget Utilization Details
 
-**Tags:** Training&Development , TrainingServices-Budget , BudgetUtilizationSummary, phase2
+**Tags:** T&D, phase2
 
 **Status:** live
 

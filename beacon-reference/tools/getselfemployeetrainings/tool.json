@@ -8,20 +8,20 @@
   "tags": [
     "T&D",
     "Aloka",
-    "26R2"
+    "phase3"
   ],
   "status": "live",
   "signature": "getSelfEmployeeTrainings",
   "createdAt": "2026-09-07T16:38:28.912Z",
-  "updatedAt": "2026-09-07T16:38:28.912Z",
+  "updatedAt": "2026-09-08T11:49:14.072Z",
   "assignedAgents": [
     {
       "id": "6955261cad06de92910e10aa",
       "name": "Training and Development"
     }
   ],
-  "contentHash": "ed5214b01e977b9349d19a026bc0b700e6fed37dcec35269dcf74115c3c2e2bf",
-  "lastExportedAt": "2026-09-07T19:57:38.692Z",
+  "contentHash": "e6e978c131dd55056f936581ff8f88ccab862726a8da3c84581cc60a6b3ec01e",
+  "lastExportedAt": "2026-09-10T09:08:50.000Z",
   "raw": {
     "basic": {
       "_id": "6a9ee8841234b7562210320c",
@@ -52,7 +52,7 @@
         ],
         "isAdvanced": false,
         "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-        "_id": "6a9ee8841234b7562210320d"
+        "_id": "6a9ff63a4ce0b9a6811ee7a4"
       },
       "by": "27739",
       "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
@@ -64,7 +64,7 @@
       "tags": [
         "T&D",
         "Aloka",
-        "26R2"
+        "phase3"
       ],
       "taskName": "Fetching Training Details",
       "etl": false,
@@ -89,8 +89,9 @@
         "apiResponse": []
       },
       "createdAt": "2026-09-07T16:38:28.912Z",
-      "updatedAt": "2026-09-07T16:38:28.912Z",
-      "__v": 0,
+      "updatedAt": "2026-09-08T11:49:14.072Z",
+      "__v": 1,
+      "outputExample": {},
       "agents": [
         {
           "_id": "6955261cad06de92910e10aa",
@@ -119,7 +120,7 @@
       ],
       "isAdvanced": false,
       "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-      "_id": "6a9ee8841234b7562210320d"
+      "_id": "6a9ff63a4ce0b9a6811ee7a4"
     },
     "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
     "transformer": "(async function (data, args, reqOptions) {\n  try {\n    // Defensive: guard every step so a missing/malformed BeaconBar context resolves to\n    // a clean NO_ACCESS response instead of an opaque synchronous exception (same\n    // pattern as drafts/gettrainingcalendarcoursedetails and drafts/getselfemployeetraininghistory).\n    const menus = (typeof BeaconBar !== \"undefined\" && BeaconBar.user && BeaconBar.user.metaData && BeaconBar.user.metaData.menus) || [];\n    const hasAccess = Array.isArray(menus) && menus.some((menu) => typeof menu === \"string\" && menu.includes(\"TNDV9/ApplyTraining/Index?mvc=1&bs=4&App=000001\"));\n    if (!hasAccess) {\n      return {\n        status: \"NO_ACCESS\",\n        message: \"It seems you don't have access. Please check with the HR Admin\"\n      };\n    }\n\n    // Optional filters to narrow down to one (or a few) training's full details (UAC 1.3).\n    // courseName is the filter a user actually has in hand - they typically know the course\n    // name, not its schedule ID - so it's a case-insensitive substring match against cosname.\n    const scheduleIdFilter = args.scheduleId !== undefined && args.scheduleId !== null ? String(args.scheduleId) : \"\";\n    const courseNameFilter = args.courseName ? String(args.courseName).trim().toLowerCase() : \"\";\n\n    const headers = new Headers();\n    headers.append(\"Accept\", \"*/*\");\n    headers.append(\"Content-Type\", \"application/json\");\n    headers.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n    const url = `${window.origin}/${reqOptions.sl}/TNDV9/ApplyTraining/GetScheduleCourseDetails`;\n\n    let response;\n    try {\n      // Confirmed from a real capture: this endpoint takes no request body at all\n      // (Content-Length: 0) - the employee is resolved from the session, not a\n      // token in the payload (unlike TNDV9/TrainingProfile's endpoints).\n      response = await fetch(url, {\n        method: \"POST\",\n        headers: headers\n      });\n    } catch (networkError) {\n      return {\n        status: \"ERROR\",\n        message: `Could not reach the Apply for Training service (${url}): ${networkError.message}`\n      };\n    }\n\n    const rawText = await response.text();\n    let responseData = null;\n    try {\n      responseData = rawText ? JSON.parse(rawText) : null;\n    } catch (parseError) {\n      return {\n        status: \"ERROR\",\n        message: `Apply for Training service returned a non-JSON response (HTTP ${response.status} from ${url}).`,\n        rawResponsePreview: rawText.slice(0, 300)\n      };\n    }\n\n    if (!response.ok) {\n      return {\n        status: \"ERROR\",\n        message: `API request to ${url} failed with status ${response.status}`,\n        details: (responseData && responseData.Status && responseData.Status.Message) || rawText.slice(0, 300)\n      };\n    }\n\n    // Wrapper shape (confirmed from a real capture):\n    // { Status: { IsSuccessfull, Message, ... }, crs: [ <course/schedule entries> ], CosElgs: [ { ElgCode, ElgName } ], ... }\n    // `crs` is the list of open course schedules this employee can view/apply for.\n    const statusInfo = responseData && responseData.Status;\n    if (!statusInfo || statusInfo.IsSuccessfull !== true || !Array.isArray(responseData.crs)) {\n      return {\n        status: \"ERROR\",\n        message: (statusInfo && statusInfo.Message) || \"Failed to retrieve training details\"\n      };\n    }\n\n    const elgLookup = {};\n    (responseData.CosElgs || []).forEach((elg) => {\n      if (elg && elg.ElgCode) elgLookup[elg.ElgCode] = elg.ElgName || \"\";\n    });\n\n    // ASP.NET JSON dates look like \"/Date(1730658600000+0530)/\" - see\n    // drafts/gettrainingcalendarcoursedetails for the same helper and rationale.\n    const parseAspNetDate = (dateStr) => {\n      if (!dateStr) return null;\n      const match = /\\/Date\\((-?\\d+)([+-]\\d{4})?\\)\\//.exec(dateStr);\n      if (!match) return null;\n\n      const ms = parseInt(match[1], 10);\n      let offsetMinutes = 0;\n      if (match[2]) {\n        const sign = match[2][0] === \"-\" ? -1 : 1;\n        const hours = parseInt(match[2].slice(1, 3), 10);\n        const minutes = parseInt(match[2].slice(3, 5), 10);\n        offsetMinutes = sign * (hours * 60 + minutes);\n      }\n\n      const local = new Date(ms + offsetMinutes * 60000);\n      const pad = (n) => String(n).padStart(2, \"0\");\n      return `${local.getUTCFullYear()}-${pad(local.getUTCMonth() + 1)}-${pad(local.getUTCDate())}`;\n    };\n\n    let trainings = responseData.crs.map((item) => {\n      const schedule = (item.SchList || []).map((sch) => ({\n        date: parseAspNetDate(sch.SchDate) || \"\",\n        startTime: sch.StartTime || \"\",\n        endTime: sch.EndTime || \"\",\n        venue: sch.VenueName || \"\",\n        resourcePersons: (sch.ResperList || []).map((resper) => ({\n          name: resper.resname || \"\",\n          category: resper.rescat || \"\",\n          type: resper.typename || \"\"\n        }))\n      }));\n\n      const capacity = item.Capacity || 0;\n      const enrolled = item.Enrolled || 0;\n\n      return {\n        scheduleId: item.schid !== undefined && item.schid !== null ? String(item.schid) : \"\",\n        courseCode: item.coscode || \"\",\n        courseName: item.cosname || \"\",\n        // Confirmed live (2026-09-07): the \"Apply for Training\" screen's own \"Description\n        // and Target Group\" field renders this same cosdesc value with no separate target\n        // group text visible alongside it - so `description` IS that combined UI field.\n        description: item.cosdesc || \"\",\n        // elgcode/CosElgs is the only eligibility-group-style field found on this endpoint,\n        // but it was null on every schedule seen so far (including the one behind the live\n        // screenshot above) and the live screen showed no distinct \"target group\" value to\n        // confirm it against. Left in as a still-unconfirmed secondary candidate, separate\n        // from `description`, in case a populated sample ever turns up.\n        eligibilityGroup: item.elgcode ? { code: item.elgcode, name: elgLookup[item.elgcode] || \"\" } : null,\n        trainingType: item.TrainType || \"\",\n        field: item.Field || \"\",\n        startDate: parseAspNetDate(item.startdate) || \"\",\n        endDate: parseAspNetDate(item.enddate) || \"\",\n        durationLabel: item.CosDuration || \"\",\n        applicationCutoffDate: parseAspNetDate(item.cutdate) || \"\",\n        // Confirmed live (2026-09-07): pardate is labeled \"Participation Confirm Cut-off\n        // Date\" on the real screen, not a plain \"participation date\".\n        participationConfirmationCutoffDate: parseAspNetDate(item.pardate) || \"\",\n        // Confirmed live (2026-09-07): these four fields are real and visible (blank in the\n        // captured sample, but present as editable fields on the live screen) - Objectives,\n        // Relevance to Job, Benefit to you, Benefit to Company.\n        objective: item.Ojective || \"\",\n        relevanceToJob: item.JobRelavance || \"\",\n        benefitToEmployee: item.PotentialYou || \"\",\n        benefitToCompany: item.PotentialCompany || \"\",\n        // Confirmed live (2026-09-07): these five collapsible sections are real and visible\n        // on the Apply for Training detail screen, each backed by the matching per-course\n        // lookup list already present in the raw response.\n        courseSubjects: (item.SubList || []).map((s) => s.subName).filter(Boolean),\n        courseQualifications: (item.QuaList || []).map((q) => q.QuaName).filter(Boolean),\n        relatedCourseNeeds: (item.NeedList || []).map((n) => n.needname).filter(Boolean),\n        courseClosureSteps: (item.CloseList || []).map((c) => c.CloseStep).filter(Boolean),\n        courseSponsors: (item.SponList || []).map((s) => s.sponName).filter(Boolean),\n        // Gap: the live screen also shows a \"Training Evaluations\" section (e.g. \"3 Months\"),\n        // but no field in this endpoint's response matches that value - the top-level\n        // `Evaluations` array was empty in every capture taken so far. Left empty with a\n        // TODO rather than guessed; if a capture ever shows this section populated alongside\n        // a non-empty response field, wire it up then.\n        trainingEvaluations: [], // TODO: To Be Confirmed - see gap note above\n        nominationStatus: item.nomination || \"\",\n        schedule: schedule,\n        seatAvailability: {\n          capacity: capacity,\n          enrolled: enrolled,\n          waiting: item.Waiting || 0,\n          applied: item.Applied || 0,\n          availableSeats: Math.max(capacity - enrolled, 0)\n        },\n        hasAttachment: item.Attach === \"1\",\n        attachmentName: item.AttachName || \"\"\n      };\n    });\n\n    if (courseNameFilter) {\n      trainings = trainings.filter((t) => t.courseName.toLowerCase().includes(courseNameFilter));\n    }\n    if (scheduleIdFilter) {\n      trainings = trainings.filter((t) => t.scheduleId === scheduleIdFilter);\n    }\n\n    if (trainings.length === 0) {\n      return {\n        status: \"SUCCESS\",\n        message: \"No matching training programs are currently available.\",\n        totalCount: 0,\n        trainings: []\n      };\n    }\n\n    return {\n      status: \"SUCCESS\",\n      message: `Found ${trainings.length} training program(s).`,\n      totalCount: trainings.length,\n      trainings: trainings\n    };\n\n  } catch (error) {\n    const errorMessage = error && error.message ? error.message : String(error);\n    return {\n      status: \"ERROR\",\n      message: `Failed to retrieve training details: ${errorMessage}`,\n      error: errorMessage\n    };\n  }\n})\n",

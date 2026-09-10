@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    {
+      "name": "courseName",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "Optional. A course name/description fragment (e.g. \\\"database\\\") to narrow the trainee evaluations down to matching courses - matches case-insensitively against any part of the course name. Else return all pending, completed trainee evaluations.",
+      "advanced": false,
+      "raw": {
+        "name": "courseName",
+        "type": "string",
+        "description": "Optional. A course name/description fragment (e.g. \\\"database\\\") to narrow the trainee evaluations down to matching courses - matches case-insensitively against any part of the course name. Else return all pending, completed trainee evaluations.",
+        "required": true,
+        "_id": "6aa11bec4915f1338d69783d"
+      }
+    }
+  ],
+  "advancedArguments": []
+}

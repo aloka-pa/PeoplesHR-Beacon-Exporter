@@ -2,7 +2,7 @@
 
 **Task:** Fetching Self Employee Training History and Status
 
-**Tags:** T&D, Aloka, 26R2
+**Tags:** T&D, Aloka, phase3
 
 **Status:** live
 

@@ -1,0 +1,8 @@
+{
+  "sampleRequest": {
+    "courseName": "Select Supervicer course"
+  },
+  "sanity": {
+    "apiResponse": []
+  }
+}

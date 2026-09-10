@@ -1,0 +1,41 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "courseName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The course name (or partial name) the employee mentioned, e.g. \"Database & Data Management\". Matches case-insensitively against the employee's own trainee evaluations - do not resolve this to an appId/scheduleId yourself first; pass the course name directly and let this tool resolve it. Either courseName, or both appId and scheduleId, must be provided. If more than one evaluation matches, the tool returns status AMBIGUOUS with a list of candidates - ask the employee to pick one and retry with appId and scheduleId.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The course name (or partial name) the employee mentioned, e.g. \"Database & Data Management\". Matches case-insensitively against the employee's own trainee evaluations - do not resolve this to an appId/scheduleId yourself first; pass the course name directly and let this tool resolve it. Either courseName, or both appId and scheduleId, must be provided. If more than one evaluation matches, the tool returns status AMBIGUOUS with a list of candidates - ask the employee to pick one and retry with appId and scheduleId."
+      }
+    },
+    {
+      "name": "appId",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The application ID of the trainee evaluation to view, when already known (e.g. carried over from getSelfEmployeeTraineeEvaluations, or from a prior AMBIGUOUS response from this same tool). Must be provided together with scheduleId - either that pair, or courseName, is required.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The application ID of the trainee evaluation to view, when already known (e.g. carried over from getSelfEmployeeTraineeEvaluations, or from a prior AMBIGUOUS response from this same tool). Must be provided together with scheduleId - either that pair, or courseName, is required."
+      }
+    },
+    {
+      "name": "scheduleId",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The schedule ID of the trainee evaluation to view, when already known (e.g. carried over from getSelfEmployeeTraineeEvaluations, or from a prior AMBIGUOUS response from this same tool). Must be provided together with appId - either that pair, or courseName, is required.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The schedule ID of the trainee evaluation to view, when already known (e.g. carried over from getSelfEmployeeTraineeEvaluations, or from a prior AMBIGUOUS response from this same tool). Must be provided together with appId - either that pair, or courseName, is required."
+      }
+    }
+  ]
+}

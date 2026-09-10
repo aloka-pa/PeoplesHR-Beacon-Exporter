@@ -2,7 +2,7 @@
 
 **Task:** Nominating a Subordinate for a Scheduled Training (Supervisor)
 
-**Tags:** T&D, Aloka, 26R2
+**Tags:** T&D, Aloka, phase3
 
 **Status:** live
 

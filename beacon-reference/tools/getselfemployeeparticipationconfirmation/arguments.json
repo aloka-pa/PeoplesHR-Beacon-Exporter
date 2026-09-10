@@ -1,0 +1,17 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "keyword",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional. A course name/title or course code fragment (e.g. \"devops\" or \"000115\") to narrow both the pending and confirmed participation confirmations down to matching courses - matches case-insensitively against any part of the course title or course code. When omitted, every pending and confirmed record is returned.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Optional. A course name/title or course code fragment (e.g. \"devops\" or \"000115\") to narrow both the pending and confirmed participation confirmations down to matching courses - matches case-insensitively against any part of the course title or course code. When omitted, every pending and confirmed record is returned."
+      }
+    }
+  ]
+}

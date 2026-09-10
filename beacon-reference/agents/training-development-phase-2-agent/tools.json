@@ -1,13 +1,68 @@
 [
   {
-    "toolId": "6a9f07df3ec32e9ccba63435",
-    "toolName": "supervisorEmployeeTrainingNomination",
-    "path": "tools/supervisoremployeetrainingnomination"
+    "toolId": "6a9fa2565d99ab2de2281eeb",
+    "toolName": "adminEmployeeTrainingNomination",
+    "path": "tools/adminemployeetrainingnomination"
   },
   {
-    "toolId": "6a9ee8841234b7562210320c",
-    "toolName": "getSelfEmployeeTrainings",
-    "path": "tools/getselfemployeetrainings"
+    "toolId": "6aa1296fe3d61b30d864f358",
+    "toolName": "getSelfEmployeeTrainerCourseEvaluationDetails",
+    "path": "tools/getselfemployeetrainercourseevaluationdetails"
+  },
+  {
+    "toolId": "6aa11ddad1aeab25027ddd4c",
+    "toolName": "getSelfEmployeeTraineeEvaluationDetails",
+    "path": "tools/getselfemployeetraineeevaluationdetails"
+  },
+  {
+    "toolId": "6aa128427439b1b29ec34c54",
+    "toolName": "getSelfEmployeeTrainerCourseEvaluations",
+    "path": "tools/getselfemployeetrainercourseevaluations"
+  },
+  {
+    "toolId": "6aa11bec4915f1338d69783b",
+    "toolName": "getSelfEmployeeTraineeEvaluations",
+    "path": "tools/getselfemployeetraineeevaluations"
+  },
+  {
+    "toolId": "6aa0dfc013562a7cd37f6871",
+    "toolName": "getSelfEmployeeParticipationConfirmation",
+    "path": "tools/getselfemployeeparticipationconfirmation"
+  },
+  {
+    "toolId": "6aa0ec259b893ad58b73dbca",
+    "toolName": "selfEmployeeParticipationConfirmation",
+    "path": "tools/selfemployeeparticipationconfirmation"
+  },
+  {
+    "toolId": "6aa03f3e0ca0292e49401900",
+    "toolName": "supervisorSubordinateTrainingNeedApplication",
+    "path": "tools/supervisorsubordinatetrainingneedapplication"
+  },
+  {
+    "toolId": "6aa036df3145f46f07ddf4c3",
+    "toolName": "selfEmployeeTrainingNeedApplication",
+    "path": "tools/selfemployeetrainingneedapplication"
+  },
+  {
+    "toolId": "6aa0296abf91849b7392ccf6",
+    "toolName": "getSelfTrainingNeeds",
+    "path": "tools/getselftrainingneeds"
+  },
+  {
+    "toolId": "6aa02a325041f561765ee5d3",
+    "toolName": "getSupervisorTrainingNeeds",
+    "path": "tools/getsupervisortrainingneeds"
+  },
+  {
+    "toolId": "6aa02ae2323c673dc24aa63f",
+    "toolName": "getAdminTrainingNeeds",
+    "path": "tools/getadmintrainingneeds"
+  },
+  {
+    "toolId": "6a9e99f7311b3fda8a34b356",
+    "toolName": "getSelfEmployeeTrainingHistory",
+    "path": "tools/getselfemployeetraininghistory"
   },
   {
     "toolId": "6a9cf26701c38d9fd8e84a73",
@@ -15,9 +70,24 @@
     "path": "tools/gettrainingcalendarcoursedetails"
   },
   {
-    "toolId": "6a9e99f7311b3fda8a34b356",
-    "toolName": "getSelfEmployeeTrainingHistory",
-    "path": "tools/getselfemployeetraininghistory"
+    "toolId": "6a9ee8841234b7562210320c",
+    "toolName": "getSelfEmployeeTrainings",
+    "path": "tools/getselfemployeetrainings"
+  },
+  {
+    "toolId": "6a9fab381234b756221c4e47",
+    "toolName": "getTrainingForNeed",
+    "path": "tools/gettrainingforneed"
+  },
+  {
+    "toolId": "6a9f07df3ec32e9ccba63435",
+    "toolName": "supervisorEmployeeTrainingNomination",
+    "path": "tools/supervisoremployeetrainingnomination"
+  },
+  {
+    "toolId": "69552f87921cbb106adf3556",
+    "toolName": "getTrainingBudgetUtilization",
+    "path": "tools/gettrainingbudgetutilization"
   },
   {
     "toolId": "695524daa4e4f389f90f1d7a",
@@ -28,10 +98,5 @@
     "toolId": "6956293bab9dbe6266aec3e1",
     "toolName": "traininingDevCreateCourseDescFilling",
     "path": "tools/traininingdevcreatecoursedescfilling"
-  },
-  {
-    "toolId": "69552f87921cbb106adf3556",
-    "toolName": "getTrainingBudgetUtilization",
-    "path": "tools/gettrainingbudgetutilization"
   }
 ]
