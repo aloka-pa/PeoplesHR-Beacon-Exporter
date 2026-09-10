@@ -1,13 +1,13 @@
 [
   {
-    "toolId": "6a9fe0e71807392514f4c467",
-    "toolName": "subordinatesLeaveapplication",
-    "path": "tools/subordinatesleaveapplication"
-  },
-  {
     "toolId": "690dc566931a2d61ba0b16ed",
     "toolName": "employeeLeaveApplication",
     "path": "tools/employeeleaveapplication"
+  },
+  {
+    "toolId": "6a9fe0e71807392514f4c467",
+    "toolName": "subordinatesLeaveapplication",
+    "path": "tools/subordinatesleaveapplication"
   },
   {
     "toolId": "690dc568931a2d61ba0b1871",

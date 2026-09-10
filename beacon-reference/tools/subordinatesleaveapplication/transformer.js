@@ -82,11 +82,22 @@
     };
   }
 
-  async function safePostJson(url, payload) {
+  /* The CommonComponents search endpoints are a different surface: the
+   * captured requests send the jQuery accept string and carry NO
+   * __cfafvalue - that header belongs to the AbsenceV9 API only. */
+  function commonComponentsHeaders() {
+    return {
+      "accept": "application/json, text/javascript, */*; q=0.01",
+      "content-type": "application/json; charset=UTF-8",
+      "x-requested-with": "XMLHttpRequest"
+    };
+  }
+
+  async function safePostJson(url, payload, headers) {
     try {
       const res = await fetch(url, {
         method: "POST",
-        headers: absenceHeaders(),
+        headers: headers || absenceHeaders(),
         body: JSON.stringify(payload),
         redirect: "follow"
       });
@@ -126,15 +137,67 @@
   }
 
   /* -------------------------------------------------
-   * Step 1: identify the subordinate.
+   * Argument reading. The assistant does not always send back the exact
+   * property name - employeeLeaveApplication and selfEmployeeLeaveApplication
+   * both defend against this (args.comment || args.Comment,
+   * args.leaveReason || args.LeaveReason) - so every argument is looked up
+   * through its known aliases and case-insensitively, rather than read off
+   * one exact key. A tool that silently sees no arguments can only ever
+   * answer "who?", which reads as the tool being broken.
    * ------------------------------------------------- */
-  if (!args || (!args.employeeNumber && !args.employeeName)) {
-    return {
-      needsInput: true,
-      message: "Please tell me which team member you want to apply leave for - their employee number or name.",
-      missingFields: ["Employee"]
-    };
+  args = args || {};
+
+  function argOf() {
+    const names = Array.prototype.slice.call(arguments);
+    for (let i = 0; i < names.length; i++) {
+      const v = args[names[i]];
+      if (v !== undefined && v !== null && String(v).trim() !== "") return String(v).trim();
+    }
+    // Case- and separator-insensitive sweep over whatever did arrive.
+    const wanted = names.map(n => n.toLowerCase().replace(/[^a-z0-9]/g, ""));
+    const keys = Object.keys(args);
+    for (let k = 0; k < keys.length; k++) {
+      const norm = keys[k].toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (wanted.indexOf(norm) !== -1) {
+        const v = args[keys[k]];
+        if (v !== undefined && v !== null && String(v).trim() !== "") return String(v).trim();
+      }
+    }
+    return "";
   }
+
+  function flagOf() {
+    const names = Array.prototype.slice.call(arguments);
+    for (let i = 0; i < names.length; i++) {
+      const v = args[names[i]];
+      if (v === true || v === "true" || v === 1 || v === "1") return true;
+    }
+    const wanted = names.map(n => n.toLowerCase().replace(/[^a-z0-9]/g, ""));
+    const keys = Object.keys(args);
+    for (let k = 0; k < keys.length; k++) {
+      const norm = keys[k].toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (wanted.indexOf(norm) !== -1) {
+        const v = args[keys[k]];
+        if (v === true || v === "true" || v === 1 || v === "1") return true;
+      }
+    }
+    return false;
+  }
+
+  const argEmployeeNumber = argOf("employeeNumber", "empNumber", "employeeId", "empId", "employeeCode", "empCode", "employeeDisplayNumber", "subordinateNumber", "employeeNo");
+  const argEmployeeName = argOf("employeeName", "empName", "subordinateName", "employeeFullName", "employee", "subordinate", "name");
+  const argLeaveType = argOf("leaveType", "leaveTypeName", "leaveTypeCode", "typeName", "typeCode");
+  const argYear = argOf("year", "leaveYear");
+  const argFromDate = argOf("fromDate", "from", "startDate", "leaveFromDate", "fromDateText");
+  const argToDate = argOf("toDate", "to", "endDate", "leaveToDate", "toDateText");
+  const argReason = argOf("reason", "leaveReason", "reasonForLeave", "reasonCode");
+  const argComment = argOf("comment", "comments", "leaveComment");
+  const argCoveringNumber = argOf("coveringEmployeeNumber", "coveringEmpNumber", "coveringEmployeeCode", "coveringEmployeeId");
+  const argCoveringName = argOf("coveringEmployeeName", "coveringEmpName", "coveringEmployee");
+  const argApproverNumber = argOf("approverNumber", "approvalEmpNumber", "approverEmployeeNumber", "approver");
+  const argConfirmed = flagOf("confirmed", "isConfirmed", "confirm");
+  const argDayModes = Array.isArray(args.dayModes) ? args.dayModes
+    : (Array.isArray(args.DayModes) ? args.DayModes : null);
 
   /* -------------------------------------------------
    * Step 2: load the Team Leave Application page. The page carries a
@@ -189,12 +252,23 @@
   const csrfToken = parseCsrfToken(pageHtml);
   if (csrfToken) window.csrf = csrfToken;
 
+  /* The page declares its JSON blobs two different ways - the leave page
+   * uses `var model = '...'` while the search widget uses
+   * `window.advancedModelObj = '...'` - so both forms are accepted. */
   function parseJsStringLiteral(html, varName) {
     if (!html) return null;
-    const rx = new RegExp(`var\\s+${varName}\\s*=\\s*'([\\s\\S]*?)';`);
-    const m = html.match(rx);
-    if (!m) return null;
-    try { return JSON.parse(m[1]); } catch (e) { return null; }
+    const forms = [
+      new RegExp(`var\\s+${varName}\\s*=\\s*'([\\s\\S]*?)';`),
+      new RegExp(`window\\.${varName}\\s*=\\s*'([\\s\\S]*?)';`),
+      new RegExp(`${varName}\\s*=\\s*'([\\s\\S]*?)';`)
+    ];
+    for (let i = 0; i < forms.length; i++) {
+      const m = html.match(forms[i]);
+      if (m) {
+        try { return JSON.parse(m[1]); } catch (e) { /* try the next form */ }
+      }
+    }
+    return null;
   }
 
   const pageModel = parseJsStringLiteral(pageHtml, "model") || {};
@@ -265,8 +339,26 @@
     return `${baseUrl}/${path}`;
   }
 
+  /* The widget's own EmpNumber/KeyValue pair. Preferred route is the whole
+   * advancedModelObj blob, but the platform's own "application" function
+   * does not bother with the declaration at all - it regexes the two fields
+   * straight out of the response text. That fallback is kept here because
+   * it survives any change to how the blob is declared or named. */
   function parseAdvancedModel(html) {
-    return parseJsStringLiteral(html, "advancedModelObj");
+    const parsed = parseJsStringLiteral(html, "advancedModelObj");
+    if (parsed && parsed.EmpNumber && parsed.KeyValue) return parsed;
+
+    if (!html) return parsed;
+    const empMatch = html.match(/"EmpNumber":"([^"]+)"/);
+    const keyMatch = html.match(/"KeyValue":"([^"]+)"/);
+    if (empMatch && keyMatch) {
+      return Object.assign({}, parsed || {}, {
+        EmpNumber: empMatch[1],
+        KeyValue: keyMatch[1],
+        _via: "field-regex"
+      });
+    }
+    return parsed;
   }
 
   function displayNumberOf(r) {
@@ -343,32 +435,35 @@
     const componentEmpNumber = advModel.EmpNumber;
     const keyValue = advModel.KeyValue;
 
-    /* Two ways to list candidates. GetSearchList is the one the live
-     * employeeDetails tool uses and is preferred: it answers with the grid
-     * rows (Col1 number, Col2 name, Col3 date), and Col3 is what
-     * GetEmpNumber wants as empDateJoined - the typeahead cannot supply it.
-     * GetPaginatedTypeaheadList is kept as a fallback for widgets that only
-     * answer that way. */
-    async function listViaSearchList(searchText) {
+    /* GetSearchList is what the popup's own grid calls, captured verbatim:
+     * criteriaValues empty, modeId "2", supEmpNumber null, sorted on column
+     * 2. The rows come back as the DataTables columns the widget declares -
+     * Col1 Employee No., Col2 Name, Col3 Date Joined, Col4 Active Status -
+     * and Col2/Col3 are exactly what GetEmpNumber then wants as
+     * empDisplayName/empDateJoined. GetPaginatedTypeaheadList is kept only
+     * as a fallback for a widget that answers that way instead. */
+    async function listViaSearchList(pageNo) {
       const result = await safePostJson(`${baseUrl}/CommonComponents/Search/GetSearchList/`, {
         empNumber: componentEmpNumber,
         criteriaValues: [],
         key: keyValue,
         modeId: "2",
         supEmpNumber: null,
-        tblPageNo: 1,
-        tblSearchText: searchText || "",
+        tblPageNo: pageNo || 1,
+        tblSearchText: "",
         sortColumn: "2",
         sortOrder: "asc"
-      });
+      }, commonComponentsHeaders());
       const data = result.body && result.body.Object && result.body.Object.data;
       const rows = Array.isArray(data) ? data : [];
       return {
         status: result.status,
+        pageData: result.body && result.body._pageData,
         rows: rows.map(r => ({
           number: String(r.Col1 || "").trim(),
           name: String(r.Col2 || "").trim(),
           dateJoined: String(r.Col3 || "").trim(),
+          activeStatus: String(r.Col4 || "").trim(),
           text: `${String(r.Col1 || "").trim()} - ${String(r.Col2 || "").trim()}`
         }))
       };
@@ -394,16 +489,22 @@
     const attempts = [];
     let rows = [];
 
-    // Search by what the user gave, then unfiltered, then the typeahead.
-    const searchList = await listViaSearchList(wantedNumber || wantedName);
-    attempts.push({ via: "GetSearchList(filtered)", status: searchList.status, rows: searchList.rows.length });
-    rows = searchList.rows;
+    /* The widget itself sends an EMPTY tblSearchText and filters nothing
+     * server-side - its own DataTables config comes back with
+     * "searching": false - so the whole list is fetched and matched here,
+     * exactly as the popup does. Paging follows _pageData.TotalPages, since
+     * a manager with more reports than PageSize gets more than one page. */
+    const firstPage = await listViaSearchList(1);
+    attempts.push({ via: "GetSearchList(page 1)", status: firstPage.status, rows: firstPage.rows.length });
+    rows = firstPage.rows;
 
-    if (rows.length === 0) {
-      const allList = await listViaSearchList("");
-      attempts.push({ via: "GetSearchList(all)", status: allList.status, rows: allList.rows.length });
-      rows = allList.rows;
+    const totalPages = firstPage.pageData && Number(firstPage.pageData.TotalPages) || 1;
+    for (let page = 2; page <= totalPages && page <= 20; page++) {
+      const next = await listViaSearchList(page);
+      attempts.push({ via: `GetSearchList(page ${page})`, status: next.status, rows: next.rows.length });
+      rows = rows.concat(next.rows);
     }
+
     if (rows.length === 0) {
       const typeahead = await listViaTypeahead();
       attempts.push({ via: "GetPaginatedTypeaheadList", status: typeahead.status, rows: typeahead.rows.length });
@@ -418,12 +519,33 @@
       };
     }
 
-    const matches = matchEmployee(rows, wantedNumber, wantedName);
+    /* Nobody named: hand back the actual team rather than just asking
+     * "who?". An empty call is then still useful - it is how the assistant
+     * discovers the list - and a manager with exactly one report needs no
+     * question at all. */
+    if (!wantedNumber && !wantedName && rows.length !== 1) {
+      return {
+        needsInput: true,
+        message: `Which team member would you like to apply leave for? Here are your ${label}s.`,
+        missingFields: ["Employee"],
+        teamMembers: rows.map(r => ({
+          employeeNumber: r.number,
+          employee: r.name,
+          dateJoined: r.dateJoined,
+          status: r.activeStatus
+        }))
+      };
+    }
+
+    // One report and nobody named - no question worth asking.
+    const matches = (!wantedNumber && !wantedName)
+      ? rows
+      : matchEmployee(rows, wantedNumber, wantedName);
     if (matches.length === 0) {
       return {
         error: true,
-        message: `"${wantedNumber || wantedName}" is not in your list of ${label}s. The search returned ${rows.length} candidate(s) - check the list below and the exact number/name.`,
-        candidates: rows.slice(0, 50).map(r => r.text),
+        message: `"${wantedNumber || wantedName}" is not in your list of ${label}s. Here are the ${rows.length} you can apply leave for - please pick one of these.`,
+        teamMembers: rows.slice(0, 50).map(r => ({ employeeNumber: r.number, employee: r.name })),
         diagnostics: { attempts }
       };
     }
@@ -457,8 +579,8 @@
     return { token, plainNumber, displayName };
   }
 
-  const wantedNumber = (args.employeeNumber || "").toLowerCase().trim();
-  const wantedName = (args.employeeName || "").toLowerCase().trim();
+  const wantedNumber = (argEmployeeNumber || "").toLowerCase().trim();
+  const wantedName = (argEmployeeName || "").toLowerCase().trim();
 
   const subordinate = await resolveEmployeeToken(subordinateSearchUrlRaw, wantedNumber, wantedName, "team member");
   if (subordinate.error || subordinate.needsInput) return subordinate;
@@ -499,13 +621,13 @@
   }
 
   let leaveYear = null;
-  if (args.year) {
-    const wantedYear = Number(args.year);
+  if (argYear) {
+    const wantedYear = Number(argYear);
     const yearMatch = yearList.find(y => y.YearCode === wantedYear);
     if (!yearMatch) {
       return {
         error: true,
-        message: `${args.year} is not an available leave year for ${employeeLabel}.`,
+        message: `${argYear} is not an available leave year for ${employeeLabel}.`,
         availableYears: yearList.map(y => y.YearCode)
       };
     }
@@ -551,7 +673,7 @@
     };
   }
 
-  if (!args.leaveType) {
+  if (!argLeaveType) {
     return {
       needsInput: true,
       message: `Which leave type would you like to apply for ${employeeLabel}? Here are the leave types available for ${leaveYear}, with the current balance.`,
@@ -561,42 +683,164 @@
     };
   }
 
-  const leaveType = matchLeaveType(args.leaveType);
+  const leaveType = matchLeaveType(argLeaveType);
   if (!leaveType) {
     return {
       error: true,
-      message: `"${args.leaveType}" is not a leave type available for ${employeeLabel} in ${leaveYear}.`,
+      message: `"${argLeaveType}" is not a leave type available for ${employeeLabel} in ${leaveYear}.`,
       leaveTypes: leaveTypeList.map(leaveTypeSummary)
     };
   }
 
-  // Additional fields (extra comment/date/dropdown controls some leave
-  // types enable) are not implemented here - flag rather than silently
-  // drop them.
-  if (leaveType.EnableAdditionalFields === 1 && leaveType.LevTypeAdditionalField) {
-    const extra = leaveType.LevTypeAdditionalField;
-    const extraLabels = Object.keys(extra)
-      .filter(k => k.endsWith("_Label") && extra[k])
-      .map(k => extra[k]);
-    if (extraLabels.length > 0) {
+  /* -------------------------------------------------
+   * Additional fields. A leave type can switch on extra controls via
+   * LevTypeAdditionalField - each one gated by its own Enable<Kind>_<n>
+   * flag, with a matching <Kind>_<n>_Label. Only the Date_1..5 family has
+   * a known home in the SaveLeaveApplication payload (Date_1_Text ..
+   * Date_5_Text, which every captured save carries), so those are
+   * collected and sent; any other kind is refused by name rather than
+   * dropped silently, because submitting without them would store an
+   * incomplete application.
+   *
+   * Note the flags gate the labels: a label alone does not mean the field
+   * is on. Test Leave carries labels with EnableAdditionalFields 0 and
+   * must not be refused because of them.
+   * ------------------------------------------------- */
+  function enabledAdditionalFields(t) {
+    const f = t.LevTypeAdditionalField;
+    const supported = [];
+    const unsupported = [];
+    if (t.EnableAdditionalFields !== 1 || !f) return { supported, unsupported };
+
+    for (let i = 1; i <= 5; i++) {
+      if (f["EnableDate_" + i]) {
+        supported.push({
+          label: f["Date_" + i + "_Label"] || `Date ${i}`,
+          payloadKey: "Date_" + i + "_Text"
+        });
+      }
+    }
+    [["Comment", 6], ["Numeric", 5], ["DropDown", 5], ["Radio", 5], ["Check", 5]].forEach(function (pair) {
+      const kind = pair[0], count = pair[1];
+      for (let i = 1; i <= count; i++) {
+        if (f["Enable" + kind + "_" + i]) {
+          unsupported.push(f[kind + "_" + i + "_Label"] || `${kind} ${i}`);
+        }
+      }
+    });
+    return { supported, unsupported };
+  }
+
+  const extraFields = enabledAdditionalFields(leaveType);
+
+  if (extraFields.unsupported.length > 0) {
+    return {
+      error: true,
+      message: `${leaveType.TypeName} needs extra fields this tool cannot fill yet (${extraFields.unsupported.join(", ")}). Please apply this leave type from the web UI.`
+    };
+  }
+
+  /* Values for the supported extra fields, matched on their label - the
+   * caller passes additionalFields as {"<label>": "<value>"}. */
+  const extraFieldValues = {};
+  if (extraFields.supported.length > 0) {
+    const supplied = (args.additionalFields && typeof args.additionalFields === "object")
+      ? args.additionalFields
+      : (args.AdditionalFields && typeof args.AdditionalFields === "object" ? args.AdditionalFields : {});
+
+    function suppliedValueFor(label) {
+      const norm = String(label).toLowerCase().replace(/[^a-z0-9]/g, "");
+      const keys = Object.keys(supplied);
+      for (let i = 0; i < keys.length; i++) {
+        if (String(keys[i]).toLowerCase().replace(/[^a-z0-9]/g, "") === norm) {
+          const v = supplied[keys[i]];
+          if (v !== undefined && v !== null && String(v).trim() !== "") return String(v).trim();
+        }
+      }
+      return "";
+    }
+
+    const missing = [];
+    extraFields.supported.forEach(function (field) {
+      const value = suppliedValueFor(field.label);
+      if (!value) { missing.push(field.label); return; }
+      /* These are declared as date controls, so a value that parses as a
+       * date goes out in the wire format the other dates use; anything
+       * else is passed through untouched rather than mangled. */
+      const parsedExtra = parseCultureDate(value);
+      extraFieldValues[field.payloadKey] = parsedExtra ? toWireDateText(parsedExtra) : value;
+    });
+
+    if (missing.length > 0) {
       return {
-        error: true,
-        message: `${leaveType.TypeName} requires extra fields (${extraLabels.join(", ")}) that this tool does not support yet. Please apply this leave type from the web UI.`
+        needsInput: true,
+        message: `${leaveType.TypeName} needs ${missing.length > 1 ? "these extra details" : "one extra detail"} for ${employeeLabel}: ${missing.join(", ")}. Please provide ${missing.length > 1 ? "them" : "it"}.`,
+        missingFields: missing,
+        additionalFieldsExpected: extraFields.supported.map(f => f.label)
       };
     }
   }
 
-  if (leaveType.IsAttachmentRequired === 1) {
-    return {
-      error: true,
-      message: `${leaveType.TypeName} requires an attachment, which this tool cannot upload. Please apply this leave type from the web UI.`
-    };
+  /* Files the user attached in the chat come from BeaconBar, the same
+   * source employeeLeaveApplication / selfEmployeeLeaveApplication read.
+   * Guarded, because a host without the helper must degrade to "no files"
+   * rather than throw. */
+  const attachmentSources = { baoHelperPresent: false, baoCount: 0, base64Count: 0, error: null };
+
+  function uploadedFiles() {
+    const files = [];
+
+    /* 1. An explicit base64 attachment argument. employeeLeaveApplication
+     * documents this as its `attachment` argument and even sketches the
+     * decode, but the block is commented out there and the property is
+     * missing from its schema, so it never actually runs. Implemented here
+     * as a real second route, for when the chat hands the file over as data
+     * rather than through BeaconBar. */
+    const raw = args.attachment || args.Attachment || args.attachments || args.Attachments;
+    const list = Array.isArray(raw) ? raw : (raw ? [raw] : []);
+    list.forEach(function (att) {
+      if (!att || typeof att !== "object") return;
+      const base64 = att.base64Data || att.base64 || att.data || att.Base64Data;
+      const fileName = att.fileName || att.name || att.filename || att.FileName;
+      if (!base64 || !fileName) return;
+      try {
+        const clean = String(base64).replace(/^data:[^,]*,/, "");
+        const byteChars = atob(clean);
+        const byteArr = new Uint8Array(byteChars.length);
+        for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
+        files.push(new File([new Blob([byteArr])], fileName));
+        attachmentSources.base64Count++;
+      } catch (e) {
+        attachmentSources.error = "base64 decode failed for " + fileName;
+      }
+    });
+
+    // 2. Files attached in the chat - the route both live tools use.
+    try {
+      if (BeaconBar && typeof BeaconBar.getUploadedBaoFiles === "function") {
+        attachmentSources.baoHelperPresent = true;
+        const bao = BeaconBar.getUploadedBaoFiles();
+        const baoList = Array.isArray(bao) ? bao.filter(Boolean) : (bao ? [bao] : []);
+        attachmentSources.baoCount = baoList.length;
+        baoList.forEach(function (f) { files.push(f); });
+      }
+    } catch (e) {
+      attachmentSources.error = String(e && e.message || e);
+    }
+
+    return files;
   }
+
+  const attachments = uploadedFiles();
+  const attachmentRequired = leaveType.IsAttachmentRequired === 1;
+  // Allowed even when not required - IsAttachmentAllowed comes off the page
+  // model, and a leave type that demands one obviously permits one.
+  const attachmentAllowed = attachmentRequired || leaveData.IsAttachmentAllowed === true;
 
   /* -------------------------------------------------
    * Step 5: dates.
    * ------------------------------------------------- */
-  if (!args.fromDate) {
+  if (!argFromDate) {
     return {
       needsInput: true,
       message: `Please tell me the From Date (${dateFormatName}) for ${employeeLabel}'s ${leaveType.TypeName}. Give a To Date too if it spans more than one day.`,
@@ -606,10 +850,10 @@
     };
   }
 
-  const parsedFrom = parseCultureDate(args.fromDate);
+  const parsedFrom = parseCultureDate(argFromDate);
   if (!parsedFrom) return { error: true, message: `Invalid From Date. Please provide it as ${dateFormatName}.` };
-  const parsedTo = args.toDate ? parseCultureDate(args.toDate) : parsedFrom;
-  if (args.toDate && !parsedTo) return { error: true, message: `Invalid To Date. Please provide it as ${dateFormatName}.` };
+  const parsedTo = argToDate ? parseCultureDate(argToDate) : parsedFrom;
+  if (argToDate && !parsedTo) return { error: true, message: `Invalid To Date. Please provide it as ${dateFormatName}.` };
   if (toDateKey(parsedFrom) > toDateKey(parsedTo)) {
     return { error: true, message: `From Date (${formatCultureDate(parsedFrom)}) is after To Date (${formatCultureDate(parsedTo)}).` };
   }
@@ -638,12 +882,12 @@
   let approverNumber = approvalData.EmpNumber || null;
   let approverDisplayText = approvalData.DisplayText || null;
 
-  if (args.approverNumber) {
-    const approverMatch = appPersonList.find(p => String(p.AppEmpNumber) === String(args.approverNumber));
+  if (argApproverNumber) {
+    const approverMatch = appPersonList.find(p => String(p.AppEmpNumber) === String(argApproverNumber));
     if (!approverMatch) {
       return {
         error: true,
-        message: `"${args.approverNumber}" is not a valid approver for ${employeeLabel}'s ${leaveType.TypeName}.`,
+        message: `"${argApproverNumber}" is not a valid approver for ${employeeLabel}'s ${leaveType.TypeName}.`,
         availableApprovers: appPersonList.map(p => ({ number: p.AppEmpNumber, name: p.AppDisplayText }))
       };
     }
@@ -673,8 +917,8 @@
    * ------------------------------------------------- */
   let coveringEmployeeNumber = null;
   if (leaveType.CoveringEmployeeRequired === 1) {
-    const wantedCoverNumber = (args.coveringEmployeeNumber || "").toLowerCase().trim();
-    const wantedCoverName = (args.coveringEmployeeName || "").toLowerCase().trim();
+    const wantedCoverNumber = (argCoveringNumber || "").toLowerCase().trim();
+    const wantedCoverName = (argCoveringName || "").toLowerCase().trim();
 
     if (!wantedCoverNumber && !wantedCoverName) {
       return {
@@ -704,7 +948,7 @@
    * ------------------------------------------------- */
   let reasonCode = null;
   if (leaveType.ShowLeaveReason === 1 && reasonList.length > 0) {
-    if (!args.reason) {
+    if (!argReason) {
       return {
         needsInput: true,
         message: `Please give a reason for ${employeeLabel}'s ${leaveType.TypeName}.`,
@@ -712,24 +956,49 @@
         reasons: reasonList.map(r => ({ code: r.ReasonCode, description: decodeURIComponent(r.Description || "").replace(/%20/g, " ") }))
       };
     }
-    const wantedReason = String(args.reason).toLowerCase().trim();
+    const wantedReason = String(argReason).toLowerCase().trim();
     const reasonMatch = reasonList.find(r => decodeURIComponent(r.Description || "").replace(/%20/g, " ").toLowerCase().trim() === wantedReason)
-      || reasonList.find(r => String(r.ReasonCode) === String(args.reason));
+      || reasonList.find(r => String(r.ReasonCode) === String(argReason));
     if (!reasonMatch) {
       return {
         error: true,
-        message: `"${args.reason}" is not a valid reason for ${leaveType.TypeName}.`,
+        message: `"${argReason}" is not a valid reason for ${leaveType.TypeName}.`,
         reasons: reasonList.map(r => ({ code: r.ReasonCode, description: decodeURIComponent(r.Description || "").replace(/%20/g, " ") }))
       };
     }
     reasonCode = reasonMatch.ReasonCode;
   }
 
-  if (leaveType.IsCommentMandatory === 1 && !args.comment) {
+  if (leaveType.IsCommentMandatory === 1 && !argComment) {
     return {
       needsInput: true,
       message: `A comment is required for ${employeeLabel}'s ${leaveType.TypeName}.`,
       missingFields: ["Comment"]
+    };
+  }
+
+  /* -------------------------------------------------
+   * Step 8b: attachment. Asked for last, once everything else about the
+   * application is settled, so the user is not chased for a file before
+   * they have even been asked for the dates. Mandatory for this leave type
+   * means the run stops here; optional means it is picked up if present and
+   * simply offered in the preview if not.
+   * ------------------------------------------------- */
+  if (attachmentRequired && attachments.length === 0) {
+    return {
+      needsInput: true,
+      message: `${leaveType.TypeName} requires an attachment. Please attach the document to this chat and ask again - I will upload it with ${employeeLabel}'s application. This tool CAN upload attachments; it just cannot see one yet.`,
+      missingFields: ["Attachment"],
+      /* Says why no file was found, so a genuinely missing attachment is
+       * never reported as "attachments are not supported". */
+      diagnostics: {
+        toolSupportsAttachments: true,
+        beaconBarHelperPresent: attachmentSources.baoHelperPresent,
+        filesFromChat: attachmentSources.baoCount,
+        filesFromBase64Argument: attachmentSources.base64Count,
+        attachmentArgumentSeen: !!(args.attachment || args.Attachment || args.attachments || args.Attachments),
+        readError: attachmentSources.error
+      }
     };
   }
 
@@ -778,6 +1047,48 @@
     };
   }
 
+  /* Per-day day mode, the same override employeeLeaveApplication and
+   * selfEmployeeLeaveApplication apply: the server returns a breakdown row
+   * per date, and any date the caller named has its DayMode/DayValue
+   * replaced (Whole Day 2/1, First Half 1/0.5, Second Half 0/0.5, Off Day
+   * 7/0). Dates left out keep whatever the server worked out, so a plain
+   * whole-day application needs no dayModes at all. */
+  const breakdownList = Array.isArray(calc.BreakdownList) ? calc.BreakdownList : [];
+
+  if (Array.isArray(argDayModes) && argDayModes.length > 0) {
+    if (leaveType.AllowHalfDay !== 1 && argDayModes.some(d => Number(d.dayValue) !== 1 && Number(d.dayValue) !== 0)) {
+      return {
+        error: true,
+        message: `${leaveType.TypeName} does not allow half days for ${employeeLabel}. Please apply it as whole days.`
+      };
+    }
+    const unmatched = [];
+    argDayModes.forEach(function (wanted) {
+      const row = breakdownList.find(x => x.LeaveDate === wanted.date);
+      if (!row) {
+        unmatched.push(wanted.date);
+        return;
+      }
+      row.DayMode = wanted.dayMode;
+      row.DayValue = wanted.dayValue;
+    });
+    if (unmatched.length > 0) {
+      return {
+        error: true,
+        message: `These dates are not part of ${employeeLabel}'s leave period: ${unmatched.join(", ")}. Day modes must use the dates the tool returns, in ISO form (e.g. 2026-09-11T00:00:00).`,
+        leaveDates: breakdownList.map(x => x.LeaveDate)
+      };
+    }
+  }
+
+  // With day modes applied the amount is their sum, exactly as the two
+  // working leave tools compute it; untouched, the server's own total stands.
+  const hasDayModes = Array.isArray(argDayModes) && argDayModes.length > 0;
+  const leaveAmount = hasDayModes
+    ? argDayModes.reduce((total, x) => total + Number(x.dayValue || 0), 0)
+    : calc.LeaveAmount;
+  const leaveAmountToVldt = hasDayModes ? leaveAmount : calc.LeaveAmountToVldt;
+
   // Clash details are informational, matching the UI's own "Leave
   // Clashes" popover - never block on them.
   const clashResult = await safePostJson(`${baseUrl}/AbsenceV9/api/LeaveApplication/GetLeaveClashDetails/`, buildLeavePayload());
@@ -789,6 +1100,55 @@
     warnings.push(`${leaveType.TypeName} may require medical details for this duration - these cannot be attached by this tool.`);
   }
 
+  /* -------------------------------------------------
+   * Balance check. BalanceDV is what the screen shows - already net of
+   * leave that is used and leave still pending approval - so it is the
+   * number to measure this application against. A type that allows a
+   * negative balance is warned about rather than blocked, exactly as the
+   * UI does; the server has the final say either way.
+   * ------------------------------------------------- */
+  /* Careful with the absent case: Number(null) is 0, so reading the balance
+   * off a missing Entitlement would look like "no days left" and block a
+   * perfectly valid application. An unknown balance must never block. */
+  const entitlement = leaveType.Entitlement || null;
+  const rawBalance = entitlement
+    ? (entitlement.BalanceAmount !== undefined && entitlement.BalanceAmount !== null
+        ? entitlement.BalanceAmount
+        : entitlement.BalanceDV)
+    : null;
+  const balanceAmount = (rawBalance === null || rawBalance === undefined || String(rawBalance).trim() === "")
+    ? NaN
+    : Number(rawBalance);
+  const requestedDays = Number(leaveAmount);
+  const balanceKnown = Number.isFinite(balanceAmount) && Number.isFinite(requestedDays);
+  const exceedsBalance = balanceKnown && requestedDays > balanceAmount;
+
+  if (exceedsBalance) {
+    const shortfall = Math.round((requestedDays - balanceAmount) * 100) / 100;
+    if (leaveType.AllowNegative === 1) {
+      warnings.push(`This is ${requestedDays} day(s) but ${employeeLabel} has only ${balanceAmount} day(s) of ${leaveType.TypeName} left - ${shortfall} day(s) over. ${leaveType.TypeName} allows a negative balance, so it can still be submitted.`);
+    } else {
+      return {
+        error: true,
+        message: `${employeeLabel} does not have enough ${leaveType.TypeName} left: this application is ${requestedDays} day(s) but only ${balanceAmount} day(s) remain (${shortfall} day(s) short). Please shorten the dates or choose another leave type.`,
+        current: {
+          employee: employeeLabel,
+          leaveType: leaveType.TypeName,
+          requestedDays,
+          balance: leaveType.Entitlement ? leaveType.Entitlement.BalanceDV : null,
+          entitlement: leaveType.Entitlement ? leaveType.Entitlement.EntitlementDV : null,
+          used: leaveType.Entitlement ? leaveType.Entitlement.UtilizedDV : null,
+          pendingApproval: leaveType.Entitlement ? leaveType.Entitlement.PendingDV : null
+        },
+        leaveTypes: leaveTypeList.map(leaveTypeSummary)
+      };
+    }
+  }
+
+  if (leaveType.MaxDaysInSingleInstance > 0 && requestedDays > Number(leaveType.MaxDaysInSingleInstance)) {
+    warnings.push(`${leaveType.TypeName} allows at most ${leaveType.MaxDaysInSingleInstance} day(s) in one application; this one is ${requestedDays}.`);
+  }
+
   const previewData = {
     employee: employeeLabel,
     employeeNumber: employeeDisplayNumber,
@@ -797,12 +1157,27 @@
     leaveYear,
     fromDate: formatCultureDate(parsedFrom),
     toDate: formatCultureDate(parsedTo),
-    leaveDays: calc.LeaveAmountText,
+    leaveDays: hasDayModes ? String(leaveAmount) : calc.LeaveAmountText,
+    dayBreakdown: breakdownList.map(x => ({ date: x.LeaveDate, dayMode: x.DayMode, dayValue: x.DayValue })),
     balanceBeforeThisApplication: leaveType.Entitlement ? leaveType.Entitlement.BalanceDV : null,
+    // Full balance picture, so the preview can show what is being spent.
+    leaveBalance: leaveType.Entitlement ? {
+      entitlement: leaveType.Entitlement.EntitlementDV,
+      used: leaveType.Entitlement.UtilizedDV,
+      pendingApproval: leaveType.Entitlement.PendingDV,
+      remainingBefore: leaveType.Entitlement.BalanceDV,
+      thisApplication: requestedDays,
+      remainingAfter: balanceKnown ? Math.round((balanceAmount - requestedDays) * 100) / 100 : null,
+      leavePeriod: leaveType.Entitlement.LeavePeriod
+    } : null,
     approver: approverDisplayText || approverNumber,
     coveringEmployee: coveringEmployeeNumber,
     reason: reasonCode ? decodeURIComponent(reasonList.find(r => r.ReasonCode === reasonCode).Description || "").replace(/%20/g, " ") : null,
-    comment: args.comment || null,
+    comment: argComment || null,
+    attachments: attachments.map(f => f.name),
+    attachmentRequired,
+    // Lets the assistant offer the choice before the user confirms.
+    canStillAddAttachment: attachmentAllowed && attachments.length === 0,
     leaveClashes: clashes.map(c => ({
       date: c.ClashDate,
       countOnLeave: c.LeaveCount,
@@ -815,14 +1190,16 @@
   /* -------------------------------------------------
    * Step 10: confirm before writing anything.
    * ------------------------------------------------- */
-  if (!args.confirmed) {
+  if (!argConfirmed) {
     return {
       needsConfirmation: true,
       preview: previewData,
       message: warnings.length > 0
         ? `Please review ${employeeLabel}'s leave application below - note the warnings - and confirm before I submit it.`
         : `Please review ${employeeLabel}'s leave application below and confirm before I submit it.`,
-      confirmationPrompt: `Are you sure you want to submit this ${leaveType.TypeName} application for ${employeeLabel}? Reply yes to submit, or no to make further changes.`
+      confirmationPrompt: previewData.canStillAddAttachment
+        ? `Are you sure you want to submit this ${leaveType.TypeName} application for ${employeeLabel}? An attachment is optional for this leave type - attach one now if you want it included. Reply yes to submit, or no to make further changes.`
+        : `Are you sure you want to submit this ${leaveType.TypeName} application for ${employeeLabel}? Reply yes to submit, or no to make further changes.`
     };
   }
 
@@ -841,13 +1218,59 @@
    * token, matching the EmpNumber/LoginEmpNumber split already
    * confirmed on CalculateLeaveDays and GetLeaveClashDetails.
    *
-   * Per-day day-mode (whole/half/off) selection is not supported here
-   * (unlike employeeLeaveApplication's dayModes argument) - the
-   * BreakdownList/LeaveAmount computed by CalculateLeaveDays above are
-   * sent back unmodified. Attachments are refused earlier (leave types
-   * requiring one return an error before reaching this point), so
-   * Attachment/Attachments are always sent as "no attachment".
+   * Attachments follow the same two-step the working tools use: each file
+   * goes to UploadLeaveAttachmentData as multipart FIRST, and only once
+   * that answers Status true does SaveLeaveApplication run, carrying the
+   * file NAMES. Note the two live tools disagree on the save shape -
+   * employeeLeaveApplication sends Attachments:[{AttachmentName}] with
+   * Attachment:{AttachmentName:""}, selfEmployeeLeaveApplication sends the
+   * inverse - and this follows employeeLeaveApplication, the one confirmed
+   * working. With no file at all both agree: Attachment {AttachmentName:
+   * "-1"} and Attachments null.
    * ------------------------------------------------- */
+  const attachmentNames = [];
+  for (let i = 0; i < attachments.length; i++) {
+    const file = attachments[i];
+    const formData = new FormData();
+    formData.append(file.name, file, file.name);
+
+    let uploadBody = null;
+    let uploadStatus = 0;
+    try {
+      // No content-type here on purpose - FormData sets its own boundary.
+      const uploadRes = await fetch(`${baseUrl}/AbsenceV9/api/LeaveApplication/UploadLeaveAttachmentData/`, {
+        method: "POST",
+        headers: {
+          "Accept": "application/json, text/javascript, */*; q=0.01",
+          "Cache-Control": "no-cache",
+          "Pragma": "no-cache",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: formData,
+        credentials: "include",
+        redirect: "follow"
+      });
+      uploadStatus = uploadRes.status;
+      uploadBody = await uploadRes.json().catch(function () { return null; });
+    } catch (e) {
+      uploadBody = null;
+    }
+
+    if (!uploadBody || uploadBody.Status !== true) {
+      return {
+        error: true,
+        message: (uploadBody && uploadBody.Message)
+          || `Could not upload "${file.name}" for ${employeeLabel}'s ${leaveType.TypeName}. Nothing has been submitted - please try attaching the file again.`,
+        preview: previewData,
+        apiResponse: uploadBody,
+        diagnostics: { uploadHttpStatus: uploadStatus, fileName: file.name, fileCount: attachments.length }
+      };
+    }
+    attachmentNames.push({ AttachmentName: file.name });
+  }
+
+  const hasAttachment = attachmentNames.length > 0;
+
   const saveResult = await safePostJson(`${baseUrl}/AbsenceV9/api/LeaveApplication/SaveLeaveApplication/`, {
     EmpNumber: empToken,
     ApprovalEmpNumber: approverNumber,
@@ -856,23 +1279,27 @@
     LeaveType: leaveType.TypeCode,
     FromDateText: fromDateText,
     ToDateText: toDateText,
-    Comment: (args.comment || "").trim(),
+    Comment: (argComment || "").trim(),
     IsAllDaysEditable: true,
-    LeaveAmount: calc.LeaveAmount,
-    LeaveAmountToVldt: calc.LeaveAmountToVldt,
-    BreakdownList: calc.BreakdownList,
+    LeaveAmount: leaveAmount,
+    LeaveAmountToVldt: leaveAmountToVldt,
+    BreakdownList: breakdownList,
     EarnedLeaveList: [],
     NotificationList: [],
     IsMedicalLeave: false,
     MedicalIssueDateText: "",
-    Attachment: { AttachmentName: "-1" },
-    Attachments: null,
-    Date_1_Text: "",
-    Date_2_Text: "",
-    Date_3_Text: "",
-    Date_4_Text: "",
-    Date_5_Text: "",
+    Attachment: hasAttachment ? { AttachmentName: "" } : { AttachmentName: "-1" },
+    Attachments: hasAttachment ? attachmentNames : null,
+    // Empty unless the leave type switched on a Date_n additional field.
+    Date_1_Text: extraFieldValues.Date_1_Text || "",
+    Date_2_Text: extraFieldValues.Date_2_Text || "",
+    Date_3_Text: extraFieldValues.Date_3_Text || "",
+    Date_4_Text: extraFieldValues.Date_4_Text || "",
+    Date_5_Text: extraFieldValues.Date_5_Text || "",
     CoveringEmpNumber: coveringEmployeeNumber || "",
+    // selfEmployeeLeaveApplication sends the resolved ReasonCode here; the
+    // reason dropdown is otherwise silently dropped from the application.
+    LeaveReason: reasonCode || "",
     LoginEmpNumber: loginEmpNumber,
     ApplicationPage: 1,
     ExtraMaternityDays: 0

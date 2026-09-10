@@ -78,6 +78,50 @@
   const sum = args.dayModes.reduce((total, x) => total + x.dayValue, 0);
 
   if (calculateDetails.Status) {
+    /* -------------------------------------------------
+     * Confirmation gate.
+     *
+     * Everything above this point only reads: the approver is resolved and
+     * the leave days are calculated, but nothing has been written. The
+     * first call therefore stops here and hands back a preview, and the
+     * application is submitted only when the caller comes back with
+     * confirmed:true - which it may set only once the user has agreed.
+     *
+     * The gate sits above the attachment block on purpose: an application
+     * the user has not confirmed must not leave an uploaded file behind on
+     * the server.
+     * ------------------------------------------------- */
+    const confirmed = args.confirmed === true
+      || args.confirmed === 1
+      || args.confirmed === "true";
+
+    if (!confirmed) {
+      // Names, never the numbers - the same mapping the day mode argument uses.
+      const dayModeNames = { 2: "Whole Day", 1: "First Half", 0: "Second Half", 7: "Off Day" };
+
+      return {
+        needsConfirmation: true,
+        Message: "Please check this leave application with the user and confirm before it is submitted. Nothing has been saved yet.",
+        Preview: {
+          fromDate: args.fromDate,
+          toDate: args.toDate,
+          totalDays: sum,
+          days: (calculateDetails.BreakdownList || []).map(function (d) {
+            return {
+              date: d.LeaveDate,
+              dayMode: dayModeNames[d.DayMode] || String(d.DayMode),
+              dayValue: d.DayValue
+            };
+          }),
+          comment: leaveComment,
+          // A covering employee code is an encoded identifier, so only say
+          // whether one was supplied.
+          coveringEmployeeGiven: !!args.coveringEmployeeCode,
+          attachmentRequired: !!args.isAttachmentMandatory
+        },
+        ConfirmationPrompt: "Shall I submit this leave application? Reply yes to submit, or tell me what to change."
+      };
+    }
 
     // ── Resolve attachment: args.attachment (base64) takes priority, ──
     // ── then fall back to BeaconBar uploaded files.                  ──

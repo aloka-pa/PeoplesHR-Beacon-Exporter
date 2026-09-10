@@ -15,6 +15,10 @@
   "updatedAt": "2026-01-23T06:20:15.633Z",
   "assignedAgents": [
     {
+      "id": "690dc572931a2d61ba0b1c72",
+      "name": "AbsenceManagementEmployee"
+    },
+    {
       "id": "690dc571931a2d61ba0b1be3",
       "name": "AbsenceManagement"
     },
@@ -25,10 +29,6 @@
     {
       "id": "690dc571931a2d61ba0b1bf4",
       "name": "Employee Information"
-    },
-    {
-      "id": "690dc572931a2d61ba0b1c72",
-      "name": "AbsenceManagementEmployee"
     },
     {
       "id": "690dc572931a2d61ba0b1c51",
@@ -43,8 +43,8 @@
       "name": "Recruitment"
     }
   ],
-  "contentHash": "21ab29ab3895a3c750cd661de6b7d5d47180640016710103a7a93af00afb59ce",
-  "lastExportedAt": "2026-09-08T17:11:14.470Z",
+  "contentHash": "87dfc321493a1a8f4d80112a1eb71cf21d44a359a864b7f29de6d2dcd0683631",
+  "lastExportedAt": "2026-09-10T09:08:51.198Z",
   "raw": {
     "basic": {
       "_id": "690dc568931a2d61ba0b1869",
@@ -79,6 +79,10 @@
       "sampleRequest": {},
       "agents": [
         {
+          "_id": "690dc572931a2d61ba0b1c72",
+          "name": "AbsenceManagementEmployee"
+        },
+        {
           "_id": "690dc571931a2d61ba0b1be3",
           "name": "AbsenceManagement"
         },
@@ -89,10 +93,6 @@
         {
           "_id": "690dc571931a2d61ba0b1bf4",
           "name": "Employee Information"
-        },
-        {
-          "_id": "690dc572931a2d61ba0b1c72",
-          "name": "AbsenceManagementEmployee"
         },
         {
           "_id": "690dc572931a2d61ba0b1c51",

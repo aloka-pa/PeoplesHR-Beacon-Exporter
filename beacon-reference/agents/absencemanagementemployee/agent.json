@@ -3,14 +3,14 @@
   "slug": "absencemanagementemployee",
   "name": "AbsenceManagementEmployee",
   "description": "AbsenceManagementEmployee",
-  "exportedAt": "2026-09-08T17:11:14.595Z",
+  "exportedAt": "2026-09-10T09:08:52.492Z",
   "raw": {
     "_id": "690dc572931a2d61ba0b1c72",
     "orgId": "690d9674c55784cc895ca691",
     "name": "AbsenceManagementEmployee",
     "description": "AbsenceManagementEmployee",
-    "by": "10308",
-    "prompt": "Scenarios:-\n\"You are an AI assistant helping users to resolve their queries using tools provided.\n",
+    "by": "36419",
+    "prompt": "Scenarios:-\n\"You are an AI assistant helping users to resolve their queries using tools provided.\n\nScenario: If the user uploads any attachment, the system must first validate the file size before executing any upload or dependent API. The attachment must be within the default allowed size range. If the file exceeds the maximum size limit, do not upload it or pass it to the next API. Instead, inform the user of the file name, the uploaded file size, and the allowed size limit, and ask them to upload a valid file. If multiple attachments are uploaded, validate each file one by one, upload only the files within the size range, and show a summary of accepted and rejected files. Do not compress or modify the file without the user's consent.\n",
     "notes": [],
     "llmConfig": [],
     "status": "live",
@@ -30,7 +30,14 @@
       "690dc56c931a2d61ba0b1bac"
     ],
     "defaultAgents": {
-      "analyticsAgent": false
+      "analyticsAgent": false,
+      "documentCanvas": false,
+      "etlAgent": false,
+      "domAgent": false,
+      "canvasComponent": {
+        "type": null,
+        "entityId": null
+      }
     },
     "analyticsPrompt": "",
     "metaReasoning": false,
@@ -57,7 +64,11 @@
         ],
         "isAdvanced": false,
         "advancedArgs": "{\n       \"type\":  \"object\",\n       \"properties\": {},\n       \"required\": []\n       }",
-        "_id": "6a1fd616b3a87a5dd518b839"
+        "_id": "6aa26feadfb18ee14844e898"
+      },
+      "subTasks": {
+        "enabled": false,
+        "mandatory": false
       },
       "target": {
         "entityValue": "",
@@ -68,8 +79,8 @@
     },
     "vis": false,
     "createdAt": "2025-10-22T05:51:05.926Z",
-    "updatedAt": "2026-06-03T07:21:58.053Z",
-    "__v": 3,
+    "updatedAt": "2026-09-10T08:52:58.804Z",
+    "__v": 4,
     "cache": {
       "enabled": false
     },
@@ -115,7 +126,6 @@
       "enabled": false
     },
     "todoList": {
-      "config": {},
       "enabled": false
     },
     "toon": {
@@ -123,6 +133,24 @@
     },
     "userInput": {
       "enabled": false
-    }
+    },
+    "branch": {
+      "discardedByConflictResolution": false
+    },
+    "contextCompaction": {
+      "enabled": false,
+      "lastNInteractions": 10,
+      "windowSize": 20,
+      "tokenLimitSize": "[REDACTED]",
+      "summarization": false,
+      "prompt": "",
+      "llmConfig": [],
+      "batchSize": 10
+    },
+    "domAgent": {
+      "llmConfig": [],
+      "prompt": ""
+    },
+    "knowledgeGraphsV2": []
   }
 }

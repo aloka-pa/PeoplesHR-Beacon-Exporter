@@ -8,10 +8,11 @@
 
 ## Description
 
-To generate the leave approver's details, follow this exact sequence. First, execute EmployeeDetails to retrieve basic employee information. Then execute EmployeeLogKey to obtain the employee's login key. Next, execute GetEmployeeLeaveBalance to fetch available leave balances.
+Follow this exact sequence: execute EmployeeDetails for the basic employee information, then EmployeeLogKey for the login key, then GetEmployeeLeaveBalance for the available balances.
 When the user selects a leave type (e.g., "Annual Leave"), internally retrieve the corresponding leaveTypeCode and leaveGroupCode — never ask the user to input or view any codes. Then execute this tool to fetch the approver's details.
 After identifying the leave type, check IsCommentMandatory from the selected leave type response: if 1, a comment is required and submission must not proceed without it; if 0, don't mention as comment required. This rule may vary by client and leave type, so never hardcode it.
 If the user specifies a covering employee, allow search by name or code and use getEmpDetails to resolve the coveringEmployeeCode.
+This tool previews first: show that preview to the user, then call again with confirmed:true only once they agree.
 Never display group codes, leave type codes, or employee keys to the user.
 
 ## Signature
@@ -36,6 +37,7 @@ _None._
 - `year` (integer, required) — User provides the year. Example: 2025, 2024, etc.
 - `isAttachmentMandatory` (boolean, optional) — Set to true when the leave type requires a mandatory attachment (e.g., medical leave). When true, prompt the user to upload a file before proceeding. Do not submit without attachment if this is true.
 - `dayModes` (array, required) — Array containing each individual leave date and its corresponding day mode. Based on the from and to date range, the system will generate all dates in between and ask the user to specify the day mode for each date. For example, if user applies for 3-day leave, there will be 3 items in this array - each with a specific date and its day mode selection.
+- `confirmed` (boolean, optional) — Set to true only after the user has seen the preview the tool returned (dates, day modes, total days, comment) and has explicitly agreed to submit. Omit or set false to preview and validate without saving anything.
 
 
 ## Assigned agents

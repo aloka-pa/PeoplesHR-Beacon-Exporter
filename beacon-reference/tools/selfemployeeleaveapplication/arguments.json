@@ -98,6 +98,44 @@
       }
     },
     {
+      "name": "attachment",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional fallback for handing the file over as data when the chat's own upload is not available. Normally omit - a file attached to the chat is picked up automatically. Required only when the leave type makes an attachment mandatory and no file can be attached to the chat.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Optional fallback for handing the file over as data when the chat's own upload is not available. Normally omit - a file attached to the chat is picked up automatically. Required only when the leave type makes an attachment mandatory and no file can be attached to the chat.",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "description": "File name including its extension. Example: 'medical_certificate.pdf'"
+          },
+          "base64Data": {
+            "type": "string",
+            "description": "The file contents, base64 encoded. A data: prefix is accepted and stripped."
+          }
+        },
+        "required": [
+          "fileName",
+          "base64Data"
+        ]
+      }
+    },
+    {
+      "name": "isAttachmentMandatory",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set to true when the chosen leave type requires an attachment - read IsAttachmentRequired from the selfEmployeeLeaveBalance response, never hardcode it. When true the tool refuses to submit until a file is attached.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Set to true when the chosen leave type requires an attachment - read IsAttachmentRequired from the selfEmployeeLeaveBalance response, never hardcode it. When true the tool refuses to submit until a file is attached."
+      }
+    },
+    {
       "name": "dayModes",
       "type": "array",
       "required": true,
@@ -141,6 +179,18 @@
           ]
         },
         "description": "Array containing each individual leave date and its corresponding day mode. Based on the from and to date range, the system will generate all dates in between and ask the user to specify the day mode for each date. For example, if user applies for 3-day leave, there will be 3 items in this array - each with a specific date and its day mode selection."
+      }
+    },
+    {
+      "name": "confirmed",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set to true only after the user has seen the preview the tool returned (dates, day modes, total days, comment, attachment) and has explicitly agreed to submit. Omit or set false to preview and validate without saving anything.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Set to true only after the user has seen the preview the tool returned (dates, day modes, total days, comment, attachment) and has explicitly agreed to submit. Omit or set false to preview and validate without saving anything."
       }
     }
   ]

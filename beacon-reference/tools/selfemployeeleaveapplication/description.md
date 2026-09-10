@@ -2,13 +2,13 @@
 
 **Task:** Self Employee Leave Application
 
-**Tags:** Absent Management, Headers, BugFix
+**Tags:** Absent Management, Headers, phase3
 
 **Status:** live
 
 ## Description
 
-Execute Flow: For self-employee leave queries (keywords like my, self, about my, apply leave, check my, my queries, me, I know), first call selfEmployeeLeaveBalance API to fetch available leave balances. When the user selects a leave type, internally retrieve leaveTypeCode and leaveGroupCode from GetEmployeeLeaveBalance/GetEntitledLeaveTypes; never ask for or display these codes. Use them only to fetch correct approver details. If a covering employee is specified, allow search by name/code and resolve EmployeeNumber using getEmpDetails API. Always ask for a leave comment/reason. After identifying the leave type, check IsCommentMandatory from the selected leave type API response: if 1, comment is required and submission must not proceed without it. if 0, comment is optional and flow may continue. This rule may vary by client and leave type, so never hardcode it. Show only user-friendly names and hide all internal codes throughout the flow. 
+For self leave queries (my, self, apply leave, check my, me), first call selfEmployeeLeaveBalance to fetch available balances. When the user picks a leave type, take leaveTypeCode and leaveGroupCode from that response; never ask for or show these codes. If a covering employee is specified, allow search by name/code and resolve EmployeeNumber using getEmpDetails API. Always ask for a leave comment/reason. After identifying the leave type, check IsCommentMandatory from the selected leave type API response: if 1 a comment is required and must not be skipped; if 0 it is optional. Never hardcode this - it varies by client and leave type. Check IsAttachmentRequired too: if 1, set isAttachmentMandatory true and ask the user to attach the document - the tool uploads any file attached to the chat. The tool previews first: show that preview to the user, then call again with confirmed:true only once they agree. Show only user-friendly names and hide all internal codes throughout the flow.
 
 ## Signature
 
@@ -31,7 +31,10 @@ _None._
 - `comment` (string, optional) — Do not ask for comment upfront.Submit first.If SaveLeaveApplication API returns 'Please specify the Comment',then ask the user for comment and retry.
 - `leaveReason` (string, optional) — Can be optional or required depending on the leave application configuration. Used when the Leave Application page has a Reason for Leave / Leave Classification dropdown. The user provides the displayed reason/classification name, such as 'Childbirth', 'Personal commitments', or 'Urgent family matters'. The transformer will internally map this displayed name to the corresponding ReasonCode from the page model ReasonList. Do not ask for this field unless the dropdown is mandatory or the SaveLeaveApplication API returns a validation message requiring a reason/classification.
 - `year` (integer, required) — User provides the year. Example: 2025, 2024, etc.
+- `attachment` (object, optional) — Optional fallback for handing the file over as data when the chat's own upload is not available. Normally omit - a file attached to the chat is picked up automatically. Required only when the leave type makes an attachment mandatory and no file can be attached to the chat.
+- `isAttachmentMandatory` (boolean, optional) — Set to true when the chosen leave type requires an attachment - read IsAttachmentRequired from the selfEmployeeLeaveBalance response, never hardcode it. When true the tool refuses to submit until a file is attached.
 - `dayModes` (array, required) — Array containing each individual leave date and its corresponding day mode. Based on the from and to date range, the system will generate all dates in between and ask the user to specify the day mode for each date. For example, if user applies for 3-day leave, there will be 3 items in this array - each with a specific date and its day mode selection.
+- `confirmed` (boolean, optional) — Set to true only after the user has seen the preview the tool returned (dates, day modes, total days, comment, attachment) and has explicitly agreed to submit. Omit or set false to preview and validate without saving anything.
 
 
 ## Assigned agents

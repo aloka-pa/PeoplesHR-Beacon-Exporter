@@ -1,4 +1,241 @@
 {
   "arguments": [],
-  "advancedArguments": []
+  "advancedArguments": [
+    {
+      "name": "employeeNumber",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The team member's employee number, e.g. 000013. Either employeeNumber or employeeName must be provided.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The team member's employee number, e.g. 000013. Either employeeNumber or employeeName must be provided."
+      }
+    },
+    {
+      "name": "employeeName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The team member's name (full or partial). Either employeeNumber or employeeName must be provided. If it matches more than one person the tool asks which one - never pick for the user.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The team member's name (full or partial). Either employeeNumber or employeeName must be provided. If it matches more than one person the tool asks which one - never pick for the user."
+      }
+    },
+    {
+      "name": "leaveType",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Name of the leave type to apply for, e.g. 'Annual Leave', 'Casual Leave', 'Sick Leave'. Must be one of the types the tool returns as available for this employee. Ask the user if not given.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Name of the leave type to apply for, e.g. 'Annual Leave', 'Casual Leave', 'Sick Leave'. Must be one of the types the tool returns as available for this employee. Ask the user if not given."
+      }
+    },
+    {
+      "name": "year",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Leave year, e.g. 2026. Defaults to the current calendar year if it is an entitled leave year for this employee, otherwise the first available year.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Leave year, e.g. 2026. Defaults to the current calendar year if it is an entitled leave year for this employee, otherwise the first available year."
+      }
+    },
+    {
+      "name": "fromDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Leave start date. Use the format returned by the dateFormat tool (MM/DD/YYYY for en-US, otherwise DD/MM/YYYY). Ask the user for this if not provided.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Leave start date. Use the format returned by the dateFormat tool (MM/DD/YYYY for en-US, otherwise DD/MM/YYYY). Ask the user for this if not provided."
+      }
+    },
+    {
+      "name": "toDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Leave end date, in the same format as fromDate. Omit for a single-day leave application.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Leave end date, in the same format as fromDate. Omit for a single-day leave application."
+      }
+    },
+    {
+      "name": "reason",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Reason for the leave, matched against the reasons the tool returns for this leave type. Required only when the leave type shows a Reason dropdown.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Reason for the leave, matched against the reasons the tool returns for this leave type. Required only when the leave type shows a Reason dropdown."
+      }
+    },
+    {
+      "name": "comment",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Free-text comment for the application. Required only when the leave type marks a comment as mandatory.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Free-text comment for the application. Required only when the leave type marks a comment as mandatory."
+      }
+    },
+    {
+      "name": "coveringEmployeeNumber",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Covering employee's number. Required only when the chosen leave type requires a covering employee. Checked first against the employee's recently-used covering employees, then searched.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Covering employee's number. Required only when the chosen leave type requires a covering employee. Checked first against the employee's recently-used covering employees, then searched."
+      }
+    },
+    {
+      "name": "coveringEmployeeName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Covering employee's name, used the same way as coveringEmployeeNumber if the number is not known.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Covering employee's name, used the same way as coveringEmployeeNumber if the number is not known."
+      }
+    },
+    {
+      "name": "approverNumber",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Approver's employee number, from the approvers the tool lists. Only needed when more than one approver is available; otherwise the single available approver is used automatically.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Approver's employee number, from the approvers the tool lists. Only needed when more than one approver is available; otherwise the single available approver is used automatically."
+      }
+    },
+    {
+      "name": "attachment",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional fallback for supplying a file as data when the chat's own upload is not available. Normally omit - a file attached to the chat is picked up automatically.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "description": "File name including its extension, e.g. 'medical.pdf'."
+          },
+          "base64Data": {
+            "type": "string",
+            "description": "The file's contents, base64 encoded. A data: prefix is accepted and stripped."
+          }
+        },
+        "description": "Optional fallback for supplying a file as data when the chat's own upload is not available. Normally omit - a file attached to the chat is picked up automatically."
+      }
+    },
+    {
+      "name": "isAttachmentMandatory",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional and normally unnecessary - the tool reads IsAttachmentRequired from the leave type itself, so it already knows. Accepted only for parity with employeeLeaveApplication.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Optional and normally unnecessary - the tool reads IsAttachmentRequired from the leave type itself, so it already knows. Accepted only for parity with employeeLeaveApplication."
+      }
+    },
+    {
+      "name": "additionalFields",
+      "type": "object",
+      "required": false,
+      "defaultValue": null,
+      "description": "Extra per-leave-type fields, only when the tool asks for them. Keys are the exact labels the tool returns in additionalFieldsExpected (e.g. {\"Sick Reason\": \"15/09/2026\"}). Do not send this unless the tool has asked.",
+      "advanced": true,
+      "raw": {
+        "type": "object",
+        "description": "Extra per-leave-type fields, only when the tool asks for them. Keys are the exact labels the tool returns in additionalFieldsExpected (e.g. {\"Sick Reason\": \"15/09/2026\"}). Do not send this unless the tool has asked."
+      }
+    },
+    {
+      "name": "dayModes",
+      "type": "array",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional per-day leave mode. Omit for whole days - the system works the breakdown out itself.",
+      "advanced": true,
+      "raw": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+              "description": "Leave date in ISO form 'YYYY-MM-DDTHH:mm:ss', copied from the dayBreakdown the tool returns."
+            },
+            "dayMode": {
+              "type": "number",
+              "enum": [
+                0,
+                1,
+                2,
+                7
+              ],
+              "description": "Whole Day=2, First Half=1, Second Half=0, Off Day=7. Display the mode name to the user, not the number."
+            },
+            "dayValue": {
+              "type": "number",
+              "enum": [
+                1,
+                0.5,
+                0
+              ],
+              "description": "Whole Day=1, First Half=0.5, Second Half=0.5, Off Day=0."
+            }
+          },
+          "required": [
+            "date",
+            "dayMode",
+            "dayValue"
+          ]
+        },
+        "description": "Optional per-day leave mode. Omit for whole days - the system works the breakdown out itself."
+      }
+    },
+    {
+      "name": "confirmed",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set to true only after the user has reviewed the preview (days, balance, clashes, warnings) and explicitly confirmed. Set to false (or omit) to just preview/validate.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Set to true only after the user has reviewed the preview (days, balance, clashes, warnings) and explicitly confirmed. Set to false (or omit) to just preview/validate."
+      }
+    }
+  ]
 }
