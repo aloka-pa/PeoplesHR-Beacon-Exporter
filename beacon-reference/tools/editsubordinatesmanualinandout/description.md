@@ -2,7 +2,7 @@
 
 **Task:** Edit the previously submitted Manual In and Out times of subordinates.
 
-**Tags:** Attendance, edit-manual-in-out, Headers
+**Tags:** Attendance, edit-manual-in-out, Headers, phase 3
 
 **Status:** live
 

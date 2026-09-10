@@ -3,25 +3,25 @@
   "slug": "mao",
   "name": "MAO",
   "description": "Multi agent orchestrator",
-  "exportedAt": "2026-09-05T19:41:12.194Z",
+  "exportedAt": "2026-09-10T09:08:52.500Z",
   "raw": {
     "_id": "6a4f413ffc8c6e9a5ddf3db3",
     "orgId": "690d9674c55784cc895ca691",
     "name": "MAO",
     "description": "Multi agent orchestrator",
-    "by": "32692",
+    "by": "27739",
     "prompt": "AbsenceManagementEmployee Agent: Route all queries related to employee leave, absence, attendance, leave application or cancellation, leave balance, leave history, leave summaries, leave statistics, covering employee details, or any absence-related employee information to the AbsenceManagementEmployee agent, which exclusively handles these domains using its internal tools and required headers, whereas admin-related absence queries must be routed to the AbsenceManagement agent.\n\nPayRoll Agent: Route all queries related to payroll, payslips, salary details, pay components, payroll reports, report navigation, or employee payroll search to the Payroll agent, which exclusively handles these domains using its internal tools\n\nPolicy docs Agent : Route all queries related to policy docs.\n\nHelp docs : Route all queries related to `how to`, or infor present in the knowledegehub.\n\nWorkfLows Agent: Route all queries related to workflows, workflow types, workflow groups, workflow configuration or setup, workflow classification, or searching employees for workflow assignment to the Workflows agent, which exclusively handles these domains using its internal tools\n\nEmployee Information\tAgent: Route all queries related to employee personal information, profile details, census data, education and professional qualifications, work experience, memberships, bank or credit card details, passport or labor card information, job specifications, position or grade details, reporting hierarchy, supervisor changes, language skills (assigned language of an employee), benefits (cash and non-cash), contract extensions, covering details, bulk employee actions, or self-service employee profile and qualification updates to the EmployeeInformation agent, which exclusively handles these domains using its internal tools and required headers. Note : When asked for covering details, use the  getCoveringDetails tool in this agent until and unless user mentioned the employee Id then call the languages in the EIM.\n\nRecruitment Agent: Route all queries related to recruitment, candidate shortlisting, applicant evaluation, hiring workflows, or accessing recruitment-related administrative information to the Recruitment agent, which exclusively handles these domains using its internal tools\n\nBenefitManagement Agent : Route all queries related to benefit master data, benefit definitions, benefit types, benefit categories, benefit structures, eligibility rules, benefit slabs, health plans, dependents, and benefit configuration even if they are administrative or setup-related, to the BenefitManagement agent. Any query related to just master data details.\n\nAbsenceManagement Agent : Route all administrative queries related to employee leave or absence management—including managing or viewing employee leave balances, leave history, summaries or statistics, approving or cancelling leaves, handling short leave requests or approvals, managing company leave policies, selecting or searching employees for leave actions, viewing covering employee details, or accessing leave-related administrative information—to the AbsenceManagement agent. This agent exclusively handles admin-level absence management using its internal tools and required headers, whereas employee self-service absence queries must be routed to the AbsenceManagementEmployee agent.\n\nAttendance Agent : Route all queries related to attendance management, including attendance modules or configurations, rounding or grace period rules, shift or roster management, overtime applications or approvals, employee or team attendance summaries, in-and-out details, attendance adjustments, or attendance-related administrative setup to the Attendance agent. This agent exclusively handles both admin-level attendance operations (such as configuration, approvals, team views, and policy management) and employee self-service attendance queries (such as personal attendance summaries, manual in/out entries, shift adjustments, and overtime applications) using its internal tools and required headers.\n\nEIM Administration : Route all queries related to enterprise information management (EIM) administration, including company definitions, locations or sub-locations, cost centres, qualifications, salary grades or grade–salary mappings, designations, corporate titles, job descriptions or categories, employee classifications, functions or functional roles, employee groups or employment types, memberships, benefits (cash and non-cash) assignment to salary grades, statutory or demographic attributes, currencies, setup or configuration management, subject, country, language (related queries except assigned language of an employee) , EIM modules or attributes, structural data to the EIMAdministration agent, which exclusively handles these administrative domains using its internal tools and required headers.\n\nif the user to ask the list of non cash benefit related query must be calling EIM agent.\n\nIf a user asks any query related to Training & Development, including modules such as Budget Utilization and Budget Allocation, the query must be handled by invoking the agent \"Training & Development | Phase 2 | Agent\".\n\nIf the user asks any knowledge-based query or how related, the request must be handled by invoking this agent with name is \"callKnowledgeBase\". For example, queries like \"How to apply leave?\".\n\nif the ask the rating method related query invoke the agent EIM Administration\n\nImportant Note :\nUse \"AbsenceManagementEmployee\" agent for retrieval of the one's own leave or self related details \nUse \"AbsenceManagement\" agent for retrieval of the other employees leave details \nAnd also when user mentioned the employee id then check if the employee id then invoke  \"AbsenceManagement\" agent\n\nIf the user asks about a finalized candidate, invoke the \"Recruitment\" agent using the tool named \"getShortListingDetails\".\n\nCRITICAL WORKFLOW RULE - MANDATORY HELP DOCS CHECK:\nBefore responding that any query is \"out of scope\" or \"not supported\", you MUST follow this exact sequence:\n**First Attempt**: Try to route the query to the appropriate specialized agent based on the module categories listed.\n**If Agent Returns \"Out of Scope\"**: DO NOT immediately tell the user it's out of scope. Instead, AUTOMATICALLY invoke the callKnowledgeBase function with the user's query.\n**Only After Help Docs Check**: If BOTH the specialized agent AND the help docs return no relevant information, then and only then respond that the request is out of scope.\nNEVER skip step 2. This is a mandatory checkpoint.\n\nHandling Dates and Relative Day References: When a user refers to a date using relative terms such as \"next Monday,\" \"tomorrow,\" \"this Friday,\" or similar expressions, do not attempt to resolve or calculate the actual date using the current UTC timestamp. Since the user's local timezone is not transmitted to the system, converting relative day references using server-side UTC time will result in incorrect dates. Instead, ask the user to provide the exact calendar date (e.g., \"Could you please provide the exact date, such as 28 May 2025?\") before proceeding with any date-sensitive action.\nCRITICAL DATE RULE: When users provide relative dates (tomorrow, next week, next Monday, etc.), ALWAYS ask for the exact date in DD/MM/YYYY format. Do not calculate or infer dates from the current date.\n\n**Important Note:** The Coordinator (MAO) agent must first determine whether the user's query matches an available sub-agent. If no matching sub-agent exists, it must immediately invoke the **`errorHandlingAgent`**. Under no circumstances should the request be routed to any other sub-agent.\n\nWhen **`errorHandlingAgent`** is invoked, it must invoke **`errorHandlingTool`** and return the tool's response **exactly as received** (for example, **\"Out Of Scope\"**).\n\n**Mandatory Rules:**\n\n* Do not invoke any other sub-agent.\n* Do not perform any additional reasoning or processing.\n* Do not generate your own response.\n* Do not ask follow-up questions.\n* Do not ask clarifying questions.\n* Do not provide suggested queries or related prompts.\n* Do not recommend alternative actions.\n* Do not infer the user's intent or make assumptions.\n* Do not generate hallucinated content or fabricate information.\n* Do not modify, append, prepend, or explain the tool's response.\n* Return **only** the output from **`errorHandlingTool`** and end the interaction immediately.\n\nThese rules are mandatory and take precedence over any default behavior that would otherwise generate follow-up questions, clarifications, suggestions, or conversational responses.",
     "notes": [],
     "llmConfig": [
       {
         "provider": "anthropic",
         "model": "claude-sonnet-4-6",
-        "_id": "6a4f56a2da557df4fdc06d44"
+        "_id": "6a9faff2ed6ca7b3483515ee"
       },
       {
         "provider": "openai",
         "model": "gpt-5.5",
-        "_id": "6a4f56a2da557df4fdc06d45"
+        "_id": "6a9faff2ed6ca7b3483515ef"
       }
     ],
     "maxTokens": "[REDACTED]",
@@ -117,7 +117,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06cf1"
+        "_id": "6a9faff2ed6ca7b34835159b"
       },
       {
         "agentId": "690dc571931a2d61ba0b1be3",
@@ -156,7 +156,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06cf5"
+        "_id": "6a9faff2ed6ca7b34835159f"
       },
       {
         "agentId": "690dc572931a2d61ba0b1c56",
@@ -194,7 +194,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06cf9"
+        "_id": "6a9faff2ed6ca7b3483515a3"
       },
       {
         "agentId": "690dc572931a2d61ba0b1c34",
@@ -233,7 +233,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06cfd"
+        "_id": "6a9faff2ed6ca7b3483515a7"
       },
       {
         "agentId": "690dc571931a2d61ba0b1bf4",
@@ -272,7 +272,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d01"
+        "_id": "6a9faff2ed6ca7b3483515ab"
       },
       {
         "agentId": "690dc571931a2d61ba0b1bef",
@@ -311,7 +311,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d05"
+        "_id": "6a9faff2ed6ca7b3483515af"
       },
       {
         "agentId": "690dc571931a2d61ba0b1be9",
@@ -350,7 +350,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d09"
+        "_id": "6a9faff2ed6ca7b3483515b3"
       },
       {
         "agentId": "690dc571931a2d61ba0b1bc2",
@@ -389,7 +389,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d0d"
+        "_id": "6a9faff2ed6ca7b3483515b7"
       },
       {
         "agentId": "690dc572931a2d61ba0b1c51",
@@ -428,7 +428,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d11"
+        "_id": "6a9faff2ed6ca7b3483515bb"
       },
       {
         "agentId": "6955261cad06de92910e10aa",
@@ -436,7 +436,8 @@
         "taskName": "Training & Development MAO",
         "rules": {
           "ids": [
-            "6993279c0a27c11d74cf099c"
+            "6993279c0a27c11d74cf099c",
+            "6a9e487c4ce0b9a681e63ea4"
           ],
           "condition": "and"
         },
@@ -460,13 +461,13 @@
           ],
           "isAdvanced": false,
           "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-          "_id": "6a4f567483026e3d233e048e"
+          "_id": "6a9faff2ed6ca7b3483515c0"
         },
         "subTasks": {
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d15"
+        "_id": "6a9faff2ed6ca7b3483515bf"
       },
       {
         "agentId": "690dc571931a2d61ba0b1bcd",
@@ -505,7 +506,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d19"
+        "_id": "6a9faff2ed6ca7b3483515c3"
       },
       {
         "agentId": "690dc571931a2d61ba0b1c12",
@@ -534,7 +535,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d1d"
+        "_id": "6a9faff2ed6ca7b3483515c7"
       },
       {
         "agentId": "690dc572931a2d61ba0b1c30",
@@ -563,7 +564,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d20"
+        "_id": "6a9faff2ed6ca7b3483515ca"
       },
       {
         "agentId": "690dc572931a2d61ba0b1c4f",
@@ -592,7 +593,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d23"
+        "_id": "6a9faff2ed6ca7b3483515cd"
       },
       {
         "agentId": "690dc571931a2d61ba0b1c14",
@@ -621,7 +622,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d26"
+        "_id": "6a9faff2ed6ca7b3483515d0"
       },
       {
         "agentId": "690dc571931a2d61ba0b1c0e",
@@ -650,7 +651,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d29"
+        "_id": "6a9faff2ed6ca7b3483515d3"
       },
       {
         "agentId": "690dc571931a2d61ba0b1c16",
@@ -679,7 +680,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d2c"
+        "_id": "6a9faff2ed6ca7b3483515d6"
       },
       {
         "agentId": "690dc572931a2d61ba0b1c32",
@@ -708,7 +709,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d2f"
+        "_id": "6a9faff2ed6ca7b3483515d9"
       },
       {
         "agentId": "690dc571931a2d61ba0b1c10",
@@ -737,7 +738,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d32"
+        "_id": "6a9faff2ed6ca7b3483515dc"
       },
       {
         "agentId": "696baf3fc2b2c4c21130c789",
@@ -766,7 +767,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d35"
+        "_id": "6a9faff2ed6ca7b3483515df"
       },
       {
         "agentId": "690dc572931a2d61ba0b1c5a",
@@ -795,7 +796,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d38"
+        "_id": "6a9faff2ed6ca7b3483515e2"
       },
       {
         "agentId": "69562bd4e05f6cdd1594bd17",
@@ -824,7 +825,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d3b"
+        "_id": "6a9faff2ed6ca7b3483515e5"
       },
       {
         "agentId": "6a4f55bb83026e3d233dceb1",
@@ -853,7 +854,7 @@
           "enabled": false,
           "mandatory": false
         },
-        "_id": "6a4f56a2da557df4fdc06d3e"
+        "_id": "6a9faff2ed6ca7b3483515e8"
       }
     ],
     "connectors": [],
@@ -887,7 +888,7 @@
         ],
         "isAdvanced": false,
         "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-        "_id": "6a4f56a2da557df4fdc06d41"
+        "_id": "6a9faff2ed6ca7b3483515eb"
       },
       "subTasks": {
         "enabled": false,
@@ -935,7 +936,8 @@
       "discardedByConflictResolution": false
     },
     "createdAt": "2026-07-09T06:35:43.761Z",
-    "updatedAt": "2026-07-09T08:06:58.164Z",
-    "__v": 12
+    "updatedAt": "2026-09-08T06:49:22.880Z",
+    "__v": 13,
+    "knowledgeGraphsV2": []
   }
 }

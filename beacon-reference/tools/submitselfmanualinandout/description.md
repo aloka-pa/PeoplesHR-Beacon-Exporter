@@ -2,7 +2,7 @@
 
 **Task:** Submit Manual In and Out when there is no existing value
 
-**Tags:** Attendance, manual-in-out, add, Headers
+**Tags:** Attendance, manual-in-out, add, Headers, phase 3
 
 **Status:** live
 

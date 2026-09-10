@@ -2,7 +2,7 @@
 
 **Task:** Submit Subordinates' Manual In And Out by Supervisor
 
-**Tags:** Attendance, manual-in-out, Headers, SupervisoryOperations
+**Tags:** Attendance, manual-in-out, Headers, SupervisoryOperations, phase 3
 
 **Status:** live
 

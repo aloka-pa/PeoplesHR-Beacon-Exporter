@@ -1,0 +1,24 @@
+{
+  "id": "6a9d12ec01c38d9fd8ec8f66",
+  "slug": "segmenttnd",
+  "name": "segmentTND",
+  "status": "live",
+  "createdAt": "2026-09-06T07:14:52.995Z",
+  "updatedAt": "2026-09-07T05:05:44.036Z",
+  "contentHash": "6cbda02fd9d288ea0a5412e8337f65631db0432164d3f5e71d9780c3abeaf3aa",
+  "lastExportedAt": "2026-09-10T09:08:54.792Z",
+  "raw": {
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "_id": "6a9d12ec01c38d9fd8ec8f66",
+    "name": "segmentTND",
+    "status": "live",
+    "code": "(function () {\r\n    const enabledAgents = JSON.parse(\r\n        localStorage.getItem('enabledAgents') || '[]'\r\n    );\r\n    return enabledAgents\r\n        .map(agent => String(agent).toLowerCase())\r\n        .includes('training'.toLowerCase());\r\n})",
+    "by": "7854",
+    "__v": 2
+  }
+}

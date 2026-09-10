@@ -2,7 +2,7 @@
 
 **Task:** Submit Manual In and Out entries by an Admin on behalf of an employee.
 
-**Tags:** Attendance, manual-in-out, Admin
+**Tags:** Attendance, manual-in-out, Admin, phase 3
 
 **Status:** live
 
