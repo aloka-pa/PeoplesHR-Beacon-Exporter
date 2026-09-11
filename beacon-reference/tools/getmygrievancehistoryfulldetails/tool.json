@@ -1,0 +1,103 @@
+{
+  "id": "6aa3e3bb327210fa8e297d67",
+  "slug": "getmygrievancehistoryfulldetails",
+  "name": "getMyGrievanceHistoryFullDetails",
+  "description": "Given one grievance record already returned by getMyGrievanceHistory, fetches everything about it in one call: the full application details (comment, submitted date, emoji rating, appeal eligibility), the per-channel-member handling status at each escalation level, and any feedback comments left by channel members. This tool has no name/search argument - if the user refers to the grievance by name, first call getMyGrievanceHistory, match the name/comment fields in its results against what the user said, then take recHeadCode, tempHeadCode, and empNumber from the matched record. Never ask the user for these three values directly.",
+  "instructions": null,
+  "taskName": "Fetch Full Details, Status, and Feedback for a Grievance",
+  "tags": [
+    "Grievance",
+    "Aloka",
+    "phase3"
+  ],
+  "status": "live",
+  "signature": "getMyGrievanceHistoryFullDetails",
+  "createdAt": "2026-09-11T11:19:23.840Z",
+  "updatedAt": "2026-09-11T16:18:42.302Z",
+  "assignedAgents": [
+    {
+      "id": "6aa374ef10cb7243bb13e6ab",
+      "name": "Grievance Handling"
+    }
+  ],
+  "contentHash": "051b940ea0a2753573a6183fd10c4cf1701ee434bf7304ed036e0563b718aea7",
+  "lastExportedAt": "2026-09-11T17:45:18.322Z",
+  "raw": {
+    "basic": {
+      "_id": "6aa3e3bb327210fa8e297d67",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getMyGrievanceHistoryFullDetails",
+      "description": "Given one grievance record already returned by getMyGrievanceHistory, fetches everything about it in one call: the full application details (comment, submitted date, emoji rating, appeal eligibility), the per-channel-member handling status at each escalation level, and any feedback comments left by channel members. This tool has no name/search argument - if the user refers to the grievance by name, first call getMyGrievanceHistory, match the name/comment fields in its results against what the user said, then take recHeadCode, tempHeadCode, and empNumber from the matched record. Never ask the user for these three values directly.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getMyGrievanceHistoryFullDetails",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"recHeadCode\": {\n      \"type\": \"string\",\n      \"description\": \"The recHeadCode of the grievance to fetch details for. Never ask the user for this and never accept a grievance name/title here - this tool has no search-by-name capability. If the user refers to the grievance by name (e.g. 'abcd'), first call getMyGrievanceHistory, match the user's wording against each result's name/comment fields, and take recHeadCode from the matched record.\"\n    },\n    \"tempHeadCode\": {\n      \"type\": \"string\",\n      \"description\": \"The tempHeadCode of the same grievance, taken from the same getMyGrievanceHistory result as recHeadCode. Do not ask the user for this.\"\n    },\n    \"empNumber\": {\n      \"type\": \"string\",\n      \"description\": \"The (encrypted) empNumber of the same grievance, taken from the same getMyGrievanceHistory result as recHeadCode. Do not ask the user for this.\"\n    }\n  },\n  \"required\": [\"recHeadCode\", \"tempHeadCode\", \"empNumber\"]\n}\n",
+        "_id": "6aa429e2b2215bd645be6370"
+      },
+      "by": "27739",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})\n",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (\n    !BeaconBar.user?.metaData?.menus?.some(menu =>\n      menu.includes(\"GrievanceV9/GrievanceHistorySummary\")\n    )\n  ) {\n    return { error: true, message: \"You do not have access to view grievance history. Please contact HR Admin.\" };\n  }\n  \n  if (!args.recHeadCode) return \"Error: recHeadCode is required. Call getMyGrievanceHistory first and use the recHeadCode of the grievance the user wants details for.\";\n  if (!args.tempHeadCode) return \"Error: tempHeadCode is required. Use the tempHeadCode returned for this grievance by getMyGrievanceHistory.\";\n  if (!args.empNumber) return \"Error: empNumber is required. Use the empNumber returned for this grievance by getMyGrievanceHistory.\";\n\n  const jsonHeaders = new Headers();\n  jsonHeaders.append(\"accept\", \"application/json, text/plain, */*\");\n  jsonHeaders.append(\"content-type\", \"application/json;charset=UTF-8\");\n\n  const detailParams = `recHeadCode=${args.recHeadCode}&isSummary=true`;\n  const digestKey = await BeaconBar.executeFunction(\"getDigest\")(detailParams);\n\n  const detailsRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/GrievanceHandle/LoadRecordDetails?${detailParams}&digest=${digestKey.digest}`, {\n    method: \"GET\",\n    headers: { \"accept\": \"application/json, text/plain, */*\" },\n    redirect: \"follow\"\n  });\n  const details = await detailsRes.json();\n\n  const channelRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/Common/GetTemplateChannelDetails`, {\n    method: \"POST\",\n    headers: jsonHeaders,\n    body: JSON.stringify({\n      tempCode: args.tempHeadCode,\n      recHeadCode: args.recHeadCode,\n      pageName: \"Handle\",\n      grievanceEmpNumber: args.empNumber\n    }),\n    redirect: \"follow\"\n  });\n  const channelMembers = await channelRes.json();\n\n  const feedbackRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/Common/GetChannelMemberFeedbackDetails`, {\n    method: \"POST\",\n    headers: jsonHeaders,\n    body: JSON.stringify({ recHeadCode: args.recHeadCode }),\n    redirect: \"follow\"\n  });\n  const feedback = await feedbackRes.json();\n\n  return {\n    recHeadCode: details.RECHEAD_CODE,\n    name: details.RECHEAD_NAME,\n    comment: details.RECHEAD_COMMENT,\n    submittedDate: details.RECHEAD_SUBMIT_DATE,\n    emojiRating: details.RECHEAD_EMOJI_RATING,\n    isNextLevel: details.isNextLevel,\n    appealed: details.APPEALED === 1,\n    canAppeal: !details.cannotAppeal,\n    ground: details.rootSource,\n    subGround: details.subSource,\n    channelMembers: (channelMembers || []).map(m => ({\n      empDisplayName: (m.empDisplayName || \"\").trim(),\n      empDisplayNumber: m.empDisplayNumber,\n      designation: m.designation,\n      priorityOrder: m.tempPriorityOrder,\n      status: m.status,\n      comment: m.comment\n    })),\n    feedback: (feedback || []).map(f => ({\n      empDisplayName: (f.empDisplayName || \"\").trim(),\n      empDisplayNumber: f.empDisplayNumber,\n      designation: f.designation,\n      comment: f.comment\n    }))\n  };\n})\n",
+      "groupName": "",
+      "tags": [
+        "Grievance",
+        "Aloka",
+        "phase3"
+      ],
+      "taskName": "Fetch Full Details, Status, and Feedback for a Grievance",
+      "etl": false,
+      "strictToolUse": false,
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: '',\n      title: '',\n      subTitle: '',\n      icon: ''\n    }\n  ];\n})",
+      "toolType": "code",
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "status": "live",
+      "isFromKG": false,
+      "branch": {
+        "id": null,
+        "sourceId": null,
+        "sourceVersion": null,
+        "discardedByConflictResolution": false
+      },
+      "sanity": {
+        "apiResponse": []
+      },
+      "createdAt": "2026-09-11T11:19:23.840Z",
+      "updatedAt": "2026-09-11T16:18:42.302Z",
+      "__v": 2,
+      "outputExample": {},
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "6aa374ef10cb7243bb13e6ab",
+          "name": "Grievance Handling"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getMyGrievanceHistoryFullDetails",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"recHeadCode\": {\n      \"type\": \"string\",\n      \"description\": \"The recHeadCode of the grievance to fetch details for. Never ask the user for this and never accept a grievance name/title here - this tool has no search-by-name capability. If the user refers to the grievance by name (e.g. 'abcd'), first call getMyGrievanceHistory, match the user's wording against each result's name/comment fields, and take recHeadCode from the matched record.\"\n    },\n    \"tempHeadCode\": {\n      \"type\": \"string\",\n      \"description\": \"The tempHeadCode of the same grievance, taken from the same getMyGrievanceHistory result as recHeadCode. Do not ask the user for this.\"\n    },\n    \"empNumber\": {\n      \"type\": \"string\",\n      \"description\": \"The (encrypted) empNumber of the same grievance, taken from the same getMyGrievanceHistory result as recHeadCode. Do not ask the user for this.\"\n    }\n  },\n  \"required\": [\"recHeadCode\", \"tempHeadCode\", \"empNumber\"]\n}\n",
+      "_id": "6aa429e2b2215bd645be6370"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})\n",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (\n    !BeaconBar.user?.metaData?.menus?.some(menu =>\n      menu.includes(\"GrievanceV9/GrievanceHistorySummary\")\n    )\n  ) {\n    return { error: true, message: \"You do not have access to view grievance history. Please contact HR Admin.\" };\n  }\n  \n  if (!args.recHeadCode) return \"Error: recHeadCode is required. Call getMyGrievanceHistory first and use the recHeadCode of the grievance the user wants details for.\";\n  if (!args.tempHeadCode) return \"Error: tempHeadCode is required. Use the tempHeadCode returned for this grievance by getMyGrievanceHistory.\";\n  if (!args.empNumber) return \"Error: empNumber is required. Use the empNumber returned for this grievance by getMyGrievanceHistory.\";\n\n  const jsonHeaders = new Headers();\n  jsonHeaders.append(\"accept\", \"application/json, text/plain, */*\");\n  jsonHeaders.append(\"content-type\", \"application/json;charset=UTF-8\");\n\n  const detailParams = `recHeadCode=${args.recHeadCode}&isSummary=true`;\n  const digestKey = await BeaconBar.executeFunction(\"getDigest\")(detailParams);\n\n  const detailsRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/GrievanceHandle/LoadRecordDetails?${detailParams}&digest=${digestKey.digest}`, {\n    method: \"GET\",\n    headers: { \"accept\": \"application/json, text/plain, */*\" },\n    redirect: \"follow\"\n  });\n  const details = await detailsRes.json();\n\n  const channelRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/Common/GetTemplateChannelDetails`, {\n    method: \"POST\",\n    headers: jsonHeaders,\n    body: JSON.stringify({\n      tempCode: args.tempHeadCode,\n      recHeadCode: args.recHeadCode,\n      pageName: \"Handle\",\n      grievanceEmpNumber: args.empNumber\n    }),\n    redirect: \"follow\"\n  });\n  const channelMembers = await channelRes.json();\n\n  const feedbackRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/Common/GetChannelMemberFeedbackDetails`, {\n    method: \"POST\",\n    headers: jsonHeaders,\n    body: JSON.stringify({ recHeadCode: args.recHeadCode }),\n    redirect: \"follow\"\n  });\n  const feedback = await feedbackRes.json();\n\n  return {\n    recHeadCode: details.RECHEAD_CODE,\n    name: details.RECHEAD_NAME,\n    comment: details.RECHEAD_COMMENT,\n    submittedDate: details.RECHEAD_SUBMIT_DATE,\n    emojiRating: details.RECHEAD_EMOJI_RATING,\n    isNextLevel: details.isNextLevel,\n    appealed: details.APPEALED === 1,\n    canAppeal: !details.cannotAppeal,\n    ground: details.rootSource,\n    subGround: details.subSource,\n    channelMembers: (channelMembers || []).map(m => ({\n      empDisplayName: (m.empDisplayName || \"\").trim(),\n      empDisplayNumber: m.empDisplayNumber,\n      designation: m.designation,\n      priorityOrder: m.tempPriorityOrder,\n      status: m.status,\n      comment: m.comment\n    })),\n    feedback: (feedback || []).map(f => ({\n      empDisplayName: (f.empDisplayName || \"\").trim(),\n      empDisplayNumber: f.empDisplayNumber,\n      designation: f.designation,\n      comment: f.comment\n    }))\n  };\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: '',\n      title: '',\n      subTitle: '',\n      icon: ''\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

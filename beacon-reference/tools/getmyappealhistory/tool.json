@@ -1,0 +1,109 @@
+{
+  "id": "6aa41b144568dadea3305d7b",
+  "slug": "getmyappealhistory",
+  "name": "getMyAppealHistory",
+  "description": "Fetches the signed-in employee's own grievance appeals (the \\\"Appeal History\\\" tab of the Grievance History screen) for a date range, optionally narrowed by ground and status, defaulting to 1st January of the current year through today when no dates are given. Filtering is never mandatory. Each result is itself a grievance-shaped record (the appeal, not the original grievance) and includes originalGrievanceRecHeadCode plus attemptsUsed/attemptsAllowed. Each record also includes recHeadCode, tempHeadCode, and empNumber - pass those straight through to getMyGrievanceHistoryFullDetails (do not ask the user for them) if the user wants more detail, status, or feedback on a specific appeal.",
+  "instructions": null,
+  "taskName": "Fetch My Grievance Appeal History",
+  "tags": [
+    "Grievance",
+    "Aloka",
+    "phase3"
+  ],
+  "status": "live",
+  "signature": "getMyAppealHistory",
+  "createdAt": "2026-09-11T15:15:32.952Z",
+  "updatedAt": "2026-09-11T16:19:17.757Z",
+  "assignedAgents": [
+    {
+      "id": "6aa374ef10cb7243bb13e6ab",
+      "name": "Grievance Handling"
+    }
+  ],
+  "contentHash": "69b8beeb1a094865519b1071caeaaab23897cb44bddeae521c76d05fb83c899c",
+  "lastExportedAt": "2026-09-11T17:45:18.316Z",
+  "raw": {
+    "basic": {
+      "_id": "6aa41b144568dadea3305d7b",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "getMyAppealHistory",
+      "description": "Fetches the signed-in employee's own grievance appeals (the \\\"Appeal History\\\" tab of the Grievance History screen) for a date range, optionally narrowed by ground and status, defaulting to 1st January of the current year through today when no dates are given. Filtering is never mandatory. Each result is itself a grievance-shaped record (the appeal, not the original grievance) and includes originalGrievanceRecHeadCode plus attemptsUsed/attemptsAllowed. Each record also includes recHeadCode, tempHeadCode, and empNumber - pass those straight through to getMyGrievanceHistoryFullDetails (do not ask the user for them) if the user wants more detail, status, or feedback on a specific appeal.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "getMyAppealHistory",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"fromDate\": {\n      \"type\": \"string\",\n      \"description\": \"Start of the date range to fetch appeal history for, formatted \\\"DD/Mon/YYYY\\\" with a 3-letter month name, e.g. \\\"01/Jan/2026\\\" - same non-standard format as getMyGrievanceHistory, NOT the usual D/M/YYYY format used elsewhere. Optional - omit to default to 1st January of the current year.\"\n    },\n    \"toDate\": {\n      \"type\": \"string\",\n      \"description\": \"End of the date range, same \\\"DD/Mon/YYYY\\\" format, e.g. \\\"11/Sep/2026\\\". Optional - omit to default to today.\"\n    },\n    \"ground\": {\n      \"type\": \"string\",\n      \"description\": \"The grievance ground/category to filter by, exactly as the user names it (e.g. \\\"Workload\\\"). Do not ask the user for a code - the tool resolves the name against Beacon's live grounds list itself. Omit to include all grounds.\"\n    },\n    \"status\": {\n      \"type\": \"string\",\n      \"enum\": [\"Pending\", \"Resolved\"],\n      \"description\": \"Filter by appeal status: \\\"Pending\\\" (not yet completed) or \\\"Resolved\\\" (completed). There is no \\\"Appealed\\\" option here since every record from this tool is already an appeal. Omit to include all statuses.\"\n    }\n  },\n  \"required\": []\n}",
+        "_id": "6aa42a05824909881cca6dbc"
+      },
+      "by": "27739",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})\n",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (\n    !BeaconBar.user?.metaData?.menus?.some(menu =>\n      menu.includes(\"GrievanceV9/GrievanceHistorySummary\")\n    )\n  ) {\n    return { error: true, message: \"You do not have access to view your appeal history. Please contact HR Admin.\" };\n  }\n\n  function formatGrievanceDate(d) {\n    const months = [\"Jan\",\"Feb\",\"Mar\",\"Apr\",\"May\",\"Jun\",\"Jul\",\"Aug\",\"Sep\",\"Oct\",\"Nov\",\"Dec\"];\n    const dd = String(d.getDate()).padStart(2, \"0\");\n    return `${dd}/${months[d.getMonth()]}/${d.getFullYear()}`;\n  }\n\n  const today = new Date();\n  const startOfYear = new Date(today.getFullYear(), 0, 1);\n\n  const frdate = args.fromDate || formatGrievanceDate(startOfYear);\n  const todate = args.toDate || formatGrievanceDate(today);\n\n  // Ground resolution reuses the same GetGrievanceSources tree/endpoint already confirmed\n  // working for getMyGrievanceHistory and submitMyGrievanceApplication - it's shared across\n  // the whole Grievance module, not specific to one screen.\n  let grnd = \"\";\n  if (args.ground) {\n    const sourcesRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/RecordGrievance/GetGrievanceSources`, {\n      method: \"GET\",\n      headers: { \"accept\": \"application/json, text/plain, */*\" },\n      redirect: \"follow\"\n    });\n    const sources = await sourcesRes.json();\n\n    const flatGrounds = [];\n    (sources || []).forEach(g => {\n      flatGrounds.push({ code: g.srcListCode, name: g.srcListName });\n      (g.subGrievanceSources || []).forEach(sub => flatGrounds.push({ code: sub.srcListCode, name: sub.srcListName }));\n    });\n\n    const wanted = args.ground.toLowerCase();\n    const match = flatGrounds.find(g => g.name.toLowerCase() === wanted)\n      || flatGrounds.find(g => g.name.toLowerCase().includes(wanted));\n\n    if (match) grnd = match.code;\n  }\n\n  // NOTE: the captured getAppealList request only ever carried {frdate, todate} - grnd was\n  // never confirmed against a live \"Filter Records\" click on the Appeal History tab. It's\n  // included here on the strength of getFilterList (the sibling My Grievances endpoint)\n  // accepting the exact same field; if the server ignores unrecognized fields, the ground\n  // filter will simply have no effect rather than break the whole call.\n  const res = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/GrievanceHistorySummary/getAppealList`, {\n    method: \"POST\",\n    headers: {\n      \"accept\": \"application/json, text/plain, */*\",\n      \"content-type\": \"application/json;charset=UTF-8\"\n    },\n    body: JSON.stringify({ frdate, todate, grnd }),\n    redirect: \"follow\"\n  });\n  let records = await res.json();\n\n  if (args.status) {\n    const wanted = args.status.toLowerCase();\n    records = (records || []).filter(r => {\n      if (wanted === \"pending\") return r.ISCOMPLETED === 0;\n      if (wanted === \"resolved\") return r.ISCOMPLETED === 1;\n      return true;\n    });\n  }\n\n  return (records || []).map(r => ({\n    recHeadCode: r.RECHEAD_CODE,\n    tempHeadCode: r.TEMPHEAD_CODE,\n    empNumber: r.EMP_NUMBER,\n    name: r.RECHEAD_NAME,\n    comment: r.RECHEAD_COMMENT,\n    submittedDate: r.SUBMITDATE,\n    status: r.status,\n    isCompleted: !!r.ISCOMPLETED,\n    originalGrievanceRecHeadCode: r.RECHEAD_REFCODE,\n    attemptsUsed: r.TRIED_ATTEMPTS,\n    attemptsAllowed: r.TEMP_ATTEMPTS,\n    ground: r.ROOT_SOURCE,\n    subGround: r.SUB_SOURCE,\n    source: r.GRIEVANCE_SOURCE\n  }));\n})\n",
+      "groupName": "",
+      "tags": [
+        "Grievance",
+        "Aloka",
+        "phase3"
+      ],
+      "taskName": "Fetch My Grievance Appeal History",
+      "etl": false,
+      "strictToolUse": false,
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: '',\n      title: '',\n      subTitle: '',\n      icon: ''\n    }\n  ];\n})",
+      "toolType": "code",
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "status": "live",
+      "isFromKG": false,
+      "branch": {
+        "id": null,
+        "sourceId": null,
+        "sourceVersion": null,
+        "discardedByConflictResolution": false
+      },
+      "sanity": {
+        "apiResponse": []
+      },
+      "createdAt": "2026-09-11T15:15:32.952Z",
+      "updatedAt": "2026-09-11T16:19:17.757Z",
+      "__v": 3,
+      "outputExample": {},
+      "sampleRequest": {
+        "ground": "Workload",
+        "status": "Pending"
+      },
+      "agents": [
+        {
+          "_id": "6aa374ef10cb7243bb13e6ab",
+          "name": "Grievance Handling"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "getMyAppealHistory",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"fromDate\": {\n      \"type\": \"string\",\n      \"description\": \"Start of the date range to fetch appeal history for, formatted \\\"DD/Mon/YYYY\\\" with a 3-letter month name, e.g. \\\"01/Jan/2026\\\" - same non-standard format as getMyGrievanceHistory, NOT the usual D/M/YYYY format used elsewhere. Optional - omit to default to 1st January of the current year.\"\n    },\n    \"toDate\": {\n      \"type\": \"string\",\n      \"description\": \"End of the date range, same \\\"DD/Mon/YYYY\\\" format, e.g. \\\"11/Sep/2026\\\". Optional - omit to default to today.\"\n    },\n    \"ground\": {\n      \"type\": \"string\",\n      \"description\": \"The grievance ground/category to filter by, exactly as the user names it (e.g. \\\"Workload\\\"). Do not ask the user for a code - the tool resolves the name against Beacon's live grounds list itself. Omit to include all grounds.\"\n    },\n    \"status\": {\n      \"type\": \"string\",\n      \"enum\": [\"Pending\", \"Resolved\"],\n      \"description\": \"Filter by appeal status: \\\"Pending\\\" (not yet completed) or \\\"Resolved\\\" (completed). There is no \\\"Appealed\\\" option here since every record from this tool is already an appeal. Omit to include all statuses.\"\n    }\n  },\n  \"required\": []\n}",
+      "_id": "6aa42a05824909881cca6dbc"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})\n",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (\n    !BeaconBar.user?.metaData?.menus?.some(menu =>\n      menu.includes(\"GrievanceV9/GrievanceHistorySummary\")\n    )\n  ) {\n    return { error: true, message: \"You do not have access to view your appeal history. Please contact HR Admin.\" };\n  }\n\n  function formatGrievanceDate(d) {\n    const months = [\"Jan\",\"Feb\",\"Mar\",\"Apr\",\"May\",\"Jun\",\"Jul\",\"Aug\",\"Sep\",\"Oct\",\"Nov\",\"Dec\"];\n    const dd = String(d.getDate()).padStart(2, \"0\");\n    return `${dd}/${months[d.getMonth()]}/${d.getFullYear()}`;\n  }\n\n  const today = new Date();\n  const startOfYear = new Date(today.getFullYear(), 0, 1);\n\n  const frdate = args.fromDate || formatGrievanceDate(startOfYear);\n  const todate = args.toDate || formatGrievanceDate(today);\n\n  // Ground resolution reuses the same GetGrievanceSources tree/endpoint already confirmed\n  // working for getMyGrievanceHistory and submitMyGrievanceApplication - it's shared across\n  // the whole Grievance module, not specific to one screen.\n  let grnd = \"\";\n  if (args.ground) {\n    const sourcesRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/RecordGrievance/GetGrievanceSources`, {\n      method: \"GET\",\n      headers: { \"accept\": \"application/json, text/plain, */*\" },\n      redirect: \"follow\"\n    });\n    const sources = await sourcesRes.json();\n\n    const flatGrounds = [];\n    (sources || []).forEach(g => {\n      flatGrounds.push({ code: g.srcListCode, name: g.srcListName });\n      (g.subGrievanceSources || []).forEach(sub => flatGrounds.push({ code: sub.srcListCode, name: sub.srcListName }));\n    });\n\n    const wanted = args.ground.toLowerCase();\n    const match = flatGrounds.find(g => g.name.toLowerCase() === wanted)\n      || flatGrounds.find(g => g.name.toLowerCase().includes(wanted));\n\n    if (match) grnd = match.code;\n  }\n\n  // NOTE: the captured getAppealList request only ever carried {frdate, todate} - grnd was\n  // never confirmed against a live \"Filter Records\" click on the Appeal History tab. It's\n  // included here on the strength of getFilterList (the sibling My Grievances endpoint)\n  // accepting the exact same field; if the server ignores unrecognized fields, the ground\n  // filter will simply have no effect rather than break the whole call.\n  const res = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/GrievanceHistorySummary/getAppealList`, {\n    method: \"POST\",\n    headers: {\n      \"accept\": \"application/json, text/plain, */*\",\n      \"content-type\": \"application/json;charset=UTF-8\"\n    },\n    body: JSON.stringify({ frdate, todate, grnd }),\n    redirect: \"follow\"\n  });\n  let records = await res.json();\n\n  if (args.status) {\n    const wanted = args.status.toLowerCase();\n    records = (records || []).filter(r => {\n      if (wanted === \"pending\") return r.ISCOMPLETED === 0;\n      if (wanted === \"resolved\") return r.ISCOMPLETED === 1;\n      return true;\n    });\n  }\n\n  return (records || []).map(r => ({\n    recHeadCode: r.RECHEAD_CODE,\n    tempHeadCode: r.TEMPHEAD_CODE,\n    empNumber: r.EMP_NUMBER,\n    name: r.RECHEAD_NAME,\n    comment: r.RECHEAD_COMMENT,\n    submittedDate: r.SUBMITDATE,\n    status: r.status,\n    isCompleted: !!r.ISCOMPLETED,\n    originalGrievanceRecHeadCode: r.RECHEAD_REFCODE,\n    attemptsUsed: r.TRIED_ATTEMPTS,\n    attemptsAllowed: r.TEMP_ATTEMPTS,\n    ground: r.ROOT_SOURCE,\n    subGround: r.SUB_SOURCE,\n    source: r.GRIEVANCE_SOURCE\n  }));\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: '',\n      title: '',\n      subTitle: '',\n      icon: ''\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {
+        "ground": "Workload",
+        "status": "Pending"
+      },
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

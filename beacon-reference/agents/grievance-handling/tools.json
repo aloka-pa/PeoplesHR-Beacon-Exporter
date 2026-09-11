@@ -1,0 +1,27 @@
+[
+  {
+    "toolId": "6aa4282725179d849b92c8e3",
+    "toolName": "submitMyGrievanceApplication",
+    "path": "tools/submitmygrievanceapplication"
+  },
+  {
+    "toolId": "6aa41e46824909881cc8416d",
+    "toolName": "submitSelfAppealForGrievance",
+    "path": "tools/submitselfappealforgrievance"
+  },
+  {
+    "toolId": "6aa41b144568dadea3305d7b",
+    "toolName": "getMyAppealHistory",
+    "path": "tools/getmyappealhistory"
+  },
+  {
+    "toolId": "6aa3e3bb327210fa8e297d67",
+    "toolName": "getMyGrievanceHistoryFullDetails",
+    "path": "tools/getmygrievancehistoryfulldetails"
+  },
+  {
+    "toolId": "6aa3deb8ae3620512a38172e",
+    "toolName": "getMyGrievanceHistory",
+    "path": "tools/getmygrievancehistory"
+  }
+]

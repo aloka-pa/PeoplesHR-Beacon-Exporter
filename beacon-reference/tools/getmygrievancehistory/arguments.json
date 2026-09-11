@@ -1,0 +1,70 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "fromDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Start of the date range to fetch grievance history for, formatted \"DD/Mon/YYYY\" with a 3-letter month name, e.g. \"11/Jun/2026\" - this screen does NOT use the usual D/M/YYYY format used elsewhere. Optional - omit to default to 3 months before today.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Start of the date range to fetch grievance history for, formatted \"DD/Mon/YYYY\" with a 3-letter month name, e.g. \"11/Jun/2026\" - this screen does NOT use the usual D/M/YYYY format used elsewhere. Optional - omit to default to 3 months before today."
+      }
+    },
+    {
+      "name": "toDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "End of the date range, same \"DD/Mon/YYYY\" format, e.g. \"11/Sep/2026\". Optional - omit to default to today.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "End of the date range, same \"DD/Mon/YYYY\" format, e.g. \"11/Sep/2026\". Optional - omit to default to today."
+      }
+    },
+    {
+      "name": "ground",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The grievance ground/category to filter by, exactly as the user names it (e.g. \"Workload\"). Do not ask the user for a code - the tool resolves the name against Beacon's live grounds list itself. Omit to include all grounds.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The grievance ground/category to filter by, exactly as the user names it (e.g. \"Workload\"). Do not ask the user for a code - the tool resolves the name against Beacon's live grounds list itself. Omit to include all grounds."
+      }
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Filter by grievance status: \"Pending\" (not yet completed), \"Resolved\" (completed), or \"Appealed\" (an appeal was raised). Omit to include all statuses.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "Pending",
+          "Resolved",
+          "Appealed"
+        ],
+        "description": "Filter by grievance status: \"Pending\" (not yet completed), \"Resolved\" (completed), or \"Appealed\" (an appeal was raised). Omit to include all statuses."
+      }
+    },
+    {
+      "name": "appealableOnly",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set true when the user asks whether they can appeal, or wants only grievances eligible for appeal right now (e.g. \"which grievances can I appeal\", \"can I submit an appeal\"). Do not just list every grievance and guess from status text - not all completed/disagreed grievances are actually appeal-able (attempts remaining, appeal window, etc. are enforced server-side), so this checks Beacon's own eligibility flag per record. Omit for a normal history listing.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Set true when the user asks whether they can appeal, or wants only grievances eligible for appeal right now (e.g. \"which grievances can I appeal\", \"can I submit an appeal\"). Do not just list every grievance and guess from status text - not all completed/disagreed grievances are actually appeal-able (attempts remaining, appeal window, etc. are enforced server-side), so this checks Beacon's own eligibility flag per record. Omit for a normal history listing."
+      }
+    }
+  ]
+}

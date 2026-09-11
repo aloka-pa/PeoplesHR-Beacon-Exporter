@@ -1,0 +1,103 @@
+{
+  "id": "6aa41e46824909881cc8416d",
+  "slug": "submitselfappealforgrievance",
+  "name": "submitSelfAppealForGrievance",
+  "description": "Submits an appeal for a grievance the employee has already submitted. originalRecHeadCode, originalEmpNumber, and originalTempHeadCode must come from a prior getMyGrievanceHistory result - never ask the user for these. comment is required and must always be asked of the user. The tool always previews first (channel members and any requested bypasses, comment, hide-identity) and only actually submits when called again with confirmed:true. DRAFT: the new appeal recHeadCode bootstrap and GetTemplateChannelDetails pageName are best-guess extrapolations from submitMyGrievanceApplication, not yet independently confirmed - see description.md.",
+  "instructions": null,
+  "taskName": "Submit an Appeal for an Existing Grievance",
+  "tags": [
+    "Grievance",
+    "Aloka",
+    "phase3"
+  ],
+  "status": "live",
+  "signature": "submitSelfAppealForGrievance",
+  "createdAt": "2026-09-11T15:29:10.385Z",
+  "updatedAt": "2026-09-11T16:20:16.758Z",
+  "assignedAgents": [
+    {
+      "id": "6aa374ef10cb7243bb13e6ab",
+      "name": "Grievance Handling"
+    }
+  ],
+  "contentHash": "d942aa02c4b799d448acc09d00d7b00eb94e0c684ce0f0754bef7ca7578ac06e",
+  "lastExportedAt": "2026-09-11T17:45:18.309Z",
+  "raw": {
+    "basic": {
+      "_id": "6aa41e46824909881cc8416d",
+      "orgId": "690d9674c55784cc895ca691",
+      "name": "submitSelfAppealForGrievance",
+      "description": "Submits an appeal for a grievance the employee has already submitted. originalRecHeadCode, originalEmpNumber, and originalTempHeadCode must come from a prior getMyGrievanceHistory result - never ask the user for these. comment is required and must always be asked of the user. The tool always previews first (channel members and any requested bypasses, comment, hide-identity) and only actually submits when called again with confirmed:true. DRAFT: the new appeal recHeadCode bootstrap and GetTemplateChannelDetails pageName are best-guess extrapolations from submitMyGrievanceApplication, not yet independently confirmed - see description.md.",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "submitSelfAppealForGrievance",
+        "args": [],
+        "isAdvanced": true,
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"originalRecHeadCode\": {\n      \"type\": \"string\",\n      \"description\": \"The recHeadCode of the grievance being appealed, taken from a getMyGrievanceHistory (or getMyGrievanceHistoryFullDetails) result. Do not ask the user for this - resolve the grievance by name/date first if needed.\"\n    },\n    \"originalEmpNumber\": {\n      \"type\": \"string\",\n      \"description\": \"The (encrypted) empNumber of the grievance being appealed, taken from the same getMyGrievanceHistory result as originalRecHeadCode. Do not ask the user for this.\"\n    },\n    \"originalTempHeadCode\": {\n      \"type\": \"string\",\n      \"description\": \"The tempHeadCode of the grievance being appealed, taken from the same getMyGrievanceHistory result as originalRecHeadCode. Do not ask the user for this.\"\n    },\n    \"comment\": {\n      \"type\": \"string\",\n      \"description\": \"The employee's comment/reason for appealing this grievance. Required - always ask the user for this before submitting.\"\n    },\n    \"hideIdentity\": {\n      \"type\": \"boolean\",\n      \"description\": \"Set true if the user wants to appeal anonymously, hiding their identity from the channel members handling it. Optional, defaults to false.\"\n    },\n    \"bypassChannelMembers\": {\n      \"type\": \"array\",\n      \"items\": { \"type\": \"string\" },\n      \"description\": \"Names (or employee numbers) of assigned channel members the user wants to bypass/skip for this appeal, matched against the channel member list this tool previews. Optional - omit to keep every channel member in the escalation chain.\"\n    },\n    \"confirmed\": {\n      \"type\": \"boolean\",\n      \"description\": \"Set true only after the user has seen the preview this tool returns (channel members and any bypassed ones, comment, hide-identity) and has explicitly agreed to submit. Omit or set false to preview without submitting anything - this is the default and safe to call repeatedly while the user is still deciding.\"\n    }\n  },\n  \"required\": [\"originalRecHeadCode\", \"originalEmpNumber\", \"originalTempHeadCode\", \"comment\"]\n}\n",
+        "_id": "6aa42a4022663e78a5da373e"
+      },
+      "by": "27739",
+      "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})\n",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (\n    !BeaconBar.user?.metaData?.menus?.some(menu =>\n      menu.includes(\"GrievanceV9/GrievanceHistorySummary\")\n    )\n  ) {\n    return { error: true, message: \"You do not have access to view grievance history. Please contact HR Admin.\" };\n  }\n\n  async function readJson(response, label) {\n    const text = await response.text();\n    try {\n      return { data: JSON.parse(text) };\n    } catch (e) {\n      return { error: `${label} did not return JSON (HTTP ${response.status}). First 300 chars of response: ${text.slice(0, 300)}` };\n    }\n  }\n\n  if (!args.originalRecHeadCode) return \"Error: originalRecHeadCode is required - the recHeadCode of the grievance being appealed, from getMyGrievanceHistory.\";\n  if (!args.originalEmpNumber) return \"Error: originalEmpNumber is required - the empNumber of that grievance, from the same getMyGrievanceHistory result.\";\n  if (!args.originalTempHeadCode) return \"Error: originalTempHeadCode is required - the tempHeadCode of that grievance, from the same getMyGrievanceHistory result.\";\n  if (!args.comment) return \"Error: comment is required - the employee's comment/reason for appealing this grievance.\";\n\n  const jsonHeaders = new Headers();\n  jsonHeaders.append(\"accept\", \"application/json, text/plain, */*\");\n  jsonHeaders.append(\"content-type\", \"application/json;charset=UTF-8\");\n\n  const indexParams = `oriHeadCode=${args.originalRecHeadCode}&oriEmpNumber=${encodeURIComponent(args.originalEmpNumber)}`;\n  const digestKey = await BeaconBar.executeFunction(\"getDigest\")(indexParams);\n  const indexRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/AppealGrievance/Index?${indexParams}&digest=${digestKey.digest}`, {\n    method: \"GET\",\n    headers: { \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\" },\n    redirect: \"follow\"\n  });\n  const indexHtml = await indexRes.text();\n  const doc = new DOMParser().parseFromString(indexHtml, \"text/html\");\n  const newRecHeadCode = doc.querySelector(\"#hdnRecHeadCode\")?.value;\n\n  if (!newRecHeadCode) {\n    return `Could not read a new appeal recHeadCode from the Appeal page load (HTTP ${indexRes.status}). AppealGrievance/Index's markup may differ from RecordGrievance/Index's #hdnRecHeadCode field - this needs a real capture of that page's response to confirm. First 300 chars of response: ${indexHtml.slice(0, 300)}`;\n  }\n\n  const recHeadCode = `${newRecHeadCode}-${args.originalRecHeadCode}-${args.originalRecHeadCode}`;\n\n  const channelRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/Common/GetTemplateChannelDetails`, {\n    method: \"POST\",\n    headers: jsonHeaders,\n    body: JSON.stringify({\n      tempCode: args.originalTempHeadCode,\n      recHeadCode: args.originalRecHeadCode,\n      pageName: \"Appeal\",\n      grievanceEmpNumber: args.originalEmpNumber\n    }),\n    redirect: \"follow\"\n  });\n  const channelResult = await readJson(channelRes, \"GetTemplateChannelDetails\");\n  if (channelResult.error) return channelResult.error;\n  const channelMembers = channelResult.data;\n\n  const bypassWanted = (args.bypassChannelMembers || []).map(n => String(n).toLowerCase());\n  (channelMembers || []).forEach(m => {\n    const name = (m.empDisplayName || \"\").trim().toLowerCase();\n    const shouldBypass = bypassWanted.some(w => name === w || name.includes(w) || m.empDisplayNumber === w);\n    if (shouldBypass) {\n      m.status_old = m.status;\n      m.statusCSS_old = m.statusCSS;\n      m.status = \"Bypassed\";\n      m.statusCSS = \"label label-bypassed\";\n      m.chkstatus = 1;\n    }\n  });\n\n  const previewChannelMembers = (channelMembers || []).map(m => ({\n    empDisplayName: (m.empDisplayName || \"\").trim(),\n    designation: m.designation,\n    priorityOrder: m.tempPriorityOrder,\n    status: m.status\n  }));\n\n  if (!args.confirmed) {\n    return {\n      preview: true,\n      message: \"Review this appeal with the user before submitting. Call this tool again with confirmed:true (and the same arguments) once they agree.\",\n      originalRecHeadCode: args.originalRecHeadCode,\n      comment: args.comment,\n      hideIdentity: !!args.hideIdentity,\n      channelMembers: previewChannelMembers\n    };\n  }\n\n  // appealrefcode: \"1\" is the exact literal value seen in the one captured Submit call.\n  // It may actually need to be the sequential appeal-attempt number (getMyAppealHistory\n  // exposes attemptsUsed for an existing appeal) rather than always \"1\" - kept as the\n  // captured value rather than guessing a formula with no second example to check it against.\n  const submitRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/AppealGrievance/Submit`, {\n    method: \"POST\",\n    headers: jsonHeaders,\n    body: JSON.stringify({\n      recModel: {\n        recHeadCode: recHeadCode,\n        tempCode: args.originalTempHeadCode,\n        recDesc: args.comment,\n        recSummary: \"\",\n        recHideIdentity: !!args.hideIdentity,\n        createdEmpNumber: args.originalEmpNumber,\n        appealrefcode: \"1\",\n        channelmems: channelMembers\n      }\n    }),\n    redirect: \"follow\"\n  });\n\n  // Submit does not return JSON - confirmed by the capture: a successful call returns the\n  // plain text OK (HTTP 200), same as GrievanceV9/RecordGrievance/Submit.\n  const submitText = (await submitRes.text()).trim().replace(/^['\"]|['\"]$/g, \"\");\n  if (!submitRes.ok || submitText.toLowerCase() !== \"ok\") {\n    return `Appeal submission did not succeed (HTTP ${submitRes.status}): ${submitText || \"(empty response)\"}`;\n  }\n\n  return {\n    submitted: true,\n    originalRecHeadCode: args.originalRecHeadCode,\n    comment: args.comment,\n    hideIdentity: !!args.hideIdentity,\n    channelMembers: previewChannelMembers\n  };\n})\n",
+      "groupName": "",
+      "tags": [
+        "Grievance",
+        "Aloka",
+        "phase3"
+      ],
+      "taskName": "Submit an Appeal for an Existing Grievance",
+      "etl": false,
+      "strictToolUse": false,
+      "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: '',\n      title: '',\n      subTitle: '',\n      icon: ''\n    }\n  ];\n})",
+      "toolType": "code",
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "status": "live",
+      "isFromKG": false,
+      "branch": {
+        "id": null,
+        "sourceId": null,
+        "sourceVersion": null,
+        "discardedByConflictResolution": false
+      },
+      "sanity": {
+        "apiResponse": []
+      },
+      "createdAt": "2026-09-11T15:29:10.385Z",
+      "updatedAt": "2026-09-11T16:20:16.758Z",
+      "__v": 1,
+      "outputExample": {},
+      "sampleRequest": {},
+      "agents": [
+        {
+          "_id": "6aa374ef10cb7243bb13e6ab",
+          "name": "Grievance Handling"
+        }
+      ],
+      "agentCount": 1
+    },
+    "arguments": {
+      "name": "submitSelfAppealForGrievance",
+      "args": [],
+      "isAdvanced": true,
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"originalRecHeadCode\": {\n      \"type\": \"string\",\n      \"description\": \"The recHeadCode of the grievance being appealed, taken from a getMyGrievanceHistory (or getMyGrievanceHistoryFullDetails) result. Do not ask the user for this - resolve the grievance by name/date first if needed.\"\n    },\n    \"originalEmpNumber\": {\n      \"type\": \"string\",\n      \"description\": \"The (encrypted) empNumber of the grievance being appealed, taken from the same getMyGrievanceHistory result as originalRecHeadCode. Do not ask the user for this.\"\n    },\n    \"originalTempHeadCode\": {\n      \"type\": \"string\",\n      \"description\": \"The tempHeadCode of the grievance being appealed, taken from the same getMyGrievanceHistory result as originalRecHeadCode. Do not ask the user for this.\"\n    },\n    \"comment\": {\n      \"type\": \"string\",\n      \"description\": \"The employee's comment/reason for appealing this grievance. Required - always ask the user for this before submitting.\"\n    },\n    \"hideIdentity\": {\n      \"type\": \"boolean\",\n      \"description\": \"Set true if the user wants to appeal anonymously, hiding their identity from the channel members handling it. Optional, defaults to false.\"\n    },\n    \"bypassChannelMembers\": {\n      \"type\": \"array\",\n      \"items\": { \"type\": \"string\" },\n      \"description\": \"Names (or employee numbers) of assigned channel members the user wants to bypass/skip for this appeal, matched against the channel member list this tool previews. Optional - omit to keep every channel member in the escalation chain.\"\n    },\n    \"confirmed\": {\n      \"type\": \"boolean\",\n      \"description\": \"Set true only after the user has seen the preview this tool returns (channel members and any bypassed ones, comment, hide-identity) and has explicitly agreed to submit. Omit or set false to preview without submitting anything - this is the default and safe to call repeatedly while the user is still deciding.\"\n    }\n  },\n  \"required\": [\"originalRecHeadCode\", \"originalEmpNumber\", \"originalTempHeadCode\", \"comment\"]\n}\n",
+      "_id": "6aa42a4022663e78a5da373e"
+    },
+    "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})\n",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (\n    !BeaconBar.user?.metaData?.menus?.some(menu =>\n      menu.includes(\"GrievanceV9/GrievanceHistorySummary\")\n    )\n  ) {\n    return { error: true, message: \"You do not have access to view grievance history. Please contact HR Admin.\" };\n  }\n\n  async function readJson(response, label) {\n    const text = await response.text();\n    try {\n      return { data: JSON.parse(text) };\n    } catch (e) {\n      return { error: `${label} did not return JSON (HTTP ${response.status}). First 300 chars of response: ${text.slice(0, 300)}` };\n    }\n  }\n\n  if (!args.originalRecHeadCode) return \"Error: originalRecHeadCode is required - the recHeadCode of the grievance being appealed, from getMyGrievanceHistory.\";\n  if (!args.originalEmpNumber) return \"Error: originalEmpNumber is required - the empNumber of that grievance, from the same getMyGrievanceHistory result.\";\n  if (!args.originalTempHeadCode) return \"Error: originalTempHeadCode is required - the tempHeadCode of that grievance, from the same getMyGrievanceHistory result.\";\n  if (!args.comment) return \"Error: comment is required - the employee's comment/reason for appealing this grievance.\";\n\n  const jsonHeaders = new Headers();\n  jsonHeaders.append(\"accept\", \"application/json, text/plain, */*\");\n  jsonHeaders.append(\"content-type\", \"application/json;charset=UTF-8\");\n\n  const indexParams = `oriHeadCode=${args.originalRecHeadCode}&oriEmpNumber=${encodeURIComponent(args.originalEmpNumber)}`;\n  const digestKey = await BeaconBar.executeFunction(\"getDigest\")(indexParams);\n  const indexRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/AppealGrievance/Index?${indexParams}&digest=${digestKey.digest}`, {\n    method: \"GET\",\n    headers: { \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\" },\n    redirect: \"follow\"\n  });\n  const indexHtml = await indexRes.text();\n  const doc = new DOMParser().parseFromString(indexHtml, \"text/html\");\n  const newRecHeadCode = doc.querySelector(\"#hdnRecHeadCode\")?.value;\n\n  if (!newRecHeadCode) {\n    return `Could not read a new appeal recHeadCode from the Appeal page load (HTTP ${indexRes.status}). AppealGrievance/Index's markup may differ from RecordGrievance/Index's #hdnRecHeadCode field - this needs a real capture of that page's response to confirm. First 300 chars of response: ${indexHtml.slice(0, 300)}`;\n  }\n\n  const recHeadCode = `${newRecHeadCode}-${args.originalRecHeadCode}-${args.originalRecHeadCode}`;\n\n  const channelRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/Common/GetTemplateChannelDetails`, {\n    method: \"POST\",\n    headers: jsonHeaders,\n    body: JSON.stringify({\n      tempCode: args.originalTempHeadCode,\n      recHeadCode: args.originalRecHeadCode,\n      pageName: \"Appeal\",\n      grievanceEmpNumber: args.originalEmpNumber\n    }),\n    redirect: \"follow\"\n  });\n  const channelResult = await readJson(channelRes, \"GetTemplateChannelDetails\");\n  if (channelResult.error) return channelResult.error;\n  const channelMembers = channelResult.data;\n\n  const bypassWanted = (args.bypassChannelMembers || []).map(n => String(n).toLowerCase());\n  (channelMembers || []).forEach(m => {\n    const name = (m.empDisplayName || \"\").trim().toLowerCase();\n    const shouldBypass = bypassWanted.some(w => name === w || name.includes(w) || m.empDisplayNumber === w);\n    if (shouldBypass) {\n      m.status_old = m.status;\n      m.statusCSS_old = m.statusCSS;\n      m.status = \"Bypassed\";\n      m.statusCSS = \"label label-bypassed\";\n      m.chkstatus = 1;\n    }\n  });\n\n  const previewChannelMembers = (channelMembers || []).map(m => ({\n    empDisplayName: (m.empDisplayName || \"\").trim(),\n    designation: m.designation,\n    priorityOrder: m.tempPriorityOrder,\n    status: m.status\n  }));\n\n  if (!args.confirmed) {\n    return {\n      preview: true,\n      message: \"Review this appeal with the user before submitting. Call this tool again with confirmed:true (and the same arguments) once they agree.\",\n      originalRecHeadCode: args.originalRecHeadCode,\n      comment: args.comment,\n      hideIdentity: !!args.hideIdentity,\n      channelMembers: previewChannelMembers\n    };\n  }\n\n  // appealrefcode: \"1\" is the exact literal value seen in the one captured Submit call.\n  // It may actually need to be the sequential appeal-attempt number (getMyAppealHistory\n  // exposes attemptsUsed for an existing appeal) rather than always \"1\" - kept as the\n  // captured value rather than guessing a formula with no second example to check it against.\n  const submitRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/AppealGrievance/Submit`, {\n    method: \"POST\",\n    headers: jsonHeaders,\n    body: JSON.stringify({\n      recModel: {\n        recHeadCode: recHeadCode,\n        tempCode: args.originalTempHeadCode,\n        recDesc: args.comment,\n        recSummary: \"\",\n        recHideIdentity: !!args.hideIdentity,\n        createdEmpNumber: args.originalEmpNumber,\n        appealrefcode: \"1\",\n        channelmems: channelMembers\n      }\n    }),\n    redirect: \"follow\"\n  });\n\n  // Submit does not return JSON - confirmed by the capture: a successful call returns the\n  // plain text OK (HTTP 200), same as GrievanceV9/RecordGrievance/Submit.\n  const submitText = (await submitRes.text()).trim().replace(/^['\"]|['\"]$/g, \"\");\n  if (!submitRes.ok || submitText.toLowerCase() !== \"ok\") {\n    return `Appeal submission did not succeed (HTTP ${submitRes.status}): ${submitText || \"(empty response)\"}`;\n  }\n\n  return {\n    submitted: true,\n    originalRecHeadCode: args.originalRecHeadCode,\n    comment: args.comment,\n    hideIdentity: !!args.hideIdentity,\n    channelMembers: previewChannelMembers\n  };\n})\n",
+    "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: '',\n      title: '',\n      subTitle: '',\n      icon: ''\n    }\n  ];\n})",
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
+  }
+}

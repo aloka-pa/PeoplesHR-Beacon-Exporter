@@ -1,0 +1,37 @@
+# submitSelfAppealForGrievance
+
+**Task:** Submit an Appeal for an Existing Grievance
+
+**Tags:** Grievance, Aloka, phase3
+
+**Status:** live
+
+## Description
+
+Submits an appeal for a grievance the employee has already submitted. originalRecHeadCode, originalEmpNumber, and originalTempHeadCode must come from a prior getMyGrievanceHistory result - never ask the user for these. comment is required and must always be asked of the user. The tool always previews first (channel members and any requested bypasses, comment, hide-identity) and only actually submits when called again with confirmed:true. DRAFT: the new appeal recHeadCode bootstrap and GetTemplateChannelDetails pageName are best-guess extrapolations from submitMyGrievanceApplication, not yet independently confirmed - see description.md.
+
+## Signature
+
+```
+submitSelfAppealForGrievance
+```
+
+## Arguments
+
+_None._
+
+
+## Advanced arguments
+
+- `originalRecHeadCode` (string, required) — The recHeadCode of the grievance being appealed, taken from a getMyGrievanceHistory (or getMyGrievanceHistoryFullDetails) result. Do not ask the user for this - resolve the grievance by name/date first if needed.
+- `originalEmpNumber` (string, required) — The (encrypted) empNumber of the grievance being appealed, taken from the same getMyGrievanceHistory result as originalRecHeadCode. Do not ask the user for this.
+- `originalTempHeadCode` (string, required) — The tempHeadCode of the grievance being appealed, taken from the same getMyGrievanceHistory result as originalRecHeadCode. Do not ask the user for this.
+- `comment` (string, required) — The employee's comment/reason for appealing this grievance. Required - always ask the user for this before submitting.
+- `hideIdentity` (boolean, optional) — Set true if the user wants to appeal anonymously, hiding their identity from the channel members handling it. Optional, defaults to false.
+- `bypassChannelMembers` (array, optional) — Names (or employee numbers) of assigned channel members the user wants to bypass/skip for this appeal, matched against the channel member list this tool previews. Optional - omit to keep every channel member in the escalation chain.
+- `confirmed` (boolean, optional) — Set true only after the user has seen the preview this tool returns (channel members and any bypassed ones, comment, hide-identity) and has explicitly agreed to submit. Omit or set false to preview without submitting anything - this is the default and safe to call repeatedly while the user is still deciding.
+
+
+## Assigned agents
+
+- Grievance Handling (`6aa374ef10cb7243bb13e6ab`)

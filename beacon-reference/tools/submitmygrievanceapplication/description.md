@@ -1,0 +1,38 @@
+# submitMyGrievanceApplication
+
+**Task:** Submit a New Self-Grievance Application
+
+**Tags:** Grievance, Aloka, phase3
+
+**Status:** live
+
+## Description
+
+Submits a new grievance on behalf of the signed-in employee. ground, summary and mood are the only required fields. The tool always previews first (ground, resolved template, its channel members with any requested bypasses applied, summary, description, hide-identity) and only actually submits when called again with confirmed:true.
+
+## Signature
+
+```
+submitMyGrievanceApplication
+```
+
+## Arguments
+
+_None._
+
+
+## Advanced arguments
+
+- `ground` (string, optional) — The grievance ground/category, exactly as the user names it (e.g. 'Workload'). Do not ask the user for a code - the tool resolves the name against Beacon's live grounds list (GetGrievanceSources). Required to actually submit, but if you don't already know a valid ground name, or the user asks what grounds exist, call this tool with ground omitted anyway - it returns the real available list instead of an error, faster than asking the user to guess. Never invent generic examples like 'Workload, Harassment, Pay' - this org's actual configured grounds may look nothing like typical HR categories.
+- `summary` (string, optional) — A short summary of the grievance. Required to actually submit, but omit it (along with ground) if you're only trying to discover the available grounds - the tool checks ground first and returns the list before ever needing summary.
+- `description` (string, optional) — The full description/details of the grievance. Optional.
+- `templateName` (string, optional) — The grievance template to submit under, as the user names it. Optional - if only one template is available for this employee it is used automatically; if several are available and none is given, the tool lists them and asks the user to pick one.
+- `hideIdentity` (boolean, optional) — Set true if the user wants to submit anonymously, hiding their identity from the channel members who will handle it. Optional, defaults to false.
+- `moodRating` (integer, optional) — The employee's current mood/emoji rating, 1 (very unhappy) to 5 (very happy). Required to actually submit - Beacon's own client-side validation refuses a submission without it ('Please specify the Current Mood.'). Always ask the user for this before calling with confirmed:true. Not schema-required here so it never blocks a ground-discovery call. The 1-5 range is inferred from emoji rating values seen on existing grievance records (2, 3, 5) - the exact emoji meanings weren't directly observed on the submission screen, so confirm against the live UI before relying on it.
+- `bypassChannelMembers` (array, optional) — Names (or employee numbers) of assigned channel members the user wants to bypass/skip for this grievance, matched against the chosen template's channel member list. Optional - omit to keep every channel member in the escalation chain. Show the user the full channel member list (from this tool's preview response) before they ask to bypass anyone.
+- `confirmed` (boolean, optional) — Set true only after the user has seen the preview this tool returns (ground, template, channel members and any bypassed ones, summary, description, hide-identity, mood) and has explicitly agreed to submit. Omit or set false to preview without submitting anything - this is the default and safe to call repeatedly while the user is still deciding.
+
+
+## Assigned agents
+
+- Grievance Handling (`6aa374ef10cb7243bb13e6ab`)

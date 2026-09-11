@@ -1,0 +1,92 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "originalRecHeadCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The recHeadCode of the grievance being appealed, taken from a getMyGrievanceHistory (or getMyGrievanceHistoryFullDetails) result. Do not ask the user for this - resolve the grievance by name/date first if needed.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The recHeadCode of the grievance being appealed, taken from a getMyGrievanceHistory (or getMyGrievanceHistoryFullDetails) result. Do not ask the user for this - resolve the grievance by name/date first if needed."
+      }
+    },
+    {
+      "name": "originalEmpNumber",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The (encrypted) empNumber of the grievance being appealed, taken from the same getMyGrievanceHistory result as originalRecHeadCode. Do not ask the user for this.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The (encrypted) empNumber of the grievance being appealed, taken from the same getMyGrievanceHistory result as originalRecHeadCode. Do not ask the user for this."
+      }
+    },
+    {
+      "name": "originalTempHeadCode",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The tempHeadCode of the grievance being appealed, taken from the same getMyGrievanceHistory result as originalRecHeadCode. Do not ask the user for this.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The tempHeadCode of the grievance being appealed, taken from the same getMyGrievanceHistory result as originalRecHeadCode. Do not ask the user for this."
+      }
+    },
+    {
+      "name": "comment",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The employee's comment/reason for appealing this grievance. Required - always ask the user for this before submitting.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The employee's comment/reason for appealing this grievance. Required - always ask the user for this before submitting."
+      }
+    },
+    {
+      "name": "hideIdentity",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set true if the user wants to appeal anonymously, hiding their identity from the channel members handling it. Optional, defaults to false.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Set true if the user wants to appeal anonymously, hiding their identity from the channel members handling it. Optional, defaults to false."
+      }
+    },
+    {
+      "name": "bypassChannelMembers",
+      "type": "array",
+      "required": false,
+      "defaultValue": null,
+      "description": "Names (or employee numbers) of assigned channel members the user wants to bypass/skip for this appeal, matched against the channel member list this tool previews. Optional - omit to keep every channel member in the escalation chain.",
+      "advanced": true,
+      "raw": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Names (or employee numbers) of assigned channel members the user wants to bypass/skip for this appeal, matched against the channel member list this tool previews. Optional - omit to keep every channel member in the escalation chain."
+      }
+    },
+    {
+      "name": "confirmed",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set true only after the user has seen the preview this tool returns (channel members and any bypassed ones, comment, hide-identity) and has explicitly agreed to submit. Omit or set false to preview without submitting anything - this is the default and safe to call repeatedly while the user is still deciding.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Set true only after the user has seen the preview this tool returns (channel members and any bypassed ones, comment, hide-identity) and has explicitly agreed to submit. Omit or set false to preview without submitting anything - this is the default and safe to call repeatedly while the user is still deciding."
+      }
+    }
+  ]
+}

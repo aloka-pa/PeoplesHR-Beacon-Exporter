@@ -1,0 +1,153 @@
+{
+  "id": "6aa374ef10cb7243bb13e6ab",
+  "slug": "grievance-handling",
+  "name": "Grievance Handling",
+  "description": "Grievance Handling",
+  "exportedAt": "2026-09-11T17:45:18.332Z",
+  "raw": {
+    "_id": "6aa374ef10cb7243bb13e6ab",
+    "orgId": "690d9674c55784cc895ca691",
+    "name": "Grievance Handling",
+    "description": "Grievance Handling",
+    "by": "27739",
+    "prompt": "Scenarios:-\n\"You are an AI assistant helping users manage their own grievances using the tools provided.\n\nScenario: This agent covers only the signed-in employee's own grievances, via: getMyGrievanceHistory (history), getMyAppealHistory (appeal history), getMyGrievanceHistoryFullDetails (details), submitMyGrievanceApplication (submit new), submitSelfAppealForGrievance (appeal existing). It cannot handle/action grievances or view others' grievances. If asked, respond \"I do not have access to that. Please use the Grievance Handling screen directly, or contact HR Admin.\"\n\nScenario: For \"my grievances\"/\"grievance history\" with or without filters, call getMyGrievanceHistory. Filtering is optional - call it even with no arguments. fromDate/toDate must be \"DD/Mon/YYYY\" (e.g. \"11/Sep/2026\"), NOT the D/M/YYYY format used elsewhere - convert yourself, do not use the \"dateFormat\" tool here.\n\nScenario: For \"what grievances have I appealed\"/\"appeal history\", call getMyAppealHistory - defaults to 1st Jan of the current year through today if no dates given. Same \"DD/Mon/YYYY\" format.\n\nScenario: \"Which grievances can I appeal\"/\"can I submit an appeal\" is different from appeal history - call getMyGrievanceHistory with appealableOnly:true instead. Never guess eligibility; only report what this filter returns.\n\nScenario: For \"more details\"/\"status\"/\"feedback\" on a specific grievance or appeal, call getMyGrievanceHistoryFullDetails. Its recHeadCode, tempHeadCode, and empNumber must come from a prior getMyGrievanceHistory or getMyAppealHistory result - never ask the user for or display these.\n\nScenario: If the user names a grievance or appeal instead of picking from a list, call getMyGrievanceHistory/getMyAppealHistory first, match their wording against each result's name/comment fields. If none or multiple match, list candidates and ask.\n\nScenario: To submit a new grievance, call submitMyGrievanceApplication. ground, summary, and moodRating (1-5 current mood) are all needed but not schema-required - if you don't know a valid ground, or the user asks what grounds exist, call it with ground omitted to get the real list; never invent generic examples like \"Workload, Harassment, Pay\". Always ask the user for their mood before confirmed:true. To appeal one, call submitSelfAppealForGrievance - its originalRecHeadCode/originalEmpNumber/originalTempHeadCode must come from a prior getMyGrievanceHistory result (never ask the user), and comment is always required from the user too.\n\nScenario: Both submission tools preview first (channel members/bypasses, comment/summary, hide-identity) and only submit with confirmed:true, after they agree. To bypass a channel member, the user must name them from that preview list.\n\nScenario: Never surface recHeadCode, tempHeadCode, empNumber, or any internal/encrypted identifier to the user - use human-readable fields only (name, comment, date, status, ground, channel members, feedback; appeals also show original grievance + attempts used).\"",
+    "notes": [],
+    "llmConfig": [],
+    "maxTokens": "[REDACTED]",
+    "status": "live",
+    "toolIds": [
+      "6aa3deb8ae3620512a38172e",
+      "6aa3e3bb327210fa8e297d67",
+      "6aa410c22c95f145270e3bc3",
+      "6aa41b144568dadea3305d7b",
+      "6aa41e46824909881cc8416d",
+      "6aa4282725179d849b92c8e3"
+    ],
+    "scenarioIds": [],
+    "skillIds": [],
+    "knowledgeGraphs": [],
+    "knowledgeGraphsV2": [],
+    "defaultAgents": {
+      "analyticsAgent": false,
+      "documentCanvas": false,
+      "etlAgent": false,
+      "domAgent": false,
+      "canvasComponent": {
+        "type": null,
+        "entityId": null
+      }
+    },
+    "analyticsPrompt": "",
+    "domAgent": {
+      "prompt": "",
+      "llmConfig": []
+    },
+    "cache": {
+      "enabled": false
+    },
+    "metaReasoning": false,
+    "toon": {
+      "enabled": false
+    },
+    "contextCompaction": {
+      "enabled": false,
+      "lastNInteractions": 5,
+      "windowSize": 20,
+      "tokenLimitSize": "[REDACTED]",
+      "summarization": false,
+      "prompt": "",
+      "llmConfig": [],
+      "batchSize": 5
+    },
+    "subTasks": {
+      "enabled": false
+    },
+    "todoList": {
+      "enabled": false
+    },
+    "userInput": {
+      "enabled": false
+    },
+    "schematicLoading": {
+      "enabled": false,
+      "tools": [],
+      "agents": [],
+      "connectors": [],
+      "connectorTools": [],
+      "topK": null
+    },
+    "agents": [],
+    "connectors": [],
+    "howTo": {
+      "enabled": false,
+      "description": "",
+      "taskName": "",
+      "rules": {
+        "ids": [],
+        "condition": "and"
+      },
+      "signature": {
+        "name": "callKnowledgeBase",
+        "args": [
+          {
+            "name": "query",
+            "type": "string",
+            "description": "The query to be executed by the agent",
+            "required": true,
+            "_id": "6aa374ef10cb7243bb13e6ad"
+          }
+        ],
+        "isAdvanced": false,
+        "advancedArgs": "",
+        "_id": "6aa43502b2215bd645c01b57"
+      },
+      "subTasks": {
+        "enabled": false,
+        "mandatory": false
+      },
+      "target": {
+        "entityValue": "none",
+        "shardKey1": "",
+        "shardKey2": "",
+        "shardKey3": ""
+      }
+    },
+    "vis": false,
+    "piiConfig": {
+      "piiEnabled": false,
+      "predefinedEntities": [
+        {
+          "name": "PERSON",
+          "enabled": false
+        },
+        {
+          "name": "LOCATION",
+          "enabled": false
+        },
+        {
+          "name": "DATE_TIME",
+          "enabled": false
+        },
+        {
+          "name": "EMAIL_ADDRESS",
+          "enabled": false
+        },
+        {
+          "name": "PHONE_NUMBER",
+          "enabled": false
+        }
+      ],
+      "customEntities": []
+    },
+    "connectorTools": [],
+    "branch": {
+      "id": null,
+      "sourceId": null,
+      "sourceVersion": null,
+      "discardedByConflictResolution": false
+    },
+    "createdAt": "2026-09-11T03:26:39.366Z",
+    "updatedAt": "2026-09-11T17:06:10.763Z",
+    "__v": 12
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "fromDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Start of the date range to fetch appeal history for, formatted \"DD/Mon/YYYY\" with a 3-letter month name, e.g. \"01/Jan/2026\" - same non-standard format as getMyGrievanceHistory, NOT the usual D/M/YYYY format used elsewhere. Optional - omit to default to 1st January of the current year.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Start of the date range to fetch appeal history for, formatted \"DD/Mon/YYYY\" with a 3-letter month name, e.g. \"01/Jan/2026\" - same non-standard format as getMyGrievanceHistory, NOT the usual D/M/YYYY format used elsewhere. Optional - omit to default to 1st January of the current year."
+      }
+    },
+    {
+      "name": "toDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "End of the date range, same \"DD/Mon/YYYY\" format, e.g. \"11/Sep/2026\". Optional - omit to default to today.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "End of the date range, same \"DD/Mon/YYYY\" format, e.g. \"11/Sep/2026\". Optional - omit to default to today."
+      }
+    },
+    {
+      "name": "ground",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The grievance ground/category to filter by, exactly as the user names it (e.g. \"Workload\"). Do not ask the user for a code - the tool resolves the name against Beacon's live grounds list itself. Omit to include all grounds.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The grievance ground/category to filter by, exactly as the user names it (e.g. \"Workload\"). Do not ask the user for a code - the tool resolves the name against Beacon's live grounds list itself. Omit to include all grounds."
+      }
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Filter by appeal status: \"Pending\" (not yet completed) or \"Resolved\" (completed). There is no \"Appealed\" option here since every record from this tool is already an appeal. Omit to include all statuses.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "enum": [
+          "Pending",
+          "Resolved"
+        ],
+        "description": "Filter by appeal status: \"Pending\" (not yet completed) or \"Resolved\" (completed). There is no \"Appealed\" option here since every record from this tool is already an appeal. Omit to include all statuses."
+      }
+    }
+  ]
+}
