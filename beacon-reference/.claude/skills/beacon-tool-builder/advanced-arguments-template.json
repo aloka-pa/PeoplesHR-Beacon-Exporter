@@ -1,0 +1,63 @@
+{
+  "type": "object",
+  "properties": {
+    "leaveTypeCode": {
+      "type": "string",
+      "description": "To get the leave type code, use 'selfEmployeeLeaveBalance' API. User provides leave type name and corresponding leave type code will be retrieved. Example: '000001'. Do not ask the user for leave type code directly."
+    },
+    "leaveGroupCode": {
+      "type": "string",
+      "description": "To get the leave group code, use 'selfEmployeeLeaveBalance' API. Example: '000001'. Do not ask the user for group code directly."
+    },
+    "fromDate": {
+      "type": "string",
+      "description": "User provides the leave from date."
+    },
+    "toDate": {
+      "type": "string",
+      "description": "User provides the leave to date."
+    },
+    "coveringEmployeeCode": {
+      "type": "string",
+      "description": "Optional field, call 'getEmpDetails' tool to get the empNumber. Do not take the employeeDisplayNumber. Important only take the empNumber."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Do not ask for comment upfront.Submit first.If SaveLeaveApplication API returns 'Please specify the Comment',then ask the user for comment and retry."
+    },
+    "leaveReason": {
+      "type": "string",
+      "description": "Can be optional or required depending on the leave application configuration. Used when the Leave Application page has a Reason for Leave / Leave Classification dropdown. The user provides the displayed reason/classification name, such as 'Childbirth', 'Personal commitments', or 'Urgent family matters'. The transformer will internally map this displayed name to the corresponding ReasonCode from the page model ReasonList. Do not ask for this field unless the dropdown is mandatory or the SaveLeaveApplication API returns a validation message requiring a reason/classification."
+    },
+    "year": {
+      "type": "integer",
+      "description": "User provides the year. Example: 2025, 2024, etc."
+    },
+    "dayModes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+            "description": "Individual leave date within the from and to date range. Example: '2025-09-23T00:00:00' - must be in ISO date format 'YYYY-MM-DDTHH:mm:ss'."
+          },
+          "dayMode": {
+            "type": "number",
+            "enum": [0, 1, 2, 7],
+            "description": "user ask available day modes front disply name corresponding values selected corresponding day mode ids will be take other then no need default values will be take ask user evry day day modes,Day mode based on user's leave mode selection: 'Whole Day' = 2, 'First Half' = 1, 'Second Half' = 0, 'Off Day' = 7. User selects leave mode name and corresponding numeric value will be used. Display the mode names to user, not the numeric values."
+          },
+          "dayValue": {
+            "type": "number",
+            "enum": [1, 0.5, 0.0],
+            "description": "user ask available day modes front disply name corresponding values selected corresponding day mode value will be take other then no need default values will be take ask user evry day day modes,Day mode based on user's leave mode selection: 'Whole Day' = 1, 'First Half' = 0.5, 'Second Half' = 0.5, 'Off Day' = 0.0. User selects leave mode name and corresponding numeric value will be used. Display the mode names to user, not the numeric values."
+          }
+        },
+        "required": ["date", "dayMode", "dayValue"]
+      },
+      "description": "Array containing each individual leave date and its corresponding day mode. Based on the from and to date range, the system will generate all dates in between and ask the user to specify the day mode for each date. For example, if user applies for 3-day leave, there will be 3 items in this array - each with a specific date and its day mode selection."
+    }
+  },
+  "required": ["leaveTypeCode", "leaveGroupCode", "fromDate", "toDate", "year", "dayModes"]
+}

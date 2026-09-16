@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -n \"0eb78d7\" \"/c/Users/aloka.pa/AppData/Local/Temp/claude/c--Github-aloka-pa-Beacon-Tranformers-beacon-exporter-beacon-reference/dd322a8b-bc44-4b6e-9ac2-4c309974449c/scratchpad/msg-filter.sh\")",
+      "Read(//c/Users/aloka.pa/AppData/Local/Temp/claude/c--Github-aloka-pa-Beacon-Tranformers-beacon-exporter-beacon-reference/dd322a8b-bc44-4b6e-9ac2-4c309974449c/scratchpad/**)",
+      "Bash(node -e ' *)",
+      "Bash(node -e \"const t = require\\('./tool.json'\\); console.log\\('OK', t.name, t.raw.basic.signature.args\\);\")",
+      "Bash(node --check fetcher.js)",
+      "Bash(node --check source.js)",
+      "Bash(node --check \"drafts/getselfemployeeconfirmedtrainings/transformer.js\")",
+      "Bash(node --check \"drafts/selfemployeeparticipationconfirmation/transformer.js\")",
+      "Bash(mkdir -p /c/Users/aloka.pa/AppData/Local/Temp/claude/scratch_verify)",
+      "Bash(node -e \"const t = require\\('./tool.json'\\); console.log\\('OK', t.name, JSON.stringify\\(t.raw.basic.signature.args\\)\\);\")",
+      "Bash(node -e \"const t = require\\('./tool.json'\\); console.log\\('OK', t.name\\); console.log\\('isAdvanced:', t.raw.basic.signature.isAdvanced\\); console.log\\('advancedArgs parses:', !!JSON.parse\\(t.raw.basic.signature.advancedArgs\\)\\);\")",
+      "Bash(awk '{print $6, $7, $NF}')",
+      "Bash(node --check drafts/selfemployeeparticipationconfirmation/transformer.js)",
+      "Bash(node -e \"const t = require\\('./tool.json'\\); console.log\\('OK', t.name\\); console.log\\(JSON.parse\\(t.raw.basic.signature.advancedArgs\\).required\\);\")",
+      "Bash(node -e \"require\\('./drafts/selfemployeeparticipationconfirmation/tool.json'\\); console.log\\('tool.json OK'\\)\")",
+      "Bash(node -e \"const a = JSON.parse\\(require\\('fs'\\).readFileSync\\('./drafts/selfemployeeparticipationconfirmation/arguments.json','utf8'\\)\\); console.log\\('arguments.json OK, required=', a.required, 'properties=', Object.keys\\(a.properties\\)\\)\")",
+      "Bash(node --check drafts/getselfemployeeparticipationconfirmation/transformer.js)",
+      "Bash(node -e \"const t = require\\('./tool.json'\\); console.log\\('OK', t.name, t.raw.basic.signature.args.length\\)\")",
+      "Bash(node -e \"require\\('./drafts/getselfemployeeparticipationconfirmation/tool.json'\\); console.log\\('tool.json OK'\\)\")",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('./drafts/getselfemployeeparticipationconfirmation/arguments.json','utf8'\\)\\); console.log\\('arguments.json OK'\\)\")",
+      "Bash(node --check drafts/getselfemployeetraineeevaluations/transformer.js)",
+      "Bash(node --check drafts/getselfemployeetrainercourseevaluations/transformer.js)"
+    ]
+  }
+}
