@@ -15,6 +15,10 @@
   "updatedAt": "2026-01-23T06:20:15.633Z",
   "assignedAgents": [
     {
+      "id": "690dc571931a2d61ba0b1be9",
+      "name": "BenefitManagement"
+    },
+    {
       "id": "690dc572931a2d61ba0b1c72",
       "name": "AbsenceManagementEmployee"
     },
@@ -35,16 +39,12 @@
       "name": "PayRoll"
     },
     {
-      "id": "690dc571931a2d61ba0b1be9",
-      "name": "BenefitManagement"
-    },
-    {
       "id": "690dc571931a2d61ba0b1bef",
       "name": "Recruitment"
     }
   ],
-  "contentHash": "87dfc321493a1a8f4d80112a1eb71cf21d44a359a864b7f29de6d2dcd0683631",
-  "lastExportedAt": "2026-09-10T09:08:51.198Z",
+  "contentHash": "abf20c95774650152e72aa7f0803e9b6528c5180a91b5581c4d57ddbe5d1cd97",
+  "lastExportedAt": "2026-09-16T16:16:15.724Z",
   "raw": {
     "basic": {
       "_id": "690dc568931a2d61ba0b1869",
@@ -79,6 +79,10 @@
       "sampleRequest": {},
       "agents": [
         {
+          "_id": "690dc571931a2d61ba0b1be9",
+          "name": "BenefitManagement"
+        },
+        {
           "_id": "690dc572931a2d61ba0b1c72",
           "name": "AbsenceManagementEmployee"
         },
@@ -97,10 +101,6 @@
         {
           "_id": "690dc572931a2d61ba0b1c51",
           "name": "PayRoll"
-        },
-        {
-          "_id": "690dc571931a2d61ba0b1be9",
-          "name": "BenefitManagement"
         },
         {
           "_id": "690dc571931a2d61ba0b1bef",
