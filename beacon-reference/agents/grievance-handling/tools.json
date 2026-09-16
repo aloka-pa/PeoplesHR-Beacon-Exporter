@@ -1,13 +1,13 @@
 [
   {
-    "toolId": "6aa4282725179d849b92c8e3",
-    "toolName": "submitMyGrievanceApplication",
-    "path": "tools/submitmygrievanceapplication"
-  },
-  {
     "toolId": "6aa41e46824909881cc8416d",
     "toolName": "submitSelfAppealForGrievance",
     "path": "tools/submitselfappealforgrievance"
+  },
+  {
+    "toolId": "6aa4282725179d849b92c8e3",
+    "toolName": "submitMyGrievanceApplication",
+    "path": "tools/submitmygrievanceapplication"
   },
   {
     "toolId": "6aa41b144568dadea3305d7b",
