@@ -1,13 +1,8 @@
 {
   "sampleRequest": {
     "employees": [
-      "000007"
-    ],
-    "newNeedName": "aloka beacon",
-    "objective": "Verify the admin org-wide training need application path works end-to-end.",
-    "relevanceToJob": "Directly relevant to validating this integration.",
-    "benefitToEmployee": "Confirms the flow works for the employee.",
-    "benefitToCompany": "Ensures the Training & Development agent can submit need applications company-wide as Admin."
+      "dinethya"
+    ]
   },
   "sanity": {
     "apiResponse": []

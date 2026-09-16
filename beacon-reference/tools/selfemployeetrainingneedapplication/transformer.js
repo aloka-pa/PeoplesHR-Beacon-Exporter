@@ -17,22 +17,10 @@
     const newNeedDescription = args.newNeedDescription ? String(args.newNeedDescription).trim() : "";
     const objective = args.objective ? String(args.objective).trim() : "";
     const goalTitle = args.goalTitle ? String(args.goalTitle).trim() : "";
+    const enableGoalObjectives = args.enableGoalObjectives === true || String(args.enableGoalObjectives).toLowerCase() === "true";
     const relevanceToJob = args.relevanceToJob ? String(args.relevanceToJob).trim() : "";
     const benefitToEmployee = args.benefitToEmployee ? String(args.benefitToEmployee).trim() : "";
     const benefitToCompany = args.benefitToCompany ? String(args.benefitToCompany).trim() : "";
-
-    if (!existingNeedName && !newNeedName) {
-      return {
-        status: "VALIDATION_ERROR",
-        message: "Provide either existingNeedName (to attach this application to an existing training need - see getSelfTrainingNeeds) or newNeedName (to submit a brand new one), not neither."
-      };
-    }
-    if (existingNeedName && newNeedName) {
-      return {
-        status: "VALIDATION_ERROR",
-        message: "Provide either existingNeedName or newNeedName, not both - the real form's Training Need Type is either 'Existing Need' or 'New Need', never both at once."
-      };
-    }
 
     const headers = new Headers();
     headers.append("Accept", "*/*");
@@ -65,6 +53,43 @@
       return parsed;
     }
 
+    // FEATURE ADD (2026-09-14): mirrors the real form's "Enable Goal Objectives" checkbox,
+    // which loads the employee's ongoing performance goals straight into the Objectives
+    // dropdown (see the screenshot in the request that prompted this) - previously this
+    // tool only ever fetched GetOngoingGoals internally to resolve an already-known
+    // goalTitle by exact match; there was no way for the employee to browse the list
+    // first. When enableGoalObjectives is true and goalTitle hasn't been chosen yet, fetch
+    // and return the list directly - deliberately BEFORE existingNeedName/newNeedName is
+    // required, since picking a goal is independent of picking a need on the real form.
+    // GetOngoingGoals never writes anything, so this is always safe to call standalone.
+    if (enableGoalObjectives && !goalTitle) {
+      const goalsData = await postJson("TNDV9/TrainingNeed/GetOngoingGoals", undefined);
+      const ongoingGoals = (Array.isArray(goalsData) ? goalsData : []).map((g) => ({
+        goalTitle: g.GoalTitle || "",
+        goalCode: g.GoalCode
+      }));
+      return {
+        status: "GOALS_LISTED",
+        message: ongoingGoals.length > 0
+          ? "Here are the employee's ongoing performance goals. Present the titles and ask which one to link as this training need's objective, then call this tool again with goalTitle set to their exact choice (along with existingNeedName/newNeedName and the other required fields)."
+          : "The employee has no ongoing performance goals to link right now - use the objective argument instead for a free-text objective.",
+        ongoingGoals: ongoingGoals
+      };
+    }
+
+    if (!existingNeedName && !newNeedName) {
+      return {
+        status: "VALIDATION_ERROR",
+        message: "Provide either existingNeedName (to attach this application to an existing training need - see getSelfTrainingNeeds) or newNeedName (to submit a brand new one), not neither."
+      };
+    }
+    if (existingNeedName && newNeedName) {
+      return {
+        status: "VALIDATION_ERROR",
+        message: "Provide either existingNeedName or newNeedName, not both - the real form's Training Need Type is either 'Existing Need' or 'New Need', never both at once."
+      };
+    }
+
     // Step 1: fetch the existing-need master list (MainNeed) and the self "subordinate"
     // record (SuborList[0]) - confirmed live: for the Applicant persona, GetTrainingNeedDetails'
     // SuborList contains exactly one entry, the logged-in employee's own record with
@@ -92,7 +117,9 @@
     // (fresh) every time the real "Add" button is pressed on the form, feeding both the
     // goal-picker dropdown (when 'Enable Goal Objectives' is checked) and the ExistingGoals
     // field that's echoed back verbatim in the submission payload regardless of which mode
-    // is used.
+    // is used. Also re-fetched here (not just reused from the standalone listing branch
+    // above) since this call may be reached directly with goalTitle already known, without
+    // ever going through the listing branch first.
     const goalsData = await postJson("TNDV9/TrainingNeed/GetOngoingGoals", undefined);
     const existingGoals = Array.isArray(goalsData) ? goalsData : [];
 
@@ -147,7 +174,7 @@
       if (goalMatches.length === 0) {
         return {
           status: "ERROR",
-          message: `No ongoing goal titled "${args.goalTitle}" was found. Provide the objective argument instead to enter a free-text objective.`
+          message: `No ongoing goal titled "${args.goalTitle}" was found. Call this tool again with enableGoalObjectives: true (and no goalTitle) to see the current list, or provide the objective argument instead for a free-text objective.`
         };
       }
       if (goalMatches.length > 1) {
