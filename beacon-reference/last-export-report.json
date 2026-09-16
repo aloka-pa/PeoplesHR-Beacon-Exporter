@@ -1,16 +1,16 @@
 {
   "agentsDiscovered": 29,
-  "toolsDiscovered": 381,
-  "toolsExported": 5,
-  "toolsSkippedUnchanged": 0,
+  "toolsDiscovered": 383,
+  "toolsExported": 24,
+  "toolsSkippedUnchanged": 359,
   "toolsFailed": [],
   "toolsMissing": [],
   "toolsPruned": [],
-  "functionsDiscovered": 0,
+  "functionsDiscovered": 183,
   "functionsExported": 0,
-  "functionsSkippedUnchanged": 0,
+  "functionsSkippedUnchanged": 183,
   "functionsFailed": [],
   "functionsMissing": [],
   "functionsPruned": [],
-  "generatedAt": "2026-09-11T17:45:23.547Z"
+  "generatedAt": "2026-09-16T16:16:22.671Z"
 }
