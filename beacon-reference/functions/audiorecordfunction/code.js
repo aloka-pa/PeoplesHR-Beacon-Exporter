@@ -1,4 +1,4 @@
-(function () {
+(function (fileName,baseUrl) {
   window.AudioWidget = {
     mediaRecorder: null,
     audioChunks: [],
@@ -12,7 +12,7 @@
     timeLeft: 60,
     onSubmit: null,
     stream: null,
-    fname: '001883',
+    fname: fileName || '001883',
 
     open: function (callback, options) {
       this.reset();
@@ -329,7 +329,7 @@
         var formData = new FormData();
         formData.append('fname', self.fname);
         formData.append('data', wavBlob, 'blob');
-        fetch('https://hrmmainphdev01.phrsandbox.dev/hr/GrievanceV9/RecordGrievance/SaveAudio', {
+        fetch(`${baseUrl}/GrievanceV9/RecordGrievance/SaveAudio`, {
           method: 'POST',
           headers: { 'accept': 'application/json, text/plain, */*' },
           body: formData,
@@ -365,7 +365,7 @@
     function launch() {
       try {
         console.log('[AudioWidget] launching, document.readyState =', document.readyState);
-        AudioWidget.open(null, { fname: '001883' });
+        AudioWidget.open(null, { fname: fileName || '001883' });
       } catch (e) {
         console.error('[AudioWidget] failed to open:', e);
       }
