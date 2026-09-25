@@ -1,15 +1,5 @@
 [
   {
-    "toolId": "6a9e99f7311b3fda8a34b356",
-    "toolName": "getSelfEmployeeTrainingHistory",
-    "path": "tools/getselfemployeetraininghistory"
-  },
-  {
-    "toolId": "6a9fa2565d99ab2de2281eeb",
-    "toolName": "adminEmployeeTrainingNomination",
-    "path": "tools/adminemployeetrainingnomination"
-  },
-  {
     "toolId": "6aa27002dfb18ee14844f2af",
     "toolName": "adminEmployeeTrainingNeedApplication",
     "path": "tools/adminemployeetrainingneedapplication"
@@ -20,14 +10,24 @@
     "path": "tools/supervisorsubordinatetrainingneedapplication"
   },
   {
-    "toolId": "6a9f07df3ec32e9ccba63435",
-    "toolName": "supervisorEmployeeTrainingNomination",
-    "path": "tools/supervisoremployeetrainingnomination"
-  },
-  {
     "toolId": "6aa036df3145f46f07ddf4c3",
     "toolName": "selfEmployeeTrainingNeedApplication",
     "path": "tools/selfemployeetrainingneedapplication"
+  },
+  {
+    "toolId": "6a9e99f7311b3fda8a34b356",
+    "toolName": "getSelfEmployeeTrainingHistory",
+    "path": "tools/getselfemployeetraininghistory"
+  },
+  {
+    "toolId": "6a9fa2565d99ab2de2281eeb",
+    "toolName": "adminEmployeeTrainingNomination",
+    "path": "tools/adminemployeetrainingnomination"
+  },
+  {
+    "toolId": "6a9f07df3ec32e9ccba63435",
+    "toolName": "supervisorEmployeeTrainingNomination",
+    "path": "tools/supervisoremployeetrainingnomination"
   },
   {
     "toolId": "6a9ff76b2ea15b32b729515b",

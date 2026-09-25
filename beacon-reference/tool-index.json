@@ -2,7 +2,7 @@
   {
     "id": "6a82e376462b20b27700e67e",
     "name": "submitSubordinatesManualInAndOut",
-    "shortDescription": "Adds a Manual In and Out for a direct subordinate. To CHANGE a recorded time use editSubordinatesManualInAndOut. Restricted to the manager's own subordinates.",
+    "shortDescription": "Submits a Manual In and Out for a subordinate. Call it AS SOON AS the user asks to submit, add, enter or record manual In and Out, check-in and check-out (checkin/checkout) or attendance FOR SOMEONE …",
     "tags": [
       "Attendance",
       "manual-in-out",
@@ -20,23 +20,28 @@
       "employeeNumber",
       "employeeName",
       "date",
+      "inDate",
       "inTime",
+      "outDate",
       "outTime",
+      "reason",
+      "confirmed",
       "breakInTime",
       "breakOutTime",
-      "reason",
-      "confirmed"
+      "rosterGroup",
+      "rosterCode",
+      "rosterName"
     ],
     "peoplesHrModule": "attendance",
     "path": "tools/submitsubordinatesmanualinandout",
-    "contentHash": "8d9571a5daaa29dbe8729dbbda62f40357cab874afce5adff60ddf3c087384dd",
-    "beaconUpdatedAt": "2026-09-08T14:45:19.528Z",
-    "lastExportedAt": "2026-09-10T09:08:49.974Z"
+    "contentHash": "97f0a53fd57330ced7293ced25cf07a1d1959ef9002796c1f5fc9e155c764058",
+    "beaconUpdatedAt": "2026-09-21T09:15:05.819Z",
+    "lastExportedAt": "2026-09-25T05:55:04.622Z"
   },
   {
     "id": "6a7d652bdf5557a058554c33",
     "name": "submitSelfManualInAndOut",
-    "shortDescription": "Adds a Manual In and Out for the logged-in employee (self). Use it to ADD a missing In or Out time. To CHANGE a recorded time use editSelfManualInAndOut.",
+    "shortDescription": "Edits an existing Manual In and Out of the logged-in employee (self). Call this whenever the user asks to change, correct, update or edit their own manual In and Out / manual attendance / manual time…",
     "tags": [
       "Attendance",
       "manual-in-out",
@@ -52,27 +57,27 @@
     ],
     "argumentNames": [
       "date",
+      "inDate",
+      "inTime",
+      "outDate",
+      "outTime",
+      "reason",
+      "confirmed",
+      "breakInTime",
+      "breakOutTime",
       "dateSelectMode",
       "fromDate",
       "toDate",
       "isGroupByEmployee",
       "rosterGroup",
       "rosterCode",
-      "rosterName",
-      "inDate",
-      "outDate",
-      "inTime",
-      "outTime",
-      "breakInTime",
-      "breakOutTime",
-      "reason",
-      "confirmed"
+      "rosterName"
     ],
     "peoplesHrModule": "attendance",
     "path": "tools/submitselfmanualinandout",
-    "contentHash": "1aab3e37e7d76311ad0f13ffe459c85dfbd032626787ee93a16701819b692e2c",
-    "beaconUpdatedAt": "2026-09-08T14:45:47.261Z",
-    "lastExportedAt": "2026-09-10T09:08:49.968Z"
+    "contentHash": "729bc306ec8676ed163823e1120d5ed9a2840dc29feebbf7b3891e97dc1a0107",
+    "beaconUpdatedAt": "2026-09-21T05:51:23.193Z",
+    "lastExportedAt": "2026-09-25T05:55:04.628Z"
   },
   {
     "id": "6a8fec0523d5d8fe14b0f829",
@@ -119,7 +124,7 @@
   {
     "id": "6a8ee7dd4297aa961cef45dc",
     "name": "editSubordinatesManualInAndOut",
-    "shortDescription": "Edits an existing Manual In and Out of a team member. To ADD a missing In/Out use submitSubordinatesManualInAndOut. Only the manager's own subordinates.",
+    "shortDescription": "Edits an existing Manual In and Out of a team member. Call it AS SOON AS the user asks to change, correct or update a manual In and Out, check-in or check-out (checkin/checkout) time, or attendance F…",
     "tags": [
       "Attendance",
       "edit-manual-in-out",
@@ -136,27 +141,27 @@
       "employeeNumber",
       "employeeName",
       "date",
+      "inDate",
+      "inTime",
+      "outDate",
+      "outTime",
+      "reason",
+      "confirmed",
+      "breakInTime",
+      "breakOutTime",
       "dateSelectMode",
       "fromDate",
       "toDate",
       "isGroupByEmployee",
       "rosterGroup",
       "rosterCode",
-      "rosterName",
-      "inDate",
-      "outDate",
-      "inTime",
-      "outTime",
-      "breakInTime",
-      "breakOutTime",
-      "reason",
-      "confirmed"
+      "rosterName"
     ],
     "peoplesHrModule": "attendance",
     "path": "tools/editsubordinatesmanualinandout",
-    "contentHash": "952626167a08cce09464e17f9e6abc229cc7e225fde695bd80c06e4e94464005",
-    "beaconUpdatedAt": "2026-09-08T14:47:30.044Z",
-    "lastExportedAt": "2026-09-10T09:08:49.943Z"
+    "contentHash": "da3daec0379788a8b352241974beee7e47ddea7e4771a0d8c5e7cd27af6cb6da",
+    "beaconUpdatedAt": "2026-09-21T09:36:40.332Z",
+    "lastExportedAt": "2026-09-25T05:55:04.615Z"
   },
   {
     "id": "6a8ea65237b20ee9436a5da9",
@@ -1000,9 +1005,9 @@
     ],
     "peoplesHrModule": null,
     "path": "tools/getbasecountry",
-    "contentHash": "1e0896bf1156c169611624b932b469edc5e6f2ce621f4d59d25ca52dd8615136",
-    "beaconUpdatedAt": "2026-07-17T12:51:46.182Z",
-    "lastExportedAt": "2026-09-10T09:08:50.261Z"
+    "contentHash": "27f31b59ceb85e5aa3039d08f7b0ea88bf661e65bc159282b777a32257b06699",
+    "beaconUpdatedAt": "2026-09-17T05:38:46.121Z",
+    "lastExportedAt": "2026-09-25T05:55:04.673Z"
   },
   {
     "id": "690dc568931a2d61ba0b17f2",
@@ -1325,12 +1330,12 @@
     ],
     "assignedAgents": [
       {
-        "id": "690dc572931a2d61ba0b1c72",
-        "name": "AbsenceManagementEmployee"
-      },
-      {
         "id": "690dc571931a2d61ba0b1be3",
         "name": "AbsenceManagement"
+      },
+      {
+        "id": "690dc572931a2d61ba0b1c72",
+        "name": "AbsenceManagementEmployee"
       }
     ],
     "argumentNames": [
@@ -1338,9 +1343,9 @@
     ],
     "peoplesHrModule": null,
     "path": "tools/getempdetails",
-    "contentHash": "cc06b2cb4d4d49fee099872d1259123e289856ddf1e087383f88047871ecdabe",
+    "contentHash": "09bb9a9b581a530856e03f88453c0a906b3f8eaf0283053933bba929547b3adc",
     "beaconUpdatedAt": "2026-09-10T10:25:54.074Z",
-    "lastExportedAt": "2026-09-16T16:16:15.709Z"
+    "lastExportedAt": "2026-09-25T05:55:04.679Z"
   },
   {
     "id": "6a326d0f7383f8d7b107b5af",
@@ -1417,9 +1422,9 @@
     ],
     "peoplesHrModule": "leave",
     "path": "tools/selfemployeeleaveapplication",
-    "contentHash": "95fd11ac3132c48ba21029011fdf8b055b622757558be68a74afd34497adc8e3",
-    "beaconUpdatedAt": "2026-09-15T12:27:42.873Z",
-    "lastExportedAt": "2026-09-16T16:16:15.607Z"
+    "contentHash": "e9decdfa398080582eae1303c62341dd07c441fc27dc2863f72618f881fba215",
+    "beaconUpdatedAt": "2026-09-17T16:39:05.710Z",
+    "lastExportedAt": "2026-09-25T05:55:04.649Z"
   },
   {
     "id": "690dc56b931a2d61ba0b1a8e",
@@ -4300,9 +4305,9 @@
     ],
     "peoplesHrModule": null,
     "path": "tools/editorupdatequalification",
-    "contentHash": "e319d1c373a77dbb64fe0d4367040be7d1216759dc6358af2aa3be68de68a698",
-    "beaconUpdatedAt": "2026-01-31T15:12:34.072Z",
-    "lastExportedAt": "2026-09-10T09:08:51.190Z"
+    "contentHash": "6e03820bbfa417cb47e39534163138e0093991d12a0ed5bee4bc180802701aa2",
+    "beaconUpdatedAt": "2026-09-17T05:38:46.238Z",
+    "lastExportedAt": "2026-09-25T05:55:04.668Z"
   },
   {
     "id": "690dc568931a2d61ba0b1869",
@@ -4318,12 +4323,12 @@
         "name": "BenefitManagement"
       },
       {
-        "id": "690dc572931a2d61ba0b1c72",
-        "name": "AbsenceManagementEmployee"
-      },
-      {
         "id": "690dc571931a2d61ba0b1be3",
         "name": "AbsenceManagement"
+      },
+      {
+        "id": "690dc572931a2d61ba0b1c72",
+        "name": "AbsenceManagementEmployee"
       },
       {
         "id": "690dc571931a2d61ba0b1bcd",
@@ -4345,9 +4350,9 @@
     "argumentNames": [],
     "peoplesHrModule": null,
     "path": "tools/getadmininformationdetails",
-    "contentHash": "abf20c95774650152e72aa7f0803e9b6528c5180a91b5581c4d57ddbe5d1cd97",
+    "contentHash": "2aaa76784c6686c971d3e216cc07327ba7f58f4bfbefbbde1d6b39d038b467bf",
     "beaconUpdatedAt": "2026-01-23T06:20:15.633Z",
-    "lastExportedAt": "2026-09-16T16:16:15.724Z"
+    "lastExportedAt": "2026-09-25T05:55:04.693Z"
   },
   {
     "id": "690dc56b931a2d61ba0b1b15",
@@ -4384,16 +4389,16 @@
         "name": "BenefitManagement"
       },
       {
-        "id": "690dc572931a2d61ba0b1c72",
-        "name": "AbsenceManagementEmployee"
-      },
-      {
         "id": "690dc571931a2d61ba0b1be3",
         "name": "AbsenceManagement"
       },
       {
         "id": "690dc571931a2d61ba0b1bc2",
         "name": "EIM Administration"
+      },
+      {
+        "id": "690dc572931a2d61ba0b1c72",
+        "name": "AbsenceManagementEmployee"
       },
       {
         "id": "690dc571931a2d61ba0b1bcd",
@@ -4417,9 +4422,9 @@
     ],
     "peoplesHrModule": null,
     "path": "tools/getglobalemployeesearch",
-    "contentHash": "56b264e07f269dcc6230b505ef64c494bd0c2eb79507a612b0ce2d757cfb7a6d",
+    "contentHash": "3ac95e769b5fcc7886c8f8511dc68b62ad04abe113422dc61cee6eef03175c3b",
     "beaconUpdatedAt": "2026-01-22T09:11:32.903Z",
-    "lastExportedAt": "2026-09-16T16:16:15.730Z"
+    "lastExportedAt": "2026-09-25T05:55:04.699Z"
   },
   {
     "id": "690dc567931a2d61ba0b1745",
@@ -5614,16 +5619,16 @@
         "name": "BenefitManagement"
       },
       {
-        "id": "690dc572931a2d61ba0b1c72",
-        "name": "AbsenceManagementEmployee"
-      },
-      {
         "id": "690dc571931a2d61ba0b1be3",
         "name": "AbsenceManagement"
       },
       {
         "id": "690dc571931a2d61ba0b1bc2",
         "name": "EIM Administration"
+      },
+      {
+        "id": "690dc572931a2d61ba0b1c72",
+        "name": "AbsenceManagementEmployee"
       },
       {
         "id": "690dc571931a2d61ba0b1bcd",
@@ -5645,9 +5650,9 @@
     "argumentNames": [],
     "peoplesHrModule": null,
     "path": "tools/dateformat",
-    "contentHash": "9f37fd6e8130acde00042005c0c37da07b9680fe586604dec6497f40635c1c3e",
+    "contentHash": "a8adc66153872aacafefda1eb04eec637e460a5c79277ec8590251d8db61727b",
     "beaconUpdatedAt": "2025-06-29T16:46:24.870Z",
-    "lastExportedAt": "2026-09-16T16:16:15.739Z"
+    "lastExportedAt": "2026-09-25T05:55:04.708Z"
   },
   {
     "id": "690dc56b931a2d61ba0b1a6b",
@@ -8559,7 +8564,7 @@
   {
     "id": "6aa27002dfb18ee14844f2af",
     "name": "adminEmployeeTrainingNeedApplication",
-    "shortDescription": "Lets an Admin submit a training need application on behalf of one or more employees, company-wide (no reporting-line restriction). Resolves every named employee (employees) FIRST - before anything ab…",
+    "shortDescription": "Lets an Admin submit a training need application on behalf of one or more employees, company-wide (no reporting-line restriction). Resolves every named employee (employees) FIRST via the real 'Select…",
     "tags": [
       "T&D",
       "Aloka",
@@ -8583,9 +8588,9 @@
     ],
     "peoplesHrModule": null,
     "path": "tools/adminemployeetrainingneedapplication",
-    "contentHash": "b23b0cebd5735a128e983f4c0d31ef14395a378ae914674ee62b7a1c00b487cf",
-    "beaconUpdatedAt": "2026-09-14T17:21:07.430Z",
-    "lastExportedAt": "2026-09-16T16:16:15.633Z"
+    "contentHash": "170187c758cab3ddab03d936b6a842422607ac3f38806fe60fd3b872d84a0627",
+    "beaconUpdatedAt": "2026-09-20T17:09:01.804Z",
+    "lastExportedAt": "2026-09-25T05:55:04.636Z"
   },
   {
     "id": "6a9fa2565d99ab2de2281eeb",
@@ -8629,12 +8634,12 @@
     ],
     "assignedAgents": [
       {
-        "id": "690dc572931a2d61ba0b1c72",
-        "name": "AbsenceManagementEmployee"
-      },
-      {
         "id": "690dc571931a2d61ba0b1be3",
         "name": "AbsenceManagement"
+      },
+      {
+        "id": "690dc572931a2d61ba0b1c72",
+        "name": "AbsenceManagementEmployee"
       }
     ],
     "argumentNames": [
@@ -8656,9 +8661,9 @@
     ],
     "peoplesHrModule": "leave",
     "path": "tools/subordinatesleaveapplication",
-    "contentHash": "06208a99a465a6193331a43155e3c515494cf104780f7ab73088bc5dfa4d133d",
-    "beaconUpdatedAt": "2026-09-15T08:46:25.975Z",
-    "lastExportedAt": "2026-09-16T16:16:15.615Z"
+    "contentHash": "b508e53f3ecdaf44f86344a918b82d2c54ff031e50061af2998a53fd9de87300",
+    "beaconUpdatedAt": "2026-09-17T17:14:44.765Z",
+    "lastExportedAt": "2026-09-25T05:55:04.642Z"
   },
   {
     "id": "6aa1296fe3d61b30d864f358",
@@ -8814,7 +8819,7 @@
   {
     "id": "6aa03f3e0ca0292e49401900",
     "name": "supervisorSubordinateTrainingNeedApplication",
-    "shortDescription": "Lets a Supervisor submit a training need application on behalf of one or more direct reports at once. Validates every named subordinate against the live direct-report list FIRST - before anything abo…",
+    "shortDescription": "Lets a Supervisor submit a training need application on behalf of one or more direct reports at once, or just list them when subordinates is omitted (answers 'who are my subordinates?' without submit…",
     "tags": [
       "T&D",
       "Aloka",
@@ -8834,13 +8839,14 @@
       "objective",
       "relevanceToJob",
       "benefitToEmployee",
-      "benefitToCompany"
+      "benefitToCompany",
+      "confirmed"
     ],
     "peoplesHrModule": null,
     "path": "tools/supervisorsubordinatetrainingneedapplication",
-    "contentHash": "de91c978b6c36973a83a9f5259a52c15940067f7e4c31933745c1d3402036162",
-    "beaconUpdatedAt": "2026-09-14T17:09:43.721Z",
-    "lastExportedAt": "2026-09-16T16:16:15.639Z"
+    "contentHash": "57f30d781717a8ce3b360666339452eccc3554b8da1ca600ec9e2ebec33e787a",
+    "beaconUpdatedAt": "2026-09-17T10:34:41.338Z",
+    "lastExportedAt": "2026-09-25T05:55:04.654Z"
   },
   {
     "id": "6aa036df3145f46f07ddf4c3",
@@ -8866,13 +8872,14 @@
       "goalTitle",
       "relevanceToJob",
       "benefitToEmployee",
-      "benefitToCompany"
+      "benefitToCompany",
+      "confirmed"
     ],
     "peoplesHrModule": null,
     "path": "tools/selfemployeetrainingneedapplication",
-    "contentHash": "2cb5bde5c61bc6a7bf71203895a66a7fc7c9b1ec8723ddf28c62773b5647680f",
-    "beaconUpdatedAt": "2026-09-14T16:33:55.805Z",
-    "lastExportedAt": "2026-09-16T16:16:15.651Z"
+    "contentHash": "0e209e38ba5e82e34744b40ebdb9c0c085c1fc33bb05dad927975548e577b97f",
+    "beaconUpdatedAt": "2026-09-17T10:33:11.445Z",
+    "lastExportedAt": "2026-09-25T05:55:04.661Z"
   },
   {
     "id": "6aa0296abf91849b7392ccf6",
@@ -9147,7 +9154,7 @@
   {
     "id": "6aaa32816e96f818ab221552",
     "name": "myTeamBenefitApplication",
-    "shortDescription": "Applies for a benefit on behalf of one of the signed-in supervisor's direct subordinates, through the Apply Benefit - Team screen. Call it as soon as the user names a team member, passing just that n…",
+    "shortDescription": "Applies for a benefit on behalf of one of the signed-in supervisor's direct subordinates. FIRST ACTION for any request to apply or claim a benefit for someone else (\"apply benefit for Liam\", \"apply a…",
     "tags": [
       "Benefits",
       "phase3"
@@ -9166,21 +9173,22 @@
       "rows",
       "comment",
       "confirmed",
-      "previewDigest"
+      "previewDigest",
+      "removeAttachments",
+      "attachmentSessionKey"
     ],
     "peoplesHrModule": null,
     "path": "tools/myteambenefitapplication",
-    "contentHash": "6107ec8773061340492278a92f02c4cfb66f99fbcdfdedd3bf129e5b0dc777e8",
-    "beaconUpdatedAt": "2026-09-16T10:46:10.912Z",
-    "lastExportedAt": "2026-09-16T16:16:15.585Z"
+    "contentHash": "271275c3c86c196b0963c5123acfd2b23c0476831499f19d9de10c0717edc980",
+    "beaconUpdatedAt": "2026-09-24T07:40:59.680Z",
+    "lastExportedAt": "2026-09-25T05:55:04.607Z"
   },
   {
     "id": "6aa45856824909881ccfe34c",
     "name": "selfEmployeeBenefitApllication",
-    "shortDescription": "Applies for an employee benefit on behalf of the signed-in employee, for any benefit type configured in Beacon - not hardcoded to a fixed list. Call with benefitType omitted to get the real, live lis…",
+    "shortDescription": "Applies for a benefit for the signed-in employee themselves. FIRST ACTION for any request to apply or claim a benefit for oneself (\"apply benefit to me\", \"claim my medical bills\"): call this tool at …",
     "tags": [
       "Benefits",
-      "Aloka",
       "phase3"
     ],
     "assignedAgents": [
@@ -9192,13 +9200,17 @@
     "argumentNames": [
       "benefitType",
       "fieldValues",
+      "rows",
       "comment",
-      "confirmed"
+      "confirmed",
+      "previewDigest",
+      "removeAttachments",
+      "attachmentSessionKey"
     ],
     "peoplesHrModule": null,
     "path": "tools/selfemployeebenefitapllication-2",
-    "contentHash": "434a39d2ff9fd1d28f62f5d4fb79c46394ea6337fb5009abea5b79be833e6e92",
-    "beaconUpdatedAt": "2026-09-11T20:33:28.265Z",
-    "lastExportedAt": "2026-09-16T16:16:15.695Z"
+    "contentHash": "17bda47e4734d5f7ea2aeff7b06553416eb3599ccd0b06323fe3366f1e330856",
+    "beaconUpdatedAt": "2026-09-24T08:23:50.729Z",
+    "lastExportedAt": "2026-09-25T05:55:04.600Z"
   }
 ]

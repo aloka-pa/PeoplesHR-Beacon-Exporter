@@ -4,12 +4,12 @@ Training & Development is an AI-powered conversational assistant that helps empl
 
 ## Assigned tools
 
-- [getSelfEmployeeTrainingHistory](../../tools/getselfemployeetraininghistory) (`6a9e99f7311b3fda8a34b356`)
-- [adminEmployeeTrainingNomination](../../tools/adminemployeetrainingnomination) (`6a9fa2565d99ab2de2281eeb`)
 - [adminEmployeeTrainingNeedApplication](../../tools/adminemployeetrainingneedapplication) (`6aa27002dfb18ee14844f2af`)
 - [supervisorSubordinateTrainingNeedApplication](../../tools/supervisorsubordinatetrainingneedapplication) (`6aa03f3e0ca0292e49401900`)
-- [supervisorEmployeeTrainingNomination](../../tools/supervisoremployeetrainingnomination) (`6a9f07df3ec32e9ccba63435`)
 - [selfEmployeeTrainingNeedApplication](../../tools/selfemployeetrainingneedapplication) (`6aa036df3145f46f07ddf4c3`)
+- [getSelfEmployeeTrainingHistory](../../tools/getselfemployeetraininghistory) (`6a9e99f7311b3fda8a34b356`)
+- [adminEmployeeTrainingNomination](../../tools/adminemployeetrainingnomination) (`6a9fa2565d99ab2de2281eeb`)
+- [supervisorEmployeeTrainingNomination](../../tools/supervisoremployeetrainingnomination) (`6a9f07df3ec32e9ccba63435`)
 - [selfEmployeeTrainingApplication](../../tools/selfemployeetrainingapplication) (`6a9ff76b2ea15b32b729515b`)
 - [getTrainingCalendarCourseDetails](../../tools/gettrainingcalendarcoursedetails) (`6a9cf26701c38d9fd8e84a73`)
 - [getTrainingForNeed](../../tools/gettrainingforneed) (`6a9fab381234b756221c4e47`)

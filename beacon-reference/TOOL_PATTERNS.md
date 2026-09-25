@@ -75,7 +75,7 @@ Mapping/reshaping a raw API response before returning it (typical Transformer re
 - `tools/submitsubordinatesmanualinandout/transformer.js`: `candidates: matches.map(function (r) { return { employeeNumber: displayNumberOf(r), employee: r.text }; })`
 - `tools/submitselfmanualinandout/transformer.js`: `availableRosters: rosterList.map(function (r) { return { rosterCode: r.RosterCode, rosterName: r.RosterName }; })`
 - `tools/submitmanualinandoutbyadmin/transformer.js`: `availableRosters: rosterList.map(function (r) { return { rosterCode: r.RosterCode, rosterName: r.RosterName }; })`
-- `tools/editsubordinatesmanualinandout/transformer.js`: `candidates: matches.map(function (r) { return { employeeNumber: displayNumberOf(r), employee: r.text }; })`
+- `tools/editsubordinatesmanualinandout/transformer.js`: `availableRosters: rosterList.map(function (r) { return { rosterCode: r.RosterCode, rosterName: r.RosterName }; })`
 - `tools/editselfmanualinandout/transformer.js`: `availableRosters: rosterList.map(function (r) { return { rosterCode: r.RosterCode, rosterName: r.RosterName }; })`
 
 ## Pagination
