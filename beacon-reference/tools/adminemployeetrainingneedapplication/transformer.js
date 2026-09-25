@@ -303,17 +303,141 @@
       needdescription = newNeedDescription;
     }
 
-    if (!objective) {
-      return { status: "VALIDATION_ERROR", message: "objective is required - the training system rejects submissions without it." };
+    // objective/relevanceToJob/benefitToEmployee/benefitToCompany are intentionally NOT
+    // hardcoded-required here - whether each is mandatory is a per-client Training &
+    // Development configuration toggle (IsObjectiveMandatory, IsRelToJobMandatory,
+    // IsPotentialToYouMandatory, IsPotentialToCompMandatory) that can differ between
+    // orgs, the same evidence already established for selfEmployeeTrainingNeedApplication/
+    // supervisorSubordinateTrainingNeedApplication (see their description.md "Why this
+    // change" sections). Each field defaults to "" below and is sent through as-is; the
+    // live ValidateNeedApplication call is the real source of truth and its Message is
+    // forwarded verbatim as VALIDATION_ERROR if this tenant's config actually requires it.
+
+    // Attachments - read files from the Beacon chat's own upload mechanism, the same
+    // source every other write tool in this build reads from (see
+    // submitMyGrievanceApplication, selfEmployeeLeaveApplication,
+    // selfEmployeeTrainingNeedApplication, supervisorSubordinateTrainingNeedApplication).
+    // Entirely optional: with no files attached, Attach/FileNameAttached/AttchList stay at
+    // their original "no attachment" values below and none of PrepareNeedAttachments/
+    // UploadFile is ever called. Confirmed live that the same TNDV9/TrainingNeed endpoints
+    // apply regardless of persona (Applicant/Supervisor/Admin) - PrepareNeedAttachments/
+    // UploadFile/DeleteFile/AttchList's shape were all captured from the same TNDV9 module
+    // the self-application tool already uses (Dev in progress Features/T&D/), and this
+    // screen shares that module's tna_id/typecode convention (tna_id always -1 for a new
+    // application record, typecode from the Existing/New Need Type choice resolved above).
+    function uploadedFiles() {
+      try {
+        if (typeof BeaconBar !== "undefined" && typeof BeaconBar.getUploadedBaoFiles === "function") {
+          const bao = BeaconBar.getUploadedBaoFiles();
+          return Array.isArray(bao) ? bao.filter(Boolean) : (bao ? [bao] : []);
+        }
+      } catch (e) {
+        // Degrade to "no files" rather than throw.
+      }
+      return [];
     }
-    if (!relevanceToJob) {
-      return { status: "VALIDATION_ERROR", message: "relevanceToJob is required - the training system rejects submissions without it." };
-    }
-    if (!benefitToEmployee) {
-      return { status: "VALIDATION_ERROR", message: "benefitToEmployee is required - the training system rejects submissions without it." };
-    }
-    if (!benefitToCompany) {
-      return { status: "VALIDATION_ERROR", message: "benefitToCompany is required - the training system rejects submissions without it." };
+
+    const attachedFiles = uploadedFiles();
+    const attchList = [];
+
+    if (attachedFiles.length) {
+      // PrepareNeedAttachments gates whether attachments can be added for this need
+      // (tna_id/typecode) before any file is actually uploaded - confirmed live
+      // (Dev in progress Features/T&D/PrepareNeedAttachments), returning
+      // {IsSuccessfull, IsExceed, BudgetExceed, Message}. Bail out here rather than upload
+      // files that would just be orphaned by a save the server was always going to reject.
+      const prepared = await postJson("TNDV9/TrainingNeed/PrepareNeedAttachments", { tna_id: -1, typecode: typecode });
+      if (!prepared || prepared.IsSuccessfull !== true || prepared.IsExceed === true) {
+        return {
+          status: "ERROR",
+          message: (prepared && prepared.Message) || "Could not prepare attachments for this training need application."
+        };
+      }
+
+      // Confirmed live (Dev in progress Features/T&D/UploadFile, UploadFile-2,
+      // UploadFile-3 - repeated for 3 separate files in one application, confirmed
+      // multi-attachment works via SaveNeedApplication-round2's 3-entry AttchList): each
+      // file is uploaded individually as multipart/form-data with two fields - "fname" (a
+      // ddMMyyyyHHmmss_ timestamp prefix plus the original file name, which becomes the
+      // server-side filepath) and "file" (the binary itself) - and the endpoint responds
+      // with the plain text "True" on success, not JSON. The generated fname is exactly
+      // what AttchList's filepath must reference below, so it's captured once per file here.
+      const uploadedEntries = [];
+      for (const file of attachedFiles) {
+        const now = new Date();
+        const pad = (n) => String(n).padStart(2, "0");
+        const timestamp = `${pad(now.getDate())}${pad(now.getMonth() + 1)}${now.getFullYear()}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+        const serverFileName = `${timestamp}_${file.name}`;
+
+        const uploadFormData = new FormData();
+        uploadFormData.append("fname", serverFileName);
+        uploadFormData.append("file", file, file.name);
+
+        let uploadText = "";
+        try {
+          const uploadRes = await fetch(`${window.origin}/${reqOptions.sl}/TNDV9/TrainingNeed/UploadFile`, {
+            method: "POST",
+            headers: { "Accept": "*/*", "x-requested-with": "XMLHttpRequest" },
+            body: uploadFormData
+          });
+          uploadText = (await uploadRes.text()).trim();
+        } catch (networkError) {
+          uploadText = "";
+        }
+
+        if (uploadText.toLowerCase() !== "true") {
+          // No fixed max size or allowed-type list is hardcoded here - both can differ per
+          // client/tenant, so the only real-time source of truth is this UploadFile call
+          // itself. On rejection, the resource keys confirmed live via TNDV9/Common/
+          // GetTndResource (Dev in progress Features/T&D/GetTndResource - type,
+          // GetTndResource-size validation) - "TndFileTypeNotAllowed" ->
+          // "File type not allowed" and "TndFileSizeExceeded" -> "Maximum file size
+          // exceeded." - line up with exactly this kind of rejection, so a non-"True"
+          // response is treated as one of these resource keys and translated into a
+          // human-readable message. Not confirmed live that UploadFile's failure body IS
+          // literally the resource key (no failing upload was captured) - if the lookup
+          // comes back empty/fails, the raw response text is shown instead so nothing is
+          // ever silently swallowed.
+          let friendlyMessage = uploadText;
+          if (uploadText) {
+            try {
+              const resourceMessage = await postJson("TNDV9/Common/GetTndResource", { resource: uploadText });
+              if (typeof resourceMessage === "string" && resourceMessage.trim()) {
+                friendlyMessage = resourceMessage.trim();
+              }
+            } catch (resourceError) {
+              // Keep the raw uploadText - this lookup is a best-effort translation only.
+            }
+          }
+
+          // Roll back whatever was already uploaded during this same call - confirmed live
+          // (Dev in progress Features/T&D/DeleteFile: POST {filepath} -> true) - so a failed
+          // attachment never leaves orphaned files behind on a submission that never happens.
+          for (const uploaded of uploadedEntries) {
+            try {
+              await postJson("TNDV9/TrainingNeed/DeleteFile", { filepath: uploaded.filepath });
+            } catch (cleanupError) {
+              // Best-effort only - the upload itself already failed, so a failed cleanup
+              // doesn't change the outcome, it just leaves a stray file server-side.
+            }
+          }
+          return {
+            status: "ERROR",
+            message: `Could not upload "${file.name}"${friendlyMessage ? `: ${friendlyMessage}` : " - the server rejected this file."}`
+          };
+        }
+
+        const dotIndex = file.name.lastIndexOf(".");
+        uploadedEntries.push({
+          attchid: uploadedEntries.length + 1,
+          attchname: file.name,
+          attchtype: dotIndex >= 0 ? file.name.slice(dotIndex + 1).toLowerCase() : "",
+          attchfile: "",
+          filepath: serverFileName
+        });
+      }
+
+      attchList.push(...uploadedEntries);
     }
 
     const empList = resolvedList.map((s) => ({
@@ -366,7 +490,7 @@
       Attach: "0",
       FileNameAttached: "",
       EmpList: empList,
-      AttchList: [],
+      AttchList: attchList,
       IsGoalObject: false,
       ExistingGoals: [],
       SelectedGoalCode: ""
@@ -396,7 +520,8 @@
       needSelectionType: existingNeedName ? "Existing" : "New",
       needCode: needcode,
       needName: existingNeedName ? mainNeed.find((n) => n.needcode === needcode).needname : newNeedName,
-      submissions: results.map((r) => ({ employeeNumber: r.empno, success: r.success, status: r.status }))
+      submissions: results.map((r) => ({ employeeNumber: r.empno, success: r.success, status: r.status })),
+      attachments: attchList.map((a) => ({ fileName: a.attchname, type: a.attchtype }))
     };
 
   } catch (error) {
