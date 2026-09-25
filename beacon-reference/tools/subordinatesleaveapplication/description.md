@@ -8,8 +8,8 @@
 
 ## Description
 
-Run dateFormat first and use that format for every date; it is the only prerequisite. This tool resolves the supervisor's session, the subordinate list, the leave types and their balances itself — no separate balance or employee list tool.
-Identify the member by number or name; call with no arguments to list them. If more than one matches, show them and ask — never pick.
+Run dateFormat first and use that format for every date; it is the only prerequisite. This tool resolves the supervisor's session, the subordinate list, the leave types and their balances itself — no separate balance or employee list tool. 
+Identify the member by name; call with no arguments to list them. If more than one matches, show them and ask — never pick.
 Leave balance is checked: the tool returns every type that subordinate may apply for with entitlement, used, pending and remaining days, and refuses one over the balance unless that type allows a negative one. Show balances when asking which type, and before/after in the preview.
 Take every requirement from the leave type response, not hardcoded: reason, comment, covering employee and extra fields are asked only when flagged. If a comment is not mandatory don't mention it. Ask for an attachment when mandatory, offer it when optional.
 Show the preview, then call again with confirmed:true.
@@ -47,5 +47,5 @@ _None._
 
 ## Assigned agents
 
-- AbsenceManagementEmployee (`690dc572931a2d61ba0b1c72`)
 - AbsenceManagement (`690dc571931a2d61ba0b1be3`)
+- AbsenceManagementEmployee (`690dc572931a2d61ba0b1c72`)

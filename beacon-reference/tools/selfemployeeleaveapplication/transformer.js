@@ -105,9 +105,6 @@ const leaveReason = matchedReason ? matchedReason.value : "";
   const sum = args.dayModes.reduce((total, x) => total + x.dayValue, 0);
 
   if (calculateDetails.Status) {
-
-    // ── Preview and confirmation, as in employeeLeaveApplication. ──
-    // ── Nothing is uploaded or saved until the user confirms.     ──
     const confirmed = args.confirmed === true
       || args.confirmed === 1
       || args.confirmed === "true";
@@ -137,18 +134,6 @@ const leaveReason = matchedReason ? matchedReason.value : "";
         ConfirmationPrompt: "Shall I submit this leave application? Reply yes to submit, or tell me what to change."
       };
     }
-
-    // ── Attachment from the Lexi chat, read on the confirmed call ──
-    // const baoFiles = BeaconBar.getUploadedBaoFiles();
-    // const file1 = baoFiles[0] || null;
-
-    // // ── Guard: block submission if attachment is mandatory but missing ──
-    // if (args.isAttachmentMandatory && !file1) {
-    //   return {
-    //     Status: false,
-    //     Message: "This leave type requires a mandatory attachment. Please upload a file and try again."
-    //   };
-    // }
 
     let file1 = null;
 
@@ -181,14 +166,6 @@ const leaveReason = matchedReason ? matchedReason.value : "";
       }
     }
 
-    // ── Save: the server reads the uploaded filename off the SINGULAR  ──
-    // ── Attachment.AttachmentName field - Attachments (plural) is      ──
-    // ── never read and must stay null. Confirmed against captured      ──
-    // ── curls in "Dev in progress Features/Absence - Attachment        ──
-    // ── handling/" - the old code put the filename in Attachments and  ──
-    // ── left Attachment.AttachmentName empty, so the server always saw ──
-    // ── "no attachment" and rejected the save with "Attachment is      ──
-    // ── required" even after a successful upload.                     ──
     const hasAttachment = !!file1;
 
     const saveResponse = await fetch(`${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveApplication/SaveLeaveApplication/`, {

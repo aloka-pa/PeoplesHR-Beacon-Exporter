@@ -85,6 +85,50 @@
     return isNaN(num) ? null : num;
   }
 
+  // Multipart POST. No Content-Type here on purpose - FormData sets its own
+  // multipart boundary.
+  async function postForm(url, formData, label) {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Accept": "application/json, text/javascript, */*; q=0.01", "X-Requested-With": "XMLHttpRequest" },
+      body: formData,
+      redirect: "follow"
+    });
+    return readJson(res, label);
+  }
+
+  // Files the user attached in the chat. Degrades to "no files" rather than
+  // throwing when the Beacon helper is unavailable.
+  // Records how the chat files were read, so a response that reports no
+  // attachment can be told apart from the helper being missing or throwing.
+  const chatFileSource = { helperPresent: false, filesSeen: 0, readError: null };
+  function chatFiles() {
+    try {
+      chatFileSource.helperPresent = typeof BeaconBar !== "undefined" && typeof BeaconBar.getUploadedBaoFiles === "function";
+      if (typeof BeaconBar !== "undefined" && typeof BeaconBar.getUploadedBaoFiles === "function") {
+        const bao = BeaconBar.getUploadedBaoFiles();
+        const list = (Array.isArray(bao) ? bao : (bao ? [bao] : [])).filter(f => f && f.name);
+        // Attaching the same name again means the supervisor replaced that file,
+        // so the last one wins - keeping the first would upload the old copy.
+        const unique = list.filter((f, i) => list.map(o => o.name.toLowerCase()).lastIndexOf(f.name.toLowerCase()) === i);
+        chatFileSource.filesSeen = unique.length;
+        return unique;
+      }
+    } catch (e) {
+      chatFileSource.readError = String((e && e.message) || e);
+    }
+    return [];
+  }
+
+  function extensionOf(name) {
+    const dot = String(name).lastIndexOf(".");
+    return dot >= 0 ? String(name).slice(dot + 1).toLowerCase() : "";
+  }
+
+  function sizeInMb(bytes) {
+    return typeof bytes === "number" ? +(bytes / (1024 * 1024)).toFixed(2) : null;
+  }
+
   /* ---------------------------------------------------------------------
    * Step 1: bootstrap the team page and scrape window.BenefitApplicationObj.
    * Its SearchModalHeader ("Apply Benefit for Team") and SearchQueryMode
@@ -233,7 +277,8 @@
   }
   if (matches.length === 0) {
     return {
-      error: true,
+      needsInput: true,
+      validationError: true,
       message: `There is no "${args.employeeNumber || args.employeeName}" in your team, so a benefit application cannot be submitted for them. You can only apply on behalf of your own direct subordinates, listed below. Show the user this list - do not look the name up with any other employee-search tool.`,
       teamMembers: teamList
     };
@@ -255,8 +300,15 @@
    * server uses it as that application's cache slot. Minting our own matches
    * the UI and keeps this application isolated from the supervisor's own
    * self-load state (what blob.KeyValue is bound to).
+   *
+   * Attachments are staged on the server under this key before the supervisor
+   * confirms, so a key handed back from an earlier preview
+   * (attachmentSessionKey) is reused - a freshly minted key would not find
+   * files staged in the previous call.
    * ------------------------------------------------------------------- */
-  const sessionKey = (typeof crypto !== "undefined" && crypto.randomUUID)
+  const sessionKey = (args.attachmentSessionKey && String(args.attachmentSessionKey).trim())
+    ? String(args.attachmentSessionKey).trim()
+    : (typeof crypto !== "undefined" && crypto.randomUUID)
     ? crypto.randomUUID()
     : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
       const r = Math.random() * 16 | 0;
@@ -309,7 +361,8 @@
 
   if (typeCandidates.length === 0) {
     return {
-      error: true,
+      needsInput: true,
+      validationError: true,
       message: `"${args.benefitType}" is not a benefit type ${employee.displayName} can apply for. Tell the user that, then show them the availableBenefitTypes list below exactly as it is and ask which one they meant - do not suggest any type that is not on it.`,
       employee: employee.displayName,
       employeeNumber: employee.displayNumber,
@@ -354,9 +407,222 @@
 
   const betInfo = structure.currentBenefitType || {};
 
-  if (betInfo.BetAttachmentMandatoryFlg === 1 || betInfo.BetAttachmentMandatoryFlg === "1") {
-    return `The "${typeMatch.BetName}" benefit type requires a file attachment, which this tool cannot upload. Please use the Benefit Management screen directly for this benefit type.`;
+  /* ---------------------------------------------------------------------
+   * Attachment settings, straight off currentBenefitType. They differ per
+   * benefit type and per client (backend key), so nothing is hardcoded and no
+   * separate network call is made to validate type or size:
+   *   BetHasAttachment          "1" = attachments accepted
+   *   BetAttachmentMandatoryFlg "1" = at least one attachment required
+   *   BetAttachmentFileTypes    e.g. ["pdf","txt","doc","docx"]
+   *   MaxAttachmentSize         per-file limit in MB, e.g. "1"
+   *   BetMaxAttachmentCount     optional cap on the number of files
+   * ------------------------------------------------------------------- */
+  const rawFileTypes = Array.isArray(betInfo.BetAttachmentFileTypes)
+    ? betInfo.BetAttachmentFileTypes
+    : String(betInfo.BetAttachmentFileTypes || "").split(",");
+  const attachmentRules = {
+    allowed: String(betInfo.BetHasAttachment) === "1" || String(betInfo.BetAttachmentMandatoryFlg) === "1",
+    mandatory: String(betInfo.BetAttachmentMandatoryFlg) === "1",
+    allowedTypes: rawFileTypes.map(t => String(t).trim().replace(/^\./, "").toLowerCase()).filter(Boolean),
+    maxSizeMb: numberOf(betInfo.MaxAttachmentSize) > 0 ? numberOf(betInfo.MaxAttachmentSize) : null,
+    maxCount: numberOf(betInfo.BetMaxAttachmentCount) > 0 ? numberOf(betInfo.BetMaxAttachmentCount) : null
+  };
+
+  function attachmentRulesText() {
+    const parts = [];
+    if (attachmentRules.allowedTypes.length) parts.push(`allowed file types: ${attachmentRules.allowedTypes.join(", ")}`);
+    if (attachmentRules.maxSizeMb) parts.push(`maximum ${attachmentRules.maxSizeMb} MB per file`);
+    if (attachmentRules.maxCount) parts.push(`at most ${attachmentRules.maxCount} file(s)`);
+    return parts.join("; ");
   }
+
+  const removeNames = (Array.isArray(args.removeAttachments) ? args.removeAttachments : (args.removeAttachments ? [args.removeAttachments] : []))
+    .map(n => String(n).trim().toLowerCase())
+    .filter(Boolean);
+  const isRemoved = name => removeNames.includes(String(name || "").trim().toLowerCase());
+
+  const attachmentBase = { attachmentRules, attachmentSessionKey: sessionKey };
+  const sameName = (a, b) => String(a || "").trim().toLowerCase() === String(b || "").trim().toLowerCase();
+  let stagedAttachments = [];
+  const attachmentNotes = [];
+  // Every file the supervisor attached that PeoplesHR will not take, with the
+  // reason - reported on its own so it is never lost in the note text.
+  const rejectedAttachments = [];
+  // Files named in removeAttachments that were never on the application:
+  // there was nothing to remove, so the name can only have cancelled a file
+  // the supervisor attached in the chat.
+  const suppressedByRemoval = [];
+  // Files kept although removeAttachments named them, because the benefit
+  // type requires an attachment and nothing else was left.
+  const keptDespiteRemoval = [];
+
+  const listAttachments = async () => {
+    const result = await postJson(
+      `${base}/BenefitV9/api/ApplicationApi/GetAttachments`,
+      { empNumber: appEmpNumber, key: sessionKey },
+      "GetAttachments"
+    );
+    if (result.error) return { error: result.error };
+    return { list: (result.data && result.data.BmAppAttachments) || [] };
+  };
+
+  /* Files are staged on the server as soon as this tool sees them, on ANY
+   * call - including the one that only lists the fields. The chat helper
+   * reports a file to the call it was attached for; by the next call it can
+   * report nothing, so a file that is merely noticed and not uploaded is
+   * lost. Staging it immediately, under a key that is the same for every
+   * call of this application, means later calls find it on the server
+   * instead of asking the supervisor for a document they already attached.
+   * Returns a response to hand straight back, or null to carry on. */
+  let attachmentsSynced = false;
+
+  async function syncAttachments() {
+    if (attachmentsSynced) return null;
+    attachmentsSynced = true;
+    if (!attachmentRules.allowed) {
+      const unexpected = chatFiles().filter(f => !isRemoved(f.name));
+      if (unexpected.length > 0) {
+        return {
+          needsInput: true,
+          message: `The "${typeMatch.BetName}" benefit type does not accept attachments, but ${unexpected.map(f => `"${f.name}"`).join(", ")} ${unexpected.length === 1 ? "is" : "are"} attached in the chat. Nothing has been uploaded or submitted. Tell the supervisor, and if they want to continue without ${unexpected.length === 1 ? "it" : "them"}, call this tool again with the same arguments plus removeAttachments listing ${unexpected.length === 1 ? "that file name" : "those file names"}.`,
+          attachmentsNotAccepted: unexpected.map(f => f.name)
+        };
+      }
+    } else {
+      const current = await listAttachments();
+      if (current.error) return current.error;
+      let serverList = current.list;
+
+      const inChat = chatFiles();
+      const toDelete = serverList.filter(a => isRemoved(a.BetAttachmentName));
+      const toUpload = inChat.filter(f => !isRemoved(f.name) && !serverList.some(a => sameName(a.BetAttachmentName, f.name)));
+      inChat.forEach(f => {
+        if (!isRemoved(f.name) || serverList.some(a => sameName(a.BetAttachmentName, f.name))) return;
+        const wrongType = attachmentRules.allowedTypes.length && !attachmentRules.allowedTypes.includes(extensionOf(f.name));
+        const tooBig = attachmentRules.maxSizeMb && typeof f.size === "number" && f.size > attachmentRules.maxSizeMb * 1024 * 1024;
+        if (!wrongType && !tooBig) suppressedByRemoval.push(f.name);
+      });
+
+      /* Local validation only - no network call - before anything is changed.
+       * Each file is judged on its own: the chat helper hands back EVERY file
+       * attached during the session, so one the server would refuse stays in that
+       * list for the rest of the conversation. Refusing the whole call because of
+       * it meant a supported file attached afterwards could never be uploaded -
+       * the supervisor kept being asked for a document they had already attached.
+       * Unusable files are skipped and reported instead. */
+      const usable = toUpload.filter(f => {
+        if (attachmentRules.allowedTypes.length && !attachmentRules.allowedTypes.includes(extensionOf(f.name))) {
+          rejectedAttachments.push({ name: f.name, reason: `its file type is not accepted for "${typeMatch.BetName}" (allowed: ${attachmentRules.allowedTypes.join(", ")})` });
+          return false;
+        }
+        if (attachmentRules.maxSizeMb && typeof f.size === "number" && f.size > attachmentRules.maxSizeMb * 1024 * 1024) {
+          rejectedAttachments.push({ name: f.name, reason: `it is ${sizeInMb(f.size)} MB and the maximum for "${typeMatch.BetName}" is ${attachmentRules.maxSizeMb} MB` });
+          return false;
+        }
+        return true;
+      });
+
+      // Nothing usable anywhere: only then is there something to go back for.
+      if (rejectedAttachments.length > 0 && usable.length === 0 && serverList.length - toDelete.length === 0) {
+        return Object.assign({
+          needsInput: true,
+          validationError: true,
+          missingFields: attachmentRules.mandatory ? ["Attachment"] : undefined,
+          rejectedAttachments,
+          message: `${rejectedAttachments.map(r => `"${r.name}" cannot be attached because ${r.reason}`).join("; ")}. Nothing has been uploaded or submitted. Tell the supervisor this exactly and ask them to attach a supported file in the chat. Do NOT put the file this tool refused in removeAttachments - it is skipped by itself, and removeAttachments is only for files already on the application that the supervisor wants taken off. When they attach one, call this tool again with the same arguments - the tool picks the new file up by itself and ignores the one it could not use. Then call this tool again with the same arguments on WHATEVER the supervisor replies next - "done", "ok", "okay then add this", "then add this", "proceed with this", "proceed", "yes", "submit", or anything else. Only this tool can see the files in the chat, so never answer that a file is missing, unsupported or too large without calling it first.`
+        }, attachmentBase);
+      }
+
+      if (rejectedAttachments.length > 0) {
+        attachmentNotes.push(`${rejectedAttachments.map(r => `"${r.name}" was NOT attached because ${r.reason}`).join("; ")}. Read this out to the supervisor: the file is still in the chat, and it is not part of this application.`);
+      }
+      const toUploadUsable = usable;
+
+      /* A removal that names a file which was never on the application can
+       * only cancel one the supervisor just attached. When that would leave a
+       * benefit type that REQUIRES an attachment with nothing at all, the
+       * removal cannot be what they meant, and honouring it would refuse the
+       * application over and over. The file is kept instead, and said so
+       * plainly in the preview, which is shown before anything is submitted. */
+      if (attachmentRules.mandatory
+        && serverList.length - toDelete.length + toUploadUsable.length === 0
+        && suppressedByRemoval.length > 0) {
+        inChat.forEach(f => {
+          if (!suppressedByRemoval.some(n => sameName(n, f.name))) return;
+          toUploadUsable.push(f);
+          keptDespiteRemoval.push(f.name);
+        });
+        attachmentNotes.push(`${keptDespiteRemoval.map(n => `"${n}"`).join(", ")} ${keptDespiteRemoval.length === 1 ? "was" : "were"} named in removeAttachments but kept, because "${typeMatch.BetName}" requires an attachment and nothing else was attached. Tell the supervisor so.`);
+      }
+
+      const finalCount = serverList.length - toDelete.length + toUploadUsable.length;
+      if (attachmentRules.maxCount && finalCount > attachmentRules.maxCount) {
+        return Object.assign({
+          needsInput: true,
+          validationError: true,
+          message: `"${typeMatch.BetName}" accepts at most ${attachmentRules.maxCount} attachment(s), but this would leave ${finalCount}. Nothing has been uploaded or submitted. Ask the supervisor which file(s) to leave out and call again with removeAttachments listing them.`,
+          attachments: serverList.map(a => a.BetAttachmentName).concat(toUploadUsable.map(f => f.name))
+        }, attachmentBase);
+      }
+
+      const unknownRemovals = (Array.isArray(args.removeAttachments) ? args.removeAttachments : (args.removeAttachments ? [args.removeAttachments] : []))
+        .filter(n => !serverList.some(a => sameName(a.BetAttachmentName, n)) && !inChat.some(f => sameName(f.name, n)));
+      if (unknownRemovals.length > 0) {
+        attachmentNotes.push(`No attachment named ${unknownRemovals.map(n => `"${n}"`).join(", ")} was found on this application, so nothing was removed for ${unknownRemovals.length === 1 ? "it" : "them"}. Only attachments that have not been submitted yet can be removed.`);
+      }
+
+      for (const att of toDelete) {
+        const del = await postJson(
+          `${base}/BenefitV9/api/ApplicationApi/DeleteAttachment`,
+          { fileCode: att.BetAttachmentCode, empNumber: appEmpNumber, key: sessionKey },
+          "DeleteAttachment"
+        );
+        if (del.error || (del.data && del.data.Status === false)) {
+          return Object.assign({
+            error: true,
+            message: `Could not remove "${att.BetAttachmentName}"${del.data && del.data.Message ? `: ${del.data.Message}` : ""}. Nothing has been submitted. Tell the supervisor this exactly.`,
+            detail: del.error || null
+          }, attachmentBase);
+        }
+      }
+
+      for (const file of toUploadUsable) {
+        const form = new FormData();
+        form.append("file_data", file, file.name);
+        // The screen's file-input widget id: size + "_" + URI-encoded name with
+        // "%" turned into "_" (capture: 14107_pre_20configurations_20demo_20intro.docx).
+        form.append("fileId", `${file.size}_${encodeURIComponent(file.name).replace(/%/g, "_")}`);
+        form.append("initialPreview", "[]");
+        form.append("initialPreviewConfig", "[]");
+        form.append("initialPreviewThumbTags", "[]");
+        form.append("benefitType", typeMatch.BetCode);
+        form.append("key", sessionKey);
+        form.append("empNumber", appEmpNumber);
+
+        const up = await postForm(`${base}/BenefitV9//api/ApplicationApi/UploadAttachment/`, form, "UploadAttachment");
+        if (up.error || !up.data || up.data.Status !== true) {
+          const after = await listAttachments();
+          return Object.assign({
+            needsInput: true,
+            validationError: true,
+            message: `Could not attach "${file.name}"${up.data && up.data.Message ? `: ${up.data.Message}` : ""}. Nothing has been submitted. Tell the supervisor this exactly, and ask them to attach a different file or to continue without it (call again with removeAttachments listing the file name).`,
+            detail: up.error || null,
+            attachments: after.list ? after.list.map(a => a.BetAttachmentName) : undefined
+          }, attachmentBase);
+        }
+      }
+
+      if (toDelete.length > 0 || toUploadUsable.length > 0) {
+        const refreshed = await listAttachments();
+        if (refreshed.error) return refreshed.error;
+        serverList = refreshed.list;
+      }
+      stagedAttachments = serverList.map(a => a.BetAttachmentName).filter(Boolean);
+
+    }
+    return null;
+  }
+
 
   /* ---------------------------------------------------------------------
    * Step 9: flatten. `ref` points back into `structure` itself, so every edit
@@ -404,7 +670,14 @@
 
   const totalLabel = structure.TotalRequestLabelName || "Total Request";
   const totalVisible = !!totalControl && structure.TotalRequestVisible !== false;
-  const totalEditable = totalVisible && structure.TotalRequestEnable === true;
+  // The screen lets the figure be typed over: the server fills it in from the
+  // amount field(s), and whatever is in the control at submit time is what
+  // Benefit History records. Confirmed by capture - Amount in Bills 100 with
+  // the Total Request typed down to 50 submitted successfully (reference 191).
+  // So it is editable unless this screen or this benefit type says otherwise.
+  const totalEditable = totalVisible
+    && structure.TotalRequestEnable !== false
+    && String(betInfo.BetAmountLocked == null ? 0 : betInfo.BetAmountLocked) !== "1";
 
   // Two controls sharing a display name would both take the same fieldValues
   // entry and silently double the computed total.
@@ -413,6 +686,35 @@
     .filter((n, i, all) => all.indexOf(n) !== i);
   if (duplicateNames.length > 0) {
     return `The "${typeMatch.BetName}" benefit type has more than one field called "${fields.find(f => f.displayName.toLowerCase() === duplicateNames[0]).displayName}", which this tool cannot tell apart. Please use the Benefit Management screen directly for this benefit type.`;
+  }
+
+  /* Dependent dropdowns. Confirmed by capture (Medical Claims): "Corporate
+   * title" (ctrl 3, BesIsDiasblePostback 0) arrives with its option list, while
+   * "Designation" (ctrl 3, BesIsDiasblePostback 1) arrives with RefObjectValue
+   * null - its options are filled in only by the recalculation that follows
+   * choosing a corporate title. The structure names no parent, so a dropdown
+   * that starts empty is tied to the nearest dropdown before it that has
+   * options and triggers a recalculation. Such a dropdown is asked for only
+   * AFTER its parent is chosen, from the options PeoplesHR returns for that
+   * choice - never typed freely by the supervisor. */
+  const dependentDropdowns = new Map();
+  fields.forEach((f, i) => {
+    if (f.ctrlType !== "3" || (f.ref.RefObjectValue || []).length > 0) return;
+    const earlier = fields.slice(0, i).reverse()
+      .filter(p => p.ctrlType === "3" && (p.ref.RefObjectValue || []).length > 0);
+    const parent = earlier.find(p => String(p.ref.BesIsDiasblePostback) !== "1") || earlier[0] || null;
+    dependentDropdowns.set(f.besId, parent);
+  });
+
+  function dependsOnText(field) {
+    const parent = dependentDropdowns.get(field.besId);
+    return parent ? `"${parent.displayName}"` : "the field it depends on";
+  }
+
+  // An optional dropdown the supervisor chose to leave blank is passed as "".
+  function leftBlank(field, values) {
+    const key = keyFor(values, field.displayName);
+    return !!key && !field.mandatory && String(values[key] == null ? "" : values[key]).trim() === "";
   }
 
   /* ---------------------------------------------------------------------
@@ -508,6 +810,131 @@
 
     mergeFlatValues(depResult.data, controlsToMerge || allControls);
     return true;
+  }
+
+  /* ---------------------------------------------------------------------
+   * The benefit type's own formulas. Some types do not compute anything on
+   * the server: every control has BesIsDiasblePostback 1, GetDependentControlValues
+   * answers with the values unchanged, and the screen instead asks
+   * GetJavascripts for that type and runs what comes back in the browser.
+   *
+   * Confirmed by capture (Medical Reimbursement, betCode 310000): the response
+   * is a block of "F_<BesId>(ctrl)" functions bound to the controls whose
+   * BesIsJavascriptFlg is 1. They read the other controls by their BesId -
+   * .value for an editable control, .innerHTML for a read-only one - and write
+   * both the read-only figures (room charges = days x room rate) and the Total
+   * Request control (applyAmount.value = amount). The UI then submits that
+   * computed total: the captured SaveApplication sends VL310000 "5500" while
+   * its RefDisplayValue is still "0.00". Without running them the total stays 0
+   * and PeoplesHR records 0.00 as the applied amount.
+   *
+   * The formulas are the client's own configuration, so they are fetched per
+   * benefit type and executed as written - nothing about any type, field or
+   * arithmetic is hardcoded here. The controls are given to the script as
+   * stand-ins backed by the live structure, so whatever the script writes lands
+   * on the same tree that is previewed and submitted.
+   * ------------------------------------------------------------------- */
+  let typeScript;            // the script for this benefit type, fetched once
+  let typeScriptCall = null; // invoker into that script, built once
+
+  function scriptElementFor(ctrl) {
+    return {
+      id: ctrl.BesId,
+      get value() { return ctrl.RefValue == null ? "" : String(ctrl.RefValue); },
+      set value(v) { ctrl.RefValue = v == null ? "" : String(v); },
+      // A read-only control shows its formatted text, which the formulas parse
+      // with their own replace(",", "") - so give them the displayed string.
+      get innerHTML() {
+        const shown = ctrl.RefDisplayValue != null && ctrl.RefDisplayValue !== "" ? ctrl.RefDisplayValue : ctrl.RefValue;
+        return shown == null ? "" : String(shown);
+      },
+      set innerHTML(v) {
+        const text = v == null ? "" : String(v);
+        ctrl.RefDisplayValue = text;
+        ctrl.RefValue = text.replace(/,/g, "");
+      },
+      get innerText() { return this.innerHTML; },
+      set innerText(v) { this.innerHTML = v; },
+      get textContent() { return this.innerHTML; },
+      set textContent(v) { this.innerHTML = v; },
+      get checked() { return String(ctrl.RefValue) === "1"; },
+      set checked(v) { ctrl.RefValue = v ? "1" : "0"; },
+      style: {},
+      classList: { add() {}, remove() {}, contains() { return false; }, toggle() {} },
+      setAttribute() {}, removeAttribute() {}, getAttribute() { return null; },
+      addEventListener() {}, removeEventListener() {},
+      options: [], children: [], parentNode: null
+    };
+  }
+
+  async function runTypeFormulas() {
+    if (typeScript === undefined) {
+      const result = await postJson(
+        `${base}/BenefitV9//api/ApplicationApi/GetJavascripts/`,
+        { betCode: typeMatch.BetCode },
+        "GetJavascripts"
+      );
+      // A type with no formulas of its own is the normal case - the server
+      // figures are then the real ones, so this must never block anything.
+      typeScript = (!result.error && typeof result.data === "string") ? result.data : "";
+    }
+    if (!typeScript || !typeScript.trim()) return;
+
+    const scriptControls = allControls.concat(workingRowControls);
+    const elements = new Map();
+    const elementById = id => {
+      if (!elements.has(id)) {
+        const ctrl = scriptControls.find(c => c.BesId === id);
+        // An id the script expects but this structure does not have must not
+        // throw - the rest of the formula still has to run.
+        elements.set(id, ctrl ? scriptElementFor(ctrl) : scriptElementFor({ BesId: id }));
+      }
+      return elements.get(id);
+    };
+
+    if (typeScriptCall === null) {
+      const documentShim = {
+        getElementById: elementById,
+        querySelector: () => null,
+        querySelectorAll: () => [],
+        getElementsByName: () => [],
+        getElementsByClassName: () => [],
+        createElement: () => scriptElementFor({ BesId: "" })
+      };
+      const jqueryShim = selector => {
+        const el = elementById(String(selector).replace(/^[#.]/, ""));
+        return {
+          val(v) { if (v === undefined) return el.value; el.value = v; return this; },
+          html(v) { if (v === undefined) return el.innerHTML; el.innerHTML = v; return this; },
+          text(v) { if (v === undefined) return el.innerHTML; el.innerHTML = v; return this; },
+          attr() { return undefined; }, on() { return this; }, trigger() { return this; },
+          each() { return this; }, length: 1, 0: el
+        };
+      };
+      try {
+        typeScriptCall = new Function("document", "window", "$", "jQuery",
+          typeScript + "\nreturn function (fnName, ctrlArg) {"
+          + " var fn = null;"
+          + " try { fn = eval(fnName); } catch (e) { fn = null; }"
+          + " if (typeof fn !== 'function') return false;"
+          + " fn(ctrlArg); return true;"
+          + " };"
+        )(documentShim, { document: documentShim }, jqueryShim, jqueryShim);
+      } catch (e) {
+        // A script this tool cannot run must not stop the application: the
+        // total is put in front of the user either way, with its warning.
+        typeScriptCall = false;
+      }
+    }
+    if (!typeScriptCall) return;
+
+    // The screen runs the function bound to a control when that control
+    // changes, so run each one the same way, in structure order.
+    scriptControls
+      .filter(c => String(c.BesIsJavascriptFlg) === "1")
+      .forEach(c => {
+        try { typeScriptCall("F_" + c.BesId, elementById(c.BesId)); } catch (e) { /* leave the figures as they are */ }
+      });
   }
 
   // Values we put in, so a recalculation that drops or rewrites one is caught
@@ -730,6 +1157,7 @@
     for (const field of orderedForApply(fieldList)) {
       const givenKey = keyFor(values, field.displayName);
       if (!givenKey) continue;
+      if (field.ctrlType === "3" && leftBlank(field, values)) continue;
 
       const outcome = normalizeValue(field, values[givenKey]);
       if (outcome.error) return { error: outcome.error };
@@ -749,7 +1177,7 @@
       const outcome = normalizeValue(field, values[givenKey]);
       if (outcome.error) return { error: outcome.error };
       if (outcome.defer) {
-        return { error: `"${field.displayName}" still has no options available for ${employee.displayName} - it depends on another field that has not been set. Ask the supervisor for that field first.` };
+        return { error: `"${field.displayName}" has no options yet - its options depend on ${dependsOnText(field)}. Nothing has been submitted. Ask the supervisor to choose ${dependsOnText(field)} first from the options this tool listed, then call again; the tool will then return the "${field.displayName}" options to choose from.` };
       }
       field.ref.RefValue = outcome.value;
       if (trackIntent) intended.set(field.besId, outcome.value);
@@ -776,9 +1204,14 @@
       options: options.length ? options.map(o => o.Value) : undefined,
       note: isDate
         ? `Required. Entitlement, utilized amount and the total are calculated for this date, so ask the supervisor which date to use - today (${todayFormatted()}) is only a suggestion.`
-        : (field.ctrlType === "3" && !options.length
-          ? "Options appear only once the field this one depends on is set - set that one first, then call this tool again."
-          : undefined)
+        : field.ctrlType === "3"
+          ? (options.length
+            ? "Show these options as a list and let the supervisor pick one. Never accept a value that is not in this list, and never let them type their own."
+            : `Do not ask for this yet. Its options depend on ${dependsOnText(field)}: once the supervisor has chosen that, call this tool again with it in fieldValues and the tool returns the "${field.displayName}" options to pick from.`)
+          : undefined,
+      dependsOn: dependentDropdowns.has(field.besId) && dependentDropdowns.get(field.besId)
+        ? dependentDropdowns.get(field.besId).displayName
+        : undefined
     };
   }
 
@@ -787,7 +1220,7 @@
   }
 
   function missingMandatory(fieldList, values) {
-    return fieldList.filter(f => f.mandatory && !keyFor(values, f.displayName));
+    return fieldList.filter(f => f.mandatory && !keyFor(values, f.displayName) && !dependentDropdowns.has(f.besId));
   }
 
   /* ---------------------------------------------------------------------
@@ -796,6 +1229,10 @@
    * probed date is reported so it is never mistaken for a choice the
    * supervisor made.
    * ------------------------------------------------------------------- */
+  // Before any early return: whatever is attached now gets staged now.
+  const attachmentIssue = await syncAttachments();
+  if (attachmentIssue) return attachmentIssue;
+
   const hasGrid = !!gridControl;
   const wantsApply = hasGrid ? !!args.rows : !!args.fieldValues;
 
@@ -829,7 +1266,13 @@
       commentMandatory: betInfo.BetCommentMandatoryFlg === "1",
       showComment: betInfo.BetshowAppCommentBox === "1",
       confirmMessage: betInfo.IsConfirmNeed === "1" ? betInfo.ConfirmMessage : null,
-      info: infoSnapshot()
+      info: infoSnapshot(),
+      attachment: attachmentRules.allowed
+        ? Object.assign({}, attachmentRules, {
+          filesInChat: stagedAttachments.slice(),
+          note: `${attachmentRules.mandatory ? "At least one attachment is REQUIRED" : "Attachments are optional"} for this benefit type (${attachmentRulesText() || "no type or size limits set"}). Ask the supervisor to attach the file(s) in the chat - the tool picks them up, validates them and stages them when it builds the preview. Do not ask for file contents or base64.`
+        })
+        : { allowed: false, note: "This benefit type does not accept attachments - do not ask for any." }
     };
 
     if (hasGrid) {
@@ -842,6 +1285,9 @@
     } else {
       discovery.message = `${employee.displayName} (${employee.displayNumber}) and the benefit type are both settled - do not ask the user for an employee number or re-confirm the type. Ask them ONLY for the fields listed below: every mandatory one, plus any optional ones they want to set. Ask for nothing that is not in this list. Then call this tool again with the same employeeName/benefitType plus a fieldValues object keyed by each field's displayName exactly as shown.`;
       discovery.fields = fields.map(describeForDiscovery);
+      if (fields.some(f => f.ctrlType === "3")) {
+        discovery.choiceNote = `Choice fields are pick-lists: show their options and let the supervisor select one - never let them type a value of their own.${dependentDropdowns.size ? ` ${[...dependentDropdowns.keys()].map(id => { const f = fields.find(x => x.besId === id); return `"${f.displayName}" depends on ${dependsOnText(f)}`; }).join("; ")} - do not ask for ${dependentDropdowns.size === 1 ? "it" : "them"} yet; the tool lists ${dependentDropdowns.size === 1 ? "its" : "their"} options once the parent is chosen.` : ""}`;
+      }
       if (totalVisible) {
         discovery.fields.push({
           displayName: totalLabel,
@@ -851,7 +1297,7 @@
           currentValue: totalControl.RefValue,
           readOnly: !totalEditable,
           note: totalEditable
-            ? "This is the amount Benefit History records against the application. PeoplesHR calculates it from the amount field(s) above, so normally leave it out - include it only when the supervisor explicitly wants a different total."
+            ? `This is the amount Benefit History records against the application. PeoplesHR fills it in from the amount field(s) above, so leave it out unless the supervisor asks for a particular Total Request. They CAN set it directly: pass the figure they ask for in fieldValues under "${totalLabel}" and leave the amount field(s) exactly as they gave them - never tell them it cannot be changed, and never ask them to change an amount to match it.`
             : "This is the amount Benefit History records against the application. PeoplesHR calculates it from the amount field(s) above; it cannot be set directly for this benefit type."
         });
       }
@@ -889,6 +1335,26 @@
 
     const drift = await assertIntactAfterRefresh();
     if (drift) return drift;
+
+    await runTypeFormulas();
+
+    const pendingChoice = fields.find(f => dependentDropdowns.has(f.besId)
+      && !keyFor(values, f.displayName)
+      && (f.ref.RefObjectValue || []).length > 0);
+    if (pendingChoice) {
+      const parent = dependentDropdowns.get(pendingChoice.besId);
+      const parentLabel = parent
+        ? ((parent.ref.RefObjectValue || []).find(o => o.Id === parent.ref.RefValue) || {}).Value || parent.ref.RefValue
+        : null;
+      return {
+        needsInput: true,
+        field: pendingChoice.displayName,
+        dependsOn: parent ? { field: parent.displayName, chosen: parentLabel } : undefined,
+        options: pendingChoice.ref.RefObjectValue.map(o => o.Value),
+        mandatory: pendingChoice.mandatory,
+        message: `${parent ? `"${parent.displayName}" is set to "${parentLabel}". ` : ""}Show the supervisor the "${pendingChoice.displayName}" options below exactly as listed - these are the only ones available${parent ? " for that choice" : ""} - and ask them to pick one. Do not let them type their own value. Nothing has been uploaded or submitted yet. Then call this tool again with the same arguments, adding "${pendingChoice.displayName}" to fieldValues.${pendingChoice.mandatory ? "" : ` It is optional: if the supervisor does not want to set it, pass "${pendingChoice.displayName}": "" instead.`}`
+      };
+    }
   } else {
     const rows = Array.isArray(args.rows) ? args.rows : [args.rows];
     if (rows.length === 0) {
@@ -986,7 +1452,7 @@
   let totalOverridden = false;
 
   if (givenTotalKey && !totalEditable) {
-    return `"${totalLabel}" cannot be set directly for the "${typeMatch.BetName}" benefit type - PeoplesHR calculates it from the amount field(s). Remove it from fieldValues and set the amount instead.`;
+    return `PeoplesHR locks "${totalLabel}" for the "${typeMatch.BetName}" benefit type, so it cannot be typed over on the Benefit Application screen either - it is always calculated from the amount field(s). Tell the supervisor that, and ask whether to change the amount instead. Nothing has been submitted.`;
   }
   if (givenTotalKey) {
     const totalValue = args.fieldValues[givenTotalKey];
@@ -1050,6 +1516,7 @@
 
   if (!totalOverridden && amountFields.length > 0 && totalControl && !(requested > 0)) {
     await refreshDependents(amountFields[amountFields.length - 1].besId, allControls);
+    await runTypeFormulas();
     requested = totalRequested();
 
     if (!(requested > 0)) {
@@ -1076,6 +1543,44 @@
   }));
 
   /* ---------------------------------------------------------------------
+   * Step 14b: attachments, staged on the server BEFORE the supervisor confirms so
+   * they can still be removed from the preview. Order:
+   *   GetAttachments -> DeleteAttachment (names in removeAttachments)
+   *   -> UploadAttachment (new chat files) -> GetAttachments.
+   * The server keeps staged files against the application-session key, and
+   * SaveApplication carries no attachment fields - it links them through
+   * KeyValue. Type, size and count are checked locally against
+   * currentBenefitType before anything changes on the server. This also runs
+   * on the confirm call: a file added or removed after the preview changes the
+   * digest and forces a fresh preview instead of being submitted unseen.
+   * ------------------------------------------------------------------- */
+  const lateAttachmentIssue = await syncAttachments();
+  if (lateAttachmentIssue) return lateAttachmentIssue;
+
+  if (attachmentRules.allowed) {
+    if (attachmentRules.mandatory && stagedAttachments.length === 0) {
+      return Object.assign({
+        needsInput: true,
+        missingFields: ["Attachment"],
+        suppressedByRemoval: suppressedByRemoval.length ? suppressedByRemoval.slice() : undefined,
+        diagnostics: { toolSupportsAttachments: true, chatHelperPresent: chatFileSource.helperPresent, filesSeenInChat: chatFileSource.filesSeen, readError: chatFileSource.readError },
+        message: suppressedByRemoval.length
+          ? `${suppressedByRemoval.map(n => `"${n}"`).join(", ")} ${suppressedByRemoval.length === 1 ? "was" : "were"} attached in the chat but left out because removeAttachments named ${suppressedByRemoval.length === 1 ? "it" : "them"}, and "${typeMatch.BetName}" requires at least one attachment (${attachmentRulesText() || "any file type"}), so nothing has been submitted. ${suppressedByRemoval.length === 1 ? "That file was never on the application, so there was nothing to remove" : "Those files were never on the application, so there was nothing to remove"}. If the supervisor wants to submit with ${suppressedByRemoval.length === 1 ? "it" : "them"}, call this tool again with the same arguments but WITHOUT ${suppressedByRemoval.length === 1 ? "that name" : "those names"} in removeAttachments. Only name a file there when it is already attached to the application and the supervisor wants it taken off.`
+          : `"${typeMatch.BetName}" requires at least one attachment (${attachmentRulesText() || "any file type"}). Nothing has been submitted. Ask the supervisor ONCE to attach the document in the chat, then call this tool again with the same arguments. This tool CAN upload attachments - it just has none yet. Then call this tool again with the same arguments on WHATEVER the supervisor replies next - "done", "ok", "okay then add this", "then add this", "proceed with this", "proceed", "yes", "submit", or anything else. Only this tool can see the files in the chat, so never answer that a file is missing, unsupported or too large without calling it first.`
+      }, attachmentBase);
+    }
+  }
+
+  function attachmentPreviewNote() {
+    if (!attachmentRules.allowed) return null;
+    const staged = stagedAttachments.length
+      ? `Attached: ${stagedAttachments.map(n => `"${n}"`).join(", ")}. Show these to the supervisor with the rest of the preview - before confirming they can still remove any of them (call again with removeAttachments listing the file name, and keep passing it on later calls)${attachmentRules.maxCount && stagedAttachments.length >= attachmentRules.maxCount ? "" : " or attach more in the chat"}.`
+      : `No attachment added (optional; ${attachmentRulesText() || "any file type"}). The supervisor can attach one in the chat before confirming.`;
+    return [staged, `Pass attachmentSessionKey:"${sessionKey}" on every later call for this application, including the confirmation; leave it out if the employee or the benefit type changes.`]
+      .concat(attachmentNotes).join(" ");
+  }
+
+  /* ---------------------------------------------------------------------
    * Step 15: preview, bound to the submit by a digest. The preview call and
    * the confirm call are independent runs - entitlement can change between
    * them (another application filed, a different day) - so the supervisor must
@@ -1088,7 +1593,8 @@
     rows: rowSummaries,
     total: requested,
     entitlement,
-    comment: args.comment || null
+    comment: args.comment || null,
+    attachments: stagedAttachments.map(n => n.toLowerCase()).sort()
   });
 
   function previewPayload(extra) {
@@ -1103,6 +1609,12 @@
       entitlementAsAt,
       [totalLabel]: requested,
       totalWasOverridden: totalOverridden,
+      // The figure was typed over rather than calculated, so say so plainly:
+      // the amount field(s) still hold what was entered, and Benefit History
+      // records this total.
+      totalOverrideNote: totalOverridden
+        ? `"${totalLabel}" was set to ${requested} as asked, and the amount field(s) keep the values that were entered. Benefit History will record ${requested}. Show both figures to the supervisor before they confirm.`
+        : null,
       amountEntered: enteredAmount || null,
       // Both of these must be read out to the supervisor before they confirm -
       // the figure PeoplesHR records is the calculated one, not what was typed.
@@ -1118,13 +1630,29 @@
       fields: hasGrid ? undefined : resolvedFields,
       rows: hasGrid ? rowSummaries : undefined,
       comment: args.comment || null,
+      attachments: attachmentRules.allowed ? stagedAttachments : undefined,
+      // Files that were received and checked but could not be attached.
+      // Read every one of these out: the supervisor attached them and would
+      // otherwise believe they are on the application.
+      rejectedAttachments: rejectedAttachments.length ? rejectedAttachments : undefined,
+      keptDespiteRemoval: keptDespiteRemoval.length ? keptDespiteRemoval.slice() : undefined,
+      attachmentWarning: keptDespiteRemoval.length
+        ? `${keptDespiteRemoval.map(n => `"${n}"`).join(", ")} ${keptDespiteRemoval.length === 1 ? "was" : "were"} listed for removal, but "${typeMatch.BetName}" requires an attachment and nothing else was attached, so ${keptDespiteRemoval.length === 1 ? "it is" : "they are"} on this application. Tell the supervisor before they confirm: if ${keptDespiteRemoval.length === 1 ? "that file is" : "those files are"} wrong, ask them to attach the right one in the chat and call again.`
+        : rejectedAttachments.length
+        ? `${rejectedAttachments.map(r => `"${r.name}" was not attached because ${r.reason}`).join("; ")}. Tell the supervisor this in full before they confirm. ${stagedAttachments.length ? `The application carries ${stagedAttachments.map(n => `"${n}"`).join(", ")} only.` : ""} They can attach a replacement in the chat and this tool will pick it up on the next call.`
+        : null,
+      attachmentRequired: attachmentRules.mandatory,
+      attachmentRules: attachmentRules.allowed ? attachmentRules : undefined,
+      canStillAddAttachment: attachmentRules.allowed && !(attachmentRules.maxCount && stagedAttachments.length >= attachmentRules.maxCount),
+      attachmentSessionKey: attachmentRules.allowed ? sessionKey : undefined,
+      attachmentNote: attachmentPreviewNote(),
       previewDigest
     }, extra || {});
   }
 
   if (!args.confirmed) {
     return previewPayload({
-      message: `Review this application with the supervisor, making clear it will be submitted on ${employee.displayName}'s behalf${totalWarning ? ", and read them the totalWarning below in full - PeoplesHR will record that calculated figure, not the amount entered" : ""}. Once they agree, call this tool again with the same arguments plus confirmed:true and previewDigest:"${previewDigest}" copied exactly from this response.`
+      message: `Review this application with the supervisor, making clear it will be submitted on ${employee.displayName}'s behalf${totalWarning ? ", and read them the totalWarning below in full - PeoplesHR will record that calculated figure, not the amount entered" : ""}. ${attachmentRules.allowed ? " Also read them the attachmentNote below." : ""} Once they agree, call this tool again with the same arguments${attachmentRules.allowed ? ` (including attachmentSessionKey:"${sessionKey}")` : ""} plus confirmed:true and previewDigest:"${previewDigest}" copied exactly from this response.`
     });
   }
 
@@ -1137,7 +1665,7 @@
   if (args.previewDigest !== previewDigest) {
     return previewPayload({
       changed: true,
-      message: `The application has changed since the supervisor saw it - most likely ${employee.displayName}'s entitlement or utilized amount moved. Nothing has been submitted. Show them these updated figures and, if they still agree, call again with confirmed:true and previewDigest:"${previewDigest}".`
+      message: `The application has changed since the supervisor saw it - most likely ${employee.displayName}'s entitlement or utilized amount moved, or an attachment was added or removed. Nothing has been submitted. Show them these updated figures and, if they still agree, call again with confirmed:true and previewDigest:"${previewDigest}".`
     });
   }
 
@@ -1163,6 +1691,38 @@
 
   const saved = saveResult.data || {};
 
+  /* The server re-checks the mandatory attachment itself - confirmed by
+   * capture: Status false, Type "TypeWarning", Message "Please add an
+   * Attachment." - e.g. when a staged file was removed on the screen between
+   * the preview and this confirm. Nothing was filed, so ask for the file
+   * instead of reporting a generic failure. */
+  if (saved.Status !== true && attachmentRules.allowed && /attach/i.test(saved.Message || "")) {
+    return Object.assign({
+      needsInput: true,
+      submitted: false,
+      missingFields: ["Attachment"],
+      message: `PeoplesHR did not submit ${employee.displayName}'s application: "${saved.Message}" Nothing has been submitted. Ask the supervisor to attach the document in the chat (${attachmentRulesText() || "any file type"}), then call this tool again with the same arguments.`
+    }, attachmentBase);
+  }
+
+  /* After a successful submit the screen clears the staged files for this
+   * session key - confirmed by capture: DeleteAttachments {empNumber, key,
+   * appId} straight after SaveApplication, answering an empty body. The
+   * attachments are already saved with the application by then, so this is
+   * housekeeping only: its outcome never changes the result reported. */
+  if (saved.Status === true && attachmentRules.allowed) {
+    try {
+      await fetch(`${base}/BenefitV9/api/ApplicationApi/DeleteAttachments`, {
+        method: "POST",
+        headers: benefitHeaders,
+        body: JSON.stringify({ empNumber: appEmpNumber, key: sessionKey, appId: blob.AppId }),
+        redirect: "follow"
+      });
+    } catch (e) {
+      // housekeeping only - the application is already submitted
+    }
+  }
+
   return {
     submitted: !!saved.Status,
     message: saved.Message
@@ -1177,6 +1737,8 @@
     amountEntered: enteredAmount || null,
     totalWarning,
     fields: hasGrid ? undefined : resolvedFields,
-    rows: hasGrid ? rowSummaries : undefined
+    rows: hasGrid ? rowSummaries : undefined,
+    attachments: attachmentRules.allowed ? stagedAttachments : undefined,
+    rejectedAttachments: rejectedAttachments.length ? rejectedAttachments : undefined
   };
 })
