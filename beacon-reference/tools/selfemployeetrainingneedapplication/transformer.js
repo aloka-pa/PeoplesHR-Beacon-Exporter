@@ -1,15 +1,11 @@
 (async function (data, args, reqOptions) {
   try {
-    // Defensive: guard every step so a missing/malformed BeaconBar context resolves to
-    // a clean NO_ACCESS response instead of an opaque synchronous exception (same
-    // pattern as every other drafts/* tool in this build).
-    const menus = (typeof BeaconBar !== "undefined" && BeaconBar.user && BeaconBar.user.metaData && BeaconBar.user.metaData.menus) || [];
-    const hasAccess = Array.isArray(menus) && menus.some((menu) => typeof menu === "string" && menu.includes("TNDV9/TrainingNeed/Index?mvc=1&bs=4&App=000001"));
-    if (!hasAccess) {
-      return {
-        status: "NO_ACCESS",
-        message: "It seems you don't have access. Please check with the HR Admin"
-      };
+    if (
+      !BeaconBar.user?.metaData?.menus?.some(menu =>
+        menu.includes("TNDV9/TrainingNeed/Index?mvc=1&bs=4&App=000001")
+      )
+    ) {
+      return { error: true, message: "You do not have access to apply for a training need. Please contact HR Admin." };
     }
 
     const existingNeedName = args.existingNeedName ? String(args.existingNeedName).trim() : "";

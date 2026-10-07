@@ -4,7 +4,7 @@
     {
       "name": "templateName",
       "type": "string",
-      "required": false,
+      "required": true,
       "defaultValue": null,
       "description": "The grievance template to submit under, as the user names it. Resolved first, before ground or any other detail. Optional - if only one template is available for this employee it is used automatically; if several are available and none is given, the tool lists them and asks the user to pick one. As soon as a template is resolved (auto-selected or named), the tool fetches and returns its channel members in every subsequent response - call this tool with just templateName (or nothing, if only one template exists) to answer \"who will handle my grievance?\" without providing ground, summary, description or mood.",
       "advanced": true,
@@ -42,11 +42,11 @@
       "type": "string",
       "required": true,
       "defaultValue": null,
-      "description": "The full description/details of the grievance. Required to actually submit - confirmed live that the real Grievance Application screen rejects a blank description ('Please fill the required fields.'). Not schema-required here so it never blocks template/ground/channel-member discovery; always ask the user for this before calling with confirmed:true.",
+      "description": "The full description/details of the grievance. Required to actually submit - confirmed live that the real Grievance Application screen rejects a blank description ('Please fill the required fields.'). Not schema-required here so it never blocks template/ground/channel-member discovery; always ask the user for this before calling with confirmed:true. Character limit is characters+spaces 200. Always enforce the character limit 200.",
       "advanced": true,
       "raw": {
         "type": "string",
-        "description": "The full description/details of the grievance. Required to actually submit - confirmed live that the real Grievance Application screen rejects a blank description ('Please fill the required fields.'). Not schema-required here so it never blocks template/ground/channel-member discovery; always ask the user for this before calling with confirmed:true."
+        "description": "The full description/details of the grievance. Required to actually submit - confirmed live that the real Grievance Application screen rejects a blank description ('Please fill the required fields.'). Not schema-required here so it never blocks template/ground/channel-member discovery; always ask the user for this before calling with confirmed:true. Character limit is characters+spaces 200. Always enforce the character limit 200."
       }
     },
     {
@@ -80,11 +80,11 @@
       "type": "object",
       "required": false,
       "defaultValue": null,
-      "description": "Only needed when one or more files are attached in the chat: a title for each attached file, keyed by its exact file name (e.g. {\"certificate.pdf\": \"Medical certificate\"}). Always ask the user explicitly for a title per file - there is no filename-based default, since the module itself rejects a blank title ('Attachment Title cannot be empty.'). Checked only after summary/description/moodRating are already known; if any attached file has no matching title here, the tool lists exactly which file(s) still need one and does not proceed to the preview. Before that, any file over 2 MB is rejected immediately (confirmed live: 'The maximum file size allowed for the Attachment is 2 MB.') so the user finds out the moment they attach it rather than after confirming - this local check is a fast-fail heuristic only, not the authoritative one, since the real limit may not be fixed at 2 MB in every case. Attachments are then uploaded one file per call, before Submit; if the module rejects any single file for any reason (type, size, or otherwise) at that point, the tool relays that exact message and does not submit the grievance at all.",
+      "description": "Only needed when one or more files are attached in the chat: a title for each attached file, keyed by its exact file name (e.g. {\"certificate.pdf\": \"Medical certificate\"}). Always ask the user explicitly for a title per file - there is no filename-based default, since the module itself rejects a blank title ('Attachment Title cannot be empty.'). Checked only after summary/description/moodRating are already known; if any attached file has no matching title here, the tool lists exactly which file(s) still need one and does not proceed to the preview. No attachment size or file-type limit is checked or assumed by the tool, because both are configured per client. Attachments are uploaded one file per call, only after the user confirms, before Submit; if the module rejects any file for any reason (size, type, or otherwise), the tool relays the module's exact message (e.g. 'The maximum file size allowed for the Attachment is 2 MB.') and does not submit the grievance. Tell the user what was rejected and ask them to attach a different file or continue without it.",
       "advanced": true,
       "raw": {
         "type": "object",
-        "description": "Only needed when one or more files are attached in the chat: a title for each attached file, keyed by its exact file name (e.g. {\"certificate.pdf\": \"Medical certificate\"}). Always ask the user explicitly for a title per file - there is no filename-based default, since the module itself rejects a blank title ('Attachment Title cannot be empty.'). Checked only after summary/description/moodRating are already known; if any attached file has no matching title here, the tool lists exactly which file(s) still need one and does not proceed to the preview. Before that, any file over 2 MB is rejected immediately (confirmed live: 'The maximum file size allowed for the Attachment is 2 MB.') so the user finds out the moment they attach it rather than after confirming - this local check is a fast-fail heuristic only, not the authoritative one, since the real limit may not be fixed at 2 MB in every case. Attachments are then uploaded one file per call, before Submit; if the module rejects any single file for any reason (type, size, or otherwise) at that point, the tool relays that exact message and does not submit the grievance at all."
+        "description": "Only needed when one or more files are attached in the chat: a title for each attached file, keyed by its exact file name (e.g. {\"certificate.pdf\": \"Medical certificate\"}). Always ask the user explicitly for a title per file - there is no filename-based default, since the module itself rejects a blank title ('Attachment Title cannot be empty.'). Checked only after summary/description/moodRating are already known; if any attached file has no matching title here, the tool lists exactly which file(s) still need one and does not proceed to the preview. No attachment size or file-type limit is checked or assumed by the tool, because both are configured per client. Attachments are uploaded one file per call, only after the user confirms, before Submit; if the module rejects any file for any reason (size, type, or otherwise), the tool relays the module's exact message (e.g. 'The maximum file size allowed for the Attachment is 2 MB.') and does not submit the grievance. Tell the user what was rejected and ask them to attach a different file or continue without it."
       }
     },
     {
@@ -112,6 +112,23 @@
       "raw": {
         "type": "boolean",
         "description": "Set true only after the user has seen the preview this tool returns (ground, template, channel members and any bypassed ones, summary, description, hide-identity, mood, attachments) and has explicitly agreed to submit. Omit or set false to preview without submitting anything - this is the default and safe to call repeatedly while the user is still deciding."
+      }
+    },
+    {
+      "name": "isAudioRecorded",
+      "type": "boolean",
+      "required": true,
+      "defaultValue": false,
+      "description": "Controls whether audio recording is requested. Send true when the user explicitly asks to record, capture, or save audio. Otherwise, always send false by default. Always include this field in the tool input.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Controls whether audio recording is requested. Send true when the user explicitly asks to record, capture, or save audio. Otherwise, always send false by default. Always include this field in the tool input.",
+        "enum": [
+          true,
+          false
+        ],
+        "default": false
       }
     }
   ]

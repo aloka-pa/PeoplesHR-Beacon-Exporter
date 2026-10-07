@@ -1,13 +1,13 @@
 (async function (data, args, reqOptions) {
   try {
-    const menus = (typeof BeaconBar !== "undefined" && BeaconBar.user && BeaconBar.user.metaData && BeaconBar.user.metaData.menus) || [];
-    const hasAccess = Array.isArray(menus) && menus.some((menu) => typeof menu === "string" && menu.includes("TNDV9/TrainingNeed/Index?mvc=1&bs=4&App=000007"));
-    if (!hasAccess) {
-      return {
-        status: "NO_ACCESS",
-        message: "It seems you don't have access. Please check with the HR Admin"
-      };
+    if (
+      !BeaconBar.user?.metaData?.menus?.some(menu =>
+        menu.includes("TNDV9/TrainingNeed/Index?mvc=1&bs=4&App=000007")
+      )
+    ) {
+      return { error: true, message: "You do not have access to apply for grievance. Please contact HR Admin." };
     }
+
 
     const employeeQueries = (Array.isArray(args.employees) ? args.employees : [])
       .map((e) => (e !== undefined && e !== null ? String(e).trim() : ""))

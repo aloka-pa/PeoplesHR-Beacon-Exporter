@@ -4,8 +4,8 @@ Benefit Management
 
 ## Assigned tools
 
-- [selfEmployeeBenefitApllication](../../tools/selfemployeebenefitapllication-2) (`6aa45856824909881ccfe34c`)
 - [myTeamBenefitApplication](../../tools/myteambenefitapplication) (`6aaa32816e96f818ab221552`)
+- [selfEmployeeBenefitApllication](../../tools/selfemployeebenefitapllication-2) (`6aa45856824909881ccfe34c`)
 - [getBenefitEmployeeInformation](../../tools/getbenefitemployeeinformation) (`690dc567931a2d61ba0b1718`)
 - [getSingleEmployeeBenefitHistory](../../tools/getsingleemployeebenefithistory) (`690dc566931a2d61ba0b16f7`)
 - [getApplicationStructure](../../tools/getapplicationstructure) (`690dc568931a2d61ba0b17f2`)

@@ -3,7 +3,7 @@
   "slug": "grievance-handling",
   "name": "Grievance Handling",
   "description": "Grievance Handling",
-  "exportedAt": "2026-09-25T05:55:04.732Z",
+  "exportedAt": "2026-10-07T06:26:50.189Z",
   "raw": {
     "_id": "6aa374ef10cb7243bb13e6ab",
     "orgId": "690d9674c55784cc895ca691",
@@ -21,7 +21,8 @@
       "6aa410c22c95f145270e3bc3",
       "6aa41b144568dadea3305d7b",
       "6aa41e46824909881cc8416d",
-      "6aa4282725179d849b92c8e3"
+      "6aa4282725179d849b92c8e3",
+      "6abf6191ab3f4045a178767a"
     ],
     "scenarioIds": [],
     "skillIds": [],
@@ -99,7 +100,7 @@
         ],
         "isAdvanced": false,
         "advancedArgs": "",
-        "_id": "6aaab857e6b9eed7ece99ebd"
+        "_id": "6abf61ada6e6ed9a8233b71b"
       },
       "subTasks": {
         "enabled": false,
@@ -147,7 +148,11 @@
       "discardedByConflictResolution": false
     },
     "createdAt": "2026-09-11T03:26:39.366Z",
-    "updatedAt": "2026-09-16T15:40:07.101Z",
-    "__v": 20
+    "updatedAt": "2026-10-02T07:47:57.152Z",
+    "__v": 21,
+    "classifierConfig": [],
+    "guardrails": [],
+    "quickAnswers": [],
+    "stateSchemas": []
   }
 }

@@ -1,4 +1,10 @@
 (async function (data, args, reqOptions) {
+  /* Anything this tool throws would otherwise reach the user as Beacon's
+   * generic "Something went wrong. Please try again later.", which says
+   * nothing about what failed. The stage is tracked as the run proceeds and
+   * reported with the error, so a failure can be placed exactly. */
+  let toolStage = "starting";
+  try {
   /* =====================================================================
    * myTeamBenefitApplication - applies for a benefit on behalf of one of the
    * signed-in supervisor's direct subordinates, via the "Apply Benefit - Team"
@@ -15,7 +21,23 @@
    *   "VL" computed Total Request - the figure Benefit History records as the
    *        applied amount
    * ===================================================================== */
-  const EDITABLE_CTRL_TYPES = ["2", "3", "4", "5"];
+  /* PeoplesHR bes_ctrl_type codes. Confirmed with IE as globally valid across
+   * every benefit type, so they are safe to hardcode:
+   *   "1" - Text Box
+   *   "2" - Numeric
+   *   "3" - Dropdown
+   *   "4" - Checkbox
+   *   "5" - Date Picker
+   *   "7" - Label      (display only, never an input)
+   *   "8" - Text Area
+   * "VL" is not one of them: it is the screen's computed Total Request, which
+   * carries no BesDisplayName and is handled separately below.
+   *
+   * Every code except "7" and "VL" is something the user fills in, so all of
+   * them belong in this list. A code left out of it is dropped from the form
+   * altogether - that is how the eleven "8" (Text Area) controls on SSS-
+   * Sickness Benefits went missing until PeoplesHR refused the save. */
+  const EDITABLE_CTRL_TYPES = ["1", "2", "3", "4", "5", "8"];
   const DEFAULT_DATE_FORMAT = "DD/MM/YYYY";
 
   const benefitHeaders = new Headers();
@@ -39,15 +61,12 @@
    * mode=0 is what separates the team screen from the self-service one, so it
    * is part of the match; the per-session digest deliberately is not.
    * ------------------------------------------------------------------- */
-  const TEAM_BENEFIT_MENU = "benefitv9/application/application/?mode=0&mvc=1";
-  const menus = (typeof BeaconBar !== "undefined" && BeaconBar.user && BeaconBar.user.metaData && BeaconBar.user.metaData.menus) || [];
-  const hasAccess = Array.isArray(menus) && menus.some(menu => typeof menu === "string" && menu.toLowerCase().includes(TEAM_BENEFIT_MENU));
-
-  if (!hasAccess) {
-    return {
-      status: "NO_ACCESS",
-      message: "It seems you don't have access to the Apply Benefit - Team screen. Please check with the HR Admin."
-    };
+  if (
+    !BeaconBar.user?.metaData?.menus?.some(menu =>
+      menu.includes("Benefitv9/Application/Application/?mode=0&mvc=1")
+    )
+  ) {
+    return { error: true, message: "You do not have access to apply for Benefit - Team screen. Please contact HR Admin." };
   }
 
   /* ---------------------------------------------------------------------
@@ -102,22 +121,102 @@
   // Records how the chat files were read, so a response that reports no
   // attachment can be told apart from the helper being missing or throwing.
   const chatFileSource = { helperPresent: false, filesSeen: 0, readError: null };
+
   function chatFiles() {
     try {
-      chatFileSource.helperPresent = typeof BeaconBar !== "undefined" && typeof BeaconBar.getUploadedBaoFiles === "function";
-      if (typeof BeaconBar !== "undefined" && typeof BeaconBar.getUploadedBaoFiles === "function") {
+      chatFileSource.helperPresent =
+        typeof BeaconBar !== "undefined" &&
+        typeof BeaconBar.getUploadedBaoFiles === "function";
+
+      let uploaded = [];
+
+      if (chatFileSource.helperPresent) {
         const bao = BeaconBar.getUploadedBaoFiles();
-        const list = (Array.isArray(bao) ? bao : (bao ? [bao] : [])).filter(f => f && f.name);
-        // Attaching the same name again means the supervisor replaced that file,
-        // so the last one wins - keeping the first would upload the old copy.
-        const unique = list.filter((f, i) => list.map(o => o.name.toLowerCase()).lastIndexOf(f.name.toLowerCase()) === i);
-        chatFileSource.filesSeen = unique.length;
-        return unique;
+        uploaded = Array.isArray(bao) ? bao : bao ? [bao] : [];
       }
+
+      // Read files collected by the separate attachment collector.
+      let collected = [];
+      if (typeof BeaconBar !== "undefined" && typeof BeaconBar.getSharedData === "function") {
+        const stored = BeaconBar.getSharedData("peoplesHRChatAttachments");
+        collected = Array.isArray(stored) ? stored : stored ? [stored] : [];
+
+        const selected = BeaconBar.getSharedData("peoplesHRSelectedAttachment");
+        if (selected && !collected.some(f =>
+          f === selected
+        )) {
+          collected.push(selected);
+        }
+      }
+
+      // Merge current chat uploads with previously collected attachments.
+      const combined = [...collected, ...uploaded]
+        .filter(f => f && typeof f === "object" && f.name);
+
+      // For duplicate names, prefer the current chat upload.
+      const unique = combined.filter((f, i, list) =>
+        list.findLastIndex(o =>
+          String(o.name).toLowerCase() === String(f.name).toLowerCase()
+        ) === i
+      );
+
+      chatFileSource.filesSeen = unique.length;
+      return unique;
     } catch (e) {
       chatFileSource.readError = String((e && e.message) || e);
+      return [];
     }
-    return [];
+  }
+
+
+  /* The file the chat hands over is not always a Blob. Confirmed live:
+   * UploadAttachment threw "parameter 2 is not of type 'Blob'" when
+   * BeaconBar.getUploadedBaoFiles() returned a wrapper describing the file
+   * rather than the file itself. Whatever arrives - a File, a wrapper holding
+   * one, raw bytes, a base64 string, a data: URL or a link - is turned into a
+   * Blob here, so the upload posts real content instead of throwing. */
+  function base64ToBlob(text, type) {
+    const clean = String(text).replace(/^data:[^,]*,/, "").replace(/\s/g, "");
+    const binary = atob(clean);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new Blob([bytes], type ? { type: type } : undefined);
+  }
+
+  async function fileBlobOf(entry) {
+    if (!entry) return null;
+    const name = String(entry.name || entry.fileName || entry.filename || entry.FileName || "attachment");
+    const type = entry.type || entry.mimeType || entry.contentType || "";
+    const wrap = blob => ({ blob: blob, name: name, size: blob.size });
+
+    if (typeof Blob !== "undefined" && entry instanceof Blob) return wrap(entry);
+
+    const nested = entry.file || entry.blob || entry.rawFile || entry.originFileObj || entry.fileObject || entry.baoFile;
+    if (nested && typeof Blob !== "undefined" && nested instanceof Blob) {
+      return { blob: nested, name: nested.name || name, size: nested.size };
+    }
+    if (typeof entry.arrayBuffer === "function") {
+      return wrap(new Blob([await entry.arrayBuffer()], type ? { type: type } : undefined));
+    }
+
+    const raw = entry.base64 || entry.base64Data || entry.Base64Data || entry.content || entry.fileData
+      || entry.data || entry.bytes || entry.buffer || entry.url || entry.src || entry.fileUrl || entry.downloadUrl;
+    if (raw && (raw instanceof ArrayBuffer || ArrayBuffer.isView(raw))) {
+      return wrap(new Blob([raw], type ? { type: type } : undefined));
+    }
+    if (typeof raw === "string" && raw) {
+      if (/^https?:\/\//i.test(raw) || raw.charAt(0) === "/") {
+        const res = await fetch(raw, { redirect: "follow" });
+        return wrap(await res.blob());
+      }
+      try { return wrap(base64ToBlob(raw, type)); } catch (e) { return null; }
+    }
+    return null;
+  }
+
+  // Named so an unresolvable entry can say what it did arrive with.
+  function describeEntry(entry) {
+    try { return Object.keys(entry || {}).join(", ") || typeof entry; } catch (e) { return typeof entry; }
   }
 
   function extensionOf(name) {
@@ -144,6 +243,7 @@
   const pageDigest = await BeaconBar.executeFunction("getDigest")(updateUrl.updateParams);
   const pageUrl = `${base}/${updateUrl.updateUrl}&digest=${pageDigest.digest}`;
 
+  toolStage = "opening the Benefit Application screen";
   const pageRes = await fetch(pageUrl, {
     method: "GET",
     headers: { "accept": "*/*", "accept-language": "en-US,en;q=0.9" },
@@ -383,6 +483,7 @@
   /* ---------------------------------------------------------------------
    * Step 8: the application structure for this employee + benefit type.
    * ------------------------------------------------------------------- */
+  toolStage = "loading the benefit type's form";
   const structureResult = await postJson(
     `${base}/BenefitV9/api/ApplicationApi/GetApplicationStructure/`,
     {
@@ -477,6 +578,7 @@
   let attachmentsSynced = false;
 
   async function syncAttachments() {
+    toolStage = "reading the attachments already on the application";
     if (attachmentsSynced) return null;
     attachmentsSynced = true;
     if (!attachmentRules.allowed) {
@@ -495,7 +597,30 @@
 
       const inChat = chatFiles();
       const toDelete = serverList.filter(a => isRemoved(a.BetAttachmentName));
-      const toUpload = inChat.filter(f => !isRemoved(f.name) && !serverList.some(a => sameName(a.BetAttachmentName, f.name)));
+
+      /* Anything the chat hands over is an upload attempt. The helper reports
+       * a file to the call it was attached for, so a file arriving under a
+       * name that is already on the application is the supervisor replacing it
+       * with a newer version - the staged copy is deleted and the new one
+       * uploaded, rather than skipped as a duplicate. Nothing in the staged
+       * list says how big a file is or when it changed, so the chat is the
+       * only thing that can be trusted about what the supervisor wants now. */
+      const replaced = serverList.filter(a => !isRemoved(a.BetAttachmentName)
+        && inChat.some(f => !isRemoved(f.name) && sameName(f.name, a.BetAttachmentName)));
+      /* "Change the document to this": with replaceAttachments the files in
+       * the chat are the whole attachment list, so anything staged that the
+       * supervisor did not attach again comes off - a swap for a file with a
+       * different name is a replacement too, not a second attachment. It
+       * only applies when there is something to put in their place, so the
+       * flag can never empty an application on its own. */
+      const replacingAll = args.replaceAttachments === true || String(args.replaceAttachments || "").toLowerCase() === "true";
+      const supersededByReplaceAll = (replacingAll && inChat.some(f => !isRemoved(f.name)))
+        ? serverList.filter(a => !isRemoved(a.BetAttachmentName)
+          && !inChat.some(f => sameName(f.name, a.BetAttachmentName))
+          && !replaced.some(r => sameName(r.BetAttachmentName, a.BetAttachmentName)))
+        : [];
+      const toRemoveFromServer = toDelete.concat(replaced, supersededByReplaceAll);
+      const toUpload = inChat.filter(f => !isRemoved(f.name));
       inChat.forEach(f => {
         if (!isRemoved(f.name) || serverList.some(a => sameName(a.BetAttachmentName, f.name))) return;
         const wrongType = attachmentRules.allowedTypes.length && !attachmentRules.allowedTypes.includes(extensionOf(f.name));
@@ -545,7 +670,7 @@
        * application over and over. The file is kept instead, and said so
        * plainly in the preview, which is shown before anything is submitted. */
       if (attachmentRules.mandatory
-        && serverList.length - toDelete.length + toUploadUsable.length === 0
+        && serverList.length - toRemoveFromServer.length + toUploadUsable.length === 0
         && suppressedByRemoval.length > 0) {
         inChat.forEach(f => {
           if (!suppressedByRemoval.some(n => sameName(n, f.name))) return;
@@ -555,7 +680,7 @@
         attachmentNotes.push(`${keptDespiteRemoval.map(n => `"${n}"`).join(", ")} ${keptDespiteRemoval.length === 1 ? "was" : "were"} named in removeAttachments but kept, because "${typeMatch.BetName}" requires an attachment and nothing else was attached. Tell the supervisor so.`);
       }
 
-      const finalCount = serverList.length - toDelete.length + toUploadUsable.length;
+      const finalCount = serverList.length - toRemoveFromServer.length + toUploadUsable.length;
       if (attachmentRules.maxCount && finalCount > attachmentRules.maxCount) {
         return Object.assign({
           needsInput: true,
@@ -571,27 +696,54 @@
         attachmentNotes.push(`No attachment named ${unknownRemovals.map(n => `"${n}"`).join(", ")} was found on this application, so nothing was removed for ${unknownRemovals.length === 1 ? "it" : "them"}. Only attachments that have not been submitted yet can be removed.`);
       }
 
-      for (const att of toDelete) {
+      toolStage = "removing an attachment";
+      for (const att of toRemoveFromServer) {
         const del = await postJson(
           `${base}/BenefitV9/api/ApplicationApi/DeleteAttachment`,
           { fileCode: att.BetAttachmentCode, empNumber: appEmpNumber, key: sessionKey },
           "DeleteAttachment"
         );
         if (del.error || (del.data && del.data.Status === false)) {
-          return Object.assign({
-            error: true,
-            message: `Could not remove "${att.BetAttachmentName}"${del.data && del.data.Message ? `: ${del.data.Message}` : ""}. Nothing has been submitted. Tell the supervisor this exactly.`,
-            detail: del.error || null
-          }, attachmentBase);
+          const reason = `${del.data && del.data.Message ? `: ${del.data.Message}` : ""}`;
+          /* A removal the supervisor asked for is the point of the call, so it stops
+           * here. A file being taken off to make way for a new one is not: the
+           * upload still has to happen, and the leftover is reported instead of
+           * losing the whole application to it. */
+          if (toDelete.some(d => sameName(d.BetAttachmentName, att.BetAttachmentName))) {
+            return Object.assign({
+              needsInput: true,
+              validationError: true,
+              message: `Could not remove "${att.BetAttachmentName}"${reason}. Nothing has been submitted. Tell the supervisor this exactly.`,
+              detail: del.error || null
+            }, attachmentBase);
+          }
+          attachmentNotes.push(`"${att.BetAttachmentName}" could not be taken off the application${reason}, so it is still attached alongside the new file. Tell the supervisor.`);
         }
       }
 
+      if (supersededByReplaceAll.length > 0) {
+        attachmentNotes.push(`${supersededByReplaceAll.map(a => `"${a.BetAttachmentName}"`).join(", ")} ${supersededByReplaceAll.length === 1 ? "was" : "were"} taken off the application, replaced by what the supervisor attached in the chat.`);
+      }
+
+      if (replaced.length > 0) {
+        attachmentNotes.push(`${replaced.map(a => `"${a.BetAttachmentName}"`).join(", ")} ${replaced.length === 1 ? "was" : "were"} replaced with the newer file attached in the chat.`);
+      }
+
+      toolStage = "uploading an attachment";
       for (const file of toUploadUsable) {
+        const resolved = await fileBlobOf(file);
+        if (!resolved || !resolved.blob || !resolved.blob.size) {
+          rejectedAttachments.push({
+            name: file && file.name ? file.name : "(unnamed file)",
+            reason: `the chat handed over no readable contents for it (it arrived as: ${describeEntry(file)})`
+          });
+          continue;
+        }
         const form = new FormData();
-        form.append("file_data", file, file.name);
+        form.append("file_data", resolved.blob, resolved.name);
         // The screen's file-input widget id: size + "_" + URI-encoded name with
         // "%" turned into "_" (capture: 14107_pre_20configurations_20demo_20intro.docx).
-        form.append("fileId", `${file.size}_${encodeURIComponent(file.name).replace(/%/g, "_")}`);
+        form.append("fileId", `${resolved.size}_${encodeURIComponent(resolved.name).replace(/%/g, "_")}`);
         form.append("initialPreview", "[]");
         form.append("initialPreviewConfig", "[]");
         form.append("initialPreviewThumbTags", "[]");
@@ -612,7 +764,8 @@
         }
       }
 
-      if (toDelete.length > 0 || toUploadUsable.length > 0) {
+      // Always read the list back after anything was uploaded or removed.
+      if (toRemoveFromServer.length > 0 || toUploadUsable.length > 0) {
         const refreshed = await listAttachments();
         if (refreshed.error) return refreshed.error;
         serverList = refreshed.list;
@@ -655,29 +808,46 @@
       // Total Request carries no BesDisplayName of its own; its label,
       // visibility and editability come from the structure's top-level
       // TotalRequestLabelName / TotalRequestVisible / TotalRequestEnable.
-      if (ctrl.BesCtrlType === "VL") {
+      if (ctrl.BesCtrlType === "VL") {  // "VL" = the screen's computed Total Request
         totalControl = ctrl;
         return;
       }
       if (ctrl.IsVisible === false) return;
       if (EDITABLE_CTRL_TYPES.includes(ctrl.BesCtrlType) && ctrl.BesDisplayName && ctrl.IsEnable !== false) {
         fields.push(describeField(ctrl));
-      } else if (ctrl.BesCtrlType === "7") {
+      } else if (ctrl.BesCtrlType === "7") {  // "7" = Label
         infoControls.push(ctrl);
       }
     });
   });
 
   const totalLabel = structure.TotalRequestLabelName || "Total Request";
-  const totalVisible = !!totalControl && structure.TotalRequestVisible !== false;
-  // The screen lets the figure be typed over: the server fills it in from the
-  // amount field(s), and whatever is in the control at submit time is what
-  // Benefit History records. Confirmed by capture - Amount in Bills 100 with
-  // the Total Request typed down to 50 submitted successfully (reference 191).
-  // So it is editable unless this screen or this benefit type says otherwise.
+  /* Whether the Total Request shows and whether it can be typed over are both
+   * stated by the screen, in two places that agree:
+   *   GetApplicationStructure -> "TotalRequestVisible": true, "TotalRequestEnable": true
+   *   the VL control itself    -> "IsVisible": true, "IsEnable": true
+   * Both captures carry them - the control the UI typed 50 into came back with
+   * IsEnable true, and that application submitted (reference 191). So the
+   * answer is read from the response: the structure's flag when it sends one,
+   * otherwise the control's own. Nothing is assumed either way, and a screen
+   * that says the figure is locked is believed. */
+  function screenFlag(fromStructure, fromControl) {
+    const structureSays = typeof fromStructure === "boolean" ? fromStructure : null;
+    const controlSays = typeof fromControl === "boolean" ? fromControl : null;
+    // Both are the screen talking about the same control, so when both are
+    // sent they have to agree - a control the screen disabled is disabled
+    // whatever the header flag says, and vice versa.
+    if (structureSays !== null && controlSays !== null) return structureSays && controlSays;
+    if (structureSays !== null) return structureSays;
+    if (controlSays !== null) return controlSays;
+    return false;
+  }
+
+  const totalLabelControl = totalControl || {};
+  const totalVisible = !!totalControl
+    && screenFlag(structure.TotalRequestVisible, totalLabelControl.IsVisible);
   const totalEditable = totalVisible
-    && structure.TotalRequestEnable !== false
-    && String(betInfo.BetAmountLocked == null ? 0 : betInfo.BetAmountLocked) !== "1";
+    && screenFlag(structure.TotalRequestEnable, totalLabelControl.IsEnable);
 
   // Two controls sharing a display name would both take the same fieldValues
   // entry and silently double the computed total.
@@ -699,9 +869,9 @@
    * choice - never typed freely by the supervisor. */
   const dependentDropdowns = new Map();
   fields.forEach((f, i) => {
-    if (f.ctrlType !== "3" || (f.ref.RefObjectValue || []).length > 0) return;
+    if (f.ctrlType !== "3" || (f.ref.RefObjectValue || []).length > 0) return;  // "3" = Dropdown
     const earlier = fields.slice(0, i).reverse()
-      .filter(p => p.ctrlType === "3" && (p.ref.RefObjectValue || []).length > 0);
+      .filter(p => p.ctrlType === "3" && (p.ref.RefObjectValue || []).length > 0);  // "3" = Dropdown
     const parent = earlier.find(p => String(p.ref.BesIsDiasblePostback) !== "1") || earlier[0] || null;
     dependentDropdowns.set(f.besId, parent);
   });
@@ -944,7 +1114,7 @@
   function sameValue(ctrlType, a, b) {
     if (a === b) return true;
     if (a == null || b == null) return false;
-    if (ctrlType === "2") {
+    if (ctrlType === "2") {  // "2" = Numeric
       const na = numberOf(a), nb = numberOf(b);
       return na !== null && nb !== null && na === nb;
     }
@@ -974,7 +1144,7 @@
   // the outer form holds only the computed total and the grid itself.
   function readOnlyControls() {
     if (gridControl && workingRowControls.length > 0) {
-      return workingRowControls.filter(c => c.BesCtrlType === "7" && c.BesDisplayName);
+      return workingRowControls.filter(c => c.BesCtrlType === "7" && c.BesDisplayName);  // "7" = Label
     }
     return infoControls;
   }
@@ -1105,7 +1275,7 @@
    * Value application, shared by the outer form and by each grid row.
    * ------------------------------------------------------------------- */
   function normalizeValue(field, value) {
-    if (field.ctrlType === "3") {
+    if (field.ctrlType === "3") {  // "3" = Dropdown
       const options = field.ref.RefObjectValue || [];
       if (options.length === 0) return { defer: true };
       const opt = options.find(o => String(o.Value).toLowerCase() === String(value).toLowerCase());
@@ -1117,27 +1287,33 @@
       return { value: opt.Id };
     }
 
-    if (field.ctrlType === "5") {
+    if (field.ctrlType === "5") {  // "5" = Date Picker
       if (!dateRegex.test(String(value))) {
         return { error: `"${field.displayName}" must be a date in ${dateFormat} format (e.g. ${todayFormatted()}) - got "${value}".` };
       }
       return { value: String(value) };
     }
 
-    if (field.ctrlType === "4") {
+    if (field.ctrlType === "4") {  // "4" = Checkbox: ticked posts "1", unticked "0"
       const text = String(value).toLowerCase().trim();
       if (["1", "true", "yes", "y"].includes(text)) return { value: "1" };
       if (["0", "false", "no", "n"].includes(text)) return { value: "0" };
       return { error: `"${field.displayName}" must be yes or no - got "${value}".` };
     }
 
-    // Numeric: "200 USD" passes a bare parseFloat, so write the parsed number
-    // back rather than whatever was typed.
-    const num = numberOf(value);
-    if (num === null) {
-      return { error: `"${field.displayName}" must be a number - got "${value}".` };
+    if (field.ctrlType === "2" || field.dataType === "NUMERIC") {  // "2" = Numeric
+      // Numeric: "200 USD" passes a bare parseFloat, so write the parsed number
+      // back rather than whatever was typed.
+      const num = numberOf(value);
+      if (num === null) {
+        return { error: `"${field.displayName}" must be a number - got "${value}".` };
+      }
+      return { value: field.decimals > 0 ? num.toFixed(field.decimals) : String(num) };
     }
-    return { value: field.decimals > 0 ? num.toFixed(field.decimals) : String(num) };
+    
+    // Whatever is left is free text - "1" Text Box or "8" Text Area - and is
+    // sent exactly as the screen sends it ("Diagnosis" -> "test").
+    return { value: value == null ? "" : String(value) };
   }
 
   function keyFor(values, name) {
@@ -1148,7 +1324,7 @@
   // and every derived figure depend on the date, and posting an amount while
   // the date is still null computes it against a 0.00 entitlement.
   function orderedForApply(list) {
-    return list.slice().sort((a, b) => (a.ctrlType === "5" ? 0 : 1) - (b.ctrlType === "5" ? 0 : 1));
+    return list.slice().sort((a, b) => (a.ctrlType === "5" ? 0 : 1) - (b.ctrlType === "5" ? 0 : 1));  // "5" = Date Picker
   }
 
   async function applyValues(fieldList, values, controlsToMerge, trackIntent) {
@@ -1157,7 +1333,7 @@
     for (const field of orderedForApply(fieldList)) {
       const givenKey = keyFor(values, field.displayName);
       if (!givenKey) continue;
-      if (field.ctrlType === "3" && leftBlank(field, values)) continue;
+      if (field.ctrlType === "3" && leftBlank(field, values)) continue;  // "3" = Dropdown
 
       const outcome = normalizeValue(field, values[givenKey]);
       if (outcome.error) return { error: outcome.error };
@@ -1191,20 +1367,24 @@
 
   function describeForDiscovery(field) {
     const options = field.ref.RefObjectValue || [];
-    const isDate = field.ctrlType === "5";
+    const isDate = field.ctrlType === "5";  // "5" = Date Picker
     return {
       displayName: field.displayName,
-      // The Application Date reports "not-mandatory", but entitlement, utilized
-      // and the computed total are all worthless without it, so it is required
-      // in practice and must be asked for.
-      mandatory: field.mandatory || isDate,
+      // Whatever PeoplesHR marks mandatory is mandatory, dates included. A
+      // date the screen calls not-mandatory is not asked for: the structure
+      // arrives with the date already filled in (C200003 came back as
+      // "29/09/2026"), and forcing every date control marked one type "5" as
+      // required turned ten back-office dates on a single benefit type into
+      // questions the supervisor cannot answer.
+      mandatory: field.mandatory,
       dataType: field.dataType,
-      inputType: isDate ? `date (${dateFormat})` : field.ctrlType === "3" ? "choice" : field.ctrlType === "4" ? "yes/no" : "number",
+      // "3" = Dropdown, "4" = Checkbox, "2" = Numeric
+      inputType: isDate ? `date (${dateFormat})` : field.ctrlType === "3" ? "choice" : field.ctrlType === "4" ? "yes/no" : (field.ctrlType === "2" || field.dataType === "NUMERIC") ? "number" : "text",
       currentValue: field.ref.RefValue,
       options: options.length ? options.map(o => o.Value) : undefined,
       note: isDate
-        ? `Required. Entitlement, utilized amount and the total are calculated for this date, so ask the supervisor which date to use - today (${todayFormatted()}) is only a suggestion.`
-        : field.ctrlType === "3"
+        ? `Already set to ${field.ref.RefValue || todayFormatted()}, and entitlement, utilized amount and the total are calculated for it. Do not ask the supervisor for this date: report the figures as they stand. Send it only when they name a different date, and then send the one they gave.`
+        : field.ctrlType === "3"  // "3" = Dropdown
           ? (options.length
             ? "Show these options as a list and let the supervisor pick one. Never accept a value that is not in this list, and never let them type their own."
             : `Do not ask for this yet. Its options depend on ${dependsOnText(field)}: once the supervisor has chosen that, call this tool again with it in fieldValues and the tool returns the "${field.displayName}" options to pick from.`)
@@ -1215,9 +1395,6 @@
     };
   }
 
-  function missingDateFields(fieldList, values) {
-    return fieldList.filter(f => f.ctrlType === "5" && !keyFor(values, f.displayName) && !f.ref.RefValue);
-  }
 
   function missingMandatory(fieldList, values) {
     return fieldList.filter(f => f.mandatory && !keyFor(values, f.displayName) && !dependentDropdowns.has(f.besId));
@@ -1238,7 +1415,7 @@
 
   if (!wantsApply) {
     let probedDate = null;
-    const probeField = (hasGrid ? gridEditable : fields).find(f => f.ctrlType === "5" && !f.ref.RefValue);
+    const probeField = (hasGrid ? gridEditable : fields).find(f => f.ctrlType === "5" && !f.ref.RefValue);  // "5" = Date Picker
     const probeTarget = hasGrid ? workingRowControls : allControls;
 
     if (probeField) {
@@ -1280,12 +1457,12 @@
       discovery.rowsRequired = true;
       discovery.gridColumns = gridEditable.map(describeForDiscovery);
       discovery.readOnlyColumns = gridColumns
-        .filter(c => c.BesCtrlType === "7" && c.BesDisplayName)
+        .filter(c => c.BesCtrlType === "7" && c.BesDisplayName)  // "7" = Label
         .map(c => c.BesDisplayName);
     } else {
       discovery.message = `${employee.displayName} (${employee.displayNumber}) and the benefit type are both settled - do not ask the user for an employee number or re-confirm the type. Ask them ONLY for the fields listed below: every mandatory one, plus any optional ones they want to set. Ask for nothing that is not in this list. Then call this tool again with the same employeeName/benefitType plus a fieldValues object keyed by each field's displayName exactly as shown.`;
       discovery.fields = fields.map(describeForDiscovery);
-      if (fields.some(f => f.ctrlType === "3")) {
+      if (fields.some(f => f.ctrlType === "3")) {  // "3" = Dropdown
         discovery.choiceNote = `Choice fields are pick-lists: show their options and let the supervisor select one - never let them type a value of their own.${dependentDropdowns.size ? ` ${[...dependentDropdowns.keys()].map(id => { const f = fields.find(x => x.besId === id); return `"${f.displayName}" depends on ${dependsOnText(f)}`; }).join("; ")} - do not ask for ${dependentDropdowns.size === 1 ? "it" : "them"} yet; the tool lists ${dependentDropdowns.size === 1 ? "its" : "their"} options once the parent is chosen.` : ""}`;
       }
       if (totalVisible) {
@@ -1320,10 +1497,6 @@
       return `${unknown.map(n => `"${n}"`).join(", ")} ${unknown.length === 1 ? "is not a field" : "are not fields"} on the "${typeMatch.BetName}" benefit type. Valid fields: ${fields.map(f => f.displayName).concat(totalEditable ? [totalLabel] : []).join(", ")}`;
     }
 
-    const missingDates = missingDateFields(fields, values);
-    if (missingDates.length > 0) {
-      return `${missingDates.map(f => `"${f.displayName}"`).join(", ")} is required for ${employee.displayName}'s "${typeMatch.BetName}" application - entitlement, utilized amount and the total are all calculated for that date. Ask the supervisor which date to use (today is ${todayFormatted()}) and call this tool again with it in fieldValues.`;
-    }
 
     const missing = missingMandatory(fields, values);
     if (missing.length > 0) {
@@ -1375,10 +1548,6 @@
       // from and what the recalculation fills in.
       const rowFields = gridEditable.map(f => Object.assign({}, f, { ref: workingControl(f.besId) || f.ref }));
 
-      const missingDates = missingDateFields(rowFields, rowValues);
-      if (missingDates.length > 0) {
-        return `${missingDates.map(f => `"${f.displayName}"`).join(", ")} is required${rowLabel} - entitlement, utilized amount and the row total are all calculated for that date. Ask the supervisor which date to use (today is ${todayFormatted()}).`;
-      }
 
       const missing = missingMandatory(rowFields, rowValues);
       if (missing.length > 0) {
@@ -1402,9 +1571,9 @@
 
       rowSummaries.push(rowFields.reduce((acc, f) => {
         const live = workingControl(f.besId) || f.ref;
-        acc[f.displayName] = f.ctrlType === "3"
+        acc[f.displayName] = f.ctrlType === "3"  // "3" = Dropdown
           ? ((live.RefObjectValue || []).find(o => o.Id === live.RefValue)?.Value ?? live.RefValue)
-          : f.ctrlType === "4" ? (live.RefValue === "1" ? "Yes" : "No") : live.RefValue;
+          : f.ctrlType === "4" ? (live.RefValue === "1" ? "Yes" : "No") : live.RefValue;  // "4" = Checkbox
         return acc;
       }, {}));
     }
@@ -1414,7 +1583,7 @@
     // numeric columns. Ask the server for it first; fall back to summing the
     // rows ourselves if it has not caught up, since this figure is what Benefit
     // History records.
-    const amountColumn = gridEditable.find(f => f.ctrlType === "2");
+    const amountColumn = gridEditable.find(f => f.ctrlType === "2");  // "2" = Numeric
     if (amountColumn) await refreshDependents(amountColumn.besId, allControls);
     // This last refresh is an optimisation, not a dependency - the row values
     // are already validated and the fallback below covers the total - so a
@@ -1429,7 +1598,7 @@
       const summed = gridVm.GridData.RowItems.reduce((sum, row) => {
         return sum + (row.ColumnItems || []).reduce((rowSum, ci) => {
           const col = gridColumns.find(c => c.BesId === ci.BesId);
-          if (!col || col.BesCtrlType !== "2") return rowSum;
+          if (!col || col.BesCtrlType !== "2") return rowSum;  // "2" = Numeric
           return rowSum + (numberOf(ci.Value) || 0);
         }, 0);
       }, 0);
@@ -1449,13 +1618,27 @@
    * an overridden total comes back recalculated, re-capture that one change.
    * ------------------------------------------------------------------- */
   const givenTotalKey = (!hasGrid && totalVisible) ? keyFor(args.fieldValues, totalLabel) : undefined;
+  /* The figure can arrive either way: as its own argument, or as a key inside
+   * fieldValues named after the label the screen uses. The screen itself takes
+   * it without any request - confirmed by capture: the amount was left at 100,
+   * the Total Request was typed down to 50, no call went out in between, and
+   * SaveApplication carried Amount 100 with VL 50 (reference 191). So whichever
+   * way it arrives it is applied here, last, and nothing recalculates after. */
+  const totalFromArgument = (!hasGrid && totalVisible
+    && args.totalRequest !== undefined && args.totalRequest !== null
+    && String(args.totalRequest).trim() !== "")
+    ? args.totalRequest
+    : undefined;
+  const totalAsked = totalFromArgument !== undefined
+    ? totalFromArgument
+    : (givenTotalKey ? args.fieldValues[givenTotalKey] : undefined);
   let totalOverridden = false;
 
-  if (givenTotalKey && !totalEditable) {
+  if (totalAsked !== undefined && !totalEditable) {
     return `PeoplesHR locks "${totalLabel}" for the "${typeMatch.BetName}" benefit type, so it cannot be typed over on the Benefit Application screen either - it is always calculated from the amount field(s). Tell the supervisor that, and ask whether to change the amount instead. Nothing has been submitted.`;
   }
-  if (givenTotalKey) {
-    const totalValue = args.fieldValues[givenTotalKey];
+  if (totalAsked !== undefined) {
+    const totalValue = totalAsked;
     if (numberOf(totalValue) === null) {
       return `"${totalLabel}" must be a number - got "${totalValue}".`;
     }
@@ -1477,7 +1660,7 @@
   // A dropdown whose parent changed later in the run can be left holding an
   // option list - and an Id - that is no longer valid.
   const staleDropdown = (hasGrid ? gridEditable : fields).find(f => {
-    if (f.ctrlType !== "3") return false;
+    if (f.ctrlType !== "3") return false;  // "3" = Dropdown
     const live = hasGrid ? (workingControl(f.besId) || f.ref) : f.ref;
     if (!live.RefValue) return false;
     return !(live.RefObjectValue || []).some(o => o.Id === live.RefValue);
@@ -1489,13 +1672,14 @@
   const entitlement = entitlementSummary();
   let requested = totalRequested();
 
+  // "2" = Numeric
   const amountFields = (hasGrid ? [] : fields).filter(f => f.ctrlType === "2" && (numberOf(f.ref.RefValue) || 0) > 0);
   const enteredAmount = amountFields.reduce((sum, f) => sum + (numberOf(f.ref.RefValue) || 0), 0);
 
   // The application date every figure below was calculated for - the same
   // employee and benefit type give different entitlement figures on different
   // dates, so the date is reported alongside them and must never be dropped.
-  const dateField = (hasGrid ? gridEditable : fields).find(f => f.ctrlType === "5");
+  const dateField = (hasGrid ? gridEditable : fields).find(f => f.ctrlType === "5");  // "5" = Date Picker
   const entitlementAsAt = dateField
     ? ((hasGrid ? (workingControl(dateField.besId) || dateField.ref) : dateField.ref).RefValue || null)
     : null;
@@ -1519,6 +1703,23 @@
     await runTypeFormulas();
     requested = totalRequested();
 
+    /* Nothing filled it in, so the screen's own rule applies: Total Request
+     * mirrors the amount. Confirmed by capture - posting "Amount in Bills"
+     * 100 with CurrentBenefitStructId C200006 answers with VL200000
+     * RefValue "100", that type's GetJavascripts is an empty F_C200006, and
+     * SaveApplication then carries the same figure. Only done while the
+     * control still holds the value the structure delivered, so a type that
+     * does calculate its own total - including a negative one, when
+     * entitlement is exhausted - keeps PeoplesHR's figure untouched. A total
+     * the user set themselves has already set totalOverridden, so this whole
+     * block is skipped and their figure stands. */
+    const totalUntouched = String(totalControl.RefValue == null ? "" : totalControl.RefValue)
+      === String(baseValues.get(totalControl.BesId) == null ? "" : baseValues.get(totalControl.BesId));
+    if (totalUntouched && enteredAmount > 0 && totalEditable) {
+      totalControl.RefValue = String(enteredAmount);
+      requested = totalRequested();
+    }
+
     if (!(requested > 0)) {
       const entitlementNote = entitlement && entitlement.entitlement !== null && entitlement.entitlement !== undefined
         ? ` ${employee.displayName}'s entitlement${entitlementAsAt ? ` for ${entitlementAsAt}` : ""} is ${entitlement.entitlement}${entitlement.utilized !== null && entitlement.utilized !== undefined ? `, with ${entitlement.utilized} already utilized` : ""}.`
@@ -1537,9 +1738,9 @@
 
   const resolvedFields = hasGrid ? [] : fields.map(f => ({
     displayName: f.displayName,
-    value: f.ctrlType === "3"
+    value: f.ctrlType === "3"  // "3" = Dropdown
       ? ((f.ref.RefObjectValue || []).find(o => o.Id === f.ref.RefValue)?.Value ?? f.ref.RefValue)
-      : f.ctrlType === "4" ? (f.ref.RefValue === "1" ? "Yes" : "No") : f.ref.RefValue
+      : f.ctrlType === "4" ? (f.ref.RefValue === "1" ? "Yes" : "No") : f.ref.RefValue  // "4" = Checkbox
   }));
 
   /* ---------------------------------------------------------------------
@@ -1563,8 +1764,11 @@
         needsInput: true,
         missingFields: ["Attachment"],
         suppressedByRemoval: suppressedByRemoval.length ? suppressedByRemoval.slice() : undefined,
+        rejectedAttachments: rejectedAttachments.length ? rejectedAttachments.slice() : undefined,
         diagnostics: { toolSupportsAttachments: true, chatHelperPresent: chatFileSource.helperPresent, filesSeenInChat: chatFileSource.filesSeen, readError: chatFileSource.readError },
-        message: suppressedByRemoval.length
+        message: rejectedAttachments.length
+          ? `${rejectedAttachments.map(r => `"${r.name}" could not be attached because ${r.reason}`).join("; ")}. "${typeMatch.BetName}" requires an attachment, so nothing has been submitted. Tell the supervisor this exactly and ask them to attach the document again in the chat.`
+          : suppressedByRemoval.length
           ? `${suppressedByRemoval.map(n => `"${n}"`).join(", ")} ${suppressedByRemoval.length === 1 ? "was" : "were"} attached in the chat but left out because removeAttachments named ${suppressedByRemoval.length === 1 ? "it" : "them"}, and "${typeMatch.BetName}" requires at least one attachment (${attachmentRulesText() || "any file type"}), so nothing has been submitted. ${suppressedByRemoval.length === 1 ? "That file was never on the application, so there was nothing to remove" : "Those files were never on the application, so there was nothing to remove"}. If the supervisor wants to submit with ${suppressedByRemoval.length === 1 ? "it" : "them"}, call this tool again with the same arguments but WITHOUT ${suppressedByRemoval.length === 1 ? "that name" : "those names"} in removeAttachments. Only name a file there when it is already attached to the application and the supervisor wants it taken off.`
           : `"${typeMatch.BetName}" requires at least one attachment (${attachmentRulesText() || "any file type"}). Nothing has been submitted. Ask the supervisor ONCE to attach the document in the chat, then call this tool again with the same arguments. This tool CAN upload attachments - it just has none yet. Then call this tool again with the same arguments on WHATEVER the supervisor replies next - "done", "ok", "okay then add this", "then add this", "proceed with this", "proceed", "yes", "submit", or anything else. Only this tool can see the files in the chat, so never answer that a file is missing, unsupported or too large without calling it first.`
       }, attachmentBase);
@@ -1609,6 +1813,14 @@
       entitlementAsAt,
       [totalLabel]: requested,
       totalWasOverridden: totalOverridden,
+      /* Whether the figure can be typed over, stated on the response the
+       * agent is actually holding when the supervisor asks to change it. The
+       * field list says so too, but that was several turns ago, and without
+       * it here the request gets refused as "they are directly linked". */
+      totalRequestEditable: totalEditable,
+      totalRequestNote: totalEditable
+        ? `The screen reports "${totalLabel}" as editable (TotalRequestEnable), and PeoplesHR records whatever it holds when the application is submitted, so the supervisor can set it to any figure they ask for - it does NOT have to match the amount field(s). If they ask for a different ${totalLabel} ("change the total request to 150"), call this tool again with the same arguments plus totalRequest:<the figure> (or "${totalLabel}" in fieldValues), leaving the amount field(s) exactly as they are. Never tell them the two are linked or that it cannot be changed.`
+        : `PeoplesHR locks "${totalLabel}" for this benefit type, so it cannot be typed over on the Benefit Application screen either.`,
       // The figure was typed over rather than calculated, so say so plainly:
       // the amount field(s) still hold what was entered, and Benefit History
       // records this total.
@@ -1652,7 +1864,7 @@
 
   if (!args.confirmed) {
     return previewPayload({
-      message: `Review this application with the supervisor, making clear it will be submitted on ${employee.displayName}'s behalf${totalWarning ? ", and read them the totalWarning below in full - PeoplesHR will record that calculated figure, not the amount entered" : ""}. ${attachmentRules.allowed ? " Also read them the attachmentNote below." : ""} Once they agree, call this tool again with the same arguments${attachmentRules.allowed ? ` (including attachmentSessionKey:"${sessionKey}")` : ""} plus confirmed:true and previewDigest:"${previewDigest}" copied exactly from this response.`
+      message: `Review this application with the supervisor, making clear it will be submitted on ${employee.displayName}'s behalf${totalWarning ? ", and read them the totalWarning below in full - PeoplesHR will record that calculated figure, not the amount entered" : ""}. ${attachmentRules.allowed ? " Also read them the attachmentNote below." : ""} ${totalEditable ? ` If the supervisor asks for a different ${totalLabel} ("change the total request to 150"), that IS allowed: call this tool again with the same arguments plus totalRequest:<the figure>, leaving the amount field(s) exactly as they are - never answer that it is calculated from the amount or that the two are linked.` : ""} Once they agree, call this tool again with the same arguments${attachmentRules.allowed ? ` (including attachmentSessionKey:"${sessionKey}")` : ""} plus confirmed:true and previewDigest:"${previewDigest}" copied exactly from this response.`
     });
   }
 
@@ -1674,10 +1886,18 @@
    * (reference 170), where the rows ride inside the grid control's
    * ApplicationGridDefVm.GridData.RowItems within ApplicationRowVms.
    * ------------------------------------------------------------------- */
+  toolStage = "submitting the application";
   const saveResult = await postJson(
     `${base}/BenefitV9//api/ApplicationApi/SaveApplication/`,
     {
-      ApplicationRowVms: structure.applicationRowVms,
+      /* The same wired shape the screen posts, not the bare structure rows.
+       * Confirmed by capture: every control in SaveApplication carries its
+       * BaseValue - the value it arrived with - beside the RefValue it now
+       * holds (VL200000 went out as RefValue "50" with BaseValue "0", the
+       * amount as "100" with BaseValue "0"). Sending the rows unwired left
+       * BaseValue off every control, so the server saw no before-and-after for
+       * the figure that was typed over. */
+      ApplicationRowVms: wiredRows(),
       CurrentEmployeeNumber: appEmpNumber,
       CurrentBenefitTypeCode: typeMatch.BetCode,
       BetCommentMandatoryFlg: betInfo.BetCommentMandatoryFlg || "0",
@@ -1741,4 +1961,13 @@
     attachments: attachmentRules.allowed ? stagedAttachments : undefined,
     rejectedAttachments: rejectedAttachments.length ? rejectedAttachments : undefined
   };
+  } catch (toolError) {
+    return {
+      error: true,
+      failedAt: toolStage,
+      message: `This application could not be completed - the tool failed while ${toolStage}. Nothing has been submitted. Tell the user that plainly and show the detail below; it names the step that failed.`,
+      detail: String((toolError && (toolError.stack || toolError.message)) || toolError),
+      arguments: { benefitType: args && args.benefitType, replaceAttachments: args && args.replaceAttachments, removeAttachments: args && args.removeAttachments, attachmentSessionKey: args && args.attachmentSessionKey, confirmed: args && args.confirmed }
+    };
+  }
 })

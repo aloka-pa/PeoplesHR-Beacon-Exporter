@@ -1,6 +1,10 @@
 {
   "sampleRequest": {
-    "courseName": "engineering"
+    "courseName": "engineering",
+    "relevanceToJob": "abc",
+    "objective": "aqhfgef",
+    "benefitToEmployee": "efjhwef",
+    "benefitToCompany": "hthrt"
   },
   "sanity": {
     "apiResponse": []

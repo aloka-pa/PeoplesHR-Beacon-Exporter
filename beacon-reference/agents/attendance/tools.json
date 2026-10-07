@@ -1,13 +1,8 @@
 [
   {
-    "toolId": "6a8ee7dd4297aa961cef45dc",
-    "toolName": "editSubordinatesManualInAndOut",
-    "path": "tools/editsubordinatesmanualinandout"
-  },
-  {
-    "toolId": "6a82e376462b20b27700e67e",
-    "toolName": "submitSubordinatesManualInAndOut",
-    "path": "tools/submitsubordinatesmanualinandout"
+    "toolId": "6ac4cdf67c4f1f8bd76e000f",
+    "toolName": "submitSelfOffShifts",
+    "path": "tools/submitselfoffshifts"
   },
   {
     "toolId": "6a7d652bdf5557a058554c33",
@@ -18,6 +13,16 @@
     "toolId": "6a8ea65237b20ee9436a5da9",
     "toolName": "editSelfManualInAndOut",
     "path": "tools/editselfmanualinandout"
+  },
+  {
+    "toolId": "6a8ee7dd4297aa961cef45dc",
+    "toolName": "editSubordinatesManualInAndOut",
+    "path": "tools/editsubordinatesmanualinandout"
+  },
+  {
+    "toolId": "6a82e376462b20b27700e67e",
+    "toolName": "submitSubordinatesManualInAndOut",
+    "path": "tools/submitsubordinatesmanualinandout"
   },
   {
     "toolId": "6a90108b5238e7bab3688f48",

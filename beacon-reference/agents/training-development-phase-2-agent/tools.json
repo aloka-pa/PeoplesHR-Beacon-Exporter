@@ -15,6 +15,11 @@
     "path": "tools/selfemployeetrainingneedapplication"
   },
   {
+    "toolId": "6a9ff76b2ea15b32b729515b",
+    "toolName": "selfEmployeeTrainingApplication",
+    "path": "tools/selfemployeetrainingapplication"
+  },
+  {
     "toolId": "6a9e99f7311b3fda8a34b356",
     "toolName": "getSelfEmployeeTrainingHistory",
     "path": "tools/getselfemployeetraininghistory"
@@ -28,11 +33,6 @@
     "toolId": "6a9f07df3ec32e9ccba63435",
     "toolName": "supervisorEmployeeTrainingNomination",
     "path": "tools/supervisoremployeetrainingnomination"
-  },
-  {
-    "toolId": "6a9ff76b2ea15b32b729515b",
-    "toolName": "selfEmployeeTrainingApplication",
-    "path": "tools/selfemployeetrainingapplication"
   },
   {
     "toolId": "6a9cf26701c38d9fd8e84a73",

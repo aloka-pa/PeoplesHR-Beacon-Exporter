@@ -1,7 +1,27 @@
 (async function (data, args, reqOptions) {
-  // Grounds are fetched first - a cheap, session-independent call - just to build the
-  // grounds list and to fail fast if none are configured at all (ground is mandatory to
-  // submit a grievance, so there is nothing else to do about it in that case).
+  if (
+    !BeaconBar.user?.metaData?.menus?.some(menu =>
+      menu.includes("GrievanceV9/RecordGrievance/Index?type=0")
+    )
+  ) {
+    return { error: true, message: "You do not have access to apply for grievance. Please contact HR Admin." };
+  }
+
+  // The Grievance Application screen caps Description at 200 characters (spaces included) with
+  // a maxlength on the textarea, so the browser UI can never send more. Beacon bypasses that
+  // control and posts straight to RecordGrievance/Submit, whose only answer to an oversized
+  // description is a generic failure - so the same rule is enforced here, before any network
+  // call (including attachment uploads), and the text is never silently truncated.
+  const MAX_DESCRIPTION_LENGTH = 200;
+
+  if (typeof args.description === "string" && args.description.length > MAX_DESCRIPTION_LENGTH) {
+    return {
+      error: `The grievance description cannot exceed ${MAX_DESCRIPTION_LENGTH} characters, including spaces. Please shorten the description and try again.`,
+      maxLength: MAX_DESCRIPTION_LENGTH,
+      currentLength: args.description.length
+    };
+  }
+
   const sourcesRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/RecordGrievance/GetGrievanceSources`, {
     method: "GET",
     headers: { "accept": "application/json, text/plain, */*" },
@@ -9,11 +29,6 @@
   });
   const sources = await sourcesRes.json();
 
-  // Grounds are single-select - exactly one node ends up isChecked. A main ground that
-  // has sublevel grounds is never itself selectable; the user must pick one of its subs
-  // (UAC 1.3). A main ground with no subs is a leaf and is selectable directly. Sub-ground
-  // names are qualified as "MainGround.SubGround" for display/matching so they read as
-  // nested under their main ground instead of a flat, undifferentiated list.
   const mainGrounds = (sources || []).map(g => ({
     code: g.srcListCode,
     name: g.srcListName,
@@ -51,6 +66,7 @@
       const wantedMain = wantedGround.slice(0, dotIndex).trim();
       const wantedSub = wantedGround.slice(dotIndex + 1).trim();
       const mainForSub = mainGrounds.find(g => g.name.toLowerCase() === wantedMain);
+
       if (mainForSub) {
         groundMatch = mainForSub.subGrounds.find(s => s.name.toLowerCase() === wantedSub)
           || mainForSub.subGrounds.find(s => s.name.toLowerCase().includes(wantedSub));
@@ -69,13 +85,19 @@
       if (matches.length > 1) {
         return { ambiguous: matches.map(qualifiedName) };
       }
+
       groundMatch = matches[0];
 
       if (!groundMatch) {
         const parentWithSubs = mainGrounds.find(g => g.subGrounds.length && g.name.toLowerCase() === wantedGround);
+
         if (parentWithSubs) {
-          return { needsSub: parentWithSubs.subGrounds.map(s => s.name), parentName: parentWithSubs.name };
+          return {
+            needsSub: parentWithSubs.subGrounds.map(s => s.name),
+            parentName: parentWithSubs.name
+          };
         }
+
         return { notFound: true };
       }
     }
@@ -83,18 +105,15 @@
     return { match: groundMatch };
   }
 
-  // Session/template bootstrap - template selection comes before ground selection and
-  // before any other detail is collected. This also means channel members (tied only to
-  // the resolved template) can be fetched and returned as soon as a template is known,
-  // without ever requiring ground/summary/description/mood - e.g. "who will handle this
-  // grievance?" is answerable right after the template is picked.
   async function getNewGrievanceBootstrap() {
     const digestKey = await BeaconBar.executeFunction("getDigest")("type=0");
+
     const indexRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/RecordGrievance/Index?type=0&digest=${digestKey.digest}`, {
       method: "GET",
       headers: { "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" },
       redirect: "follow"
     });
+
     const indexHtml = await indexRes.text();
     const doc = new DOMParser().parseFromString(indexHtml, "text/html");
 
@@ -111,17 +130,26 @@
       headers: { "accept": "application/json, text/plain, */*" },
       redirect: "follow"
     });
+
     const empDetails = await empDetailsRes.json();
 
     if (!empDetails?.empNumberEncrypt) {
       return { error: "Could not resolve the logged-in employee's details - please try again." };
     }
 
-    return { recHeadCode, selectedEmpNumber, createdEmpNumber: empDetails.empNumberEncrypt };
+    return {
+      recHeadCode,
+      selectedEmpNumber,
+      createdEmpNumber: empDetails.empNumberEncrypt
+    };
   }
 
   const bootstrap = await getNewGrievanceBootstrap();
-  if (bootstrap.error) return bootstrap.error;
+
+  if (bootstrap.error) {
+    return bootstrap.error;
+  }
+
   const { recHeadCode, selectedEmpNumber, createdEmpNumber } = bootstrap;
 
   const jsonHeaders = new Headers();
@@ -133,13 +161,17 @@
     headers: { "accept": "application/json, text/plain, */*" },
     redirect: "follow"
   });
+
   const templates = await templatesRes.json();
 
   let template;
+
   if (args.templateName) {
     const wantedTemplate = args.templateName.toLowerCase();
+
     template = (templates || []).find(t => t.tempName.toLowerCase() === wantedTemplate)
       || (templates || []).find(t => t.tempName.toLowerCase().includes(wantedTemplate));
+
     if (!template) {
       return `Could not find a grievance template matching "${args.templateName}". Available templates: ${(templates || []).map(t => t.tempName).join(", ")}`;
     }
@@ -163,12 +195,15 @@
     }),
     redirect: "follow"
   });
+
   const channelMembers = await channelRes.json();
 
   const bypassWanted = (args.bypassChannelMembers || []).map(n => String(n).toLowerCase());
+
   (channelMembers || []).forEach(m => {
     const name = (m.empDisplayName || "").trim().toLowerCase();
     const shouldBypass = bypassWanted.some(w => name === w || name.includes(w) || m.empDisplayNumber === w);
+
     if (shouldBypass) {
       m.status_old = m.status;
       m.statusCSS_old = m.statusCSS;
@@ -185,14 +220,6 @@
     status: m.status
   }));
 
-  // Confirmed via Beacon's own validation message (type "Grievance", key
-  // "GrCannotByPassAllChannels": "You are not allowed to bypass all the channels in
-  // grievance application.") - at least one channel member must remain un-bypassed, even
-  // when every individual member named is otherwise a valid, multi-member-channel bypass.
-  // Checked against the flat member list as a whole; if channels are tracked as separate
-  // groups server-side (distinct from this flat list), a per-channel version of this same
-  // rule may also apply and isn't modeled here - that grouping field hasn't been captured
-  // from a live response yet, so this only guards against bypassing every member overall.
   if ((channelMembers || []).length && (channelMembers || []).every(m => m.status === "Bypassed")) {
     return {
       error: "You are not allowed to bypass all the channels in grievance application. At least one channel member must remain.",
@@ -201,9 +228,6 @@
     };
   }
 
-  // Ground selection comes next. Channel members are already known by this point, so a
-  // call that has only named a template still gets them back here even with no ground
-  // given yet.
   if (!args.ground) {
     return {
       message: `ground is required. Available grounds: ${describeGrounds()}`,
@@ -221,6 +245,7 @@
       channelMembers: previewChannelMembers
     };
   }
+
   if (resolved.needsSub) {
     return {
       message: `"${resolved.parentName}" has sublevel grounds - ask the user to pick one: ${resolved.needsSub.join(", ")}.`,
@@ -228,6 +253,7 @@
       channelMembers: previewChannelMembers
     };
   }
+
   if (!resolved.match) {
     return {
       message: `Could not find a grievance ground matching "${args.ground}". Available grounds: ${describeGrounds()}`,
@@ -240,9 +266,6 @@
   groundMatch.node.isChecked = true;
   const groundDisplay = qualifiedName(groundMatch);
 
-  // Other details are collected last: summary, then description, then mood. Template and
-  // channel members are already resolved by this point, so both are still included even
-  // when these are missing.
   if (!args.summary) {
     return {
       error: "summary is required - a short summary of the grievance.",
@@ -251,12 +274,7 @@
       channelMembers: previewChannelMembers
     };
   }
-  // Confirmed live: submitting with description left blank is rejected by the real
-  // Grievance Application screen (type "Grievance", key "GrFormError": "Please fill the
-  // required fields." - a generic required-fields message, not description-specific, but
-  // description was the field left blank in the capture that produced it). Description is
-  // mandatory, not optional, despite being declared optional in the schema so it never
-  // blocks template/ground/channel discovery.
+
   if (!args.description) {
     return {
       error: "description is required - the full description/details of the grievance.",
@@ -265,9 +283,7 @@
       channelMembers: previewChannelMembers
     };
   }
-  // Confirmed via Beacon's own client-side validation message (GrEmojiError: "Please
-  // specify the Current Mood.") - mood is mandatory, not optional. Checked here rather
-  // than declared schema-required so it never blocks template/ground/channel discovery.
+
   if (!args.moodRating) {
     return {
       error: "moodRating is required - ask the user for their current mood (1-5) before submitting.",
@@ -277,11 +293,6 @@
     };
   }
 
-  // Attachments are optional (UAC 1.5) and come only from the Beacon chat's own upload
-  // mechanism - the same source every other tool in this org reads from. No base64/object
-  // argument fallback is added here since nothing confirms the Grievance module ever
-  // receives a file any other way. Guarded so a host without the helper degrades to "no
-  // files" rather than throw.
   function uploadedFiles() {
     try {
       if (BeaconBar && typeof BeaconBar.getUploadedBaoFiles === "function") {
@@ -291,31 +302,17 @@
     } catch (e) {
       // Degrade to "no files" rather than throw.
     }
+
     return [];
   }
 
   const attachedFiles = uploadedFiles();
   const attachmentTitles = args.attachmentTitles || {};
 
-  // Local, immediate size check - so the employee finds out the moment they attach an
-  // oversized file, not only after filling in the rest of the application and confirming.
-  // This is a heuristic, not the authoritative check: 2 MB is the limit a real live
-  // rejection returned ("The maximum file size allowed for the Attachment is 2 MB."), but
-  // nothing confirms this is fixed rather than configurable (per file type, per tenant, or
-  // changeable later) - so a file under 2MB still goes through the real AttachmentUpload
-  // call at confirmed:true, which remains the actual source of truth and can still reject
-  // it for a different reason. This check only ever short-circuits the obviously-too-big
-  // case early; it never green-lights a file the server would otherwise reject.
-  const MAX_ATTACHMENT_BYTES = 2 * 1024 * 1024;
-  const oversizedFiles = attachedFiles.filter(f => typeof f.size === "number" && f.size > MAX_ATTACHMENT_BYTES);
-  if (oversizedFiles.length) {
-    return {
-      message: `${oversizedFiles.map(f => `"${f.name}" is ${(f.size / (1024 * 1024)).toFixed(1)} MB`).join(", ")} - the maximum attachment size is 2 MB. Ask the user to attach a smaller file instead, or continue without it.`,
-      template: template.tempName,
-      ground: groundDisplay,
-      channelMembers: previewChannelMembers
-    };
-  }
+  // No attachment size or file-type limit is hardcoded here: both are configured per client
+  // and enforced by RecordGrievance/AttachmentUpload itself, which answers a rejected file with
+  // the module's own plain-text message (confirmed live with a 5 MB PDF: "The maximum file
+  // size allowed for the Attachment is 2 MB."). That message is relayed verbatim below.
 
   // A title is mandatory per attachment - confirmed live (type "Grievance", key
   // "ErrorEmptyAttachmentTitleMsg": "Attachment Title cannot be empty.") - and is always
@@ -336,7 +333,10 @@
     }
   }
 
-  const attachmentPreview = attachedFiles.map(f => ({ fileName: f.name, title: attachmentTitles[f.name] }));
+  const attachmentPreview = attachedFiles.map(f => ({
+    fileName: f.name,
+    title: attachmentTitles[f.name]
+  }));
 
   if (!args.confirmed) {
     return {
@@ -353,16 +353,9 @@
     };
   }
 
-  // Attachments are uploaded before Submit, one file per call - the only shape this
-  // endpoint accepts (single uploadFile + fileTypedName + fileName + recHeadCode per POST,
-  // plain-text "OK" on success - confirmed live, same convention as Submit's own "OK"). If
-  // any single upload fails, stop here and relay its exact server message (e.g. "Chosen
-  // document type is invalid. Valid document types are ..." - confirmed live) - Submit is
-  // never called, so a partially-attached grievance is never created. No file type/size is
-  // pre-validated client-side; whatever the server says at upload time is the only truth,
-  // since both can vary and aren't enumerable here.
   for (const file of attachedFiles) {
     const uploadFormData = new FormData();
+
     uploadFormData.append("uploadFile", file, file.name);
     uploadFormData.append("fileTypedName", attachmentTitles[file.name]);
     uploadFormData.append("fileName", file.name);
@@ -375,13 +368,46 @@
       body: uploadFormData,
       redirect: "follow"
     });
+
     const uploadText = (await uploadRes.text()).trim();
+
     if (uploadText.toLowerCase() !== "ok") {
+      // The server's own message (size or file-type rejection) is shown to the user as-is,
+      // so it always reflects the limits configured for this client. The grievance is not
+      // submitted, and the tool can be called again once the user swaps or drops the file.
       return {
-        error: `Could not attach "${file.name}": ${uploadText || "(empty response)"}`,
+        error: `Could not attach "${file.name}": ${uploadText || "The server rejected this file."}`,
+        attachmentRejected: true,
+        fileName: file.name,
         template: template.tempName,
         ground: groundDisplay,
         channelMembers: previewChannelMembers
+      };
+    }
+  }
+
+  // Audio is optional. When disabled, this block is completely skipped and
+  // the grievance Submit API proceeds normally.
+  if (args?.isAudioRecorded === true || args?.isAudioRecorded === "true") {
+    try {
+      const audioResult = await BeaconBar.executeFunction("audioRecordFunction")(
+        recHeadCode,
+        `${location.origin}/${reqOptions.sl}`
+      );
+
+      if (!audioResult || audioResult.success !== true) {
+ 
+        return {
+          error: true,
+          message: "Audio recording failed. Please try again."
+        };
+      }
+
+    } catch (audioError) {
+
+      return {
+        error: true,
+        message: "Audio recording failed. Please try again."
       };
     }
   }
@@ -406,26 +432,32 @@
   });
 
   const submitText = (await submitRes.text()).trim();
+
   if (submitText.toLowerCase() !== "ok") {
     return `Submit did not succeed: ${submitText || "(empty response)"}`;
   }
 
-  // Round-trip once against the module's own attachment list rather than trusting our own
-  // upload calls did exactly what was intended - authoritative names/ids for the response.
-  // Attachments are not referenced anywhere in the Submit payload above; the module links
-  // them to the grievance purely via recHeadCode, independent of the Submit call.
   let attachmentsResult = attachmentPreview;
+
   if (attachedFiles.length) {
     try {
       const attListRes = await fetch(`${location.origin}/${reqOptions.sl}/GrievanceV9/RecordGrievance/GetAttachmentLists`, {
         method: "POST",
         headers: jsonHeaders,
-        body: JSON.stringify({ recHeadCode: recHeadCode }),
+        body: JSON.stringify({
+          recHeadCode: recHeadCode
+        }),
         redirect: "follow"
       });
+
       const attList = await attListRes.json();
+
       if (Array.isArray(attList)) {
-        attachmentsResult = attList.map(a => ({ attId: a.attId, fileName: a.attName, title: a.attDescription }));
+        attachmentsResult = attList.map(a => ({
+          attId: a.attId,
+          fileName: a.attName,
+          title: a.attDescription
+        }));
       }
     } catch (e) {
       // Keep the locally-known list if this verification call itself fails - the uploads

@@ -1,6 +1,6 @@
 # Beacon tool patterns
 
-Auto-generated from 383 exported tool(s) and 183 function(s) by `npm run beacon:export`. Regenerated on every export — do not hand-edit; add durable notes to README.md instead.
+Auto-generated from 385 exported tool(s) and 183 function(s) by `npm run beacon:export`. Regenerated on every export — do not hand-edit; add durable notes to README.md instead.
 
 ## Permission / menu-access checks
 
@@ -73,10 +73,10 @@ try/catch or status-code branching around an API call.
 Mapping/reshaping a raw API response before returning it (typical Transformer responsibility).
 
 - `tools/submitsubordinatesmanualinandout/transformer.js`: `candidates: matches.map(function (r) { return { employeeNumber: displayNumberOf(r), employee: r.text }; })`
-- `tools/submitselfmanualinandout/transformer.js`: `availableRosters: rosterList.map(function (r) { return { rosterCode: r.RosterCode, rosterName: r.RosterName }; })`
+- `tools/submitselfmanualinandout/transformer.js`: `recordedBreaks: existing.map(function (br, i) { return Object.assign({ breakNo: i + 1 }, breakText(br)); })`
 - `tools/submitmanualinandoutbyadmin/transformer.js`: `availableRosters: rosterList.map(function (r) { return { rosterCode: r.RosterCode, rosterName: r.RosterName }; })`
 - `tools/editsubordinatesmanualinandout/transformer.js`: `availableRosters: rosterList.map(function (r) { return { rosterCode: r.RosterCode, rosterName: r.RosterName }; })`
-- `tools/editselfmanualinandout/transformer.js`: `availableRosters: rosterList.map(function (r) { return { rosterCode: r.RosterCode, rosterName: r.RosterName }; })`
+- `tools/editselfmanualinandout/transformer.js`: `recordedBreaks: existing.map(function (br, i) { return Object.assign({ breakNo: i + 1 }, breakText(br)); })`
 
 ## Pagination
 

@@ -6,11 +6,140 @@
       "type": "string",
       "required": true,
       "defaultValue": null,
-      "description": "Date of the existing manual in and out record to edit. Use the format returned by the dateFormat tool (MM/DD/YYYY for en-US, otherwise DD/MM/YYYY). Ask the user for this if not provided.",
+      "description": "Date of the existing manual In and Out record to edit. Use the format returned by the dateFormat tool (MM/DD/YYYY for en-US, otherwise DD/MM/YYYY). Ask the user for this if not provided.",
       "advanced": true,
       "raw": {
         "type": "string",
-        "description": "Date of the existing manual in and out record to edit. Use the format returned by the dateFormat tool (MM/DD/YYYY for en-US, otherwise DD/MM/YYYY). Ask the user for this if not provided."
+        "description": "Date of the existing manual In and Out record to edit. Use the format returned by the dateFormat tool (MM/DD/YYYY for en-US, otherwise DD/MM/YYYY). Ask the user for this if not provided."
+      }
+    },
+    {
+      "name": "inDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "In date, in the format returned by the dateFormat tool. ALWAYS ask the user for it - together with In Time, Out Date and Out Time, all four every time, including when only the break is changing. Never assume it. The tool returns the row's own date under suggested.inDate; offer that as the default and let the user confirm or change it.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "In date, in the format returned by the dateFormat tool. ALWAYS ask the user for it - together with In Time, Out Date and Out Time, all four every time, including when only the break is changing. Never assume it. The tool returns the row's own date under suggested.inDate; offer that as the default and let the user confirm or change it."
+      }
+    },
+    {
+      "name": "inTime",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "New In time in HH:mm 24-hour format, e.g. 08:30. ALWAYS ask the user for it together with inDate, outDate and outTime - offer suggested.inTime (the recorded time) as the default and let the user confirm or change it.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "New In time in HH:mm 24-hour format, e.g. 08:30. ALWAYS ask the user for it together with inDate, outDate and outTime - offer suggested.inTime (the recorded time) as the default and let the user confirm or change it."
+      }
+    },
+    {
+      "name": "outDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Out date, in the format returned by the dateFormat tool. ALWAYS ask the user for it together with In Date, In Time and Out Time - never decide it yourself. An Out Date on the day AFTER the In Date is normal - many shifts end after midnight - and the Out time is then earlier on the clock than the In time, which is correct and must never be questioned or rejected. The tool reports whether this shift can end on the following day as current.shiftCanEndNextDay, and returns the row's own date under suggested.outDate; offer that as the default and let the user confirm or change it.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Out date, in the format returned by the dateFormat tool. ALWAYS ask the user for it together with In Date, In Time and Out Time - never decide it yourself. An Out Date on the day AFTER the In Date is normal - many shifts end after midnight - and the Out time is then earlier on the clock than the In time, which is correct and must never be questioned or rejected. The tool reports whether this shift can end on the following day as current.shiftCanEndNextDay, and returns the row's own date under suggested.outDate; offer that as the default and let the user confirm or change it."
+      }
+    },
+    {
+      "name": "outTime",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "New Out time in HH:mm 24-hour format, e.g. 17:30. ALWAYS ask the user for it together with inDate, inTime and outDate - offer suggested.outTime (the recorded time) as the default. An Out Date on the day AFTER the In Date is normal, and the Out time is then earlier on the clock than the In time - check it against outDate, not against inTime.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "New Out time in HH:mm 24-hour format, e.g. 17:30. ALWAYS ask the user for it together with inDate, inTime and outDate - offer suggested.outTime (the recorded time) as the default. An Out Date on the day AFTER the In Date is normal, and the Out time is then earlier on the clock than the In time - check it against outDate, not against inTime."
+      }
+    },
+    {
+      "name": "reason",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Reason/comment explaining why the manual In and Out is being changed. Required before the update is submitted.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Reason/comment explaining why the manual In and Out is being changed. Required before the update is submitted."
+      }
+    },
+    {
+      "name": "confirmed",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set to true only after the user has reviewed the preview of current vs new values and explicitly confirmed. Set to false (or omit) to just preview/validate without updating anything.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Set to true only after the user has reviewed the preview of current vs new values and explicitly confirmed. Set to false (or omit) to just preview/validate without updating anything."
+      }
+    },
+    {
+      "name": "breaks",
+      "type": "array",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional breaks - none, one or as many as the user wants. After showing the shift details, tell the user they can add breaks or change a recorded one, but do not insist. Each break needs both times, must end after it starts, must sit within the In and Out date-times and the shift's allowed period, and must not overlap another break of the day (shiftDetails.recordedBreaks lists the ones already recorded). A break after midnight is fine on a shift whose period reaches there.",
+      "advanced": true,
+      "raw": {
+        "type": "array",
+        "description": "Optional breaks - none, one or as many as the user wants. After showing the shift details, tell the user they can add breaks or change a recorded one, but do not insist. Each break needs both times, must end after it starts, must sit within the In and Out date-times and the shift's allowed period, and must not overlap another break of the day (shiftDetails.recordedBreaks lists the ones already recorded). A break after midnight is fine on a shift whose period reaches there.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "breakInTime": {
+              "type": "string",
+              "description": "Break start time in HH:mm 24-hour format, e.g. 12:00."
+            },
+            "breakOutTime": {
+              "type": "string",
+              "description": "Break end time in HH:mm 24-hour format, e.g. 13:00."
+            },
+            "breakNo": {
+              "type": "integer",
+              "description": "Only to CHANGE a recorded break: its breakNo from shiftDetails.recordedBreaks. Leave it out to add a new break."
+            }
+          },
+          "required": [
+            "breakInTime",
+            "breakOutTime"
+          ]
+        }
+      }
+    },
+    {
+      "name": "breakInTime",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Single-break shorthand: break start time in HH:mm (adds a new break). Prefer the breaks list. If given, breakOutTime must be given too.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Single-break shorthand: break start time in HH:mm (adds a new break). Prefer the breaks list. If given, breakOutTime must be given too."
+      }
+    },
+    {
+      "name": "breakOutTime",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Single-break shorthand: break end time in HH:mm (adds a new break). Prefer the breaks list. If given, breakInTime must be given too.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Single-break shorthand: break end time in HH:mm (adds a new break). Prefer the breaks list. If given, breakInTime must be given too."
       }
     },
     {
@@ -58,11 +187,11 @@
       "type": "boolean",
       "required": false,
       "defaultValue": null,
-      "description": "Optional Group By Employee checkbox on the Search Criteria panel. Defaults to false.",
+      "description": "Optional Group By Employee checkbox on the Search Criteria panel. Omit it to use the screen's own default.",
       "advanced": true,
       "raw": {
         "type": "boolean",
-        "description": "Optional Group By Employee checkbox on the Search Criteria panel. Defaults to false."
+        "description": "Optional Group By Employee checkbox on the Search Criteria panel. Omit it to use the screen's own default."
       }
     },
     {
@@ -70,11 +199,11 @@
       "type": "string",
       "required": false,
       "defaultValue": null,
-      "description": "Optional roster group id used to load the roster list via GetRostersByGroupId. Defaults to 1.",
+      "description": "Optional roster group, by id or name, as listed by submitSelfManualInAndOut with showRosters. Omit it to use the screen's first roster group. Do not ask the user for it unless they want a specific roster.",
       "advanced": true,
       "raw": {
         "type": "string",
-        "description": "Optional roster group id used to load the roster list via GetRostersByGroupId. Defaults to 1."
+        "description": "Optional roster group, by id or name, as listed by submitSelfManualInAndOut with showRosters. Omit it to use the screen's first roster group. Do not ask the user for it unless they want a specific roster."
       }
     },
     {
@@ -82,11 +211,11 @@
       "type": "string",
       "required": false,
       "defaultValue": null,
-      "description": "Optional roster code for GetGridDataByCriteria, e.g. 000017. Defaults to 000017. Takes precedence over rosterName.",
+      "description": "Optional roster code. Takes precedence over rosterName. Omit it to use the first roster of the roster group, as the screen does.",
       "advanced": true,
       "raw": {
         "type": "string",
-        "description": "Optional roster code for GetGridDataByCriteria, e.g. 000017. Defaults to 000017. Takes precedence over rosterName."
+        "description": "Optional roster code. Takes precedence over rosterName. Omit it to use the first roster of the roster group, as the screen does."
       }
     },
     {
@@ -94,83 +223,11 @@
       "type": "string",
       "required": false,
       "defaultValue": null,
-      "description": "Optional roster name, e.g. 'Roster 1'. Resolved to a roster code against the roster list. Ignored when rosterCode is given.",
+      "description": "Optional roster name. Resolved to a roster code within the roster group. Ignored when rosterCode is given.",
       "advanced": true,
       "raw": {
         "type": "string",
-        "description": "Optional roster name, e.g. 'Roster 1'. Resolved to a roster code against the roster list. Ignored when rosterCode is given."
-      }
-    },
-    {
-      "name": "inTime",
-      "type": "string",
-      "required": false,
-      "defaultValue": null,
-      "description": "New In time in HH:mm 24-hour format, e.g. 08:30. Omit to keep the In time that is already recorded.",
-      "advanced": true,
-      "raw": {
-        "type": "string",
-        "description": "New In time in HH:mm 24-hour format, e.g. 08:30. Omit to keep the In time that is already recorded."
-      }
-    },
-    {
-      "name": "outTime",
-      "type": "string",
-      "required": false,
-      "defaultValue": null,
-      "description": "New Out time in HH:mm 24-hour format, e.g. 17:30. Omit to keep the Out time that is already recorded.",
-      "advanced": true,
-      "raw": {
-        "type": "string",
-        "description": "New Out time in HH:mm 24-hour format, e.g. 17:30. Omit to keep the Out time that is already recorded."
-      }
-    },
-    {
-      "name": "breakInTime",
-      "type": "string",
-      "required": false,
-      "defaultValue": null,
-      "description": "Optional break in time in HH:mm 24-hour format. Break times are not mandatory - add them only if the user wants to. If given, breakOutTime must be given too.",
-      "advanced": true,
-      "raw": {
-        "type": "string",
-        "description": "Optional break in time in HH:mm 24-hour format. Break times are not mandatory - add them only if the user wants to. If given, breakOutTime must be given too."
-      }
-    },
-    {
-      "name": "breakOutTime",
-      "type": "string",
-      "required": false,
-      "defaultValue": null,
-      "description": "Optional break out time in HH:mm 24-hour format. Break times are not mandatory - add them only if the user wants to. If given, breakInTime must be given too.",
-      "advanced": true,
-      "raw": {
-        "type": "string",
-        "description": "Optional break out time in HH:mm 24-hour format. Break times are not mandatory - add them only if the user wants to. If given, breakInTime must be given too."
-      }
-    },
-    {
-      "name": "reason",
-      "type": "string",
-      "required": false,
-      "defaultValue": null,
-      "description": "Reason/comment explaining why the manual in and out is being changed. Required before the update is submitted. No reason is needed for the break times on their own.",
-      "advanced": true,
-      "raw": {
-        "type": "string",
-        "description": "Reason/comment explaining why the manual in and out is being changed. Required before the update is submitted. No reason is needed for the break times on their own."
-      }
-    },
-    {
-      "name": "confirmed",
-      "type": "boolean",
-      "required": false,
-      "defaultValue": null,
-      "description": "Set to true only after the user has reviewed the preview of current vs new values and explicitly confirmed. Set to false (or omit) to just preview/validate without updating anything.",
-      "advanced": true,
-      "raw": {
-        "type": "boolean",
-        "description": "Set to true only after the user has reviewed the preview of current vs new values and explicitly confirmed. Set to false (or omit) to just preview/validate without updating anything."
+        "description": "Optional roster name. Resolved to a roster code within the roster group. Ignored when rosterCode is given."
       }
     }
   ]

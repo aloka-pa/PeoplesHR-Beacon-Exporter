@@ -1,0 +1,210 @@
+{
+  "arguments": [],
+  "advancedArguments": [
+    {
+      "name": "date",
+      "type": "string",
+      "required": true,
+      "defaultValue": null,
+      "description": "The off shift day the manual In and Out is being submitted for. Use the format returned by the dateFormat tool (MM/DD/YYYY for en-US, otherwise DD/MM/YYYY). Ask the user for this if not provided.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The off shift day the manual In and Out is being submitted for. Use the format returned by the dateFormat tool (MM/DD/YYYY for en-US, otherwise DD/MM/YYYY). Ask the user for this if not provided."
+      }
+    },
+    {
+      "name": "inDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "In date, in the format returned by the dateFormat tool. ALWAYS ask the user for it - together with In Time, Out Date and Out Time, all four every time, even when the day already has values recorded. Never assume it. The tool returns the row's own date under suggested.inDate; offer that as the default and let the user confirm or change it.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "In date, in the format returned by the dateFormat tool. ALWAYS ask the user for it - together with In Time, Out Date and Out Time, all four every time, even when the day already has values recorded. Never assume it. The tool returns the row's own date under suggested.inDate; offer that as the default and let the user confirm or change it."
+      }
+    },
+    {
+      "name": "inTime",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "In time in HH:mm 24-hour format, e.g. 10:00. ALWAYS ask the user for it together with inDate, outDate and outTime, even when an In time is already recorded - offer suggested.inTime as the default.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "In time in HH:mm 24-hour format, e.g. 10:00. ALWAYS ask the user for it together with inDate, outDate and outTime, even when an In time is already recorded - offer suggested.inTime as the default."
+      }
+    },
+    {
+      "name": "outDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Out date, in the format returned by the dateFormat tool. ALWAYS ask the user for it together with In Date, In Time and Out Time - never decide it yourself. An off shift day's window can run into the following day (current.allowedTo), so an Out Date after the In Date can be correct. Offer suggested.outDate as the default.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Out date, in the format returned by the dateFormat tool. ALWAYS ask the user for it together with In Date, In Time and Out Time - never decide it yourself. An off shift day's window can run into the following day (current.allowedTo), so an Out Date after the In Date can be correct. Offer suggested.outDate as the default."
+      }
+    },
+    {
+      "name": "outTime",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Out time in HH:mm 24-hour format, e.g. 18:00. ALWAYS ask the user for it together with inDate, inTime and outDate, even when an Out time is already recorded - offer suggested.outTime as the default. The Out date-time must be after the In date-time.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Out time in HH:mm 24-hour format, e.g. 18:00. ALWAYS ask the user for it together with inDate, inTime and outDate, even when an Out time is already recorded - offer suggested.outTime as the default. The Out date-time must be after the In date-time."
+      }
+    },
+    {
+      "name": "reason",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Reason/comment explaining why the off shift manual In and Out is being submitted. Required before the record is submitted.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Reason/comment explaining why the off shift manual In and Out is being submitted. Required before the record is submitted."
+      }
+    },
+    {
+      "name": "breaks",
+      "type": "array",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional breaks taken during the off shift - none, one or as many as the user wants. After showing the shift details, tell the user they can add breaks, but do not insist. Each break needs both times, must end after it starts, must sit within the In and Out date-times and the day's allowed period, and must not overlap another break of the day (shiftDetails.recordedBreaks lists the ones already recorded).",
+      "advanced": true,
+      "raw": {
+        "type": "array",
+        "description": "Optional breaks taken during the off shift - none, one or as many as the user wants. After showing the shift details, tell the user they can add breaks, but do not insist. Each break needs both times, must end after it starts, must sit within the In and Out date-times and the day's allowed period, and must not overlap another break of the day (shiftDetails.recordedBreaks lists the ones already recorded).",
+        "items": {
+          "type": "object",
+          "properties": {
+            "breakInTime": {
+              "type": "string",
+              "description": "Break start time in HH:mm 24-hour format, e.g. 11:00."
+            },
+            "breakOutTime": {
+              "type": "string",
+              "description": "Break end time in HH:mm 24-hour format, e.g. 12:00."
+            },
+            "breakNo": {
+              "type": "integer",
+              "description": "Only to CHANGE a recorded break: its breakNo from shiftDetails.recordedBreaks. Leave it out to add a new break."
+            }
+          },
+          "required": [
+            "breakInTime",
+            "breakOutTime"
+          ]
+        }
+      }
+    },
+    {
+      "name": "confirmed",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set to true only after the user has reviewed the preview and explicitly confirmed. Set to false (or omit) to preview/validate without submitting anything.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Set to true only after the user has reviewed the preview and explicitly confirmed. Set to false (or omit) to preview/validate without submitting anything."
+      }
+    },
+    {
+      "name": "dateSelectMode",
+      "type": null,
+      "required": false,
+      "defaultValue": null,
+      "description": "Search Criteria date selection mode, matching the page radio buttons: last7days (Last 7 Days), last30days (Last 30 Days), period (By Period, uses fromDate/toDate). Defaults to period with a wide range.",
+      "advanced": true,
+      "raw": {
+        "enum": [
+          "last7days",
+          "last30days",
+          "period"
+        ],
+        "description": "Search Criteria date selection mode, matching the page radio buttons: last7days (Last 7 Days), last30days (Last 30 Days), period (By Period, uses fromDate/toDate). Defaults to period with a wide range."
+      }
+    },
+    {
+      "name": "fromDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Search range start date in the format returned by the dateFormat tool. Only used when dateSelectMode is period. If omitted, a wide default range is used. The date must fall inside the range.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Search range start date in the format returned by the dateFormat tool. Only used when dateSelectMode is period. If omitted, a wide default range is used. The date must fall inside the range."
+      }
+    },
+    {
+      "name": "toDate",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Search range end date in the format returned by the dateFormat tool. Only used when dateSelectMode is period. If omitted, a wide default range is used. The date must fall inside the range.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Search range end date in the format returned by the dateFormat tool. Only used when dateSelectMode is period. If omitted, a wide default range is used. The date must fall inside the range."
+      }
+    },
+    {
+      "name": "isGroupByEmployee",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional Group By Employee checkbox on the Search Criteria panel. Omit it to use the screen's own default.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Optional Group By Employee checkbox on the Search Criteria panel. Omit it to use the screen's own default."
+      }
+    },
+    {
+      "name": "rosterGroup",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional roster group, by id or name, as listed by submitSelfManualInAndOut with showRosters. Omit it to use the screen's first roster group. Do not ask the user for it unless they want a specific roster.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Optional roster group, by id or name, as listed by submitSelfManualInAndOut with showRosters. Omit it to use the screen's first roster group. Do not ask the user for it unless they want a specific roster."
+      }
+    },
+    {
+      "name": "rosterCode",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional roster code. Takes precedence over rosterName. Omit it to use the first roster of the roster group, as the screen does.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Optional roster code. Takes precedence over rosterName. Omit it to use the first roster of the roster group, as the screen does."
+      }
+    },
+    {
+      "name": "rosterName",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Optional roster name. Resolved to a roster code within the roster group. Ignored when rosterCode is given.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Optional roster name. Resolved to a roster code within the roster group. Ignored when rosterCode is given."
+      }
+    }
+  ]
+}
