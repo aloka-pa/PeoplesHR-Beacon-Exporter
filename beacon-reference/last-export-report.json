@@ -4,7 +4,8 @@
   "toolsExported": 385,
   "toolsSkippedUnchanged": 0,
   "toolsFailed": [],
-  "toolsMissing": [
+  "toolsMissing": [],
+  "toolsPruned": [
     "6839837aee810f144aeb58f3",
     "683ff29e9f17a1a75c2b85ce",
     "680f47d839076bbb628b5eb0",
@@ -270,12 +271,12 @@
     "6811cfa00c8b721f97df63e7",
     "6810e7956a612deb206e3902"
   ],
-  "toolsPruned": [],
   "functionsDiscovered": 183,
   "functionsExported": 183,
   "functionsSkippedUnchanged": 0,
   "functionsFailed": [],
-  "functionsMissing": [
+  "functionsMissing": [],
+  "functionsPruned": [
     "682c15e3eca3ee3d74e97f42",
     "683f3dff223a17fa79e3c536",
     "682b37bd149b1c1b669309d6",
@@ -441,6 +442,5 @@
     "680b8bb1b9df673757af7fdc",
     "680b8b87814baf3019305f49"
   ],
-  "functionsPruned": [],
-  "generatedAt": "2026-10-07T06:27:32.251Z"
+  "generatedAt": "2026-10-07T06:32:50.581Z"
 }
