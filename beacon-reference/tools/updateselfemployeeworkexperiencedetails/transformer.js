@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("EIM/WorkExperience.aspx")
+  )
+) {
+  return { error: true, message: "You do not have access to Work Experience Page. Please contact HR Admin." };
+}
   let finalData = args.WorkExperienceRecords.map(x => ({
     ...x,
     EmpNumber: window.empNumber1

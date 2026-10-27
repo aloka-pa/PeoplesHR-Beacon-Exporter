@@ -1,8 +1,13 @@
 [
   {
-    "toolId": "6aa27002dfb18ee14844f2af",
-    "toolName": "adminEmployeeTrainingNeedApplication",
-    "path": "tools/adminemployeetrainingneedapplication"
+    "toolId": "69552f87921cbb106adf3556",
+    "toolName": "getTrainingBudgetUtilization",
+    "path": "tools/gettrainingbudgetutilization"
+  },
+  {
+    "toolId": "695524daa4e4f389f90f1d7a",
+    "toolName": "getTrainingBudgetAllocation",
+    "path": "tools/gettrainingbudgetallocation"
   },
   {
     "toolId": "6aa03f3e0ca0292e49401900",
@@ -13,6 +18,11 @@
     "toolId": "6aa036df3145f46f07ddf4c3",
     "toolName": "selfEmployeeTrainingNeedApplication",
     "path": "tools/selfemployeetrainingneedapplication"
+  },
+  {
+    "toolId": "6aa27002dfb18ee14844f2af",
+    "toolName": "adminEmployeeTrainingNeedApplication",
+    "path": "tools/adminemployeetrainingneedapplication"
   },
   {
     "toolId": "6a9ff76b2ea15b32b729515b",
@@ -93,16 +103,6 @@
     "toolId": "6a9ee8841234b7562210320c",
     "toolName": "getSelfEmployeeTrainings",
     "path": "tools/getselfemployeetrainings"
-  },
-  {
-    "toolId": "69552f87921cbb106adf3556",
-    "toolName": "getTrainingBudgetUtilization",
-    "path": "tools/gettrainingbudgetutilization"
-  },
-  {
-    "toolId": "695524daa4e4f389f90f1d7a",
-    "toolName": "getTrainingBudgetAllocation",
-    "path": "tools/gettrainingbudgetallocation"
   },
   {
     "toolId": "6956293bab9dbe6266aec3e1",

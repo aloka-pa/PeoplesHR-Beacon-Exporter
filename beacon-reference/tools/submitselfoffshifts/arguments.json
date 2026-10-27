@@ -2,15 +2,27 @@
   "arguments": [],
   "advancedArguments": [
     {
+      "name": "showTab",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set when the user asks to see the dates on one tab of the Manual In and Out screen - e.g. 'what are the dates in the pending tab'. Pass the tab name as the user says it: Regularize, Pending, Valid Swipes or Off Shifts. No date is needed (the team and admin tools still need the employee). Returns only that tab's dates and submits nothing - show the dates as returned.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "Set when the user asks to see the dates on one tab of the Manual In and Out screen - e.g. 'what are the dates in the pending tab'. Pass the tab name as the user says it: Regularize, Pending, Valid Swipes or Off Shifts. No date is needed (the team and admin tools still need the employee). Returns only that tab's dates and submits nothing - show the dates as returned."
+      }
+    },
+    {
       "name": "date",
       "type": "string",
       "required": true,
       "defaultValue": null,
-      "description": "The off shift day the manual In and Out is being submitted for. Use the format returned by the dateFormat tool (MM/DD/YYYY for en-US, otherwise DD/MM/YYYY). Ask the user for this if not provided.",
+      "description": "The off shift day the manual In and Out is being submitted for. Use the format returned by the dateFormat tool (MM/DD/YYYY for en-US, otherwise DD/MM/YYYY). Ask the user for this if not provided. Also call with the date when the user asks for the status of a pending request on that date - for a Pending day the tool returns the status, what was requested (old -> new In/Out and break times), the comment and who it is waiting for (pendingRequest); show that as returned.",
       "advanced": true,
       "raw": {
         "type": "string",
-        "description": "The off shift day the manual In and Out is being submitted for. Use the format returned by the dateFormat tool (MM/DD/YYYY for en-US, otherwise DD/MM/YYYY). Ask the user for this if not provided."
+        "description": "The off shift day the manual In and Out is being submitted for. Use the format returned by the dateFormat tool (MM/DD/YYYY for en-US, otherwise DD/MM/YYYY). Ask the user for this if not provided. Also call with the date when the user asks for the status of a pending request on that date - for a Pending day the tool returns the status, what was requested (old -> new In/Out and break times), the comment and who it is waiting for (pendingRequest); show that as returned."
       }
     },
     {
@@ -18,11 +30,11 @@
       "type": "string",
       "required": false,
       "defaultValue": null,
-      "description": "In date, in the format returned by the dateFormat tool. ALWAYS ask the user for it - together with In Time, Out Date and Out Time, all four every time, even when the day already has values recorded. Never assume it. The tool returns the row's own date under suggested.inDate; offer that as the default and let the user confirm or change it.",
+      "description": "In date, in the format returned by the dateFormat tool. Give it with inTime when the user is giving the In. The screen submits an In on its own, an Out on its own, or both, so one side is enough - ask the user which they want to give and never insist on the other. Offer suggested.inDate as the default; never assume it.",
       "advanced": true,
       "raw": {
         "type": "string",
-        "description": "In date, in the format returned by the dateFormat tool. ALWAYS ask the user for it - together with In Time, Out Date and Out Time, all four every time, even when the day already has values recorded. Never assume it. The tool returns the row's own date under suggested.inDate; offer that as the default and let the user confirm or change it."
+        "description": "In date, in the format returned by the dateFormat tool. Give it with inTime when the user is giving the In. The screen submits an In on its own, an Out on its own, or both, so one side is enough - ask the user which they want to give and never insist on the other. Offer suggested.inDate as the default; never assume it."
       }
     },
     {
@@ -30,11 +42,11 @@
       "type": "string",
       "required": false,
       "defaultValue": null,
-      "description": "In time in HH:mm 24-hour format, e.g. 10:00. ALWAYS ask the user for it together with inDate, outDate and outTime, even when an In time is already recorded - offer suggested.inTime as the default.",
+      "description": "In time in HH:mm 24-hour format, e.g. 08:30. Give it with inDate when the user is giving the In; leave both out for an Out-only entry. Offer suggested.inTime as the default.",
       "advanced": true,
       "raw": {
         "type": "string",
-        "description": "In time in HH:mm 24-hour format, e.g. 10:00. ALWAYS ask the user for it together with inDate, outDate and outTime, even when an In time is already recorded - offer suggested.inTime as the default."
+        "description": "In time in HH:mm 24-hour format, e.g. 08:30. Give it with inDate when the user is giving the In; leave both out for an Out-only entry. Offer suggested.inTime as the default."
       }
     },
     {
@@ -42,11 +54,11 @@
       "type": "string",
       "required": false,
       "defaultValue": null,
-      "description": "Out date, in the format returned by the dateFormat tool. ALWAYS ask the user for it together with In Date, In Time and Out Time - never decide it yourself. An off shift day's window can run into the following day (current.allowedTo), so an Out Date after the In Date can be correct. Offer suggested.outDate as the default.",
+      "description": "Out date, in the format returned by the dateFormat tool. Give it with outTime when the user is giving the Out; leave both out for an In-only entry. An Out Date on the day AFTER the In Date is normal for shifts past midnight (shiftDetails.canEndNextDay) - never question it. Offer suggested.outDate as the default.",
       "advanced": true,
       "raw": {
         "type": "string",
-        "description": "Out date, in the format returned by the dateFormat tool. ALWAYS ask the user for it together with In Date, In Time and Out Time - never decide it yourself. An off shift day's window can run into the following day (current.allowedTo), so an Out Date after the In Date can be correct. Offer suggested.outDate as the default."
+        "description": "Out date, in the format returned by the dateFormat tool. Give it with outTime when the user is giving the Out; leave both out for an In-only entry. An Out Date on the day AFTER the In Date is normal for shifts past midnight (shiftDetails.canEndNextDay) - never question it. Offer suggested.outDate as the default."
       }
     },
     {
@@ -54,11 +66,11 @@
       "type": "string",
       "required": false,
       "defaultValue": null,
-      "description": "Out time in HH:mm 24-hour format, e.g. 18:00. ALWAYS ask the user for it together with inDate, inTime and outDate, even when an Out time is already recorded - offer suggested.outTime as the default. The Out date-time must be after the In date-time.",
+      "description": "Out time in HH:mm 24-hour format, e.g. 17:30. Give it with outDate when the user is giving the Out. Check it against outDate, not against inTime. Offer suggested.outTime as the default.",
       "advanced": true,
       "raw": {
         "type": "string",
-        "description": "Out time in HH:mm 24-hour format, e.g. 18:00. ALWAYS ask the user for it together with inDate, inTime and outDate, even when an Out time is already recorded - offer suggested.outTime as the default. The Out date-time must be after the In date-time."
+        "description": "Out time in HH:mm 24-hour format, e.g. 17:30. Give it with outDate when the user is giving the Out. Check it against outDate, not against inTime. Offer suggested.outTime as the default."
       }
     },
     {
@@ -107,15 +119,62 @@
       }
     },
     {
+      "name": "otherEntries",
+      "type": "array",
+      "required": false,
+      "defaultValue": null,
+      "description": "When the user asks for several days in one request, pass on every call the OTHER days of that request that are not submitted yet, each with the values the user gave. The screen submits such days together and refuses all of them when two overlap across midnight, so the tool checks the overlap in each day's preview. Preview every day first; submit none until all previews passed.",
+      "advanced": true,
+      "raw": {
+        "type": "array",
+        "description": "When the user asks for several days in one request, pass on every call the OTHER days of that request that are not submitted yet, each with the values the user gave. The screen submits such days together and refuses all of them when two overlap across midnight, so the tool checks the overlap in each day's preview. Preview every day first; submit none until all previews passed.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "description": "That day, in the dateFormat format."
+            },
+            "inDate": {
+              "type": "string"
+            },
+            "inTime": {
+              "type": "string",
+              "description": "HH:mm"
+            },
+            "outDate": {
+              "type": "string"
+            },
+            "outTime": {
+              "type": "string",
+              "description": "HH:mm"
+            }
+          }
+        }
+      }
+    },
+    {
       "name": "confirmed",
       "type": "boolean",
       "required": false,
       "defaultValue": null,
-      "description": "Set to true only after the user has reviewed the preview and explicitly confirmed. Set to false (or omit) to preview/validate without submitting anything.",
+      "description": "Set to true, together with previewToken, only after the user has reviewed the preview and explicitly confirmed. Set to false (or omit) to preview/validate without submitting anything. Never send it on the first call - the tool validates and returns the preview first.",
       "advanced": true,
       "raw": {
         "type": "boolean",
-        "description": "Set to true only after the user has reviewed the preview and explicitly confirmed. Set to false (or omit) to preview/validate without submitting anything."
+        "description": "Set to true, together with previewToken, only after the user has reviewed the preview and explicitly confirmed. Set to false (or omit) to preview/validate without submitting anything. Never send it on the first call - the tool validates and returns the preview first."
+      }
+    },
+    {
+      "name": "previewToken",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "description": "The previewToken from the preview the user confirmed. Required with confirmed:true. Without it, or if any value changed since that preview, nothing is submitted and the preview is returned again - show it and ask for confirmation.",
+      "advanced": true,
+      "raw": {
+        "type": "string",
+        "description": "The previewToken from the preview the user confirmed. Required with confirmed:true. Without it, or if any value changed since that preview, nothing is submitted and the preview is returned again - show it and ask for confirmation."
       }
     },
     {

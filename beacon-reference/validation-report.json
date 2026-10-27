@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-07T06:28:10.170Z",
+  "generatedAt": "2026-10-27T03:28:13.567Z",
   "agentsDiscovered": 29,
-  "toolsDiscovered": 385,
-  "toolsExportedFull": 384,
+  "toolsDiscovered": 387,
+  "toolsExportedFull": 386,
   "toolsExportedPartial": 1,
   "toolsFailed": [],
   "missingSectionsByTool": {

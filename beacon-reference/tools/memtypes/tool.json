@@ -11,15 +11,15 @@
   "status": "live",
   "signature": "memTypes",
   "createdAt": "2025-04-30T09:52:27.350Z",
-  "updatedAt": "2025-04-30T09:52:27.350Z",
+  "updatedAt": "2026-10-23T09:26:49.232Z",
   "assignedAgents": [
     {
       "id": "690dc571931a2d61ba0b1bc2",
       "name": "EIM Administration"
     }
   ],
-  "contentHash": "9edcffa128c99aa23b53aba47a17670de55886f5d96c82768c91ca2668b9ea8c",
-  "lastExportedAt": "2026-10-07T06:32:17.700Z",
+  "contentHash": "addd0cb26fac61be53753e9e7b3383b3947c594a5da78f1a3b3d4f94170f20d8",
+  "lastExportedAt": "2026-10-27T03:27:10.521Z",
   "raw": {
     "basic": {
       "_id": "690dc564931a2d61ba0b14b1",
@@ -34,12 +34,12 @@
         "name": "memTypes",
         "args": [],
         "isAdvanced": false,
-        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-        "_id": "6811f2dbcfbd25ce9c12e5c4"
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6adb285946d6a978eef90b31"
       },
-      "by": "1927",
+      "by": "44101",
       "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return [];\n    })`\n  };\n})",
-      "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Membership\");\n  const response = await BeaconBar.executeFunction(\"getEIMApii\")(\n    {\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __VIEWSTATE: details.viewState,\n      __VIEWSTATEGENERATOR: details.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: details.eventValidation,\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n      \"ctl00$body$ContentSearch$cboCriteria\": \"MEMBSHIP_CODE\",\n      \"ctl00$body$ContentSearch$txtContent\": \"\",\n      \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"4\",\n      \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdsummary_ClientState\": \"\",\n      \"ctl00$body$butNew\": \"New\"\n    },\n    \"Membership\"\n  )\n  window.cm = response;\n  const parser = new DOMParser();\n  const document = parser.parseFromString(response.rawData, \"text/html\");\n\n  const select = document.getElementById(\"ctl00_body_dpcountry\");\n\n  const allMembershipTypes = select\n    ? Array.from(select.options)\n      .filter(opt => opt.value !== \"-1\" && opt.value.trim() && opt.text.trim())\n      .map(opt => ({ value: opt.value, text: opt.text.trim() }))\n    : [];\n\n  return allMembershipTypes;\n})\n",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (\n  !BeaconBar.user?.metaData?.menus?.some(menu =>\n    menu.includes(onclick=\"EIM/MemberShipType.aspx\")\n  )\n) {\n  return { error: true, message: \"You do not have access to Membership Type Page. Please contact HR Admin.\" };\n}\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Membership\");\n  const response = await BeaconBar.executeFunction(\"getEIMApii\")(\n    {\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __VIEWSTATE: details.viewState,\n      __VIEWSTATEGENERATOR: details.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: details.eventValidation,\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n      \"ctl00$body$ContentSearch$cboCriteria\": \"MEMBSHIP_CODE\",\n      \"ctl00$body$ContentSearch$txtContent\": \"\",\n      \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"4\",\n      \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdsummary_ClientState\": \"\",\n      \"ctl00$body$butNew\": \"New\"\n    },\n    \"Membership\"\n  )\n  window.cm = response;\n  const parser = new DOMParser();\n  const document = parser.parseFromString(response.rawData, \"text/html\");\n\n  const select = document.getElementById(\"ctl00_body_dpcountry\");\n\n  const allMembershipTypes = select\n    ? Array.from(select.options)\n      .filter(opt => opt.value !== \"-1\" && opt.value.trim() && opt.text.trim())\n      .map(opt => ({ value: opt.value, text: opt.text.trim() }))\n    : [];\n\n  return allMembershipTypes;\n})\n",
       "groupName": "",
       "tags": [
         "Headers"
@@ -48,8 +48,26 @@
       "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
       "status": "live",
       "createdAt": "2025-04-30T09:52:27.350Z",
-      "updatedAt": "2025-04-30T09:52:27.350Z",
-      "__v": 0,
+      "updatedAt": "2026-10-23T09:26:49.232Z",
+      "__v": 2,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "strictToolUse": false,
+      "toolType": "code",
       "agents": [
         {
           "_id": "690dc571931a2d61ba0b1bc2",
@@ -62,12 +80,17 @@
       "name": "memTypes",
       "args": [],
       "isAdvanced": false,
-      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-      "_id": "6811f2dbcfbd25ce9c12e5c4"
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6adb285946d6a978eef90b31"
     },
     "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return [];\n    })`\n  };\n})",
-    "transformer": "(async function (data, args, reqOptions) {\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Membership\");\n  const response = await BeaconBar.executeFunction(\"getEIMApii\")(\n    {\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __VIEWSTATE: details.viewState,\n      __VIEWSTATEGENERATOR: details.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: details.eventValidation,\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n      \"ctl00$body$ContentSearch$cboCriteria\": \"MEMBSHIP_CODE\",\n      \"ctl00$body$ContentSearch$txtContent\": \"\",\n      \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"4\",\n      \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdsummary_ClientState\": \"\",\n      \"ctl00$body$butNew\": \"New\"\n    },\n    \"Membership\"\n  )\n  window.cm = response;\n  const parser = new DOMParser();\n  const document = parser.parseFromString(response.rawData, \"text/html\");\n\n  const select = document.getElementById(\"ctl00_body_dpcountry\");\n\n  const allMembershipTypes = select\n    ? Array.from(select.options)\n      .filter(opt => opt.value !== \"-1\" && opt.value.trim() && opt.text.trim())\n      .map(opt => ({ value: opt.value, text: opt.text.trim() }))\n    : [];\n\n  return allMembershipTypes;\n})\n",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (\n  !BeaconBar.user?.metaData?.menus?.some(menu =>\n    menu.includes(onclick=\"EIM/MemberShipType.aspx\")\n  )\n) {\n  return { error: true, message: \"You do not have access to Membership Type Page. Please contact HR Admin.\" };\n}\n  const details = await BeaconBar.executeFunction(\"getApiList\")(\"Membership\");\n  const response = await BeaconBar.executeFunction(\"getEIMApii\")(\n    {\n      scrollLeft: \"0\",\n      scrollTop: \"0\",\n      __EVENTTARGET: \"\",\n      __EVENTARGUMENT: \"\",\n      __VIEWSTATE: details.viewState,\n      __VIEWSTATEGENERATOR: details.viewStateGen,\n      __VIEWSTATEENCRYPTED: \"\",\n      __EVENTVALIDATION: details.eventValidation,\n      \"ctl00$hdnDateFormat\": \"dd/mm/yy\",\n      \"ctl00$body$ContentSearch$cboCriteria\": \"MEMBSHIP_CODE\",\n      \"ctl00$body$ContentSearch$txtContent\": \"\",\n      \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$GoToPageTextBox\": \"1\",\n      \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_GoToPageTextBox_ClientState\": \"\",\n      \"ctl00$body$grdsummary$ctl00$ctl03$ctl01$ChangePageSizeTextBox\": \"4\",\n      \"ctl00_body_grdsummary_ctl00_ctl03_ctl01_ChangePageSizeTextBox_ClientState\": \"\",\n      \"ctl00_body_grdsummary_ClientState\": \"\",\n      \"ctl00$body$butNew\": \"New\"\n    },\n    \"Membership\"\n  )\n  window.cm = response;\n  const parser = new DOMParser();\n  const document = parser.parseFromString(response.rawData, \"text/html\");\n\n  const select = document.getElementById(\"ctl00_body_dpcountry\");\n\n  const allMembershipTypes = select\n    ? Array.from(select.options)\n      .filter(opt => opt.value !== \"-1\" && opt.value.trim() && opt.text.trim())\n      .map(opt => ({ value: opt.value, text: opt.text.trim() }))\n    : [];\n\n  return allMembershipTypes;\n})\n",
     "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
-    "test": {}
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
   }
 }

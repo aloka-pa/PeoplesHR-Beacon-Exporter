@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("EIM/StaffGroup.aspx")
+  )
+) {
+  return { error: true, message: "You do not have access to Employee Group Page. Please contact HR Admin." };
+}
 
   const updateurl = await BeaconBar.executeFunction("updateUrlParams")('EIM/StaffGroup.aspx');
   let url;

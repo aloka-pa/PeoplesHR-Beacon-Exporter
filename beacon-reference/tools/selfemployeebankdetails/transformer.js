@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("EIM/AssignBankInformation.aspx")
+  )
+) {
+  return { error: true, message: "You do not have access to Bank Details Page. Please contact HR Admin." };
+}
   const url = await BeaconBar.executeFunction("updateUrlParams")("EIMV9/Bank/Bank?mvc=1&subordinate=0")
   const digest = await BeaconBar.executeFunction('getDigest')(url.updateParams);
 

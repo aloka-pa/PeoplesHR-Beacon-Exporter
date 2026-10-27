@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("<MenuURL>")
+  )
+) {
+  return { error: true, message: "You do not have access to <screen>. Please contact HR Admin." };
+}
   if (args.entity === "overtimeInformation") {
     const response = await BeaconBar.executeFunction('module')({
       "ctl00$main$RadScriptManager": "ctl00$action$UpdatePanel3|ctl00$action$ButtonPanel$butSave$imgbtnSave",

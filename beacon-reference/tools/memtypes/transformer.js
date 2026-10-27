@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes(onclick="EIM/MemberShipType.aspx")
+  )
+) {
+  return { error: true, message: "You do not have access to Membership Type Page. Please contact HR Admin." };
+}
   const details = await BeaconBar.executeFunction("getApiList")("Membership");
   const response = await BeaconBar.executeFunction("getEIMApii")(
     {

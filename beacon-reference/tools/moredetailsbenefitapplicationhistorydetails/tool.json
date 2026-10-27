@@ -12,15 +12,15 @@
   "status": "live",
   "signature": "moreDetailsBenefitApplicationHistoryDetails",
   "createdAt": "2025-10-26T17:38:51.507Z",
-  "updatedAt": "2025-10-26T17:38:51.507Z",
+  "updatedAt": "2026-10-23T05:52:46.694Z",
   "assignedAgents": [
     {
       "id": "690dc571931a2d61ba0b1be9",
       "name": "BenefitManagement"
     }
   ],
-  "contentHash": "383c4e71605facf219770b9ce8cd38feca582bfc976249230cf3e0872f8094f1",
-  "lastExportedAt": "2026-10-07T06:32:16.639Z",
+  "contentHash": "1f703bed62cb9a3e51d1788469390713589a35043ad43824bf0fd80499a654e2",
+  "lastExportedAt": "2026-10-27T03:27:10.571Z",
   "raw": {
     "basic": {
       "_id": "690dc56c931a2d61ba0b1b92",
@@ -78,12 +78,12 @@
           }
         ],
         "isAdvanced": false,
-        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-        "_id": "68fe5cab73f22bf658115aa2"
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6adaf62eeed48bf24723daa0"
       },
-      "by": "2414",
+      "by": "44101",
       "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
-      "transformer": "(async function (data, args, reqOptions) {\n  let params;\n  if(window.empNumber12){\n    params = `mvc=1&bs=4&empNumber=${args.ENCRYPT_EMP_NUMBER}&appId=${args.BET_APP_ID}&betCode=${args.BET_CODE}&mode=-1&isFIrstLoad=0&isAllHistory=1&SEmployee=${window.empNumber12 || ''}&SFrmDate=${args.fromDate}&SToDate=${args.toDate}&SBetCode=undefined&BetAppYear=${args.BET_APPY_DATE}`;\n  }else{\n    params = `mvc=1&bs=4&empNumber=${args.ENCRYPT_EMP_NUMBER}&appId=${args.BET_APP_ID}&betCode=${args.BET_CODE}&mode=-1&isFIrstLoad=0&BetAppYear=${args.BET_APPY_DATE}`;\n  }\n\n  const digestkey = await BeaconBar.executeFunction('getDigest')(params);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8,te;q=0.7\");\n  myHeaders.append(\"content-type\", \"application/json; charset=UTF-8\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const summary = await fetch(`${window.origin}/hr/BenefitV9/Application/ApplicationSummary/?${params}&digest=${digestkey.digest}`, requestOptions);\n  const text = await summary.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(text, \"text/html\");\n  const scriptTag = Array.from(doc.querySelectorAll(\"script\")).find(s => s.textContent.includes(\"window.BenefitApplicationObj\"));\n  const regex = /window\\.BenefitApplicationObj\\s*=\\s*'([^']+)'/;\n  const match = scriptTag?.textContent.match(regex);\n  const jsonData = JSON.parse(match[1]);\n\n  const extracted = {\n    betAppYear: jsonData.BetAppYear,\n    appId: jsonData.AppId,\n    betCode: jsonData.CurrentBenefitTypeCode || jsonData.BmApplication?.BetCode,\n    cancelWfMainId: jsonData.CancelWfMainId,\n    empNumber: jsonData.Employee?.EmpNumber,\n    isWorkflow: jsonData.IsWorkflow,\n    keyValue: jsonData.KeyValue,\n    visibilityState: jsonData.VisibilityState,\n    wfMainId: jsonData.WfMainId\n  };\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: JSON.stringify(extracted),\n    redirect: \"follow\"\n  };\n\n  const details = await fetch(`${window.origin}/hr/BenefitV9/api/ApplicationApi/GetApplicationStructure/`, requestOptions1);\n  const data1 = await details.json();\n\n  return data1;\n})\n",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (\n  !BeaconBar.user?.metaData?.menus?.some(menu =>\n    menu.includes(\"<MenuURL>\")\n  )\n) {\n  return { error: true, message: \"You do not have access to <screen>. Please contact HR Admin.\" };\n}\n  let params;\n  if(window.empNumber12){\n    params = `mvc=1&bs=4&empNumber=${args.ENCRYPT_EMP_NUMBER}&appId=${args.BET_APP_ID}&betCode=${args.BET_CODE}&mode=-1&isFIrstLoad=0&isAllHistory=1&SEmployee=${window.empNumber12 || ''}&SFrmDate=${args.fromDate}&SToDate=${args.toDate}&SBetCode=undefined&BetAppYear=${args.BET_APPY_DATE}`;\n  }else{\n    params = `mvc=1&bs=4&empNumber=${args.ENCRYPT_EMP_NUMBER}&appId=${args.BET_APP_ID}&betCode=${args.BET_CODE}&mode=-1&isFIrstLoad=0&BetAppYear=${args.BET_APPY_DATE}`;\n  }\n\n  const digestkey = await BeaconBar.executeFunction('getDigest')(params);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8,te;q=0.7\");\n  myHeaders.append(\"content-type\", \"application/json; charset=UTF-8\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const summary = await fetch(`${window.origin}/hr/BenefitV9/Application/ApplicationSummary/?${params}&digest=${digestkey.digest}`, requestOptions);\n  const text = await summary.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(text, \"text/html\");\n  const scriptTag = Array.from(doc.querySelectorAll(\"script\")).find(s => s.textContent.includes(\"window.BenefitApplicationObj\"));\n  const regex = /window\\.BenefitApplicationObj\\s*=\\s*'([^']+)'/;\n  const match = scriptTag?.textContent.match(regex);\n  const jsonData = JSON.parse(match[1]);\n\n  const extracted = {\n    betAppYear: jsonData.BetAppYear,\n    appId: jsonData.AppId,\n    betCode: jsonData.CurrentBenefitTypeCode || jsonData.BmApplication?.BetCode,\n    cancelWfMainId: jsonData.CancelWfMainId,\n    empNumber: jsonData.Employee?.EmpNumber,\n    isWorkflow: jsonData.IsWorkflow,\n    keyValue: jsonData.KeyValue,\n    visibilityState: jsonData.VisibilityState,\n    wfMainId: jsonData.WfMainId\n  };\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: JSON.stringify(extracted),\n    redirect: \"follow\"\n  };\n\n  const details = await fetch(`${window.origin}/hr/BenefitV9/api/ApplicationApi/GetApplicationStructure/`, requestOptions1);\n  const data1 = await details.json();\n\n  return data1;\n})\n",
       "groupName": "",
       "tags": [
         "BenefitManagement",
@@ -93,8 +93,26 @@
       "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
       "status": "live",
       "createdAt": "2025-10-26T17:38:51.507Z",
-      "updatedAt": "2025-10-26T17:38:51.507Z",
-      "__v": 0,
+      "updatedAt": "2026-10-23T05:52:46.694Z",
+      "__v": 1,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "strictToolUse": false,
+      "toolType": "code",
       "agents": [
         {
           "_id": "690dc571931a2d61ba0b1be9",
@@ -150,12 +168,17 @@
         }
       ],
       "isAdvanced": false,
-      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-      "_id": "68fe5cab73f22bf658115aa2"
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6adaf62eeed48bf24723daa0"
     },
     "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
-    "transformer": "(async function (data, args, reqOptions) {\n  let params;\n  if(window.empNumber12){\n    params = `mvc=1&bs=4&empNumber=${args.ENCRYPT_EMP_NUMBER}&appId=${args.BET_APP_ID}&betCode=${args.BET_CODE}&mode=-1&isFIrstLoad=0&isAllHistory=1&SEmployee=${window.empNumber12 || ''}&SFrmDate=${args.fromDate}&SToDate=${args.toDate}&SBetCode=undefined&BetAppYear=${args.BET_APPY_DATE}`;\n  }else{\n    params = `mvc=1&bs=4&empNumber=${args.ENCRYPT_EMP_NUMBER}&appId=${args.BET_APP_ID}&betCode=${args.BET_CODE}&mode=-1&isFIrstLoad=0&BetAppYear=${args.BET_APPY_DATE}`;\n  }\n\n  const digestkey = await BeaconBar.executeFunction('getDigest')(params);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8,te;q=0.7\");\n  myHeaders.append(\"content-type\", \"application/json; charset=UTF-8\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const summary = await fetch(`${window.origin}/hr/BenefitV9/Application/ApplicationSummary/?${params}&digest=${digestkey.digest}`, requestOptions);\n  const text = await summary.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(text, \"text/html\");\n  const scriptTag = Array.from(doc.querySelectorAll(\"script\")).find(s => s.textContent.includes(\"window.BenefitApplicationObj\"));\n  const regex = /window\\.BenefitApplicationObj\\s*=\\s*'([^']+)'/;\n  const match = scriptTag?.textContent.match(regex);\n  const jsonData = JSON.parse(match[1]);\n\n  const extracted = {\n    betAppYear: jsonData.BetAppYear,\n    appId: jsonData.AppId,\n    betCode: jsonData.CurrentBenefitTypeCode || jsonData.BmApplication?.BetCode,\n    cancelWfMainId: jsonData.CancelWfMainId,\n    empNumber: jsonData.Employee?.EmpNumber,\n    isWorkflow: jsonData.IsWorkflow,\n    keyValue: jsonData.KeyValue,\n    visibilityState: jsonData.VisibilityState,\n    wfMainId: jsonData.WfMainId\n  };\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: JSON.stringify(extracted),\n    redirect: \"follow\"\n  };\n\n  const details = await fetch(`${window.origin}/hr/BenefitV9/api/ApplicationApi/GetApplicationStructure/`, requestOptions1);\n  const data1 = await details.json();\n\n  return data1;\n})\n",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (\n  !BeaconBar.user?.metaData?.menus?.some(menu =>\n    menu.includes(\"<MenuURL>\")\n  )\n) {\n  return { error: true, message: \"You do not have access to <screen>. Please contact HR Admin.\" };\n}\n  let params;\n  if(window.empNumber12){\n    params = `mvc=1&bs=4&empNumber=${args.ENCRYPT_EMP_NUMBER}&appId=${args.BET_APP_ID}&betCode=${args.BET_CODE}&mode=-1&isFIrstLoad=0&isAllHistory=1&SEmployee=${window.empNumber12 || ''}&SFrmDate=${args.fromDate}&SToDate=${args.toDate}&SBetCode=undefined&BetAppYear=${args.BET_APPY_DATE}`;\n  }else{\n    params = `mvc=1&bs=4&empNumber=${args.ENCRYPT_EMP_NUMBER}&appId=${args.BET_APP_ID}&betCode=${args.BET_CODE}&mode=-1&isFIrstLoad=0&BetAppYear=${args.BET_APPY_DATE}`;\n  }\n\n  const digestkey = await BeaconBar.executeFunction('getDigest')(params);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"application/json, text/javascript, */*; q=0.01\");\n  myHeaders.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8,te;q=0.7\");\n  myHeaders.append(\"content-type\", \"application/json; charset=UTF-8\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const summary = await fetch(`${window.origin}/hr/BenefitV9/Application/ApplicationSummary/?${params}&digest=${digestkey.digest}`, requestOptions);\n  const text = await summary.text();\n\n  const parser = new DOMParser();\n  const doc = parser.parseFromString(text, \"text/html\");\n  const scriptTag = Array.from(doc.querySelectorAll(\"script\")).find(s => s.textContent.includes(\"window.BenefitApplicationObj\"));\n  const regex = /window\\.BenefitApplicationObj\\s*=\\s*'([^']+)'/;\n  const match = scriptTag?.textContent.match(regex);\n  const jsonData = JSON.parse(match[1]);\n\n  const extracted = {\n    betAppYear: jsonData.BetAppYear,\n    appId: jsonData.AppId,\n    betCode: jsonData.CurrentBenefitTypeCode || jsonData.BmApplication?.BetCode,\n    cancelWfMainId: jsonData.CancelWfMainId,\n    empNumber: jsonData.Employee?.EmpNumber,\n    isWorkflow: jsonData.IsWorkflow,\n    keyValue: jsonData.KeyValue,\n    visibilityState: jsonData.VisibilityState,\n    wfMainId: jsonData.WfMainId\n  };\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: JSON.stringify(extracted),\n    redirect: \"follow\"\n  };\n\n  const details = await fetch(`${window.origin}/hr/BenefitV9/api/ApplicationApi/GetApplicationStructure/`, requestOptions1);\n  const data1 = await details.json();\n\n  return data1;\n})\n",
     "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
-    "test": {}
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
   }
 }

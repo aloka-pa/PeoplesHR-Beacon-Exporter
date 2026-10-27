@@ -1,5 +1,20 @@
 [
   {
+    "toolId": "690dc566931a2d61ba0b16e6",
+    "toolName": "UpdateDefineMasterDateDetails",
+    "path": "tools/updatedefinemasterdatedetails"
+  },
+  {
+    "toolId": "690dc566931a2d61ba0b16f7",
+    "toolName": "getSingleEmployeeBenefitHistory",
+    "path": "tools/getsingleemployeebenefithistory"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b92",
+    "toolName": "moreDetailsBenefitApplicationHistoryDetails",
+    "path": "tools/moredetailsbenefitapplicationhistorydetails"
+  },
+  {
     "toolId": "6aaa32816e96f818ab221552",
     "toolName": "myTeamBenefitApplication",
     "path": "tools/myteambenefitapplication"
@@ -13,11 +28,6 @@
     "toolId": "690dc567931a2d61ba0b1718",
     "toolName": "getBenefitEmployeeInformation",
     "path": "tools/getbenefitemployeeinformation"
-  },
-  {
-    "toolId": "690dc566931a2d61ba0b16f7",
-    "toolName": "getSingleEmployeeBenefitHistory",
-    "path": "tools/getsingleemployeebenefithistory"
   },
   {
     "toolId": "690dc568931a2d61ba0b17f2",
@@ -50,11 +60,6 @@
     "path": "tools/getdefinemasterdatedetails"
   },
   {
-    "toolId": "690dc56c931a2d61ba0b1b92",
-    "toolName": "moreDetailsBenefitApplicationHistoryDetails",
-    "path": "tools/moredetailsbenefitapplicationhistorydetails"
-  },
-  {
     "toolId": "690dc56b931a2d61ba0b1b12",
     "toolName": "selfBenefitApplicationTypes",
     "path": "tools/selfbenefitapplicationtypes"
@@ -83,10 +88,5 @@
     "toolId": "690dc568931a2d61ba0b17f7",
     "toolName": "getBenefitApplicationTypesDetails",
     "path": "tools/getbenefitapplicationtypesdetails"
-  },
-  {
-    "toolId": "690dc566931a2d61ba0b16e6",
-    "toolName": "UpdateDefineMasterDateDetails",
-    "path": "tools/updatedefinemasterdatedetails"
   }
 ]

@@ -49,6 +49,352 @@
       return parsed;
     }
 
+    // Attachments - mirrors the real form's attachment popup (HRM-TND45-MVC
+    // TrainingNeedViewModel.js), one file at a time: each file is checked when it's picked
+    // (SelectMainFile - type/size against #tndHdnFileTypes/#tndHdnFileSize), uploaded straight
+    // away with TNDV9/TrainingNeed/UploadFile (UploadMainFile - one call per file, as in
+    // T and D/Valid file/UploadFile.txt) and added to AttchList, and taken off with
+    // TNDV9/TrainingNeed/DeleteFile (RemoveAttachment). Save then just sends AttchList.
+    //
+    // Runs on EVERY call, before anything can return early, so a file is never missed just
+    // because the call that saw it ended at the goal list or a need question. A file is
+    // uploaded on the call that first sees it - while the chat still hands over its
+    // contents - so the confirming call submits what's already on the server and never
+    // needs the file again.
+    //
+    // BeaconBar.getUploadedBaoFiles() lists every file attached in the conversation and keeps
+    // listing a file after it has been dealt with (a rejected images.png came back on every
+    // later call). Seen live in Lexi (attachmentCheck): the list is NEWEST first, and only
+    // the files of the current message come with their contents - earlier ones are {name,
+    // key} stubs. So positions shift with every attachment and can't be used to tell new
+    // files from old ones. A listed file is new when either:
+    //   - its name is listed more times than on the previous call (re-attaching the very
+    //     same file adds another copy), or
+    //   - it comes with readable contents and this tool hasn't seen that file object before
+    //     (a file of the current message - this also catches a new chat in the same page
+    //     whose first file has a name the previous chat already had).
+    // Files already dealt with are never processed again, whatever order the chat lists
+    // them in; of several copies of one name, an unseen readable copy is taken as the new
+    // one. A name listed fewer times than before means a different conversation in the same
+    // page, and the tracking starts over; uploaded files whose name the chat no longer lists
+    // at all belong to another conversation and are dropped from this application.
+    //
+    // Page state (window.__peoplesHRTndSelfNeedUploads), kept until the application is saved:
+    //   chatCounts  - lower-cased name -> how many times the chat listed it on the last call
+    //   seenObjects - every file object this tool has already looked at (WeakSet)
+    //   staged      - files uploaded for this application: { key, name, type, size, filepath }
+    //   leftOut     - lower-cased name -> { name, reason: "removed" | "replaced" | "rejected" }
+    //   unavailable - lower-cased name -> name: listed as new, but without readable contents
+    const lc = (n) => String(n || "").trim().toLowerCase();
+
+    async function chatEntries() {
+      try {
+        if (typeof BeaconBar !== "undefined" && typeof BeaconBar.getUploadedBaoFiles === "function") {
+          // Awaited like collectChatAttachment does - harmless if it returns a plain value.
+          const bao = await BeaconBar.getUploadedBaoFiles();
+          return (Array.isArray(bao) ? bao : (bao ? [bao] : [])).filter((f) => f && typeof f === "object" && f.name);
+        }
+      } catch (e) {
+        // Degrade to "no files" rather than throw.
+      }
+      return [];
+    }
+
+    // The chat doesn't always hand over a Blob (the benefit tools saw a wrapper describing
+    // the file instead), so whatever arrives - a File, a wrapper holding one, raw bytes,
+    // base64, a data: URL or a link - is turned into a Blob, or null if it has no contents.
+    function base64ToBlob(text, type) {
+      const clean = String(text).replace(/^data:[^,]*,/, "").replace(/\s/g, "");
+      const binary = atob(clean);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      return new Blob([bytes], type ? { type: type } : undefined);
+    }
+
+    async function fileBlobOf(entry) {
+      const type = entry.type || entry.mimeType || entry.contentType || "";
+      if (typeof Blob !== "undefined" && entry instanceof Blob) return entry;
+      const nested = entry.file || entry.blob || entry.rawFile || entry.originFileObj || entry.fileObject || entry.baoFile;
+      if (nested && typeof Blob !== "undefined" && nested instanceof Blob) return nested;
+      if (typeof entry.arrayBuffer === "function") {
+        return new Blob([await entry.arrayBuffer()], type ? { type: type } : undefined);
+      }
+      const raw = entry.base64 || entry.base64Data || entry.Base64Data || entry.content || entry.fileData
+        || entry.data || entry.bytes || entry.buffer || entry.url || entry.src || entry.fileUrl || entry.downloadUrl;
+      if (raw && (raw instanceof ArrayBuffer || ArrayBuffer.isView(raw))) {
+        return new Blob([raw], type ? { type: type } : undefined);
+      }
+      if (typeof raw === "string" && raw) {
+        if (/^https?:\/\//i.test(raw) || raw.charAt(0) === "/") {
+          const res = await fetch(raw, { redirect: "follow" });
+          return await res.blob();
+        }
+        try { return base64ToBlob(raw, type); } catch (e) { return null; }
+      }
+      return null;
+    }
+
+    const cacheHost = typeof window !== "undefined" ? window : globalThis;
+    const attachmentState = cacheHost.__peoplesHRTndSelfNeedUploads = cacheHost.__peoplesHRTndSelfNeedUploads || {};
+    attachmentState.chatCounts = attachmentState.chatCounts || {};
+    attachmentState.seenObjects = attachmentState.seenObjects || new WeakSet();
+    attachmentState.staged = attachmentState.staged || [];
+    attachmentState.leftOut = attachmentState.leftOut || {};
+    attachmentState.unavailable = attachmentState.unavailable || {};
+
+    // Each listed file with its contents resolved (null for a {name, key} stub).
+    const listed = [];
+    for (const entry of await chatEntries()) {
+      let blob = null;
+      try {
+        blob = await fileBlobOf(entry);
+      } catch (readError) {
+        blob = null;
+      }
+      listed.push({
+        entry: entry,
+        name: String(entry.name),
+        key: lc(entry.name),
+        blob: blob && blob.size ? blob : null,
+        unseen: !attachmentState.seenObjects.has(entry)
+      });
+    }
+    listed.forEach((f) => attachmentState.seenObjects.add(f.entry));
+
+    const chatCounts = {};
+    listed.forEach((f) => { chatCounts[f.key] = (chatCounts[f.key] || 0) + 1; });
+    let previousCounts = attachmentState.chatCounts;
+    if (Object.keys(previousCounts).some((k) => (chatCounts[k] || 0) < previousCounts[k])) {
+      attachmentState.staged = [];
+      attachmentState.leftOut = {};
+      attachmentState.unavailable = {};
+      previousCounts = {};
+    }
+    attachmentState.chatCounts = chatCounts;
+    attachmentState.staged = attachmentState.staged.filter((s) => chatCounts[s.key]);
+    Object.keys(attachmentState.leftOut).forEach((k) => { if (!chatCounts[k]) delete attachmentState.leftOut[k]; });
+    Object.keys(attachmentState.unavailable).forEach((k) => { if (!chatCounts[k]) delete attachmentState.unavailable[k]; });
+
+    // The chat lists newest first, so this is reversed to upload oldest first and keep the
+    // files in the order they were attached.
+    const freshness = (f) => (f.blob && f.unseen ? 2 : (f.blob ? 1 : 0));
+    const newEntries = [];
+    Object.keys(chatCounts).forEach((k) => {
+      const copies = listed.filter((f) => f.key === k);
+      const addedCopies = chatCounts[k] - (previousCounts[k] || 0);
+      const currentMessageCopies = copies.filter((f) => freshness(f) === 2).length;
+      const count = Math.max(addedCopies, currentMessageCopies);
+      if (count <= 0) return;
+      copies.sort((a, b) => freshness(b) - freshness(a));
+      newEntries.push(...copies.slice(0, count));
+    });
+    newEntries.sort((a, b) => listed.indexOf(b) - listed.indexOf(a));
+
+    const removeNames = (Array.isArray(args.removeAttachments)
+      ? args.removeAttachments
+      : (args.removeAttachments ? [args.removeAttachments] : []))
+      .map(lc)
+      .filter(Boolean);
+    const replaceAttachments = args.replaceAttachments === true || String(args.replaceAttachments).toLowerCase() === "true";
+
+    // Same resource keys the form alerts with, fetched live like every other GetTndResource
+    // string in this tool; the fallbacks are the captured responses.
+    async function tndResource(resource, fallback) {
+      try {
+        const text = await postJson("TNDV9/Common/GetTndResource", { resource: resource });
+        if (typeof text === "string" && text.trim()) return text.trim();
+      } catch (resourceError) {
+        // Keep the fallback - this lookup is best-effort only.
+      }
+      return fallback;
+    }
+
+    // DeleteFile always answers "true" (TrainingNeedController.DeleteFile swallows errors),
+    // so this is best-effort, the same as the form's RemoveAttachment.
+    async function deleteStaged(entry) {
+      try {
+        await postJson("TNDV9/TrainingNeed/DeleteFile", { filepath: entry.filepath });
+      } catch (deleteError) {
+        // Leaves a stray file server-side at worst; it's no longer on the application.
+      }
+    }
+
+    const attachmentNotes = [];
+    const rejectedNow = [];
+    const stagedNow = [];
+    let attachmentLimits = null;
+
+    if (newEntries.length) {
+      // TNDLibrary.GetMaxFileSize()/GetfileTypes()'s own defaults - only used if the page
+      // can't be read. The form compares the extension with indexOf against the raw
+      // comma-separated string, which would also accept a fragment like "df" (inside "pdf") -
+      // compared against the split list here instead. Size is checked before type, the same
+      // order as the form.
+      attachmentLimits = { maxFileSizeMb: 3, allowedFileTypes: ["doc", "docx", "pdf", "xls", "xlsx", "jpeg", "jpg", "txt", "bmp", "rtf"] };
+      try {
+        const indexRes = await fetch(`${window.origin}/${reqOptions.sl}/TNDV9/TrainingNeed/Index?mvc=1&bs=4&App=000001`, {
+          method: "GET",
+          headers: { "Accept": "*/*", "x-requested-with": "XMLHttpRequest" }
+        });
+        if (indexRes.ok) {
+          const indexDoc = new DOMParser().parseFromString(await indexRes.text(), "text/html");
+          const pageMaxSize = parseFloat(indexDoc.querySelector("#tndHdnFileSize")?.value || "");
+          const pageFileTypes = (indexDoc.querySelector("#tndHdnFileTypes")?.value || "")
+            .split(",")
+            .map((t) => t.trim().replace(/^\./, "").toLowerCase())
+            .filter(Boolean);
+          if (pageMaxSize > 0) attachmentLimits.maxFileSizeMb = pageMaxSize;
+          if (pageFileTypes.length) attachmentLimits.allowedFileTypes = pageFileTypes;
+        }
+      } catch (settingsError) {
+        // Keep the defaults above.
+      }
+
+      for (const newFile of newEntries) {
+        const fileName = newFile.name;
+        const key = newFile.key;
+        const blob = newFile.blob;
+        if (removeNames.includes(key)) {
+          continue; // Attached and removed in the same breath - never uploaded.
+        }
+        if (!blob) {
+          attachmentState.unavailable[key] = fileName;
+          continue;
+        }
+
+        const dotIndex = fileName.lastIndexOf(".");
+        const fileType = dotIndex >= 0 ? fileName.slice(dotIndex + 1).toLowerCase() : "";
+        if (blob.size > attachmentLimits.maxFileSizeMb * 1024 * 1024) {
+          rejectedNow.push({ fileName: fileName, reason: "size", sizeMb: +(blob.size / (1024 * 1024)).toFixed(2) });
+          attachmentState.leftOut[key] = { name: fileName, reason: "rejected" };
+          continue;
+        }
+        if (!attachmentLimits.allowedFileTypes.includes(fileType)) {
+          rejectedNow.push({ fileName: fileName, reason: "type", fileType: fileType });
+          attachmentState.leftOut[key] = { name: fileName, reason: "rejected" };
+          continue;
+        }
+
+        // Confirmed live (T and D/Valid file/UploadFile.txt, and Dev in progress Features/
+        // T&D/UploadFile, UploadFile-2, UploadFile-3 for three files in one application):
+        // multipart/form-data with "fname" (a ddMMyyyyHHmmss_ timestamp prefix plus the
+        // original file name, which becomes the server-side filepath AttchList references)
+        // and "file" (the binary itself); the endpoint answers with the plain text "True".
+        const now = new Date();
+        const pad = (n) => String(n).padStart(2, "0");
+        const timestamp = `${pad(now.getDate())}${pad(now.getMonth() + 1)}${now.getFullYear()}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+        const serverFileName = `${timestamp}_${fileName}`;
+        const uploadFormData = new FormData();
+        uploadFormData.append("fname", serverFileName);
+        uploadFormData.append("file", blob, fileName);
+
+        let uploadText = "";
+        try {
+          const uploadRes = await fetch(`${window.origin}/${reqOptions.sl}/TNDV9/TrainingNeed/UploadFile`, {
+            method: "POST",
+            headers: { "Accept": "*/*", "x-requested-with": "XMLHttpRequest" },
+            body: uploadFormData
+          });
+          uploadText = (await uploadRes.text()).trim();
+        } catch (networkError) {
+          uploadText = "";
+        }
+        if (uploadText.toLowerCase() !== "true") {
+          // UploadFile does no type/size checking of its own (TrainingNeedController.
+          // UploadFile saves whatever it receives and returns true, or false when no file
+          // arrived), so this means the upload itself failed. Files already uploaded stay
+          // on the application.
+          return {
+            status: "ERROR",
+            message: `Could not upload "${fileName}"${uploadText && uploadText.toLowerCase() !== "false" ? `: ${uploadText}` : " - the server did not accept the file."} Nothing has been submitted. Ask the employee to attach the file again, then call this tool again with the same arguments.`,
+            attachments: attachmentState.staged.map((s) => s.name)
+          };
+        }
+
+        // Attaching a file under a name already on the application replaces that one file.
+        const sameName = attachmentState.staged.findIndex((s) => s.key === key);
+        const stagedEntry = { key: key, name: fileName, type: fileType, size: blob.size, filepath: serverFileName };
+        if (sameName >= 0) {
+          await deleteStaged(attachmentState.staged[sameName]);
+          attachmentState.staged[sameName] = stagedEntry;
+        } else {
+          attachmentState.staged.push(stagedEntry);
+        }
+        delete attachmentState.leftOut[key];
+        delete attachmentState.unavailable[key];
+        stagedNow.push(key);
+      }
+    }
+
+    // replaceAttachments: the file(s) uploaded on this call replace every earlier one.
+    if (replaceAttachments) {
+      if (stagedNow.length) {
+        const replaced = attachmentState.staged.filter((s) => !stagedNow.includes(s.key));
+        for (const s of replaced) {
+          await deleteStaged(s);
+          attachmentState.leftOut[s.key] = { name: s.name, reason: "replaced" };
+        }
+        attachmentState.staged = attachmentState.staged.filter((s) => stagedNow.includes(s.key));
+        if (replaced.length) {
+          attachmentNotes.push(`${replaced.map((s) => `"${s.name}"`).join(", ")} ${replaced.length === 1 ? "was" : "were"} replaced and will not be submitted.`);
+        }
+      } else {
+        attachmentNotes.push("replaceAttachments was set, but no new file was attached in this message, so nothing was replaced. To take an earlier file off, pass its name in removeAttachments instead.");
+      }
+    }
+
+    // removeAttachments: off the application and deleted from the server, like the form's
+    // RemoveAttachment. Attaching the file again brings it back.
+    const notAttached = [];
+    for (const key of removeNames) {
+      const stagedIndex = attachmentState.staged.findIndex((s) => s.key === key);
+      if (stagedIndex >= 0) {
+        const s = attachmentState.staged[stagedIndex];
+        await deleteStaged(s);
+        attachmentState.staged.splice(stagedIndex, 1);
+        attachmentState.leftOut[key] = { name: s.name, reason: "removed" };
+      } else if (attachmentState.unavailable[key]) {
+        attachmentState.leftOut[key] = { name: attachmentState.unavailable[key], reason: "removed" };
+        delete attachmentState.unavailable[key];
+      } else if (!attachmentState.leftOut[key]) {
+        notAttached.push(key);
+      }
+    }
+    if (notAttached.length) {
+      attachmentNotes.push(`${notAttached.map((n) => `"${n}"`).join(", ")} ${notAttached.length === 1 ? "is" : "are"} not on this application, so nothing was removed for ${notAttached.length === 1 ? "it" : "them"}. Use the file names exactly as shown in preview.attachments.`);
+    }
+
+    // What the chat handed over on this call - lets a live test see whether a newly attached
+    // file actually reached the tool.
+    const attachmentCheck = {
+      filesListedByChat: listed.map((f) => f.name),
+      withContentsOnThisCall: listed.filter((f) => f.blob).map((f) => f.name),
+      newOnThisCall: newEntries.map((f) => f.name)
+    };
+
+    if (rejectedNow.length) {
+      const sizeMessage = rejectedNow.some((r) => r.reason === "size")
+        ? await tndResource("TndFileSizeExceeded", "Maximum file size exceeded.")
+        : "";
+      const typeMessage = rejectedNow.some((r) => r.reason === "type")
+        ? await tndResource("TndFileTypeNotAllowed", "File type not allowed")
+        : "";
+      return {
+        status: "VALIDATION_ERROR",
+        message: "One or more attached files can't be added to this training need application. Tell the employee which file(s) were rejected and why, including the allowed file types and maximum size below. The rejected file(s) were not uploaded and are ignored from now on - do not put them in removeAttachments, and never tell the employee to start a new chat. Files in attachmentsKept are still attached. Nothing has been submitted. Ask the employee to attach a file that meets these limits, or to continue without it, then call this tool again with the same arguments on whatever they reply.",
+        rejectedAttachments: rejectedNow.map((r) => ({
+          fileName: r.fileName,
+          reason: r.reason === "size"
+            ? `${sizeMessage} The file is ${r.sizeMb} MB; the maximum is ${attachmentLimits.maxFileSizeMb} MB per file.`
+            : `${typeMessage} (${r.fileType ? "." + r.fileType : "no file extension"}).`
+        })),
+        attachmentsKept: attachmentState.staged.map((s) => s.name),
+        allowedFileTypes: attachmentLimits.allowedFileTypes,
+        maxFileSizeMb: attachmentLimits.maxFileSizeMb,
+        attachmentCheck: attachmentCheck
+      };
+    }
+
     // FEATURE ADD (2026-09-14): mirrors the real form's "Enable Goal Objectives" checkbox,
     // which loads the employee's ongoing performance goals straight into the Objectives
     // dropdown (see the screenshot in the request that prompted this) - previously this
@@ -185,38 +531,22 @@
       selectedGoalCode = goalMatches[0].GoalCode;
     }
 
-    // Step 5: attachments (detection only, no network) - read files from the Beacon chat's
-    // own upload mechanism, the same source every other write tool in this build reads from
-    // (see submitMyGrievanceApplication, selfEmployeeLeaveApplication). Entirely optional:
-    // with no files attached, Attach/FileNameAttached/AttchList stay at their original "no
-    // attachment" values below and none of PrepareNeedAttachments/UploadFile is ever called.
-    // Detected here (rather than inside Step 7) purely so the confirmation preview in Step 6
-    // can list what's about to be attached - the actual upload is deferred until confirmed.
-    function uploadedFiles() {
-      try {
-        if (typeof BeaconBar !== "undefined" && typeof BeaconBar.getUploadedBaoFiles === "function") {
-          const bao = BeaconBar.getUploadedBaoFiles();
-          return Array.isArray(bao) ? bao.filter(Boolean) : (bao ? [bao] : []);
-        }
-      } catch (e) {
-        // Degrade to "no files" rather than throw.
-      }
-      return [];
-    }
-
-    const attachedFiles = uploadedFiles();
+    // Step 5: attachments - the files uploaded by the attachment handling at the top of this
+    // call (and of earlier calls for this application) are this application's attachments.
+    // Entirely optional: with no files attached, Attach/FileNameAttached/AttchList stay at
+    // their original "no attachment" values below. Each file was already checked against
+    // the form's type/size limits before it was uploaded.
     const attchList = [];
 
     // Step 6: confirmation gate - confirmed live via TNDV9/Common/GetTndResource
     // ({resource: "TndNeedApplicationSaveConfirm"} -> "Are you sure you want to submit
     // this training need?"): the real form always shows this confirm dialog right before
-    // Save, after every field has already been filled in. Nothing is uploaded, validated,
-    // or saved until the employee has reviewed this exact application and confirmed -
-    // placed here (after the need/objective/attachment-detection steps, before any write
-    // call) so the preview below reflects exactly what Step 7 onward would submit. The
-    // prompt text is fetched live rather than hardcoded, same reasoning as the file-type/
-    // size messages in Step 7 below - it's just another GetTndResource-owned string that
-    // can change server-side.
+    // Save, after every field has already been filled in. Nothing is validated or saved
+    // until the employee has reviewed this exact application and confirmed. Attached files
+    // are already uploaded at this point, as on the real form (UploadFile runs when a file
+    // is added, not on Save), and only become part of a training need once Save references
+    // them in AttchList. The prompt text is fetched live rather than hardcoded - it's just
+    // another GetTndResource-owned string that can change server-side.
     if (!args.confirmed) {
       let confirmPrompt = "Are you sure you want to submit this training need?";
       try {
@@ -228,9 +558,10 @@
         // Keep the fallback text above - this lookup is best-effort only.
       }
 
+      const unavailableNames = Object.keys(attachmentState.unavailable).map((k) => attachmentState.unavailable[k]);
       return {
         status: "CONFIRMATION_REQUIRED",
-        message: `Review this training need application with the employee before submitting. ${confirmPrompt} Call this tool again with confirmed:true (and the same arguments) once they agree.`,
+        message: `Review this training need application with the employee before submitting, listing preview.attachments exactly - these are the only files that will be submitted. ${confirmPrompt} Call this tool again with confirmed:true (and the same arguments) once they agree. If they want to change the attachments first: a newly attached file is added (several files are allowed); to take a file off, call again with removeAttachments; to swap the earlier files for the one(s) attached in the current message, call again with replaceAttachments: true. Whenever the user attaches another file, call this tool again on that same turn (same arguments) - never just acknowledge it, since the chat hands over a file's contents only on the turn it was attached.`,
         confirmationPrompt: confirmPrompt,
         preview: {
           needSelectionType: existingNeedName ? "Existing" : "New",
@@ -240,111 +571,32 @@
           relevanceToJob: relevanceToJob,
           benefitToEmployee: benefitToEmployee,
           benefitToCompany: benefitToCompany,
-          attachments: attachedFiles.map((f) => ({ fileName: f.name }))
-        }
+          attachments: attachmentState.staged.map((a) => ({ fileName: a.name })),
+          attachmentsLeftOut: Object.keys(attachmentState.leftOut).map((k) => ({ fileName: attachmentState.leftOut[k].name, reason: attachmentState.leftOut[k].reason })),
+          attachmentsUnavailable: unavailableNames
+        },
+        attachmentNotes: attachmentNotes.concat(unavailableNames.length
+          ? [`${unavailableNames.map((n) => `"${n}"`).join(", ")} ${unavailableNames.length === 1 ? "was" : "were"} attached on an earlier turn that this tool was not called on, so ${unavailableNames.length === 1 ? "its" : "their"} contents can no longer be read and ${unavailableNames.length === 1 ? "it is" : "they are"} not on the application. Ask the employee to attach only ${unavailableNames.length === 1 ? "that file" : "those files"} again, and call this tool on the turn ${unavailableNames.length === 1 ? "it is" : "they are"} attached. The files in preview.attachments are already uploaded - never ask for them again or ask for all files to be attached together.`]
+          : []),
+        attachmentCheck: attachmentCheck
       };
     }
 
-    // Step 7: attachments (upload) - only reached once the employee has confirmed above.
-    if (attachedFiles.length) {
-      // PrepareNeedAttachments gates whether attachments can be added for this need
-      // (tna_id/typecode) before any file is actually uploaded - confirmed live
-      // (Dev in progress Features/T&D/PrepareNeedAttachments), returning
-      // {IsSuccessfull, IsExceed, BudgetExceed, Message}. Bail out here rather than upload
-      // files that would just be orphaned by a save the server was always going to reject.
-      const prepared = await postJson("TNDV9/TrainingNeed/PrepareNeedAttachments", { tna_id: -1, typecode: typecode });
-      if (!prepared || prepared.IsSuccessfull !== true || prepared.IsExceed === true) {
-        return {
-          status: "ERROR",
-          message: (prepared && prepared.Message) || "Could not prepare attachments for this training need application."
-        };
-      }
-
-      // Confirmed live (Dev in progress Features/T&D/UploadFile, UploadFile-2,
-      // UploadFile-3 - repeated for 3 separate files in one application, confirmed
-      // multi-attachment works via SaveNeedApplication-round2's 3-entry AttchList): each
-      // file is uploaded individually as multipart/form-data with two fields - "fname" (a
-      // ddMMyyyyHHmmss_ timestamp prefix plus the original file name, which becomes the
-      // server-side filepath) and "file" (the binary itself) - and the endpoint responds
-      // with the plain text "True" on success, not JSON. The generated fname is exactly
-      // what AttchList's filepath must reference below, so it's captured once per file here.
-      const uploadedEntries = [];
-      for (const file of attachedFiles) {
-        const now = new Date();
-        const pad = (n) => String(n).padStart(2, "0");
-        const timestamp = `${pad(now.getDate())}${pad(now.getMonth() + 1)}${now.getFullYear()}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
-        const serverFileName = `${timestamp}_${file.name}`;
-
-        const uploadFormData = new FormData();
-        uploadFormData.append("fname", serverFileName);
-        uploadFormData.append("file", file, file.name);
-
-        let uploadText = "";
-        try {
-          const uploadRes = await fetch(`${window.origin}/${reqOptions.sl}/TNDV9/TrainingNeed/UploadFile`, {
-            method: "POST",
-            headers: { "Accept": "*/*", "x-requested-with": "XMLHttpRequest" },
-            body: uploadFormData
-          });
-          uploadText = (await uploadRes.text()).trim();
-        } catch (networkError) {
-          uploadText = "";
-        }
-
-        if (uploadText.toLowerCase() !== "true") {
-          // No fixed max size or allowed-type list is hardcoded here - both can differ per
-          // client/tenant, so the only real-time source of truth is this UploadFile call
-          // itself. On rejection, the resource keys confirmed live via TNDV9/Common/
-          // GetTndResource (Dev in progress Features/T&D/GetTndResource - type,
-          // GetTndResource-size validation) - "TndFileTypeNotAllowed" ->
-          // "File type not allowed" and "TndFileSizeExceeded" -> "Maximum file size
-          // exceeded." - line up with exactly this kind of rejection, so a non-"True"
-          // response is treated as one of these resource keys and translated into a
-          // human-readable message. Not confirmed live that UploadFile's failure body IS
-          // literally the resource key (no failing upload was captured) - if the lookup
-          // comes back empty/fails, the raw response text is shown instead so nothing is
-          // ever silently swallowed.
-          let friendlyMessage = uploadText;
-          if (uploadText) {
-            try {
-              const resourceMessage = await postJson("TNDV9/Common/GetTndResource", { resource: uploadText });
-              if (typeof resourceMessage === "string" && resourceMessage.trim()) {
-                friendlyMessage = resourceMessage.trim();
-              }
-            } catch (resourceError) {
-              // Keep the raw uploadText - this lookup is a best-effort translation only.
-            }
-          }
-
-          // Roll back whatever was already uploaded during this same call - confirmed live
-          // (Dev in progress Features/T&D/DeleteFile: POST {filepath} -> true) - so a failed
-          // attachment never leaves orphaned files behind on a submission that never happens.
-          for (const uploaded of uploadedEntries) {
-            try {
-              await postJson("TNDV9/TrainingNeed/DeleteFile", { filepath: uploaded.filepath });
-            } catch (cleanupError) {
-              // Best-effort only - the upload itself already failed, so a failed cleanup
-              // doesn't change the outcome, it just leaves a stray file server-side.
-            }
-          }
-          return {
-            status: "ERROR",
-            message: `Could not upload "${file.name}"${friendlyMessage ? `: ${friendlyMessage}` : " - the server rejected this file."}`
-          };
-        }
-
-        const dotIndex = file.name.lastIndexOf(".");
-        uploadedEntries.push({
-          attchid: uploadedEntries.length + 1,
-          attchname: file.name,
-          attchtype: dotIndex >= 0 ? file.name.slice(dotIndex + 1).toLowerCase() : "",
-          attchfile: "",
-          filepath: serverFileName
-        });
-      }
-
-      attchList.push(...uploadedEntries);
-    }
+    // Step 7: attachments - only reached once the employee has confirmed above. The files
+    // were uploaded when they were attached (see the attachment handling at the top), so
+    // AttchList just references them by their server-side filepath - the same entries the
+    // form pushes in UploadMainFile ({attchid, attchname, attchtype, attchfile: "",
+    // filepath}). Confirmed live that multiple entries are accepted
+    // (SaveNeedApplication-round2's 3-entry AttchList).
+    attachmentState.staged.forEach((a, i) => {
+      attchList.push({
+        attchid: i + 1,
+        attchname: a.name,
+        attchtype: a.type,
+        attchfile: "",
+        filepath: a.filepath
+      });
+    });
 
     // Step 8: build the outgoing EmpList entry - a specific field subset of the self
     // record (not the whole SuborList object), confirmed live by direct comparison against
@@ -419,9 +671,9 @@
     // Step 10: validate, then save - confirmed live two-step flow
     // (New_PeoplesHR_Feature/selfEmployeeTrainingNeedApplication/applicant - {existing,new}
     // need submission.txt), same validate-then-save convention as every other write tool
-    // in this build. If a save fails after attachments were uploaded, the files stay
-    // uploaded server-side (nothing in the captured evidence ties a failed Save back to a
-    // DeleteFile call) - only an upload failure itself triggers the Step 7 rollback above.
+    // in this build. If validation or save fails, the uploaded files stay staged for this
+    // application (page state is only cleared on success), so a retry submits them again
+    // without re-uploading.
     const validation = await postJson("TNDV9/TrainingNeed/ValidateNeedApplication", payload);
     if (!validation || validation.IsSuccessfull !== true) {
       return {
@@ -439,6 +691,13 @@
     }
 
     const resultEntry = (Array.isArray(saveResult.Results) && saveResult.Results[0]) || null;
+
+    // The files are now part of the submitted application - they must not be deleted, and
+    // the next application in this conversation starts with none. chatCounts is kept, so
+    // the files already in the chat are not taken as new attachments again.
+    attachmentState.staged = [];
+    attachmentState.leftOut = {};
+    attachmentState.unavailable = {};
 
     return {
       status: "SUCCESS",

@@ -12,15 +12,15 @@
   "status": "live",
   "signature": "getSingleEmployeeBenefitHistory",
   "createdAt": "2025-05-13T12:14:48.913Z",
-  "updatedAt": "2026-07-24T06:57:16.153Z",
+  "updatedAt": "2026-10-23T06:03:33.434Z",
   "assignedAgents": [
     {
       "id": "690dc571931a2d61ba0b1be9",
       "name": "BenefitManagement"
     }
   ],
-  "contentHash": "1425636aa1ccba118dea122d14674f250c637d252af23a03e786e75bcf3271eb",
-  "lastExportedAt": "2026-10-07T06:32:14.943Z",
+  "contentHash": "0a47506f94a3be1fbca2a483af56b8627c99d41c4b070d9d9c6563df7409740d",
+  "lastExportedAt": "2026-10-27T03:27:10.557Z",
   "raw": {
     "basic": {
       "_id": "690dc566931a2d61ba0b16f7",
@@ -57,12 +57,12 @@
           }
         ],
         "isAdvanced": false,
-        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-        "_id": "6a630ccc347f1334c9e249e6"
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6adaf8b56fe26494bc20dbd4"
       },
-      "by": "27739",
+      "by": "44101",
       "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
-      "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`, requestOptions);\n  const details = await response1.json();\n\n  const digestkey = await BeaconBar.executeFunction('getDigest')(`key=${details.Message}&mode=0`);\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  let response2, details1\n  try {\n    response2 = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/AdminHistoryApi/GetSearchEmployee/?key=${details.Message}&mode=0&digest=${digestkey.digest}`, requestOptions1);\n    details1 = await response2.json();\n    \n  } catch {\n    return \"Access denied, you do not have access to view this information\"\n  }\n\n\n  window.empNumber12 = details1.EmpNumber;\n\n  const params = JSON.stringify({ \"EmpNumber\": details1.EmpNumber, \"FromDate\": args.fromDate, \"ToDate\": args.toDate })\n\n  const myHeaders1 = new Headers();\n  myHeaders1.append(\"accept\", \"*/*\");\n  myHeaders1.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8,te;q=0.7\");\n  myHeaders1.append(\"content-type\", \"application/json; charset=UTF-8\");\n  myHeaders1.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders1,\n    body: params,\n    redirect: \"follow\"\n  };\n\n  const response3 = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/AdminHistoryApi/GetHistoryByEmployee`, requestOptions2);\n  const details2 = await response3.json();\n\n  return details2.HistoryDataTableVm.DataTableRowVms;\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (\n  !BeaconBar.user?.metaData?.menus?.some(menu =>\n    menu.includes(\"Benefitv9/History/BenefitHistory/?mvc=1\")\n  )\n) {\n  return { error: true, message: \"You do not have access to Benefit History Page. Please contact HR Admin.\" };\n}\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`, requestOptions);\n  const details = await response1.json();\n\n  const digestkey = await BeaconBar.executeFunction('getDigest')(`key=${details.Message}&mode=0`);\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  let response2, details1\n  try {\n    response2 = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/AdminHistoryApi/GetSearchEmployee/?key=${details.Message}&mode=0&digest=${digestkey.digest}`, requestOptions1);\n    details1 = await response2.json();\n    \n  } catch {\n    return \"Access denied, you do not have access to view this information\"\n  }\n\n\n  window.empNumber12 = details1.EmpNumber;\n\n  const params = JSON.stringify({ \"EmpNumber\": details1.EmpNumber, \"FromDate\": args.fromDate, \"ToDate\": args.toDate })\n\n  const myHeaders1 = new Headers();\n  myHeaders1.append(\"accept\", \"*/*\");\n  myHeaders1.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8,te;q=0.7\");\n  myHeaders1.append(\"content-type\", \"application/json; charset=UTF-8\");\n  myHeaders1.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders1,\n    body: params,\n    redirect: \"follow\"\n  };\n\n  const response3 = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/AdminHistoryApi/GetHistoryByEmployee`, requestOptions2);\n  const details2 = await response3.json();\n\n  return details2.HistoryDataTableVm.DataTableRowVms;\n})",
       "groupName": "",
       "tags": [
         "BenefitManagement",
@@ -72,8 +72,8 @@
       "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
       "status": "live",
       "createdAt": "2025-05-13T12:14:48.913Z",
-      "updatedAt": "2026-07-24T06:57:16.153Z",
-      "__v": 1,
+      "updatedAt": "2026-10-23T06:03:33.434Z",
+      "__v": 3,
       "apiConfig": {
         "method": "GET"
       },
@@ -91,6 +91,7 @@
         "apiResponse": []
       },
       "toolType": "code",
+      "strictToolUse": false,
       "agents": [
         {
           "_id": "690dc571931a2d61ba0b1be9",
@@ -125,11 +126,11 @@
         }
       ],
       "isAdvanced": false,
-      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-      "_id": "6a630ccc347f1334c9e249e6"
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6adaf8b56fe26494bc20dbd4"
     },
     "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
-    "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`, requestOptions);\n  const details = await response1.json();\n\n  const digestkey = await BeaconBar.executeFunction('getDigest')(`key=${details.Message}&mode=0`);\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  let response2, details1\n  try {\n    response2 = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/AdminHistoryApi/GetSearchEmployee/?key=${details.Message}&mode=0&digest=${digestkey.digest}`, requestOptions1);\n    details1 = await response2.json();\n    \n  } catch {\n    return \"Access denied, you do not have access to view this information\"\n  }\n\n\n  window.empNumber12 = details1.EmpNumber;\n\n  const params = JSON.stringify({ \"EmpNumber\": details1.EmpNumber, \"FromDate\": args.fromDate, \"ToDate\": args.toDate })\n\n  const myHeaders1 = new Headers();\n  myHeaders1.append(\"accept\", \"*/*\");\n  myHeaders1.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8,te;q=0.7\");\n  myHeaders1.append(\"content-type\", \"application/json; charset=UTF-8\");\n  myHeaders1.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders1,\n    body: params,\n    redirect: \"follow\"\n  };\n\n  const response3 = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/AdminHistoryApi/GetHistoryByEmployee`, requestOptions2);\n  const details2 = await response3.json();\n\n  return details2.HistoryDataTableVm.DataTableRowVms;\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (\n  !BeaconBar.user?.metaData?.menus?.some(menu =>\n    menu.includes(\"Benefitv9/History/BenefitHistory/?mvc=1\")\n  )\n) {\n  return { error: true, message: \"You do not have access to Benefit History Page. Please contact HR Admin.\" };\n}\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions = {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  const response1 = await fetch(`${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`, requestOptions);\n  const details = await response1.json();\n\n  const digestkey = await BeaconBar.executeFunction('getDigest')(`key=${details.Message}&mode=0`);\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  };\n\n  let response2, details1\n  try {\n    response2 = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/AdminHistoryApi/GetSearchEmployee/?key=${details.Message}&mode=0&digest=${digestkey.digest}`, requestOptions1);\n    details1 = await response2.json();\n    \n  } catch {\n    return \"Access denied, you do not have access to view this information\"\n  }\n\n\n  window.empNumber12 = details1.EmpNumber;\n\n  const params = JSON.stringify({ \"EmpNumber\": details1.EmpNumber, \"FromDate\": args.fromDate, \"ToDate\": args.toDate })\n\n  const myHeaders1 = new Headers();\n  myHeaders1.append(\"accept\", \"*/*\");\n  myHeaders1.append(\"accept-language\", \"en-GB,en-US;q=0.9,en;q=0.8,te;q=0.7\");\n  myHeaders1.append(\"content-type\", \"application/json; charset=UTF-8\");\n  myHeaders1.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  const requestOptions2 = {\n    method: \"POST\",\n    headers: myHeaders1,\n    body: params,\n    redirect: \"follow\"\n  };\n\n  const response3 = await fetch(`${location.origin}/${reqOptions.sl}/BenefitV9/api/AdminHistoryApi/GetHistoryByEmployee`, requestOptions2);\n  const details2 = await response3.json();\n\n  return details2.HistoryDataTableVm.DataTableRowVms;\n})",
     "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
     "test": {
       "sampleRequest": {},

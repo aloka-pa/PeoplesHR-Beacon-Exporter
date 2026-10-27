@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("EIM/AssignQualification.aspx")
+  )
+) {
+  return { error: true, message: "You do not have access to Employee Educational and Qualification Details Page. Please contact HR Admin." };
+}
   const fields = [
     "QualificationTypeCaption",
     "Qualification",

@@ -122,7 +122,15 @@
   // attachment can be told apart from the helper being missing or throwing.
   const chatFileSource = { helperPresent: false, filesSeen: 0, readError: null };
 
-  function chatFiles() {
+  // Names of the files attached to the CURRENT message - the only ones the chat
+  // hands over with their contents; earlier files come back as {name, key}.
+  let currentChatNames = [];
+  // Entries saved by collectChatAttachment (peoplesHRChatAttachments /
+  // peoplesHRSelectedAttachment). It saves the files of the message it was
+  // called for, as the original File objects.
+  let collectedEntries = [];
+
+  async function chatFiles() {
     try {
       chatFileSource.helperPresent =
         typeof BeaconBar !== "undefined" &&
@@ -133,21 +141,23 @@
       if (chatFileSource.helperPresent) {
         const bao = BeaconBar.getUploadedBaoFiles();
         uploaded = Array.isArray(bao) ? bao : bao ? [bao] : [];
+          currentChatNames = uploaded.filter(f => f && f.name).map(f => String(f.name));
       }
 
       // Read files collected by the separate attachment collector.
       let collected = [];
       if (typeof BeaconBar !== "undefined" && typeof BeaconBar.getSharedData === "function") {
-        const stored = BeaconBar.getSharedData("peoplesHRChatAttachments");
+        const stored = await BeaconBar.getSharedData("peoplesHRChatAttachments");
         collected = Array.isArray(stored) ? stored : stored ? [stored] : [];
 
-        const selected = BeaconBar.getSharedData("peoplesHRSelectedAttachment");
+        const selected = await BeaconBar.getSharedData("peoplesHRSelectedAttachment");
         if (selected && !collected.some(f =>
           f === selected
         )) {
           collected.push(selected);
         }
       }
+      collectedEntries = collected.filter(f => f && typeof f === "object" && f.name);
 
       // Merge current chat uploads with previously collected attachments.
       const combined = [...collected, ...uploaded]
@@ -218,6 +228,32 @@
   function describeEntry(entry) {
     try { return Object.keys(entry || {}).join(", ") || typeof entry; } catch (e) { return typeof entry; }
   }
+
+  /* Multiple attachments: the chat hands a file's CONTENTS over only on the call
+   * for the message it was attached to - later calls see the same file as
+   * {name, key} - and PeoplesHR did not keep the files staged by an earlier call.
+   * So a copy of every readable file is kept in the page (attachmentCache) and
+   * the application is re-staged from those copies on every call, the final
+   * confirmation included. Files of this message are parked here first, because
+   * the benefit type (and team member) may not be known yet. */
+  const cacheHost = typeof window !== "undefined" ? window : globalThis;
+  const attachmentCache = cacheHost.__peoplesHRBenefitAttachments = cacheHost.__peoplesHRBenefitAttachments || {};
+  attachmentCache.apps = attachmentCache.apps || {};
+  attachmentCache.pending = attachmentCache.pending || {};
+  attachmentCache.consumed = attachmentCache.consumed || {};
+  attachmentCache.seen = attachmentCache.seen || new WeakSet();
+  const isNewlyCollected = f => collectedEntries.includes(f) && !attachmentCache.seen.has(f);
+  for (const f of await chatFiles()) {
+    if (!currentChatNames.some(n => String(n).trim().toLowerCase() === String(f.name).trim().toLowerCase())
+      && !isNewlyCollected(f)) continue;
+    try {
+      const resolved = await fileBlobOf(f);
+      if (resolved && resolved.blob && resolved.blob.size) {
+        attachmentCache.pending[String(f.name).trim().toLowerCase()] = { blob: resolved.blob, name: f.name, size: resolved.blob.size };
+      }
+    } catch (e) { /* unreadable now; reported later if the application needs it */ }
+  }
+
 
   function extensionOf(name) {
     const dot = String(name).lastIndexOf(".");
@@ -442,7 +478,7 @@
   if (!args.benefitType) {
     return {
       needsInput: true,
-      message: `${employee.displayName} (${employee.displayNumber}) is identified - do not ask the user for an employee number. Show the user the availableBenefitTypes list below exactly as it is and ask which one to apply for. These are the only types ${employee.displayName} can apply for; never offer benefit types from general knowledge.`,
+      message: `${employee.displayName} (${employee.displayNumber}) is identified - do not ask the user for an employee number. If the user already named a benefit type in their request, do not show this list or ask - call this tool again at once with benefitType set to that name. Otherwise show the user the availableBenefitTypes list below exactly as it is and ask which one to apply for. These are the only types ${employee.displayName} can apply for; never offer benefit types from general knowledge.`,
       employee: employee.displayName,
       employeeNumber: employee.displayNumber,
       availableBenefitTypes: availableTypes
@@ -457,7 +493,55 @@
   const wantedType = args.benefitType.toLowerCase().trim();
   const exactType = benefitTypes.filter(b => b.BetName.toLowerCase() === wantedType);
   const partialTypes = benefitTypes.filter(b => b.BetName.toLowerCase().includes(wantedType));
-  const typeCandidates = exactType.length > 0 ? exactType : partialTypes;
+  // Word-based fallback: the user's words are not always the exact name or a piece of
+  // it ("medical telephone reimbursement" against "Telephone Bill Reimbursement" and
+  // "Medical Reimbursement"). A type whose full name appears in what they said is taken;
+  // then a type holding every word they gave (short forms like "reimburse" count); if no
+  // type holds them all, the types sharing the most words are offered to choose from
+  // below, before falling back to the full list.
+  const typeWords = text => String(text).toLowerCase().split(/[^a-z0-9]+/)
+    .filter(w => w.length > 1 && !["a", "an", "the", "for", "of", "to", "my", "me", "and", "apply"].includes(w));
+  // Small typos in longer words count too ("reimbursment").
+  const editDistance = (a, b) => {
+    let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+    for (let i = 1; i <= a.length; i++) {
+      const row = [i];
+      for (let j = 1; j <= b.length; j++) row[j] = Math.min(prev[j] + 1, row[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      prev = row;
+    }
+    return prev[b.length];
+  };
+  const sameWord = (a, b) => a === b
+    || (Math.min(a.length, b.length) >= 4 && (a.startsWith(b) || b.startsWith(a)))
+    || (Math.min(a.length, b.length) >= 6 && editDistance(a, b) <= 2);
+  const wantedWords = typeWords(wantedType);
+  const scoredTypes = benefitTypes.map(b => {
+    const nameWords = typeWords(b.BetName);
+    const shared = wantedWords.filter(w => nameWords.some(n => sameWord(w, n))).length;
+    return { type: b, shared: shared, coversAll: wantedWords.length > 0 && shared === wantedWords.length };
+  });
+  const containedTypes = benefitTypes.filter(b => wantedType.includes(b.BetName.toLowerCase()));
+  const coveringTypes = scoredTypes.filter(s => s.coversAll).map(s => s.type);
+  const bestShared = Math.max(0, ...scoredTypes.map(s => s.shared));
+  // Closest types are offered only when every word the user gave belongs to one of their
+  // types - a word matching none ("fuel" in "fuel reimbursement") means they asked for a
+  // type they do not have, so the full list is shown instead.
+  const everyWordKnown = wantedWords.length > 0 && wantedWords.every(w => benefitTypes.some(b => typeWords(b.BetName).some(n => sameWord(w, n))));
+  const closestTypes = bestShared > 0 && everyWordKnown ? scoredTypes.filter(s => s.shared === bestShared).map(s => s.type) : [];
+  const typeCandidates = exactType.length > 0 ? exactType
+    : partialTypes.length > 0 ? partialTypes
+    : containedTypes.length > 0 ? containedTypes
+    : coveringTypes;
+
+  if (typeCandidates.length === 0 && closestTypes.length > 0) {
+    return {
+      needsInput: true,
+      message: `"${args.benefitType}" is not exactly one of the benefit types ${employee.displayName} can apply for, but it is close to the ${closestTypes.length === 1 ? "one" : "ones"} in candidates below. Ask the user which one they meant, using the exact names in candidates - do not show the full list unless they say it is none of these (it is in availableBenefitTypes).`,
+      employee: employee.displayName,
+      candidates: closestTypes.map(b => b.BetName),
+      availableBenefitTypes: availableTypes
+    };
+  }
 
   if (typeCandidates.length === 0) {
     return {
@@ -540,7 +624,12 @@
   const removeNames = (Array.isArray(args.removeAttachments) ? args.removeAttachments : (args.removeAttachments ? [args.removeAttachments] : []))
     .map(n => String(n).trim().toLowerCase())
     .filter(Boolean);
-  const isRemoved = name => removeNames.includes(String(name || "").trim().toLowerCase());
+  // Files left out by an earlier call (removed or replaced), from attachmentCache.
+  const leftOutNames = [];
+  const isRemoved = name => {
+    const n = String(name || "").trim().toLowerCase();
+    return removeNames.includes(n) || leftOutNames.includes(n);
+  };
 
   const attachmentBase = { attachmentRules, attachmentSessionKey: sessionKey };
   const sameName = (a, b) => String(a || "").trim().toLowerCase() === String(b || "").trim().toLowerCase();
@@ -575,6 +664,10 @@
    * call of this application, means later calls find it on the server
    * instead of asking the supervisor for a document they already attached.
    * Returns a response to hand straight back, or null to carry on. */
+  const appCacheKey = (employee.displayNumber || employee.displayName) + "|" + typeMatch.BetCode;
+  const appCache = attachmentCache.apps[appCacheKey] = attachmentCache.apps[appCacheKey] || { files: {}, excluded: {} };
+  // Attached in the chat but removed or replaced - reported in the preview.
+  let leftOutAttachments = [];
   let attachmentsSynced = false;
 
   async function syncAttachments() {
@@ -582,7 +675,7 @@
     if (attachmentsSynced) return null;
     attachmentsSynced = true;
     if (!attachmentRules.allowed) {
-      const unexpected = chatFiles().filter(f => !isRemoved(f.name));
+      const unexpected = (await chatFiles()).filter(f => !isRemoved(f.name));
       if (unexpected.length > 0) {
         return {
           needsInput: true,
@@ -595,8 +688,68 @@
       if (current.error) return current.error;
       let serverList = current.list;
 
-      const inChat = chatFiles();
-      const toDelete = serverList.filter(a => isRemoved(a.BetAttachmentName));
+      const lc = n => String(n || "").trim().toLowerCase();
+      const isCurrent = f => currentChatNames.some(n => sameName(n, f.name));
+      // Files of an application already submitted are not picked up again unless
+      // they are attached again.
+      const inChat = (await chatFiles()).filter(f => !attachmentCache.consumed[lc(f.name)] || isCurrent(f));
+
+      toolStage = "reading the files attached in the chat";
+      // Files collectChatAttachment delivered for this message count as attached
+      // in it, exactly like files from getUploadedBaoFiles.
+      const collectedNow = inChat.filter(isNewlyCollected).map(f => lc(f.name));
+      const readableNow = [];
+      for (const f of inChat) {
+        if (collectedEntries.includes(f)) attachmentCache.seen.add(f);
+        const resolved = await fileBlobOf(f);
+        if (resolved && resolved.blob && resolved.blob.size) {
+          appCache.files[lc(f.name)] = { blob: resolved.blob, name: f.name, size: resolved.blob.size };
+          readableNow.push(lc(f.name));
+        } else if (attachmentCache.pending[lc(f.name)] && !appCache.files[lc(f.name)]) {
+          appCache.files[lc(f.name)] = attachmentCache.pending[lc(f.name)];
+        }
+        delete attachmentCache.pending[lc(f.name)];
+        if (isCurrent(f)) delete attachmentCache.consumed[lc(f.name)];
+      }
+      // Files parked before this application was known (sent with the first message,
+      // before the benefit type or team member was chosen) belong to it, even when
+      // the chat no longer lists them.
+      Object.keys(attachmentCache.pending).forEach(n => {
+        if (!appCache.files[n] && !attachmentCache.consumed[n]) appCache.files[n] = attachmentCache.pending[n];
+        delete attachmentCache.pending[n];
+      });
+      // A file handed over WITH its contents in this message - a new file, or a new
+      // copy of one already attached.
+      const freshInMessage = f => (isCurrent(f) || collectedNow.includes(lc(f.name))) && readableNow.includes(lc(f.name));
+      const displayOf = n => {
+        const c = inChat.find(f => lc(f.name) === n), s = serverList.find(a => lc(a.BetAttachmentName) === n);
+        return (c && c.name) || (s && s.BetAttachmentName) || (appCache.files[n] && appCache.files[n].name) || n;
+      };
+
+      // Attaching a file again brings it back; removals are remembered so a file
+      // the chat keeps listing stays out even if removeAttachments is not resent.
+      inChat.forEach(f => { if (freshInMessage(f) && !removeNames.includes(lc(f.name))) delete appCache.excluded[lc(f.name)]; });
+      removeNames.forEach(n => { appCache.excluded[n] = true; });
+
+      // replaceAttachments: the file(s) of this message replace every earlier one.
+      const replacedByThisMessage = [];
+      if ((args.replaceAttachments === true || String(args.replaceAttachments || "").toLowerCase() === "true")
+        && inChat.some(f => freshInMessage(f) && !removeNames.includes(lc(f.name)))) {
+        new Set(serverList.map(a => lc(a.BetAttachmentName)).concat(Object.keys(appCache.files), inChat.map(f => lc(f.name)))).forEach(n => {
+          if (appCache.excluded[n] || inChat.some(f => freshInMessage(f) && lc(f.name) === n)) return;
+          appCache.excluded[n] = true;
+          replacedByThisMessage.push(n);
+        });
+      }
+      Object.keys(appCache.excluded).forEach(n => { if (!removeNames.includes(n)) leftOutNames.push(n); });
+      if (replacedByThisMessage.length > 0) {
+        attachmentNotes.push(`${replacedByThisMessage.map(n => `"${displayOf(n)}"`).join(", ")} ${replacedByThisMessage.length === 1 ? "was" : "were"} replaced by what the supervisor attached in the chat and will not be submitted.`);
+      }
+
+      // Removals the supervisor asked for in this call; files left out earlier come off
+      // quietly alongside them.
+      const toDelete = serverList.filter(a => removeNames.includes(lc(a.BetAttachmentName)));
+      const leftOutOnServer = serverList.filter(a => leftOutNames.includes(lc(a.BetAttachmentName)));
 
       /* Anything the chat hands over is an upload attempt. The helper reports
        * a file to the call it was attached for, so a file arriving under a
@@ -606,7 +759,7 @@
        * list says how big a file is or when it changed, so the chat is the
        * only thing that can be trusted about what the supervisor wants now. */
       const replaced = serverList.filter(a => !isRemoved(a.BetAttachmentName)
-        && inChat.some(f => !isRemoved(f.name) && sameName(f.name, a.BetAttachmentName)));
+        && inChat.some(f => !isRemoved(f.name) && freshInMessage(f) && sameName(f.name, a.BetAttachmentName)));
       /* "Change the document to this": with replaceAttachments the files in
        * the chat are the whole attachment list, so anything staged that the
        * supervisor did not attach again comes off - a swap for a file with a
@@ -619,10 +772,20 @@
           && !inChat.some(f => sameName(f.name, a.BetAttachmentName))
           && !replaced.some(r => sameName(r.BetAttachmentName, a.BetAttachmentName)))
         : [];
-      const toRemoveFromServer = toDelete.concat(replaced, supersededByReplaceAll);
-      const toUpload = inChat.filter(f => !isRemoved(f.name));
+      const toRemoveFromServer = toDelete.concat(replaced, supersededByReplaceAll, leftOutOnServer);
+      /* Additive: every file attached in the conversation is part of the application
+       * until removed or replaced (capture: three UploadAttachment calls under one
+       * key, GetAttachments growing 1 -> 2 -> 3, SaveApplication picking them all up
+       * through KeyValue). A file already staged is not uploaded again, and files
+       * PeoplesHR no longer holds are re-uploaded from their copies. */
+      const staysStaged = name => serverList.some(a => sameName(a.BetAttachmentName, name))
+        && !toRemoveFromServer.some(r => sameName(r.BetAttachmentName, name));
+      const toUpload = inChat.filter(f => !isRemoved(f.name) && !staysStaged(f.name))
+        .concat(Object.keys(appCache.files)
+          .filter(n => !isRemoved(n) && !staysStaged(n) && !inChat.some(f => lc(f.name) === n))
+          .map(n => ({ name: appCache.files[n].name, size: appCache.files[n].size })));
       inChat.forEach(f => {
-        if (!isRemoved(f.name) || serverList.some(a => sameName(a.BetAttachmentName, f.name))) return;
+        if (!removeNames.includes(lc(f.name)) || serverList.some(a => sameName(a.BetAttachmentName, f.name))) return;
         const wrongType = attachmentRules.allowedTypes.length && !attachmentRules.allowedTypes.includes(extensionOf(f.name));
         const tooBig = attachmentRules.maxSizeMb && typeof f.size === "number" && f.size > attachmentRules.maxSizeMb * 1024 * 1024;
         if (!wrongType && !tooBig) suppressedByRemoval.push(f.name);
@@ -703,7 +866,14 @@
           { fileCode: att.BetAttachmentCode, empNumber: appEmpNumber, key: sessionKey },
           "DeleteAttachment"
         );
-        if (del.error || (del.data && del.data.Status === false)) {
+        // Capture: DeleteAttachment {fileCode, empNumber, key} answers with the files
+        // still attached ({BmAppAttachments: [...]}, no Status).
+        const remaining = del.data && Array.isArray(del.data.BmAppAttachments) ? del.data.BmAppAttachments : null;
+        if (remaining) serverList = remaining;
+        const stillThere = remaining
+          ? remaining.some(a => a.BetAttachmentCode === att.BetAttachmentCode)
+          : !!(del.data && del.data.Status === false);
+        if (del.error || stillThere) {
           const reason = `${del.data && del.data.Message ? `: ${del.data.Message}` : ""}`;
           /* A removal the supervisor asked for is the point of the call, so it stops
            * here. A file being taken off to make way for a new one is not: the
@@ -731,11 +901,11 @@
 
       toolStage = "uploading an attachment";
       for (const file of toUploadUsable) {
-        const resolved = await fileBlobOf(file);
+        const resolved = appCache.files[lc(file.name)] || await fileBlobOf(file);
         if (!resolved || !resolved.blob || !resolved.blob.size) {
           rejectedAttachments.push({
             name: file && file.name ? file.name : "(unnamed file)",
-            reason: `the chat handed over no readable contents for it (it arrived as: ${describeEntry(file)})`
+            reason: `it was attached earlier in the chat, but its contents are no longer available to this tool (the page may have been reloaded) - it needs to be attached again (it arrived as: ${describeEntry(file)})`
           });
           continue;
         }
@@ -762,6 +932,15 @@
             attachments: after.list ? after.list.map(a => a.BetAttachmentName) : undefined
           }, attachmentBase);
         }
+
+        // The screen reads the list back after every upload (UploadAttachment ->
+        // GetAttachments, once per file), so this does too.
+        const afterUpload = await listAttachments();
+        if (afterUpload.error) return afterUpload.error;
+        if (!afterUpload.list.some(a => sameName(a.BetAttachmentName, resolved.name))) {
+          attachmentNotes.push(`"${resolved.name}" was sent to PeoplesHR but does not appear on the application's attachment list. Tell the supervisor, and ask them to attach it again.`);
+        }
+        serverList = afterUpload.list;
       }
 
       // Always read the list back after anything was uploaded or removed.
@@ -771,6 +950,9 @@
         serverList = refreshed.list;
       }
       stagedAttachments = serverList.map(a => a.BetAttachmentName).filter(Boolean);
+      leftOutAttachments = Object.keys(appCache.excluded)
+        .filter(n => !stagedAttachments.some(s => lc(s) === n) && (appCache.files[n] || inChat.some(f => lc(f.name) === n)))
+        .map(displayOf);
 
     }
     return null;
@@ -1781,6 +1963,7 @@
       ? `Attached: ${stagedAttachments.map(n => `"${n}"`).join(", ")}. Show these to the supervisor with the rest of the preview - before confirming they can still remove any of them (call again with removeAttachments listing the file name, and keep passing it on later calls)${attachmentRules.maxCount && stagedAttachments.length >= attachmentRules.maxCount ? "" : " or attach more in the chat"}.`
       : `No attachment added (optional; ${attachmentRulesText() || "any file type"}). The supervisor can attach one in the chat before confirming.`;
     return [staged, `Pass attachmentSessionKey:"${sessionKey}" on every later call for this application, including the confirmation; leave it out if the employee or the benefit type changes.`]
+      .concat(leftOutAttachments.length ? [`Left out (removed or replaced, will not be submitted): ${leftOutAttachments.map(n => `"${n}"`).join(", ")}.`] : [])
       .concat(attachmentNotes).join(" ");
   }
 
@@ -1843,6 +2026,8 @@
       rows: hasGrid ? rowSummaries : undefined,
       comment: args.comment || null,
       attachments: attachmentRules.allowed ? stagedAttachments : undefined,
+      attachmentCount: attachmentRules.allowed ? stagedAttachments.length : undefined,
+      attachmentsLeftOut: leftOutAttachments.length ? leftOutAttachments : undefined,
       // Files that were received and checked but could not be attached.
       // Read every one of these out: the supervisor attached them and would
       // otherwise believe they are on the application.
@@ -1931,6 +2116,8 @@
    * attachments are already saved with the application by then, so this is
    * housekeeping only: its outcome never changes the result reported. */
   if (saved.Status === true && attachmentRules.allowed) {
+    stagedAttachments.forEach(n => { attachmentCache.consumed[String(n).trim().toLowerCase()] = true; });
+    delete attachmentCache.apps[appCacheKey];
     try {
       await fetch(`${base}/BenefitV9/api/ApplicationApi/DeleteAttachments`, {
         method: "POST",

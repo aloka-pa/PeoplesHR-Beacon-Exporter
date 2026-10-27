@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("TNAV9/AttendanceSummary/AttendanceSummary/0?mvc=1")
+  )
+) {
+  return { error: true, message: "You do not have access to Attendance Summary Page. Please contact HR Admin." };
+}
   const myHeaders = new Headers();
   myHeaders.append("accept", "*/*");
   myHeaders.append("accept-language", "en-US,en;q=0.9");

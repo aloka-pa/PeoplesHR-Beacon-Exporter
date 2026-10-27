@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("TNAVUE/app/ShiftAdjustment?mvc=1")
+  )
+) {
+  return { error: true, message: "You do not have access to Shift Adjustments. Please contact HR Admin." };
+}
   function transformToUpdatePayload(getApiResponse, previousShiftDetails, updateShiftDetails) {
     const result = { EmpShiftScheduleList: [] };
     getApiResponse.forEach(employee => {

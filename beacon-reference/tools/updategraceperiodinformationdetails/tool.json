@@ -12,15 +12,15 @@
   "status": "live",
   "signature": "updateGracePeriodInformationDetails",
   "createdAt": "2025-06-25T13:43:41.099Z",
-  "updatedAt": "2025-06-25T13:43:41.099Z",
+  "updatedAt": "2026-10-23T09:16:23.788Z",
   "assignedAgents": [
     {
       "id": "690dc571931a2d61ba0b1bcd",
       "name": "Attendance"
     }
   ],
-  "contentHash": "865c9aaab78af5b3605af85ddf5b57bd07e64651a0f71bd211625d33ebf61c27",
-  "lastExportedAt": "2026-10-07T06:32:16.759Z",
+  "contentHash": "fc3301092048433672e4407e4375a99820baf6ee57544b0a734e643b1d4718b5",
+  "lastExportedAt": "2026-10-27T03:27:10.535Z",
   "raw": {
     "basic": {
       "_id": "690dc56b931a2d61ba0b1a6b",
@@ -64,12 +64,12 @@
           }
         ],
         "isAdvanced": false,
-        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-        "_id": "685bfd0dafa936e2712696ee"
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6adb25e71849bf8297020cfc"
       },
-      "by": "1927",
+      "by": "44101",
       "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
-      "transformer": "(async function (data, args, reqOptions) {\n  const save = await BeaconBar.executeFunction('module')({\n    \"ctl00$main$RadScriptManager\": \"ctl00$action$UpdatePanel2|ctl00$action$ButtonPanel$butSave$imgbtnSave\",\n    \"ctl00_main_RadScriptManager_HiddenField\": \"\",\n    \"ctl00$body$GraceName_txt\": args.garcePeriodName,\n    \"ctl00$body$cmdRoundings\": args.roundingPattern,\n    \"ctl00$body$cmbPreviousGrace\": args.previousGracePeriod,\n    \"ctl00$body$nbDuraton\": args.duration,\n    \"ctl00$body$tpTest2$txtTime\": \"\",\n    \"ctl00$action$ButtonPanel$butDelete$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butReset$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSave$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSummary$isControlEnabled\": \"True\",\n    \"ctl00$action$maxLateVal\": window.maxval,\n    \"ctl00$hdnCulturDateFormat\": \"M/d/yyyy\",\n    \"__EVENTTARGET\": \"\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": window.graceupdate.viewState1,\n    \"__VIEWSTATEGENERATOR\": window.graceupdate.viewStateGen1,\n    \"__SCROLLPOSITIONX\": \"0\",\n    \"__SCROLLPOSITIONY\": \"0\",\n    \"__EVENTVALIDATION\": window.graceupdate.eventValidation1,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"hiddenInputToUpdateATBuffer_CommonToolkitScripts\": \"1\",\n    \"__ASYNCPOST\": \"true\",\n    \"ctl00$action$ButtonPanel$butSave$imgbtnSave\": \"Save\"\n  }, `${reqOptions.sl}/TNA/GracePeriodInformation`);\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(save.rawData, 'text/html');\n\n  const gracePeriodName = document.querySelector('#ctl00_body_GraceName_txt')?.value;\n  const roundingPatternSelect = document.querySelector('#ctl00_body_cmdRoundings');\n  const roundingPattern = roundingPatternSelect?.options[roundingPatternSelect.selectedIndex]?.text;\n  const previousGraceSelect = document.querySelector('#ctl00_body_cmbPreviousGrace');\n  const previousGracePeriod = previousGraceSelect?.options[previousGraceSelect.selectedIndex]?.text;\n  const duration = document.querySelector('#ctl00_body_nbDuraton')?.value;\n\n  return {\n    \"Grace Period Name\": gracePeriodName,\n    \"Rounding Pattern\": roundingPattern,\n    \"Previous Grace Period\": previousGracePeriod,\n    \"Duration\": duration\n  };\n\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (\n  !BeaconBar.user?.metaData?.menus?.some(menu =>\n    menu.includes(\"TNA/GracePeriodInformation.aspx\")\n  )\n) {\n  return { error: true, message: \"You do not have access to Grace Period Information Page. Please contact HR Admin.\" };\n}\n  const save = await BeaconBar.executeFunction('module')({\n    \"ctl00$main$RadScriptManager\": \"ctl00$action$UpdatePanel2|ctl00$action$ButtonPanel$butSave$imgbtnSave\",\n    \"ctl00_main_RadScriptManager_HiddenField\": \"\",\n    \"ctl00$body$GraceName_txt\": args.garcePeriodName,\n    \"ctl00$body$cmdRoundings\": args.roundingPattern,\n    \"ctl00$body$cmbPreviousGrace\": args.previousGracePeriod,\n    \"ctl00$body$nbDuraton\": args.duration,\n    \"ctl00$body$tpTest2$txtTime\": \"\",\n    \"ctl00$action$ButtonPanel$butDelete$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butReset$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSave$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSummary$isControlEnabled\": \"True\",\n    \"ctl00$action$maxLateVal\": window.maxval,\n    \"ctl00$hdnCulturDateFormat\": \"M/d/yyyy\",\n    \"__EVENTTARGET\": \"\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": window.graceupdate.viewState1,\n    \"__VIEWSTATEGENERATOR\": window.graceupdate.viewStateGen1,\n    \"__SCROLLPOSITIONX\": \"0\",\n    \"__SCROLLPOSITIONY\": \"0\",\n    \"__EVENTVALIDATION\": window.graceupdate.eventValidation1,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"hiddenInputToUpdateATBuffer_CommonToolkitScripts\": \"1\",\n    \"__ASYNCPOST\": \"true\",\n    \"ctl00$action$ButtonPanel$butSave$imgbtnSave\": \"Save\"\n  }, `${reqOptions.sl}/TNA/GracePeriodInformation`);\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(save.rawData, 'text/html');\n\n  const gracePeriodName = document.querySelector('#ctl00_body_GraceName_txt')?.value;\n  const roundingPatternSelect = document.querySelector('#ctl00_body_cmdRoundings');\n  const roundingPattern = roundingPatternSelect?.options[roundingPatternSelect.selectedIndex]?.text;\n  const previousGraceSelect = document.querySelector('#ctl00_body_cmbPreviousGrace');\n  const previousGracePeriod = previousGraceSelect?.options[previousGraceSelect.selectedIndex]?.text;\n  const duration = document.querySelector('#ctl00_body_nbDuraton')?.value;\n\n  return {\n    \"Grace Period Name\": gracePeriodName,\n    \"Rounding Pattern\": roundingPattern,\n    \"Previous Grace Period\": previousGracePeriod,\n    \"Duration\": duration\n  };\n\n})",
       "groupName": "",
       "tags": [
         "Attendance",
@@ -79,8 +79,26 @@
       "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
       "status": "live",
       "createdAt": "2025-06-25T13:43:41.099Z",
-      "updatedAt": "2025-06-25T13:43:41.099Z",
-      "__v": 0,
+      "updatedAt": "2026-10-23T09:16:23.788Z",
+      "__v": 2,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "strictToolUse": false,
+      "toolType": "code",
       "agents": [
         {
           "_id": "690dc571931a2d61ba0b1bcd",
@@ -122,12 +140,17 @@
         }
       ],
       "isAdvanced": false,
-      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-      "_id": "685bfd0dafa936e2712696ee"
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6adb25e71849bf8297020cfc"
     },
     "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
-    "transformer": "(async function (data, args, reqOptions) {\n  const save = await BeaconBar.executeFunction('module')({\n    \"ctl00$main$RadScriptManager\": \"ctl00$action$UpdatePanel2|ctl00$action$ButtonPanel$butSave$imgbtnSave\",\n    \"ctl00_main_RadScriptManager_HiddenField\": \"\",\n    \"ctl00$body$GraceName_txt\": args.garcePeriodName,\n    \"ctl00$body$cmdRoundings\": args.roundingPattern,\n    \"ctl00$body$cmbPreviousGrace\": args.previousGracePeriod,\n    \"ctl00$body$nbDuraton\": args.duration,\n    \"ctl00$body$tpTest2$txtTime\": \"\",\n    \"ctl00$action$ButtonPanel$butDelete$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butReset$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSave$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSummary$isControlEnabled\": \"True\",\n    \"ctl00$action$maxLateVal\": window.maxval,\n    \"ctl00$hdnCulturDateFormat\": \"M/d/yyyy\",\n    \"__EVENTTARGET\": \"\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": window.graceupdate.viewState1,\n    \"__VIEWSTATEGENERATOR\": window.graceupdate.viewStateGen1,\n    \"__SCROLLPOSITIONX\": \"0\",\n    \"__SCROLLPOSITIONY\": \"0\",\n    \"__EVENTVALIDATION\": window.graceupdate.eventValidation1,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"hiddenInputToUpdateATBuffer_CommonToolkitScripts\": \"1\",\n    \"__ASYNCPOST\": \"true\",\n    \"ctl00$action$ButtonPanel$butSave$imgbtnSave\": \"Save\"\n  }, `${reqOptions.sl}/TNA/GracePeriodInformation`);\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(save.rawData, 'text/html');\n\n  const gracePeriodName = document.querySelector('#ctl00_body_GraceName_txt')?.value;\n  const roundingPatternSelect = document.querySelector('#ctl00_body_cmdRoundings');\n  const roundingPattern = roundingPatternSelect?.options[roundingPatternSelect.selectedIndex]?.text;\n  const previousGraceSelect = document.querySelector('#ctl00_body_cmbPreviousGrace');\n  const previousGracePeriod = previousGraceSelect?.options[previousGraceSelect.selectedIndex]?.text;\n  const duration = document.querySelector('#ctl00_body_nbDuraton')?.value;\n\n  return {\n    \"Grace Period Name\": gracePeriodName,\n    \"Rounding Pattern\": roundingPattern,\n    \"Previous Grace Period\": previousGracePeriod,\n    \"Duration\": duration\n  };\n\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (\n  !BeaconBar.user?.metaData?.menus?.some(menu =>\n    menu.includes(\"TNA/GracePeriodInformation.aspx\")\n  )\n) {\n  return { error: true, message: \"You do not have access to Grace Period Information Page. Please contact HR Admin.\" };\n}\n  const save = await BeaconBar.executeFunction('module')({\n    \"ctl00$main$RadScriptManager\": \"ctl00$action$UpdatePanel2|ctl00$action$ButtonPanel$butSave$imgbtnSave\",\n    \"ctl00_main_RadScriptManager_HiddenField\": \"\",\n    \"ctl00$body$GraceName_txt\": args.garcePeriodName,\n    \"ctl00$body$cmdRoundings\": args.roundingPattern,\n    \"ctl00$body$cmbPreviousGrace\": args.previousGracePeriod,\n    \"ctl00$body$nbDuraton\": args.duration,\n    \"ctl00$body$tpTest2$txtTime\": \"\",\n    \"ctl00$action$ButtonPanel$butDelete$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butReset$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSave$isControlEnabled\": \"True\",\n    \"ctl00$action$ButtonPanel$butSummary$isControlEnabled\": \"True\",\n    \"ctl00$action$maxLateVal\": window.maxval,\n    \"ctl00$hdnCulturDateFormat\": \"M/d/yyyy\",\n    \"__EVENTTARGET\": \"\",\n    \"__EVENTARGUMENT\": \"\",\n    \"__LASTFOCUS\": \"\",\n    \"__VIEWSTATE\": window.graceupdate.viewState1,\n    \"__VIEWSTATEGENERATOR\": window.graceupdate.viewStateGen1,\n    \"__SCROLLPOSITIONX\": \"0\",\n    \"__SCROLLPOSITIONY\": \"0\",\n    \"__EVENTVALIDATION\": window.graceupdate.eventValidation1,\n    \"__VIEWSTATEENCRYPTED\": \"\",\n    \"hiddenInputToUpdateATBuffer_CommonToolkitScripts\": \"1\",\n    \"__ASYNCPOST\": \"true\",\n    \"ctl00$action$ButtonPanel$butSave$imgbtnSave\": \"Save\"\n  }, `${reqOptions.sl}/TNA/GracePeriodInformation`);\n\n  const parser = new DOMParser();\n  const document = parser.parseFromString(save.rawData, 'text/html');\n\n  const gracePeriodName = document.querySelector('#ctl00_body_GraceName_txt')?.value;\n  const roundingPatternSelect = document.querySelector('#ctl00_body_cmdRoundings');\n  const roundingPattern = roundingPatternSelect?.options[roundingPatternSelect.selectedIndex]?.text;\n  const previousGraceSelect = document.querySelector('#ctl00_body_cmbPreviousGrace');\n  const previousGracePeriod = previousGraceSelect?.options[previousGraceSelect.selectedIndex]?.text;\n  const duration = document.querySelector('#ctl00_body_nbDuraton')?.value;\n\n  return {\n    \"Grace Period Name\": gracePeriodName,\n    \"Rounding Pattern\": roundingPattern,\n    \"Previous Grace Period\": previousGracePeriod,\n    \"Duration\": duration\n  };\n\n})",
     "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
-    "test": {}
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
   }
 }

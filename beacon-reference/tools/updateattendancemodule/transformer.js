@@ -1,4 +1,5 @@
 (async function (data, args, reqOptions) {
+
   if (args.entity === "systemParameters") {
     const updateurl = await BeaconBar.executeFunction("updateUrlParams")('TNA/SystemParameters.aspx');
     let url;

@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("EIM/AssignPassport.aspx")
+  )
+) {
+  return { error: true, message: "You do not have access to Employee Passport and Other Article Details Page. Please contact HR Admin." };
+}
   function parseDotNetDate(dotNetDateStr) {
     const match = /\/Date\((\d+)\)\//.exec(dotNetDateStr);
     if (match) {

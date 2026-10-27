@@ -12,15 +12,15 @@
   "status": "live",
   "signature": "selfEmployeeWorkExperienceDetails",
   "createdAt": "2025-08-26T11:11:58.268Z",
-  "updatedAt": "2025-11-10T12:13:08.361Z",
+  "updatedAt": "2026-10-26T06:09:14.431Z",
   "assignedAgents": [
     {
       "id": "690dc571931a2d61ba0b1bf4",
       "name": "Employee Information"
     }
   ],
-  "contentHash": "738b4a11e1f8806aa1669c442e1ca67b30695b09adf0f092989f9589bafaa9a0",
-  "lastExportedAt": "2026-10-07T06:32:16.565Z",
+  "contentHash": "7dc0edb0a2f62972fe5ab93b650535ec7d28a01f0596682ea069f736314574df",
+  "lastExportedAt": "2026-10-27T03:27:10.458Z",
   "raw": {
     "basic": {
       "_id": "690dc56c931a2d61ba0b1b36",
@@ -37,12 +37,12 @@
         "name": "selfEmployeeWorkExperienceDetails",
         "args": [],
         "isAdvanced": false,
-        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-        "_id": "68ad967e6882c79d57f9ea49"
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6adeee8ad0482a828fa6972a"
       },
-      "by": "7337",
+      "by": "44101",
       "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
-      "transformer": "(async function (data, args, reqOptions) {\n  function parseDotNetDate(dotNetDateStr) {\n    const match = /\\/Date\\((\\d+)\\)\\//.exec(dotNetDateStr);\n    if (match) {\n      const timestamp = parseInt(match[1], 10);\n      const date = new Date(timestamp);\n\n      // Format as dd/MM/yyyy\n      const day = String(date.getDate()).padStart(2, '0');\n      const month = String(date.getMonth() + 1).padStart(2, '0'); // months are 0-based\n      const year = date.getFullYear();\n\n      return `${day}/${month}/${year}`;\n    }\n    return null;\n  }\n  const url = await BeaconBar.executeFunction(\"updateUrlParams\")(\"WorkExperience/WorkExperience?mvc=1&subordinate=0\")\n  const digest = await BeaconBar.executeFunction('getDigest')(url.updateParams);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${url.updateUrl}&digest=${digest.digest}&_=${Date.now()}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n  const details = await response.text();\n  const match = details.match(/var\\s+modelWorkExperience\\s*=\\s*(\\{[\\s\\S]*?\\});/);\n  const work = JSON.parse(match[1]);\n  window.empNumber1 = work.EmpNumber;\n\n  return work.WorkExperienceList.map(x => ({\n    \"Internal / External\": x.Category || \"\",\n    \"Company Name\": x.Company || \"\",\n    \"Work Related\": x.WorkRelatedFlg ? \"Yes\" : \"No\",\n    \"From Date\": parseDotNetDate(x.ExpFromDate),\n    \"To Date\": parseDotNetDate(x.ExpToDate),\n    \"Confirmed Date\": parseDotNetDate(x.ConfirmedDate),\n    \"Contact Person\": x.ContactPerson || \"\",\n    \"Department/Division\": x.Department || \"\",\n    \"Designation on Leaving\": x.DesignationOnLeave || \"\",\n    \"Reason for Leaving\": x.ReasonForLeave || \"\",\n    \"Industry Type\": x.IndustryTypeName || \"\",\n    \"Address\": [x.Address1, x.Address2, x.Address3].filter(Boolean).join(\", \"),\n    \"Telephone\": x.ExpTelNo || \"\",\n    \"E-mail\": x.ExpEmail || \"\",\n    \"Accountabilities\": x.Accountabilities || \"\",\n    \"Achievements\": x.Achievments || \"\",\n    \"No of Years\": x.ExpYears || 0,\n    \"No of Months\": x.ExpMonths || 0,\n    \"Benefit Consideration\": x.BenifitConsiderFlg ? \"Yes\" : \"No\"\n  }));\n\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (\n  !BeaconBar.user?.metaData?.menus?.some(menu =>\n    menu.includes(\"EIM/WorkExperience.aspx\")\n  )\n) {\n  return { error: true, message: \"You do not have access to Employee Work Experience Details Page. Please contact HR Admin.\" };\n}\n  function parseDotNetDate(dotNetDateStr) {\n    const match = /\\/Date\\((\\d+)\\)\\//.exec(dotNetDateStr);\n    if (match) {\n      const timestamp = parseInt(match[1], 10);\n      const date = new Date(timestamp);\n\n      // Format as dd/MM/yyyy\n      const day = String(date.getDate()).padStart(2, '0');\n      const month = String(date.getMonth() + 1).padStart(2, '0'); // months are 0-based\n      const year = date.getFullYear();\n\n      return `${day}/${month}/${year}`;\n    }\n    return null;\n  }\n  const url = await BeaconBar.executeFunction(\"updateUrlParams\")(\"WorkExperience/WorkExperience?mvc=1&subordinate=0\")\n  const digest = await BeaconBar.executeFunction('getDigest')(url.updateParams);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${url.updateUrl}&digest=${digest.digest}&_=${Date.now()}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n  const details = await response.text();\n  const match = details.match(/var\\s+modelWorkExperience\\s*=\\s*(\\{[\\s\\S]*?\\});/);\n  const work = JSON.parse(match[1]);\n  window.empNumber1 = work.EmpNumber;\n\n  return work.WorkExperienceList.map(x => ({\n    \"Internal / External\": x.Category || \"\",\n    \"Company Name\": x.Company || \"\",\n    \"Work Related\": x.WorkRelatedFlg ? \"Yes\" : \"No\",\n    \"From Date\": parseDotNetDate(x.ExpFromDate),\n    \"To Date\": parseDotNetDate(x.ExpToDate),\n    \"Confirmed Date\": parseDotNetDate(x.ConfirmedDate),\n    \"Contact Person\": x.ContactPerson || \"\",\n    \"Department/Division\": x.Department || \"\",\n    \"Designation on Leaving\": x.DesignationOnLeave || \"\",\n    \"Reason for Leaving\": x.ReasonForLeave || \"\",\n    \"Industry Type\": x.IndustryTypeName || \"\",\n    \"Address\": [x.Address1, x.Address2, x.Address3].filter(Boolean).join(\", \"),\n    \"Telephone\": x.ExpTelNo || \"\",\n    \"E-mail\": x.ExpEmail || \"\",\n    \"Accountabilities\": x.Accountabilities || \"\",\n    \"Achievements\": x.Achievments || \"\",\n    \"No of Years\": x.ExpYears || 0,\n    \"No of Months\": x.ExpMonths || 0,\n    \"Benefit Consideration\": x.BenifitConsiderFlg ? \"Yes\" : \"No\"\n  }));\n\n})",
       "groupName": "",
       "tags": [
         "Employee Information",
@@ -52,9 +52,25 @@
       "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
       "status": "live",
       "createdAt": "2025-08-26T11:11:58.268Z",
-      "updatedAt": "2025-11-10T12:13:08.361Z",
-      "__v": 1,
+      "updatedAt": "2026-10-26T06:09:14.431Z",
+      "__v": 2,
       "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "sanity": {
+        "apiResponse": []
+      },
+      "strictToolUse": false,
+      "toolType": "code",
       "agents": [
         {
           "_id": "690dc571931a2d61ba0b1bf4",
@@ -67,14 +83,17 @@
       "name": "selfEmployeeWorkExperienceDetails",
       "args": [],
       "isAdvanced": false,
-      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-      "_id": "68ad967e6882c79d57f9ea49"
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6adeee8ad0482a828fa6972a"
     },
     "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
-    "transformer": "(async function (data, args, reqOptions) {\n  function parseDotNetDate(dotNetDateStr) {\n    const match = /\\/Date\\((\\d+)\\)\\//.exec(dotNetDateStr);\n    if (match) {\n      const timestamp = parseInt(match[1], 10);\n      const date = new Date(timestamp);\n\n      // Format as dd/MM/yyyy\n      const day = String(date.getDate()).padStart(2, '0');\n      const month = String(date.getMonth() + 1).padStart(2, '0'); // months are 0-based\n      const year = date.getFullYear();\n\n      return `${day}/${month}/${year}`;\n    }\n    return null;\n  }\n  const url = await BeaconBar.executeFunction(\"updateUrlParams\")(\"WorkExperience/WorkExperience?mvc=1&subordinate=0\")\n  const digest = await BeaconBar.executeFunction('getDigest')(url.updateParams);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${url.updateUrl}&digest=${digest.digest}&_=${Date.now()}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n  const details = await response.text();\n  const match = details.match(/var\\s+modelWorkExperience\\s*=\\s*(\\{[\\s\\S]*?\\});/);\n  const work = JSON.parse(match[1]);\n  window.empNumber1 = work.EmpNumber;\n\n  return work.WorkExperienceList.map(x => ({\n    \"Internal / External\": x.Category || \"\",\n    \"Company Name\": x.Company || \"\",\n    \"Work Related\": x.WorkRelatedFlg ? \"Yes\" : \"No\",\n    \"From Date\": parseDotNetDate(x.ExpFromDate),\n    \"To Date\": parseDotNetDate(x.ExpToDate),\n    \"Confirmed Date\": parseDotNetDate(x.ConfirmedDate),\n    \"Contact Person\": x.ContactPerson || \"\",\n    \"Department/Division\": x.Department || \"\",\n    \"Designation on Leaving\": x.DesignationOnLeave || \"\",\n    \"Reason for Leaving\": x.ReasonForLeave || \"\",\n    \"Industry Type\": x.IndustryTypeName || \"\",\n    \"Address\": [x.Address1, x.Address2, x.Address3].filter(Boolean).join(\", \"),\n    \"Telephone\": x.ExpTelNo || \"\",\n    \"E-mail\": x.ExpEmail || \"\",\n    \"Accountabilities\": x.Accountabilities || \"\",\n    \"Achievements\": x.Achievments || \"\",\n    \"No of Years\": x.ExpYears || 0,\n    \"No of Months\": x.ExpMonths || 0,\n    \"Benefit Consideration\": x.BenifitConsiderFlg ? \"Yes\" : \"No\"\n  }));\n\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (\n  !BeaconBar.user?.metaData?.menus?.some(menu =>\n    menu.includes(\"EIM/WorkExperience.aspx\")\n  )\n) {\n  return { error: true, message: \"You do not have access to Employee Work Experience Details Page. Please contact HR Admin.\" };\n}\n  function parseDotNetDate(dotNetDateStr) {\n    const match = /\\/Date\\((\\d+)\\)\\//.exec(dotNetDateStr);\n    if (match) {\n      const timestamp = parseInt(match[1], 10);\n      const date = new Date(timestamp);\n\n      // Format as dd/MM/yyyy\n      const day = String(date.getDate()).padStart(2, '0');\n      const month = String(date.getMonth() + 1).padStart(2, '0'); // months are 0-based\n      const year = date.getFullYear();\n\n      return `${day}/${month}/${year}`;\n    }\n    return null;\n  }\n  const url = await BeaconBar.executeFunction(\"updateUrlParams\")(\"WorkExperience/WorkExperience?mvc=1&subordinate=0\")\n  const digest = await BeaconBar.executeFunction('getDigest')(url.updateParams);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${url.updateUrl}&digest=${digest.digest}&_=${Date.now()}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n  const details = await response.text();\n  const match = details.match(/var\\s+modelWorkExperience\\s*=\\s*(\\{[\\s\\S]*?\\});/);\n  const work = JSON.parse(match[1]);\n  window.empNumber1 = work.EmpNumber;\n\n  return work.WorkExperienceList.map(x => ({\n    \"Internal / External\": x.Category || \"\",\n    \"Company Name\": x.Company || \"\",\n    \"Work Related\": x.WorkRelatedFlg ? \"Yes\" : \"No\",\n    \"From Date\": parseDotNetDate(x.ExpFromDate),\n    \"To Date\": parseDotNetDate(x.ExpToDate),\n    \"Confirmed Date\": parseDotNetDate(x.ConfirmedDate),\n    \"Contact Person\": x.ContactPerson || \"\",\n    \"Department/Division\": x.Department || \"\",\n    \"Designation on Leaving\": x.DesignationOnLeave || \"\",\n    \"Reason for Leaving\": x.ReasonForLeave || \"\",\n    \"Industry Type\": x.IndustryTypeName || \"\",\n    \"Address\": [x.Address1, x.Address2, x.Address3].filter(Boolean).join(\", \"),\n    \"Telephone\": x.ExpTelNo || \"\",\n    \"E-mail\": x.ExpEmail || \"\",\n    \"Accountabilities\": x.Accountabilities || \"\",\n    \"Achievements\": x.Achievments || \"\",\n    \"No of Years\": x.ExpYears || 0,\n    \"No of Months\": x.ExpMonths || 0,\n    \"Benefit Consideration\": x.BenifitConsiderFlg ? \"Yes\" : \"No\"\n  }));\n\n})",
     "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
     "test": {
-      "sampleRequest": {}
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
     }
   }
 }

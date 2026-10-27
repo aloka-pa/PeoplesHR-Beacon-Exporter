@@ -373,7 +373,9 @@
   /* -------------------------------------------------
    * Step 1: identify the date.
    * ------------------------------------------------- */
-  if (!args.date) {
+  const wantsTab = !!args.showTab;
+
+  if (!args.date && !wantsTab) {
     return {
       needsInput: true,
       message: `Please tell me the date (${dateFormatName}) of the manual In and Out you want to edit.`,
@@ -382,12 +384,12 @@
     };
   }
 
-  const parsedDate = parseCultureDate(args.date);
-  if (!parsedDate) {
+  const parsedDate = args.date ? parseCultureDate(args.date) : null;
+  if (!wantsTab && !parsedDate) {
     return invalid(`Invalid date format. Please provide the date as ${dateFormatName}.`, { missingFields: ["Date"], expectedDateFormat: dateFormatName });
   }
-  const dateText = formatCultureDate(parsedDate);
-  const targetIsoDay = `${parsedDate.yyyy}-${parsedDate.mm}-${parsedDate.dd}`;
+  const dateText = parsedDate ? formatCultureDate(parsedDate) : null;
+  const targetIsoDay = parsedDate ? `${parsedDate.yyyy}-${parsedDate.mm}-${parsedDate.dd}` : null;
 
   const sl = reqOptions.sl;
   const baseUrl = getPathBase(sl);
@@ -481,7 +483,9 @@
   /* The number behind each InOutRecordType member, from the scripts the
    * page itself loads - the screen's own script first. A plain object
    * literal and a compiled enum are both understood. */
-  async function readRecordTypeValues(html) {
+  /* The screen's own scripts (/Scripts/app/), de-duplicated - not the
+   * shared libraries - the page's own script first. */
+  function ownScriptUrls(html) {
     const pageSegments = pageUrl.split("?")[0].split("/").filter(Boolean);
     function score(src) {
       return (/\/Scripts\/app\//i.test(src) ? 1 : 0)
@@ -491,9 +495,16 @@
     const rx = /<script\b[^>]*\bsrc="([^"]+)"/g;
     let m;
     while ((m = rx.exec(html || "")) !== null) srcs.push(m[1]);
-    srcs.sort(function (a, b) { return score(b) - score(a); });
+    const own = srcs.filter(function (src, i) { return score(src) > 0 && srcs.indexOf(src) === i; });
+    own.sort(function (a, b) { return score(b) - score(a); });
+    return own;
+  }
 
-    for (const src of srcs) {
+  async function readRecordTypeValues(html) {
+    // The tab counts are the fallback when the enum is not found in the screen's scripts.
+    const own = ownScriptUrls(html);
+
+    for (const src of own) {
       let js = "";
       try {
         const res = await fetch(new URL(src, pageUrl).href, { method: "GET", redirect: "follow" });
@@ -516,23 +527,51 @@
     return {};
   }
 
-  /* Which rows each tab holds. A tab holds the rows of its record type;
-   * when the count the grid reports for it only adds up with the off
-   * shift days included (Off Shifts also lists the pending ones), it
-   * holds those as well. A record type the scripts did not give is
-   * inferred from the counts - the one type whose rows add up to the
-   * tab's count. A tab whose rows cannot be told apart (View All) is
-   * left out. */
+  /* The ActionType the screen gives a break it deletes - read from the
+   * screen's own scripts (an action enum with a Delete/Remove member),
+   * only when a break is being deleted. null when the scripts do not say. */
+  async function readBreakDeleteAction(html) {
+    for (const src of ownScriptUrls(html)) {
+      let js = "";
+      try {
+        const res = await fetch(new URL(src, pageUrl).href, { method: "GET", redirect: "follow" });
+        if (!res.ok) continue;
+        js = await res.text();
+      } catch (e) { continue; }
+      const isDelete = function (name) { return /^(delete|deleted|remove|removed)$/i.test(name); };
+      const literal = /(\w*Action\w*)\s*[:=]\s*(?:Object\.freeze\(\s*)?\{([^{}]*)\}/g;
+      let m;
+      while ((m = literal.exec(js)) !== null) {
+        const pair = /["']?(\w+)["']?\s*:\s*(-?\d+)/g;
+        let p;
+        while ((p = pair.exec(m[2])) !== null) if (isDelete(p[1])) return Number(p[2]);
+      }
+      const compiled = /(\w*Action\w*)\[\s*\1\[\s*["'](\w+)["']\s*\]\s*=\s*(-?\d+)\s*\]/g;
+      while ((m = compiled.exec(js)) !== null) if (isDelete(m[2])) return Number(m[3]);
+    }
+    return null;
+  }
+
+  /* Which rows each tab holds. A tab holds the rows of its record type
+   * when that is what the count the grid reports for it adds up to;
+   * otherwise, when the count is the number of off shift days, it holds
+   * the off shift days whatever their record type - Off Shifts does
+   * (self capture: 9 open + 1 pending = 10; team capture: 22 of the 52
+   * type 0 rows, the other 30 being REST days on no tab but View All).
+   * A record type the scripts did not give is inferred from the counts -
+   * the one type whose rows add up to the tab's count. A tab whose rows
+   * cannot be told apart (View All) is left out. */
   function buildTabs(links, typeValues, gridBody, rows) {
     const config = pageModel.ConfigData || {};
     const typeCount = {};
     rows.forEach(function (r) { typeCount[r.InOutRecordType] = (typeCount[r.InOutRecordType] || 0) + 1; });
 
+    const offShiftCount = rows.filter(function (r) { return r.IsShiftOffShift === true; }).length;
+
     function fit(type, reported) {
-      if (typeof reported !== "number") return "type";
-      if ((typeCount[type] || 0) === reported) return "type";
-      const withOffShift = rows.filter(function (r) { return r.InOutRecordType === type || r.IsShiftOffShift === true; }).length;
-      return withOffShift === reported ? "typeOrOffShift" : null;
+      if (typeof reported !== "number") return type === null ? null : "type";
+      if (type !== null && (typeCount[type] || 0) === reported) return "type";
+      return offShiftCount === reported ? "offShift" : null;
     }
 
     const built = links
@@ -554,7 +593,7 @@
       const taken = built.filter(function (t) { return t.value !== null; }).map(function (t) { return t.value; });
       built.filter(function (t) { return t.value === null && typeof t.reported === "number"; }).forEach(function (t) {
         const candidates = Object.keys(typeCount).map(Number).filter(function (type) {
-          return taken.indexOf(type) === -1 && fit(type, t.reported) !== null;
+          return taken.indexOf(type) === -1 && typeCount[type] === t.reported;
         });
         if (candidates.length === 1) {
           t.value = candidates[0];
@@ -565,16 +604,18 @@
     }
 
     return built
-      .map(function (t) { return Object.assign(t, { mode: t.value === null ? null : fit(t.value, t.reported) }); })
+      // A tab the screen counts as 0 is kept as an empty tab - nothing on it, but it is still a tab.
+      .map(function (t) { return Object.assign(t, { mode: fit(t.value, t.reported) || (t.reported === 0 ? "empty" : null) }); })
       .filter(function (t) { return t.mode !== null; });
   }
-
   const tabLinks = readTabLinks(pageHtml);
   const typeValues = await readRecordTypeValues(pageHtml);
   let tabs = [];
 
   function inTab(row, tab) {
-    return !!tab && (row.InOutRecordType === tab.value || (tab.mode === "typeOrOffShift" && row.IsShiftOffShift === true));
+    if (!tab) return false;
+    if (tab.mode === "empty") return false;
+    return tab.mode === "offShift" ? row.IsShiftOffShift === true : row.InOutRecordType === tab.value;
   }
   function tabsOf(row) { return tabs.filter(function (t) { return inTab(row, t); }); }
   function tabByMember(member) { return tabs.find(function (t) { return t.member === member; }) || null; }
@@ -619,6 +660,56 @@
     return { breakIn: s || null, breakOut: e || null, startDate: br.BStartDateText || null, endDate: br.BEndDateText || null };
   }
 
+  /* -------------------------------------------------
+   * The request behind a Pending day, as the screen shows it when the
+   * day's pending details are opened (captured GetEmployeePendingApprovalData, posted
+   * {empNumber, datInDateText} with the row's own EmpNumber token). One
+   * entry per requested change: which time (TimeModeText), New or Change
+   * (ActionTypeText), the old and new date/time (MClockData), the comment,
+   * and - when the API names one - the approver it is waiting for.
+   * ------------------------------------------------- */
+  async function loadPendingRequest(row) {
+    const res = await safePostJson(`${baseUrl}/TNAV9/api/ManualInOut/GetEmployeePendingApprovalData/`, {
+      empNumber: row.EmpNumber || empNumber,
+      datInDateText: row.InDateText || dateText
+    }, ajaxHeaders);
+    const list = Array.isArray(res.body) ? res.body : [];
+
+    function whenText(isoDate, time) {
+      if (!hasTime(time)) return null;
+      const parsed = isoToParsed(isoDate);
+      return `${parsed ? formatCultureDate(parsed) + " " : ""}${hhmmToText(time)}`;
+    }
+
+    const changes = list.map(function (p) {
+      const m = p.MClockData || {};
+      return {
+        field: p.TimeModeText || null,
+        action: p.ActionTypeText || null,
+        from: whenText(m.OldDate, m.OldTime),
+        to: whenText(m.NewDate, m.NewTime),
+        comment: m.Comment || null,
+        approvalComment: m.ApprovalComment || null,
+        approver: p.AppEmpDisplayName ? `${p.AppEmpDisplayNumber ? p.AppEmpDisplayNumber + " - " : ""}${String(p.AppEmpDisplayName).trim()}` : null,
+        workflowId: p.WFMainId || null
+      };
+    });
+    const unique = function (values) { return values.filter(function (v, i) { return v && values.indexOf(v) === i; }); };
+    const approvers = unique(changes.map(function (c) { return c.approver; }));
+    const comments = unique(changes.map(function (c) { return c.comment; }));
+    const approvalComments = unique(changes.map(function (c) { return c.approvalComment; }));
+
+    const requested = changes.map(function (c) {
+      return c.from
+        ? `${c.field}: ${c.from} -> ${c.to || "-"} (${c.action || "Change"})`
+        : `${c.field}: ${c.to || "-"} (${c.action || "New"})`;
+    });
+    const text = changes.length > 0
+      ? ` Requested: ${requested.join("; ")}.${comments.length ? ` Comment: "${comments.join('", "')}".` : ""}${approvers.length ? ` Waiting for approval by ${approvers.join(", ")}.` : ""}${approvalComments.length ? ` Approver comment: "${approvalComments.join('", "')}".` : ""}`
+      : " No details of the pending request were returned.";
+
+    return { status: row.RecordStatusText || null, changes, approvers, text };
+  }
   function shiftDetailsOf(row, window, existing) {
     return {
       date: row.InDateText || null,
@@ -727,7 +818,22 @@
    * the shift's window and every other break that will stand on the day.
    * Returns { response } for the first problem, or { placed }. */
   function placeBreaks(list, span, window, existing) {
-    const spanText = `${span.inDateText} ${span.inText} - ${span.outDateText} ${span.outText}`;
+    /* Only an In or only an Out was given: the missing edge is the day's
+     * own allowed window (the row's ShiftToolTip), so a break is placed
+     * against what the API states rather than against nothing. */
+    span = Object.assign({}, span);
+    if (span.inKey === null) span.inKey = window ? window.start : toMinuteKey(span.inParsed, "00:00");
+    if (span.outKey === null) {
+      span.outKey = window ? window.end : toMinuteKey(span.outParsed, "23:59");
+      if (window) {
+        const endDay = String(Math.floor(window.end / 10000));
+        const endParsed = { yyyy: endDay.slice(0, 4), mm: endDay.slice(4, 6), dd: endDay.slice(6, 8) };
+        if (toDateKey(endParsed) > toDateKey(span.outParsed)) span.outParsed = endParsed;
+      }
+    }
+    const inEdge = span.inText ? `${span.inDateText} ${span.inText}` : (window ? `${window.startText} (no In given - start of the allowed window)` : `${span.inDateText} -`);
+    const outEdge = span.outText ? `${span.outDateText} ${span.outText}` : (window ? `${window.endText} (no Out given - end of the allowed window)` : `${span.outDateText} -`);
+    const spanText = `${inEdge} - ${outEdge}`;
     const changed = list.map(function (b) { return Number(b.breakNo); });
     const standing = existing
       .map(function (br, k) {
@@ -782,6 +888,23 @@
    * the next SeqNo. ActionType is the "was this break touched" flag - 1
    * for one the user added or changed (a new break sent as 0 is read as
    * unmodified, "No modifications to save"), the captured 0/1 otherwise. */
+  /* A recorded break deleted on the Valid Swipes grid (captured): its
+   * start and end emptied, what it was kept as the Old values, its texts
+   * left as they were, and the delete ActionType. */
+  function deletedBreak(br, action, empty) {
+    return Object.assign({}, br, {
+      BStartOldDate: br.BStartDate !== undefined ? br.BStartDate : br.BStartOldDate,
+      BStartOldTime: hasTime(br.BStartTime) ? br.BStartTime : (br.BStartOldTime !== undefined ? br.BStartOldTime : empty),
+      BEndOldDate: br.BEndDate !== undefined ? br.BEndDate : br.BEndOldDate,
+      BEndOldTime: hasTime(br.BEndTime) ? br.BEndTime : (br.BEndOldTime !== undefined ? br.BEndOldTime : empty),
+      BStartDate: null,
+      BStartTime: empty,
+      BEndDate: null,
+      BEndTime: empty,
+      ActionType: action
+    });
+  }
+
   function mergeBreaks(existing, placed, row) {
     let seq = existing.reduce(function (maxVal, br) {
       const n = Number(br && br.SeqNo);
@@ -904,14 +1027,14 @@
     }
   }
 
-  const targetKey = toDateKey(parsedDate);
+  const targetKey = parsedDate ? toDateKey(parsedDate) : null;
   const fromKey = toDateKey(parseCultureDate(fromDateText));
   const toKey = toDateKey(parseCultureDate(toDateText));
 
   if (fromKey > toKey) {
     return invalid(`The search range is invalid: From Date (${fromDateText}) is after To Date (${toDateText}).`, { missingFields: ["From Date", "To Date"] });
   }
-  if (targetKey < fromKey || targetKey > toKey) {
+  if (targetKey !== null && (targetKey < fromKey || targetKey > toKey)) {
     return invalid(`${dateText} is outside the selected search range (${fromDateText} - ${toDateText}). Please widen the range so it includes ${dateText}.`, {
       searchRange: { dateSelectMode: requestedMode, fromDate: fromDateText, toDate: toDateText }
     });
@@ -954,6 +1077,53 @@
   const recordList = rowsOf(gridResult.body);
   tabs = buildTabs(tabLinks, typeValues, gridResult.body, recordList);
 
+  /* -------------------------------------------------
+   * One tab's dates (showTab): "what are the dates in the Pending tab"
+   * and the like. The tab is opened the way the screen opens it
+   * (GetManuallyTimeFixedData -> GetManualRejectedData with its page),
+   * and only the days on that tab are returned - nothing is asked for
+   * and nothing is sent. The tab is matched by the screen's own label.
+   * ------------------------------------------------- */
+  if (wantsTab) {
+    const norm = function (s) { return String(s || "").toLowerCase().replace(/[^a-z]/g, ""); };
+    const wanted = norm(args.showTab);
+    const tab = tabs.find(function (t) {
+      const label = norm(t.label), member = norm(t.member);
+      return member === wanted || label === wanted || (wanted.length >= 3 && (label.indexOf(wanted) === 0 || wanted.indexOf(label) === 0 || wanted.indexOf(member) === 0));
+    }) || null;
+    if (!tab) {
+      return invalid(`There is no "${args.showTab}" tab on the Manual In and Out screen. The tabs are: ${tabs.map(function (t) { return t.label; }).join(", ")}.`, {
+        missingFields: ["Tab"],
+        availableTabs: tabs.map(function (t) { return t.label; })
+      });
+    }
+    await openTab(tab);
+
+    const who = typeof employeeLabel !== "undefined" ? employeeLabel : null;
+    const days = recordList.filter(function (r) { return inTab(r, tab); }).map(function (r) {
+      return {
+        date: r.InDateText,
+        day: r.DayAbbreviation || null,
+        shift: r.ShiftAbbreviation || null,
+        inTime: hasTime(r.InTime) ? (r.InTimeText || hhmmToText(r.InTime)) : null,
+        outDate: hasTime(r.OutTime) ? (r.OutDateText || null) : null,
+        outTime: hasTime(r.OutTime) ? (r.OutTimeText || hhmmToText(r.OutTime)) : null,
+        status: r.RecordStatusText || null
+      };
+    });
+    const SHOWN = 60;
+    const listed = days.slice(0, SHOWN).map(function (d) { return d.date; }).join(", ");
+    return {
+      tab: tab.label,
+      employee: who,
+      count: days.length,
+      searchRange: { fromDate: fromDateText, toDate: toDateText },
+      days,
+      message: days.length > 0
+        ? `${who ? `${who} has` : "There are"} ${days.length} date${days.length === 1 ? "" : "s"} on the ${tab.label} tab between ${fromDateText} and ${toDateText}: ${listed}${days.length > SHOWN ? ` ... and ${days.length - SHOWN} more` : ""}.`
+        : `There are no dates on the ${tab.label} tab${who ? ` for ${who}` : ""} between ${fromDateText} and ${toDateText}.`
+    };
+  }
   const gridRow = recordList.find(function (item) {
     return isoDayOf(item.DatInDate) === targetIsoDay;
   });
@@ -1012,10 +1182,12 @@
   /* A day on the Pending tab is in the approval process - the screen
    * disables every cell of it, so nothing further is loaded or sent. */
   if (inTab(gridRow, pendingTab)) {
+    const pendingRequest = await loadPendingRequest(gridRow);
     return {
       pending: true,
-      message: `${dateText} is in the pending process, so you cannot edit or submit a manual In and Out for this date.`,
-      day: describeDay(gridRow)
+      message: `${dateText} is in the pending process (status ${pendingRequest.status || "-"}), so you cannot edit or submit a manual In and Out for this date.${pendingRequest.text}`,
+      day: describeDay(gridRow),
+      pendingRequest
     };
   }
 
@@ -1081,11 +1253,21 @@
   const currentOutText = hasTime(targetRow.OutTime) ? (targetRow.OutTimeText || hhmmToText(targetRow.OutTime)) : null;
   const requestedBreaks = requestedBreaksOf(args);
 
+  /* The Valid Swipes grid also lets a recorded In or Out be emptied, and a
+   * recorded break be deleted, and the row submitted (captured). */
+  const clearIn = args.clearInTime === true;
+  const clearOut = args.clearOutTime === true;
+  const deleteBreakNos = (Array.isArray(args.deleteBreaks)
+    ? args.deleteBreaks
+    : (args.deleteBreaks !== undefined && args.deleteBreaks !== null && args.deleteBreaks !== "" ? [args.deleteBreaks] : []))
+    .map(Number);
+  const clearing = clearIn || clearOut || deleteBreakNos.length > 0;
+
   const rowEmpToken = targetRow.EmpNumber || empNumber;
   const rowDateText = targetRow.InDateText || dateText;
 
   let existingBreaks = [];
-  if (requestedBreaks.length > 0 || Number(targetRow.BreakCount) > 0) {
+  if (requestedBreaks.length > 0 || deleteBreakNos.length > 0 || Number(targetRow.BreakCount) > 0) {
     const breaksResult = await safePostJson(
       `${baseUrl}/TNAV9/api/ManualInOut/GetEmployeeBreaksByDate/`,
       { empNumber: rowEmpToken, datInDateText: rowDateText },
@@ -1124,17 +1306,27 @@
     ? ` This shift can end on the following day, so the Out Date may be ${formatCultureDate(addDays(parseCultureDate(suggestedInDateText) || parsedDate, 1))} rather than ${suggestedInDateText} - ask, do not assume.`
     : "";
 
+  /* The screen submits an In on its own, an Out on its own, or both - so
+   * one side is enough. A side is its date and its time together: a time
+   * given without its date, or a date without its time, is asked for. The
+   * side left out keeps what the grid has for it. */
+  const givesIn = !!(args.inDate || args.inTime);
+  const givesOut = !!(args.outDate || args.outTime);
   const missing = [];
-  if (!args.inDate) missing.push("In Date");
-  if (!args.inTime) missing.push("In Time");
-  if (!args.outDate) missing.push("Out Date");
-  if (!args.outTime) missing.push("Out Time");
+  if (!givesIn && !givesOut && requestedBreaks.length === 0 && !clearing) {
+    missing.push("In Date and In Time, and/or Out Date and Out Time");
+  } else {
+    if (givesIn && !args.inDate) missing.push("In Date");
+    if (givesIn && !args.inTime && !clearIn) missing.push("In Time");
+    if (givesOut && !args.outDate) missing.push("Out Date");
+    if (givesOut && !args.outTime && !clearOut) missing.push("Out Time");
+  }
   if (!args.reason) missing.push("Reason");
 
   if (missing.length > 0) {
     return {
       needsInput: true,
-      message: `You have already submitted your manual In and Out for ${dateText}. ${shiftDetailsText(shiftDetails)} Please give me the following to change it: ${missing.join(", ")}. Dates are ${dateFormatName} and times are HH:mm.${nextDayNote} You can also add one or more breaks, or change a recorded break by its number - breaks are optional.`,
+      message: `You have already submitted your manual In and Out for ${dateText}. ${shiftDetailsText(shiftDetails)} Please give me the following to change it: ${missing.join(", ")}. You can give only the In (date and time), only the Out, or both - or clear the recorded In or Out time, or delete a recorded break by its number. Dates are ${dateFormatName} and times are HH:mm.${nextDayNote} You can also add one or more breaks, or change a recorded break by its number - breaks are optional.`,
       missingFields: missing,
       shiftDetails,
       suggested: { inDate: suggestedInDateText, inTime: currentInText, outDate: suggestedOutDateText, outTime: currentOutText },
@@ -1155,23 +1347,48 @@
   /* -------------------------------------------------
    * Validate the new values (HH:mm in, HH.MM on the wire).
    * ------------------------------------------------- */
-  if (timeToHHMM(args.inTime) === null) {
+  if (args.inTime && timeToHHMM(args.inTime) === null) {
     return invalid("In Time must be in HH:mm 24-hour format, e.g. 08:30.", { missingFields: ["In Time"], shiftDetails });
   }
-  if (timeToHHMM(args.outTime) === null) {
+  if (args.outTime && timeToHHMM(args.outTime) === null) {
     return invalid("Out Time must be in HH:mm 24-hour format, e.g. 17:30.", { missingFields: ["Out Time"], shiftDetails });
   }
 
-  const parsedInDateText = parseCultureDate(args.inDate);
+  const parsedInDateText = args.inDate ? parseCultureDate(args.inDate) : parseCultureDate(suggestedInDateText);
   if (!parsedInDateText) return invalid(`Invalid In Date. Please provide it as ${dateFormatName}.`, { missingFields: ["In Date"], shiftDetails });
-  const parsedOutDateText = parseCultureDate(args.outDate);
+  const parsedOutDateText = args.outDate ? parseCultureDate(args.outDate) : parseCultureDate(suggestedOutDateText);
   if (!parsedOutDateText) return invalid(`Invalid Out Date. Please provide it as ${dateFormatName}.`, { missingFields: ["Out Date"], shiftDetails });
+
+  if (clearIn && args.inTime) {
+    return invalid(`You asked to clear the In time and also gave a new one (${args.inTime}). Please either clear it or give the new In time.`, Object.assign({ missingFields: ["In Time"] }, { shiftDetails }));
+  }
+  if (clearOut && args.outTime) {
+    return invalid(`You asked to clear the Out time and also gave a new one (${args.outTime}). Please either clear it or give the new Out time.`, Object.assign({ missingFields: ["Out Time"] }, { shiftDetails }));
+  }
+  if (clearIn && !currentInText) {
+    return invalid(`There is no In time recorded on ${dateText}, so there is nothing to clear.`, Object.assign({}, { shiftDetails }));
+  }
+  if (clearOut && !currentOutText) {
+    return invalid(`There is no Out time recorded on ${dateText}, so there is nothing to clear.`, Object.assign({}, { shiftDetails }));
+  }
+  for (let i = 0; i < deleteBreakNos.length; i++) {
+    const n = deleteBreakNos[i];
+    if (!Number.isInteger(n) || n < 1 || n > existingBreaks.length) {
+      return invalid(existingBreaks.length > 0
+        ? `Break ${deleteBreakNos[i]} cannot be deleted - ${dateText} has recorded breaks 1 to ${existingBreaks.length}.`
+        : `There are no recorded breaks on ${dateText} to delete.`, Object.assign({ recordedBreaks: shiftDetails.recordedBreaks }, { shiftDetails }));
+    }
+    if (deleteBreakNos.indexOf(n) !== i) return invalid(`Break ${n} is listed twice to delete. Give it once.`, Object.assign({}, { shiftDetails }));
+    if (requestedBreaks.some(function (b) { return Number(b.breakNo) === n; })) {
+      return invalid(`Recorded break ${n} is both deleted and changed. Please either delete it or change it.`, Object.assign({}, { shiftDetails }));
+    }
+  }
 
   const breakShapeProblem = checkBreakShapes(requestedBreaks, existingBreaks);
   if (breakShapeProblem) return Object.assign(breakShapeProblem, { shiftDetails });
 
-  const finalInText = normaliseHHMM(args.inTime);
-  const finalOutText = normaliseHHMM(args.outTime);
+  const finalInText = clearIn ? "" : (args.inTime ? normaliseHHMM(args.inTime) : (currentInText || ""));
+  const finalOutText = clearOut ? "" : (args.outTime ? normaliseHHMM(args.outTime) : (currentOutText || ""));
   const finalInDateText = formatCultureDate(parsedInDateText);
   const finalOutDateText = formatCultureDate(parsedOutDateText);
 
@@ -1183,6 +1400,176 @@
    * it is checked on the full In/Out date-times rather than the bare clock
    * values - so a shift that ends after midnight is not refused for having
    * an Out "before" its In. */
+  /* -------------------------------------------------
+   * Midnight crossover. A shift can end after midnight, on the next day's
+   * date. The screen then refuses an In that is not later than the
+   * previous day's Out, or an Out that is not earlier than the next day's
+   * In, and saves neither day (captured: 25/11 In 00:00, Out 26/11 03:00
+   * with 26/11 In 26/11 00:00 -> Status false, "Employee In-Time should
+   * be greater than shift start cutoff time", nothing submitted). The
+   * neighbouring days' times come from the grid; a neighbour still in the
+   * approval process shows no times there (-1), so its requested times
+   * come from its pending request (GetEmployeePendingApprovalData, the Pending
+   * tab's own details call).
+   * ------------------------------------------------- */
+  /* The other days the user asked for in the same request and that are
+   * not submitted yet (otherEntries). The screen submits such days together
+   * and refuses them all when two of them overlap across midnight, so their
+   * values count here as those days' own - each day's preview shows the
+   * overlap before anything is confirmed or submitted. */
+  function parseEntryDate(value) {
+    const text = String(value || "").trim();
+    const iso = /^(\d{4})-(\d{2})-(\d{2})/.exec(text);
+    return parseCultureDate(text) || (iso ? { yyyy: iso[1], mm: iso[2], dd: iso[3] } : null);
+  }
+
+  function sameRequestEntry(day) {
+    const list = Array.isArray(args.otherEntries) ? args.otherEntries : [];
+    const isClock = function (v) {
+      const m = /^(\d{1,2}):(\d{2})$/.exec(String(v || "").trim());
+      return !!m && Number(m[1]) <= 23 && Number(m[2]) <= 59;
+    };
+    for (const e of list) {
+      if (!e || typeof e !== "object") continue;
+      const entryDay = parseEntryDate(e.date || e.inDate);
+      if (!entryDay || toDateKey(entryDay) !== toDateKey(day)) continue;
+      const side = function (dateValue, timeValue) {
+        const parsed = parseEntryDate(dateValue) || (timeValue ? entryDay : null);
+        if (!parsed || !isClock(timeValue)) return null;
+        const clock = normaliseHHMM(timeValue);
+        const key = toMinuteKey(parsed, clock);
+        return key === null ? null : { key, parsed, dateText: formatCultureDate(parsed), time: clock };
+      };
+      return { in: side(e.inDate, e.inTime), out: side(e.outDate, e.outTime) };
+    }
+    return null;
+  }
+
+  async function neighbourTimes(offset, fromDay) {
+    const base = fromDay || parsedDate;
+    const day = base ? addDays(base, offset) : null;
+    if (!day) return null;
+    const row = recordList.find(function (r) { return isoDayOf(r.DatInDate) === `${day.yyyy}-${day.mm}-${day.dd}`; });
+    const entry = sameRequestEntry(day);
+    if (!row && !entry) return null;
+    if (!row) return { day, dateText: formatCultureDate(day), in: entry.in, out: entry.out, pending: false, sameRequest: true };
+    function edge(dateIso, time, text) {
+      const parsed = isoToParsed(dateIso);
+      if (!parsed || !hasTime(time)) return null;
+      const clock = text || hhmmToText(time);
+      const key = toMinuteKey(parsed, clock);
+      return key === null ? null : { key, parsed, dateText: formatCultureDate(parsed), time: clock };
+    }
+    const found = {
+      day,
+      dateText: row.InDateText || formatCultureDate(day),
+      in: edge(row.InDate, row.InTime, row.InTimeText),
+      out: edge(row.OutDate, row.OutTime, row.OutTimeText),
+      pending: false
+    };
+    const window = parseGraceWindow(row.ShiftToolTip);
+    if (inTab(row, pendingTab)) {
+      const res = await safePostJson(`${baseUrl}/TNAV9/api/ManualInOut/GetEmployeePendingApprovalData/`, {
+        empNumber: row.EmpNumber || empNumber,
+        datInDateText: row.InDateText || formatCultureDate(day)
+      }, ajaxHeaders);
+      (Array.isArray(res.body) ? res.body : []).forEach(function (p) {
+        const m = p.MClockData || {};
+        const requested = edge(m.NewDate, m.NewTime, null);
+        // Only a time inside that day's own allowed window (its ShiftToolTip) belongs to that day.
+        if (!requested || (window && (requested.key < window.start || requested.key > window.end))) return;
+        // Which time it is, as the request names it (TimeModeText: "In Time" / "Out Time").
+        const mode = String(p.TimeModeText || "");
+        if (/out/i.test(mode)) found.out = requested;
+        else if (/in/i.test(mode)) found.in = requested;
+        else return;
+        found.pending = true;
+      });
+    }
+    // A value given for that day in the same request replaces what is recorded or requested.
+    if (entry) {
+      if (entry.in) found.in = entry.in;
+      if (entry.out) found.out = entry.out;
+      found.sameRequest = !!(entry.in || entry.out);
+    }
+    return found;
+  }
+
+  /* A neighbouring day with no time yet to compare with can still be
+   * overlapped: its own allowed window (its ShiftToolTip) shows where its
+   * swipes may fall. The preview says so before anything is confirmed, so a
+   * day is not submitted that would make the neighbour's submit refused. */
+  /* The dates checked are only the ones the user entered in this request -
+   * the day being submitted and otherEntries - nothing is assumed about any
+   * other date. Each entered date is checked against the day before and the
+   * day after it: another entered date when there is one, otherwise what
+   * that day already holds (recorded in the grid, or requested and waiting
+   * for approval). A shift that ends on the following date is therefore
+   * checked against that date. Every pair is checked here, before the
+   * preview, so no entered date is submitted while two of them overlap. */
+  const dayTimesCache = {};
+  async function timesOf(day) {
+    const k = toDateKey(day);
+    if (Object.prototype.hasOwnProperty.call(dayTimesCache, k)) return dayTimesCache[k];
+    let value;
+    if (parsedDate && k === toDateKey(parsedDate)) {
+      value = {
+        day,
+        dateText,
+        in: inKey !== null ? { key: inKey, parsed: parsedInDateText, dateText: finalInDateText, time: finalInText } : null,
+        out: outKey !== null ? { key: outKey, parsed: parsedOutDateText, dateText: finalOutDateText, time: finalOutText } : null,
+        source: "current"
+      };
+    } else {
+      const found = await neighbourTimes(0, day);
+      value = found ? Object.assign(found, { source: found.sameRequest ? "entered" : (found.pending ? "pending" : "recorded") }) : null;
+    }
+    dayTimesCache[k] = value;
+    return value;
+  }
+  function sourceText(times) {
+    if (times.source === "current") return "the date you are submitting";
+    if (times.source === "entered") return "which you entered in this same request";
+    if (times.source === "pending") return "submitted and waiting for approval";
+    return "already recorded";
+  }
+
+  const enteredDays = [];
+  if (parsedDate) enteredDays.push(parsedDate);
+  (Array.isArray(args.otherEntries) ? args.otherEntries : []).forEach(function (e) {
+    const d = e && typeof e === "object" ? parseEntryDate(e.date || e.inDate) : null;
+    if (d && !enteredDays.some(function (x) { return toDateKey(x) === toDateKey(d); })) enteredDays.push(d);
+  });
+  enteredDays.sort(function (a, b) { return toDateKey(a) - toDateKey(b); });
+  const otherEnteredDates = enteredDays
+    .filter(function (d) { return !parsedDate || toDateKey(d) !== toDateKey(parsedDate); })
+    .map(formatCultureDate);
+
+  for (const day of enteredDays) {
+    const pairs = [[addDays(day, -1), day], [day, addDays(day, 1)]];
+    for (const pair of pairs) {
+      const earlier = await timesOf(pair[0]);
+      const later = await timesOf(pair[1]);
+      if (!earlier || !later || !earlier.out || !later.in || later.in.key > earlier.out.key) continue;
+      const pastMidnight = toDateKey(earlier.out.parsed) > toDateKey(earlier.day);
+      const enteredBoth = earlier.source !== "recorded" && earlier.source !== "pending"
+        && later.source !== "recorded" && later.source !== "pending";
+      // What the user is asked to change: the side that belongs to the date being submitted, else the entered one.
+      const fixLater = later.source === "current" || (earlier.source !== "current" && later.source === "entered");
+      return invalid(`The In of ${later.dateText} (${later.in.dateText} ${later.in.time}, ${sourceText(later)}) is not later than the Out of ${earlier.dateText} (${earlier.out.dateText} ${earlier.out.time}, ${sourceText(earlier)}${pastMidnight ? " - that shift runs past midnight" : ""}). The two days overlap across midnight, which the system does not accept ("Employee In-Time should be greater than shift start cutoff time")${enteredBoth ? ", so neither day is submitted" : ""}. Please give ${fixLater ? `an In for ${later.dateText} later than ${earlier.out.dateText} ${earlier.out.time}` : `an Out for ${earlier.dateText} earlier than ${later.in.dateText} ${later.in.time}`}.`, Object.assign({
+        missingFields: fixLater ? [`In Date (${later.dateText})`, `In Time (${later.dateText})`] : [`Out Date (${earlier.dateText})`, `Out Time (${earlier.dateText})`],
+        midnightCrossover: true,
+        overlap: {
+          earlierDay: { date: earlier.dateText, outDate: earlier.out.dateText, outTime: earlier.out.time, source: earlier.source },
+          laterDay: { date: later.dateText, inDate: later.in.dateText, inTime: later.in.time, source: later.source }
+        },
+        checkedDates: enteredDays.map(formatCultureDate),
+        // Nothing is submitted for any entered date while two of them overlap.
+        submitNeither: enteredBoth
+      }, { shiftDetails }));
+    }
+  }
+
   if (inKey !== null && outKey !== null && outKey <= inKey) {
     if (shiftWindow && !shiftWindow.spansNextDay) {
       return invalid(`The Out time ${finalOutText} on ${finalOutDateText} is not after the In time ${finalInText} on ${finalInDateText}. This shift runs ${shiftWindow.text} and has to be swiped between ${shiftWindow.startText} and ${shiftWindow.endText}, which is all within one day, so the Out time cannot be on the following date. Please give an Out time later than the In time.`, {
@@ -1241,14 +1628,14 @@
       };
     });
 
-  const inTimeChanged = finalInText !== currentInText;
-  const outTimeChanged = finalOutText !== currentOutText;
+  const inTimeChanged = finalInText !== (currentInText || "");
+  const outTimeChanged = finalOutText !== (currentOutText || "");
   const inDateChanged = finalInDateText !== suggestedInDateText;
   const outDateChanged = finalOutDateText !== suggestedOutDateText;
 
   const changes = [];
-  if (inTimeChanged) changes.push({ field: "In Time", from: currentInText, to: finalInText });
-  if (outTimeChanged) changes.push({ field: "Out Time", from: currentOutText, to: finalOutText });
+  if (inTimeChanged) changes.push({ field: "In Time", from: currentInText, to: finalInText || "(cleared)" });
+  if (outTimeChanged) changes.push({ field: "Out Time", from: currentOutText, to: finalOutText || "(cleared)" });
   if (inDateChanged) changes.push({ field: "In Date", from: suggestedInDateText, to: finalInDateText });
   if (outDateChanged) changes.push({ field: "Out Date", from: suggestedOutDateText, to: finalOutDateText });
   placedBreaks.forEach(function (b) {
@@ -1259,6 +1646,11 @@
       from: recorded ? `${recorded.breakIn} - ${recorded.breakOut}` : null,
       to: `${b.inText} - ${b.outText}`
     });
+  });
+
+  deleteBreakNos.forEach(function (n) {
+    const recorded = shiftDetails.recordedBreaks[n - 1];
+    changes.push({ field: `Break ${n}`, from: recorded ? `${recorded.breakIn} - ${recorded.breakOut}` : null, to: "(deleted)" });
   });
 
   if (changes.length === 0) {
@@ -1279,8 +1671,8 @@
     // True when the Out lands on the date after the In - worth showing.
     outIsNextDay: finalOutDateText !== finalInDateText,
     warnings,
-    inTime: { current: currentInText, updated: finalInText },
-    outTime: { current: currentOutText, updated: finalOutText },
+    inTime: { current: currentInText, updated: finalInText || null, cleared: clearIn },
+    outTime: { current: currentOutText, updated: finalOutText || null, cleared: clearOut },
     breaks: placedBreaks.map(function (b) {
       return {
         changesRecordedBreak: b.breakNo,
@@ -1290,6 +1682,7 @@
         endDate: formatCultureDate(b.end)
       };
     }),
+    deletedBreaks: deleteBreakNos.map(function (n) { return shiftDetails.recordedBreaks[n - 1]; }),
     recordedBreaks: shiftDetails.recordedBreaks,
     reason: args.reason,
     commentHistory,
@@ -1301,13 +1694,33 @@
   /* -------------------------------------------------
    * Step 6: nothing is written until the user confirms.
    * ------------------------------------------------- */
-  if (!args.confirmed) {
+  /* The submit only goes ahead for the exact values the user saw in a
+   * preview: the preview carries a token made from those values, and
+   * confirmed:true without that token - or with one for other values -
+   * returns the preview again instead of submitting. Every check above has
+   * then run and been shown before the user is asked to confirm. */
+  const previewToken = (function (text) {
+    let h = 2166136261;
+    for (let i = 0; i < text.length; i++) {
+      h ^= text.charCodeAt(i);
+      h = Math.imul(h, 16777619) >>> 0;
+    }
+    return h.toString(36);
+  })(JSON.stringify(previewData));
+  const confirmedThisPreview = args.confirmed === true && String(args.previewToken || "") === previewToken;
+
+  if (!confirmedThisPreview) {
     return {
       needsConfirmation: true,
+      previewToken,
+      // confirmed:true came without this preview's token: nothing was submitted - show this preview and ask again.
+      notSubmitted: args.confirmed === true ? "Nothing was submitted - these values have not been confirmed by the user yet. Show this preview and ask for confirmation." : undefined,
       preview: previewData,
-      message: warnings.length > 0
+      shiftDetails,
+      // The shift is shown with the preview too - the user may have given every value up front.
+      message: shiftDetailsText(shiftDetails) + (otherEnteredDates.length > 0 ? ` Checked for midnight overlap together with the other date(s) you entered: ${otherEnteredDates.join(", ")} - no overlap.` : "") + " " + (warnings.length > 0
         ? "Please review the changes below - note the warnings - and confirm before I update your manual In and Out."
-        : "Please review the changes below and confirm before I update your manual In and Out.",
+        : "Please review the changes below and confirm before I update your manual In and Out."),
       confirmationPrompt: "Are you sure you want to save these changes? Reply yes to update, or no to make further changes."
     };
   }
@@ -1320,13 +1733,27 @@
    * each changed cell ChangeCell_Highlight. The In/Out old values
    * (InOldTime, OutOldTime, ...) stay exactly as the grid gave them.
    * ------------------------------------------------- */
+  /* An emptied cell goes out as the grid's own "no time" value - what
+   * the page's rows carry where nothing was swiped (captured: the cleared
+   * Out sent as OutTime -1 with OutTimeText ""). */
+  const emptyTime = (function () {
+    for (const r of tabRows) {
+      if (r.InTimeText === "" && typeof r.InTime === "number") return r.InTime;
+      if (r.OutTimeText === "" && typeof r.OutTime === "number") return r.OutTime;
+    }
+    return typeof targetRow.NextInTime === "number" ? targetRow.NextInTime : -1;
+  })();
+  // The delete ActionType from the screen's scripts; failing that, the value the captured delete carried.
+  const scriptDeleteAction = deleteBreakNos.length > 0 ? await readBreakDeleteAction(pageHtml) : null;
+  const deleteAction = scriptDeleteAction !== null ? scriptDeleteAction : 3;
+
   const inChanged = inTimeChanged || inDateChanged;
   const outChanged = outTimeChanged || outDateChanged;
   const updatedRow = Object.assign({}, targetRow, {
     InDate: formatIsoDateOnly(parsedInDateText),
     OutDate: formatIsoDateOnly(parsedOutDateText),
-    InTime: inChanged ? toWireTime(finalInText) : targetRow.InTime,
-    OutTime: outChanged ? toWireTime(finalOutText) : targetRow.OutTime,
+    InTime: clearIn ? emptyTime : (inChanged ? toWireTime(finalInText) : targetRow.InTime),
+    OutTime: clearOut ? emptyTime : (outChanged ? toWireTime(finalOutText) : targetRow.OutTime),
     InTimeText: finalInText,
     OutTimeText: finalOutText,
     InDateText: finalInDateText,
@@ -1341,7 +1768,11 @@
    * toValidSwipeRow while BreakCount kept the day's real count - so the
    * loaded list is always carried, with any change or addition merged in. */
   updatedRow.DABreakList = mergeBreaks(existingBreaks, placedBreaks, targetRow);
-  updatedRow.BreakCount = updatedRow.DABreakList.length > 0 ? updatedRow.DABreakList.length : targetRow.BreakCount;
+  deleteBreakNos.forEach(function (n) {
+    updatedRow.DABreakList[n - 1] = deletedBreak(updatedRow.DABreakList[n - 1], deleteAction, emptyTime);
+  });
+  // BreakCount is the breaks left standing (captured: 0 after deleting the day's only break).
+  updatedRow.BreakCount = updatedRow.DABreakList.length > 0 ? updatedRow.DABreakList.length - deleteBreakNos.length : targetRow.BreakCount;
 
   // The captured submit posts the Valid Swipes page on screen - nothing else.
   const detailList = tabRows.map(function (row, idx) {
@@ -1507,12 +1938,13 @@
 
   return {
     success: true,
-    message: (submitRowResult && submitRowResult.Message)
-      ? `Your manual In and Out for ${dateText} has been updated. ${submitRowResult.Message}`
-      : (submitResult && submitResult.Message) || `Your manual In and Out for ${dateText} has been updated successfully.`,
-    updated: previewData,
-    saved: savedRow ? describeDay(savedRow) : null,
+    // No status here: the server's per-day text ("Record submitted for approval." ...) and the
+    // day's tab/status are left out of the success answer; the status is asked for separately.
+    message: `Your manual In and Out for ${dateText} has been updated successfully.`,
+    updated: (function (values) { delete values.commentHistory; delete values.tab; return values; })(Object.assign({}, previewData)),
+    // What the grid now holds for the day - without its status or tab; the status is asked for separately.
+    saved: savedRow ? (function (day) { delete day.status; delete day.tabs; return day; })(describeDay(savedRow)) : null,
     summary,
-    apiResponse: submitResult
+    apiResponse: { successCount: submitResult.successCount, failCount: submitResult.failCount }
   };
 });

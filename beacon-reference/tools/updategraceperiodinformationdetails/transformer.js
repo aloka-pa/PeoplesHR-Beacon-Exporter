@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("TNA/GracePeriodInformation.aspx")
+  )
+) {
+  return { error: true, message: "You do not have access to Grace Period Information Page. Please contact HR Admin." };
+}
   const save = await BeaconBar.executeFunction('module')({
     "ctl00$main$RadScriptManager": "ctl00$action$UpdatePanel2|ctl00$action$ButtonPanel$butSave$imgbtnSave",
     "ctl00_main_RadScriptManager_HiddenField": "",

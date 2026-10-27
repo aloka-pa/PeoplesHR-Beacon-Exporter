@@ -12,15 +12,15 @@
   "status": "live",
   "signature": "updateRoundingInformation",
   "createdAt": "2025-06-05T14:43:58.528Z",
-  "updatedAt": "2025-06-05T14:43:58.528Z",
+  "updatedAt": "2026-10-23T05:48:54.408Z",
   "assignedAgents": [
     {
       "id": "690dc571931a2d61ba0b1bcd",
       "name": "Attendance"
     }
   ],
-  "contentHash": "726785a4df736dde6fb2a21097a48936f735389b6dffc0c742073c6b7469a3e3",
-  "lastExportedAt": "2026-10-07T06:32:16.893Z",
+  "contentHash": "4508c9c153698e7d7fd4432904932e5876c0010ffbd6c8334f93d14e6e2d95b3",
+  "lastExportedAt": "2026-10-27T03:27:10.592Z",
   "raw": {
     "basic": {
       "_id": "690dc569931a2d61ba0b19af",
@@ -36,11 +36,11 @@
         "args": [],
         "isAdvanced": true,
         "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"roundingPatternName\": {\n      \"type\": \"string\",\n      \"description\": \"The name of the rounding pattern (e.g., 'Beacon')\"\n    },\n    \"pattern\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"General\",\n        \"Range\"\n      ],\n      \"description\": \"The rounding pattern type\"\n    },\n    \"method\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"1\",\n        \"2\",\n        \"3\"\n      ],\n      \"description\": \"Specifies the rounding method: Roundup (1), RoundDown (2), or Nearest (3). Only these values are accepted.\",\n      \"examples\": [\n        \"1\",\n        \"2\",\n        \"3\"\n      ]\n    },\n    \"numVal\": {\n      \"type\": \"string\",\n      \"description\": \"The rounding value time (used in General pattern) if the change the genral compulsary take this value ask user consent and does not take user special characters \",\n      \"pattern\": \"^\\\\d{2}:\\\\d{2}$\"\n    },\n    \"numFrom\": {\n      \"type\": \"string\",\n      \"description\": \"The start time of the range (used in Range pattern) Range value must be a value between From and To values and must not be the same value and does not take user special characters.\",\n      \"pattern\": \"^\\\\d{2}:\\\\d{2}$\"\n    },\n    \"numTo\": {\n      \"type\": \"string\",\n      \"description\": \"The end time of the range (used in Range pattern) Range value must be a value between From and To values and must not be the same value and does not take user special characters.\",\n      \"pattern\": \"^\\\\d{2}:\\\\d{2}$\"\n    },\n    \"textnumValue\": {\n      \"type\": \"string\",\n      \"description\": \"The value applied for the range (used in Range pattern) and does not take user special characters and be text numValue in between start time of the range to end time of the range\",\n      \"pattern\": \"^\\\\d{2}:\\\\d{2}$\"\n    }\n  },\n  \"required\": [\n    \"roundingPatternName\",\n    \"pattern\"\n  ],\n  \"if\": {\n    \"properties\": {\n      \"pattern\": {\n        \"const\": \"General\"\n      }\n    }\n  },\n  \"then\": {\n    \"required\": [\n      \"method\",\n      \"numVal\"\n    ]\n  },\n  \"else\": {\n    \"required\": [\n      \"numFrom\",\n      \"numTo\",\n      \"numValue\"\n    ]\n  }\n}",
-        "_id": "6841ad2e1ed253048a7683c3"
+        "_id": "6adaf54639afe1c0f0a92065"
       },
-      "by": "1927",
+      "by": "44101",
       "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
-      "transformer": "(async function (data, args, reqOptions) {\n    const dats = await BeaconBar.executeFunction(\"saveRoundinginformation\")(args);\n    return { message: \"successfully updated\" }\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n \n    const dats = await BeaconBar.executeFunction(\"saveRoundinginformation\")(args);\n    return { message: \"successfully updated\" }\n})",
       "groupName": "",
       "tags": [
         "Attendance",
@@ -50,8 +50,26 @@
       "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
       "status": "live",
       "createdAt": "2025-06-05T14:43:58.528Z",
-      "updatedAt": "2025-06-05T14:43:58.528Z",
-      "__v": 0,
+      "updatedAt": "2026-10-23T05:48:54.408Z",
+      "__v": 2,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "strictToolUse": false,
+      "toolType": "code",
       "agents": [
         {
           "_id": "690dc571931a2d61ba0b1bcd",
@@ -65,11 +83,16 @@
       "args": [],
       "isAdvanced": true,
       "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"roundingPatternName\": {\n      \"type\": \"string\",\n      \"description\": \"The name of the rounding pattern (e.g., 'Beacon')\"\n    },\n    \"pattern\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"General\",\n        \"Range\"\n      ],\n      \"description\": \"The rounding pattern type\"\n    },\n    \"method\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"1\",\n        \"2\",\n        \"3\"\n      ],\n      \"description\": \"Specifies the rounding method: Roundup (1), RoundDown (2), or Nearest (3). Only these values are accepted.\",\n      \"examples\": [\n        \"1\",\n        \"2\",\n        \"3\"\n      ]\n    },\n    \"numVal\": {\n      \"type\": \"string\",\n      \"description\": \"The rounding value time (used in General pattern) if the change the genral compulsary take this value ask user consent and does not take user special characters \",\n      \"pattern\": \"^\\\\d{2}:\\\\d{2}$\"\n    },\n    \"numFrom\": {\n      \"type\": \"string\",\n      \"description\": \"The start time of the range (used in Range pattern) Range value must be a value between From and To values and must not be the same value and does not take user special characters.\",\n      \"pattern\": \"^\\\\d{2}:\\\\d{2}$\"\n    },\n    \"numTo\": {\n      \"type\": \"string\",\n      \"description\": \"The end time of the range (used in Range pattern) Range value must be a value between From and To values and must not be the same value and does not take user special characters.\",\n      \"pattern\": \"^\\\\d{2}:\\\\d{2}$\"\n    },\n    \"textnumValue\": {\n      \"type\": \"string\",\n      \"description\": \"The value applied for the range (used in Range pattern) and does not take user special characters and be text numValue in between start time of the range to end time of the range\",\n      \"pattern\": \"^\\\\d{2}:\\\\d{2}$\"\n    }\n  },\n  \"required\": [\n    \"roundingPatternName\",\n    \"pattern\"\n  ],\n  \"if\": {\n    \"properties\": {\n      \"pattern\": {\n        \"const\": \"General\"\n      }\n    }\n  },\n  \"then\": {\n    \"required\": [\n      \"method\",\n      \"numVal\"\n    ]\n  },\n  \"else\": {\n    \"required\": [\n      \"numFrom\",\n      \"numTo\",\n      \"numValue\"\n    ]\n  }\n}",
-      "_id": "6841ad2e1ed253048a7683c3"
+      "_id": "6adaf54639afe1c0f0a92065"
     },
     "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
-    "transformer": "(async function (data, args, reqOptions) {\n    const dats = await BeaconBar.executeFunction(\"saveRoundinginformation\")(args);\n    return { message: \"successfully updated\" }\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n \n    const dats = await BeaconBar.executeFunction(\"saveRoundinginformation\")(args);\n    return { message: \"successfully updated\" }\n})",
     "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
-    "test": {}
+    "test": {
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
+    }
   }
 }

@@ -12,15 +12,15 @@
   "status": "live",
   "signature": "getAttendanceSummaryDetails",
   "createdAt": "2025-05-19T06:28:33.808Z",
-  "updatedAt": "2026-01-08T03:53:50.847Z",
+  "updatedAt": "2026-10-23T09:13:53.046Z",
   "assignedAgents": [
     {
       "id": "690dc571931a2d61ba0b1bcd",
       "name": "Attendance"
     }
   ],
-  "contentHash": "cfd7f07510ed6c72c90c9fe0f2f739d50de7dddf43b0db751b3a60509df60d76",
-  "lastExportedAt": "2026-10-07T06:32:16.271Z",
+  "contentHash": "91aeb90a12f232d88e42e6e7579eb9f7d56e1e0bf72a32e6d7b48adcad06ee6f",
+  "lastExportedAt": "2026-10-27T03:27:10.542Z",
   "raw": {
     "basic": {
       "_id": "690dc567931a2d61ba0b17c6",
@@ -66,12 +66,12 @@
           }
         ],
         "isAdvanced": false,
-        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-        "_id": "682acf9181dc680489a63a97"
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6adb2551c8ecc61210cd88e6"
       },
-      "by": "10308",
+      "by": "44101",
       "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
-      "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  let rawPayload;\n\n  if (args.rosterCode) {\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"2\",\n      RosterCode: args.rosterCode,\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0,\n    };\n  } else {\n    const requestOptions = {\n      method: \"GET\",\n      headers: myHeaders,\n      redirect: \"follow\"\n    };\n\n    const response1 = await fetch(\n      `${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`,\n      requestOptions\n    );\n\n    const details = await response1.json();\n    const empNumber = details?.Message || \"\";\n\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"1\",\n      EmpNumber: empNumber,\n      RosterCode: \"\",\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0,\n    };\n  }\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      accept: \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\",\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\",\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/${reqOptions.sl}/tnav9/api/AttendanceSummary/GetGridDataByCriteria/`,\n    requestOptions1\n  );\n\n  const details1 = await response2.json();\n  const attendanceSummary = details1.AttendanceSummaryDetailList.map((entry) => {\n    return {\n      Date: entry.DatInDateString?.split(\" \")[0] || \"-\",\n      Shift: entry.ShiftAbbreviation || \"OFF\",\n      InDate: entry.InDateText || \"-\",\n      InTime: entry.InTimeText || \"-\",\n      OutDate: entry.OutDateText || \"-\",\n      OutTime: entry.OutTimeText || \"-\",\n      Breaks: entry.BreakCount || 0,\n      Overtime: formatTime(entry.TotalOvertime),\n      EarlyMin: formatTime(entry.StartLate),\n      LateMin: formatTime(entry.EndLate),\n      WorkHours: formatTime(entry.WorkHours),\n      Nopay: entry.NopayDays ? entry.NopayDays.toFixed(2) : \"0.00\",\n      Leave: entry.LeaveDaysLabelString || \"\"\n      // Notifications: entry.Message || \"\",\n      // Comment: entry.Comment || \"\",\n    };\n  });\n\n  function formatTime(value) {\n    if (!value || value === 0) return \"00:00\";\n    const hours = Math.floor(value);\n    const minutes = Math.round((value - hours) * 60);\n    return `${String(hours).padStart(2, \"0\")}:${String(minutes).padStart(2, \"0\")}`;\n  }\n  if (attendanceSummary.length >= 5) {\n    await BeaconBar.executeFunction(\"downloadcsv\")(attendanceSummary);\n    return attendanceSummary.slice(0, 5);\n  }\n\n  return attendanceSummary;\n});\n",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (\n  !BeaconBar.user?.metaData?.menus?.some(menu =>\n    menu.includes(\"TNAV9/AttendanceSummary/AttendanceSummary/0?mvc=1\")\n  )\n) {\n  return { error: true, message: \"You do not have access to Attendance Summary Page. Please contact HR Admin.\" };\n}\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  let rawPayload;\n\n  if (args.rosterCode) {\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"2\",\n      RosterCode: args.rosterCode,\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0,\n    };\n  } else {\n    const requestOptions = {\n      method: \"GET\",\n      headers: myHeaders,\n      redirect: \"follow\"\n    };\n\n    const response1 = await fetch(\n      `${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`,\n      requestOptions\n    );\n\n    const details = await response1.json();\n    const empNumber = details?.Message || \"\";\n\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"1\",\n      EmpNumber: empNumber,\n      RosterCode: \"\",\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0,\n    };\n  }\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      accept: \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\",\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\",\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/${reqOptions.sl}/tnav9/api/AttendanceSummary/GetGridDataByCriteria/`,\n    requestOptions1\n  );\n\n  const details1 = await response2.json();\n  const attendanceSummary = details1.AttendanceSummaryDetailList.map((entry) => {\n    return {\n      Date: entry.DatInDateString?.split(\" \")[0] || \"-\",\n      Shift: entry.ShiftAbbreviation || \"OFF\",\n      InDate: entry.InDateText || \"-\",\n      InTime: entry.InTimeText || \"-\",\n      OutDate: entry.OutDateText || \"-\",\n      OutTime: entry.OutTimeText || \"-\",\n      Breaks: entry.BreakCount || 0,\n      Overtime: formatTime(entry.TotalOvertime),\n      EarlyMin: formatTime(entry.StartLate),\n      LateMin: formatTime(entry.EndLate),\n      WorkHours: formatTime(entry.WorkHours),\n      Nopay: entry.NopayDays ? entry.NopayDays.toFixed(2) : \"0.00\",\n      Leave: entry.LeaveDaysLabelString || \"\"\n      // Notifications: entry.Message || \"\",\n      // Comment: entry.Comment || \"\",\n    };\n  });\n\n  function formatTime(value) {\n    if (!value || value === 0) return \"00:00\";\n    const hours = Math.floor(value);\n    const minutes = Math.round((value - hours) * 60);\n    return `${String(hours).padStart(2, \"0\")}:${String(minutes).padStart(2, \"0\")}`;\n  }\n  if (attendanceSummary.length >= 5) {\n    await BeaconBar.executeFunction(\"downloadcsv\")(attendanceSummary);\n    return attendanceSummary.slice(0, 5);\n  }\n\n  return attendanceSummary;\n});\n",
       "groupName": "",
       "tags": [
         "Attendance",
@@ -81,9 +81,26 @@
       "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
       "status": "live",
       "createdAt": "2025-05-19T06:28:33.808Z",
-      "updatedAt": "2026-01-08T03:53:50.847Z",
-      "__v": 3,
+      "updatedAt": "2026-10-23T09:13:53.046Z",
+      "__v": 6,
       "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "outputExample": {},
+      "sanity": {
+        "apiResponse": []
+      },
+      "strictToolUse": false,
+      "toolType": "code",
       "agents": [
         {
           "_id": "690dc571931a2d61ba0b1bcd",
@@ -125,14 +142,17 @@
         }
       ],
       "isAdvanced": false,
-      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-      "_id": "682acf9181dc680489a63a97"
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6adb2551c8ecc61210cd88e6"
     },
     "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return [];\n      })`\n  };\n})",
-    "transformer": "(async function (data, args, reqOptions) {\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  let rawPayload;\n\n  if (args.rosterCode) {\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"2\",\n      RosterCode: args.rosterCode,\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0,\n    };\n  } else {\n    const requestOptions = {\n      method: \"GET\",\n      headers: myHeaders,\n      redirect: \"follow\"\n    };\n\n    const response1 = await fetch(\n      `${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`,\n      requestOptions\n    );\n\n    const details = await response1.json();\n    const empNumber = details?.Message || \"\";\n\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"1\",\n      EmpNumber: empNumber,\n      RosterCode: \"\",\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0,\n    };\n  }\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      accept: \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\",\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\",\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/${reqOptions.sl}/tnav9/api/AttendanceSummary/GetGridDataByCriteria/`,\n    requestOptions1\n  );\n\n  const details1 = await response2.json();\n  const attendanceSummary = details1.AttendanceSummaryDetailList.map((entry) => {\n    return {\n      Date: entry.DatInDateString?.split(\" \")[0] || \"-\",\n      Shift: entry.ShiftAbbreviation || \"OFF\",\n      InDate: entry.InDateText || \"-\",\n      InTime: entry.InTimeText || \"-\",\n      OutDate: entry.OutDateText || \"-\",\n      OutTime: entry.OutTimeText || \"-\",\n      Breaks: entry.BreakCount || 0,\n      Overtime: formatTime(entry.TotalOvertime),\n      EarlyMin: formatTime(entry.StartLate),\n      LateMin: formatTime(entry.EndLate),\n      WorkHours: formatTime(entry.WorkHours),\n      Nopay: entry.NopayDays ? entry.NopayDays.toFixed(2) : \"0.00\",\n      Leave: entry.LeaveDaysLabelString || \"\"\n      // Notifications: entry.Message || \"\",\n      // Comment: entry.Comment || \"\",\n    };\n  });\n\n  function formatTime(value) {\n    if (!value || value === 0) return \"00:00\";\n    const hours = Math.floor(value);\n    const minutes = Math.round((value - hours) * 60);\n    return `${String(hours).padStart(2, \"0\")}:${String(minutes).padStart(2, \"0\")}`;\n  }\n  if (attendanceSummary.length >= 5) {\n    await BeaconBar.executeFunction(\"downloadcsv\")(attendanceSummary);\n    return attendanceSummary.slice(0, 5);\n  }\n\n  return attendanceSummary;\n});\n",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (\n  !BeaconBar.user?.metaData?.menus?.some(menu =>\n    menu.includes(\"TNAV9/AttendanceSummary/AttendanceSummary/0?mvc=1\")\n  )\n) {\n  return { error: true, message: \"You do not have access to Attendance Summary Page. Please contact HR Admin.\" };\n}\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"*/*\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"cache-control\", \"no-cache\");\n  myHeaders.append(\"Content-Type\", \"application/x-www-form-urlencoded\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n  let rawPayload;\n\n  if (args.rosterCode) {\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"2\",\n      RosterCode: args.rosterCode,\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0,\n    };\n  } else {\n    const requestOptions = {\n      method: \"GET\",\n      headers: myHeaders,\n      redirect: \"follow\"\n    };\n\n    const response1 = await fetch(\n      `${location.origin}/${reqOptions.sl}/CommonComponents/Search/GetEmpNumberFromTypeahead/?loggedEmpNumber=${window.empLog.empNumber2}&empNumber=${args.id}&key=${window.empLog.keyValue}&_=${Date.now()}`,\n      requestOptions\n    );\n\n    const details = await response1.json();\n    const empNumber = details?.Message || \"\";\n\n    rawPayload = {\n      FromDateText: args.fromDate,\n      ToDateText: args.toDate,\n      IsGroupByEmployee: true,\n      FilterMode: \"1\",\n      EmpNumber: empNumber,\n      RosterCode: \"\",\n      callBackId: 4,\n      isShowShiftHoursInShiftAdjEnabled: false,\n      IsClientUoc: false,\n      PageMode: 0,\n    };\n  }\n\n  const requestOptions1 = {\n    method: \"POST\",\n    headers: {\n      accept: \"*/*\",\n      \"accept-language\": \"en-US,en;q=0.9\",\n      \"cache-control\": \"no-cache\",\n      \"Content-Type\": \"application/json\",\n      \"x-requested-with\": \"XMLHttpRequest\",\n    },\n    body: JSON.stringify(rawPayload),\n    redirect: \"follow\",\n  };\n\n  const response2 = await fetch(\n    `${location.origin}/${reqOptions.sl}/tnav9/api/AttendanceSummary/GetGridDataByCriteria/`,\n    requestOptions1\n  );\n\n  const details1 = await response2.json();\n  const attendanceSummary = details1.AttendanceSummaryDetailList.map((entry) => {\n    return {\n      Date: entry.DatInDateString?.split(\" \")[0] || \"-\",\n      Shift: entry.ShiftAbbreviation || \"OFF\",\n      InDate: entry.InDateText || \"-\",\n      InTime: entry.InTimeText || \"-\",\n      OutDate: entry.OutDateText || \"-\",\n      OutTime: entry.OutTimeText || \"-\",\n      Breaks: entry.BreakCount || 0,\n      Overtime: formatTime(entry.TotalOvertime),\n      EarlyMin: formatTime(entry.StartLate),\n      LateMin: formatTime(entry.EndLate),\n      WorkHours: formatTime(entry.WorkHours),\n      Nopay: entry.NopayDays ? entry.NopayDays.toFixed(2) : \"0.00\",\n      Leave: entry.LeaveDaysLabelString || \"\"\n      // Notifications: entry.Message || \"\",\n      // Comment: entry.Comment || \"\",\n    };\n  });\n\n  function formatTime(value) {\n    if (!value || value === 0) return \"00:00\";\n    const hours = Math.floor(value);\n    const minutes = Math.round((value - hours) * 60);\n    return `${String(hours).padStart(2, \"0\")}:${String(minutes).padStart(2, \"0\")}`;\n  }\n  if (attendanceSummary.length >= 5) {\n    await BeaconBar.executeFunction(\"downloadcsv\")(attendanceSummary);\n    return attendanceSummary.slice(0, 5);\n  }\n\n  return attendanceSummary;\n});\n",
     "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
     "test": {
-      "sampleRequest": {}
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
     }
   }
 }

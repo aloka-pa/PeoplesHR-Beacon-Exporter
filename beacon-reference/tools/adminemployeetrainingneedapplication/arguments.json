@@ -99,6 +99,45 @@
         "type": "string",
         "description": "The benefit of this training need to the company. Whether this is mandatory is a per-client Training & Development configuration setting (IsPotentialToCompMandatory) and can change between orgs - do not assume it's required and do not ask the Admin for it upfront. Call this tool with whatever is known once every named employee is confirmed to exist and the need is identified; if ValidateNeedApplication rejects the submission with 'Please specify the benefit to the company.', that confirms it's mandatory for this org - ask the Admin for it then and call this tool again with the same arguments plus benefitToCompany filled in."
       }
+    },
+    {
+      "name": "removeAttachments",
+      "type": "array",
+      "required": false,
+      "defaultValue": null,
+      "description": "Whenever the user attaches a file, call this tool again on that same turn, with whatever arguments are already known - the chat hands this tool a file's contents only on the turn it was attached, so never just acknowledge a file, ask a question first, or call another tool instead; a file this tool never sees on its own turn has to be attached again. File names to take off this application, exactly as shown in the preview's attachments list or as attached in the chat - e.g. when the admin says 'remove images.png'. Attachments are never passed as arguments: every file the admin attaches in the chat is picked up automatically and added to the application (several files are allowed, in one message or across several). A removed file stays out on later calls even if the chat keeps listing it, so there is no need to send it again; attaching it again brings it back. A file this tool rejected for its type or size is already left out - never put it here. Never tell the admin to start a new chat to get rid of a file.",
+      "advanced": true,
+      "raw": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Whenever the user attaches a file, call this tool again on that same turn, with whatever arguments are already known - the chat hands this tool a file's contents only on the turn it was attached, so never just acknowledge a file, ask a question first, or call another tool instead; a file this tool never sees on its own turn has to be attached again. File names to take off this application, exactly as shown in the preview's attachments list or as attached in the chat - e.g. when the admin says 'remove images.png'. Attachments are never passed as arguments: every file the admin attaches in the chat is picked up automatically and added to the application (several files are allowed, in one message or across several). A removed file stays out on later calls even if the chat keeps listing it, so there is no need to send it again; attaching it again brings it back. A file this tool rejected for its type or size is already left out - never put it here. Never tell the admin to start a new chat to get rid of a file."
+      }
+    },
+    {
+      "name": "replaceAttachments",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set true when the admin attaches a new file to REPLACE the earlier one(s) ('use this document instead', 'replace the attachment with this'), on the call for the message that carries the new file: the file(s) attached in that message become the only attachments and every earlier file is left out. Leave unset when they are adding another file - files are added by default. If the new file was attached in an earlier message, use removeAttachments with the old file's name instead.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Set true when the admin attaches a new file to REPLACE the earlier one(s) ('use this document instead', 'replace the attachment with this'), on the call for the message that carries the new file: the file(s) attached in that message become the only attachments and every earlier file is left out. Leave unset when they are adding another file - files are added by default. If the new file was attached in an earlier message, use removeAttachments with the old file's name instead."
+      }
+    },
+    {
+      "name": "confirmed",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": null,
+      "description": "Set true only after the admin has reviewed a summary of this exact application (employees, need, objective, relevance to job, benefits, attachments) and explicitly agreed to submit it. Leave unset/false on the first call - the tool returns status CONFIRMATION_REQUIRED with a preview and the server's own confirmation prompt (mirrors the real form's 'Are you sure you want to submit this training need?' dialog, shown right before Save) instead of submitting anything. Nothing is validated or saved until this is true (attached files are uploaded as soon as they are attached, as on the real form, but only become part of the application when it is saved). Call this tool again with confirmed:true and the exact same arguments once the admin agrees.",
+      "advanced": true,
+      "raw": {
+        "type": "boolean",
+        "description": "Set true only after the admin has reviewed a summary of this exact application (employees, need, objective, relevance to job, benefits, attachments) and explicitly agreed to submit it. Leave unset/false on the first call - the tool returns status CONFIRMATION_REQUIRED with a preview and the server's own confirmation prompt (mirrors the real form's 'Are you sure you want to submit this training need?' dialog, shown right before Save) instead of submitting anything. Nothing is validated or saved until this is true (attached files are uploaded as soon as they are attached, as on the real form, but only become part of the application when it is saved). Call this tool again with confirmed:true and the exact same arguments once the admin agrees."
+      }
     }
   ]
 }

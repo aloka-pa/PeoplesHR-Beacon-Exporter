@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("TNA/RoundingInformation.aspx")
+  )
+) {
+  return { error: true, message: "You do not have access to Rounding Information Page. Please contact HR Admin." };
+}
   // const details = await BeaconBar.executeFunction('getmodule')(`${reqOptions.sl}/TNA/OvertimeDefintion`);
 
   const updateurl = await BeaconBar.executeFunction("updateUrlParams")('TNA/OvertimeDefintion.aspx');

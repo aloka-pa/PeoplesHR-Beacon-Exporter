@@ -1,4 +1,5 @@
 (async function (data, args, reqOptions) {
+
   const details = await (args.type === "attendance in and out"
   ? await BeaconBar.executeFunction('Attendance')() 
   : args.type === "team attendance"

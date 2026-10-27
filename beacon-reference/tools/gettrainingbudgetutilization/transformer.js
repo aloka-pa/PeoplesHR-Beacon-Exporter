@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("TNDV9/TrainingBudget/Index?mvc=1")
+  )
+) {
+  return { error: true, message: "You do not have access to Budget Utilization Page. Please contact HR Admin." };
+}
   try {
     // Allow user to specify year (empty string "" means current/active year)
     const year = args.year !== undefined ? args.year : "";

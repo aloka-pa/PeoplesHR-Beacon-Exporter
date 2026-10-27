@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("TNDV9/TrainingBudget/Index?mvc=1")
+  )
+) {
+  return { error: true, message: "You do not have access to Budget Allocation Page. Please contact HR Admin." };
+}
   debugger;
   try {
     // Optional: Allow user to specify loadtype (defaults to "0" for active year)

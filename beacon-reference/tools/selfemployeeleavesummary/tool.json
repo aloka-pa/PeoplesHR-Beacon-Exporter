@@ -12,15 +12,15 @@
   "status": "live",
   "signature": "selfEmployeeLeaveSummary",
   "createdAt": "2025-08-18T08:24:17.015Z",
-  "updatedAt": "2025-08-18T08:24:17.015Z",
+  "updatedAt": "2026-10-26T05:56:44.845Z",
   "assignedAgents": [
     {
       "id": "690dc572931a2d61ba0b1c72",
       "name": "AbsenceManagementEmployee"
     }
   ],
-  "contentHash": "ffe26ba4bbd73ed0897a4ec4804045268e29dd52315704e845852b76c6bca617",
-  "lastExportedAt": "2026-10-07T06:32:16.710Z",
+  "contentHash": "564d770b16a607812f83c9dd7285cd0fb57503b00d2cc7ad4ac73c18c9e036d2",
+  "lastExportedAt": "2026-10-27T03:27:10.507Z",
   "raw": {
     "basic": {
       "_id": "690dc56b931a2d61ba0b1ab9",
@@ -43,12 +43,12 @@
           }
         ],
         "isAdvanced": false,
-        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-        "_id": "68a2e3314b46c47085f7295f"
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6adeeb9ce5f013a62a913b3c"
       },
-      "by": "1927",
+      "by": "44101",
       "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return []\n    })`\n  }\n})\n",
-      "transformer": "(async function (data, args, reqOptions) {\n  const empKey = await BeaconBar.executeFunction(\"employeeLeaveApplication\")();\n  const myHeaders = new Headers({\n    \"__cfafvalue\": window.csrf,\n    \"accept\": \"application/json, text/javascript, */*; q=0.01\",\n    \"accept-language\": \"en-US,en;q=0.9\",\n    \"Content-Type\": \"application/x-www-form-urlencoded\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n  });\n\n  const raw = new URLSearchParams({\n    EmpNumber: empKey,\n    LeaveYear: args.year,\n    IsReject: \"0\",\n    _search: \"false\",\n    nd: Date.now().toString(),\n    rows: \"1000\",\n    page: \"1\",\n    sidx: \"\",\n    sord: \"asc\"\n  }).toString();\n\n  const url = `${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveHistory/GetLeaveStatusDetails`;\n  const request = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw\n  };\n\n  const response = await fetch(url, request);\n  const datass = await response.json();\n\n  const summarDetails = datass.map(item => ({\n    fromDate: item.LDetail.FromDate,\n    toDate: item.LDetail.ToDate,\n    appliedDate: item.LDetail.EditDate,\n    leaveType: item.LeaveTypeName,\n    days: item.LDetail.LeaveAmountText,\n    status: item.Status.replace(/<\\/?[^>]+(>|$)/g, \"\"),\n    reasonForLeave: item.LeaveReason || item.Comment || \"\",\n    coveringEmployee: item.LeaveActingEmp\n  }));\n  return summarDetails;\n})\n",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (\n  !BeaconBar.user?.metaData?.menus?.some(menu =>\n    menu.includes(absence/ess/SubordinateLeaveSummary.aspx\")\n  )\n) {\n  return { error: true, message: \"You do not have access to Leave Summary Page. Please contact HR Admin.\" };\n}\n  const empKey = await BeaconBar.executeFunction(\"employeeLeaveApplication\")();\n  const myHeaders = new Headers({\n    \"__cfafvalue\": window.csrf,\n    \"accept\": \"application/json, text/javascript, */*; q=0.01\",\n    \"accept-language\": \"en-US,en;q=0.9\",\n    \"Content-Type\": \"application/x-www-form-urlencoded\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n  });\n\n  const raw = new URLSearchParams({\n    EmpNumber: empKey,\n    LeaveYear: args.year,\n    IsReject: \"0\",\n    _search: \"false\",\n    nd: Date.now().toString(),\n    rows: \"1000\",\n    page: \"1\",\n    sidx: \"\",\n    sord: \"asc\"\n  }).toString();\n\n  const url = `${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveHistory/GetLeaveStatusDetails`;\n  const request = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw\n  };\n\n  const response = await fetch(url, request);\n  const datass = await response.json();\n\n  const summarDetails = datass.map(item => ({\n    fromDate: item.LDetail.FromDate,\n    toDate: item.LDetail.ToDate,\n    appliedDate: item.LDetail.EditDate,\n    leaveType: item.LeaveTypeName,\n    days: item.LDetail.LeaveAmountText,\n    status: item.Status.replace(/<\\/?[^>]+(>|$)/g, \"\"),\n    reasonForLeave: item.LeaveReason || item.Comment || \"\",\n    coveringEmployee: item.LeaveActingEmp\n  }));\n  return summarDetails;\n})\n",
       "groupName": "",
       "tags": [
         "Absent Management",
@@ -58,8 +58,24 @@
       "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
       "status": "live",
       "createdAt": "2025-08-18T08:24:17.015Z",
-      "updatedAt": "2025-08-18T08:24:17.015Z",
-      "__v": 0,
+      "updatedAt": "2026-10-26T05:56:44.845Z",
+      "__v": 2,
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "sanity": {
+        "apiResponse": []
+      },
+      "strictToolUse": false,
+      "toolType": "code",
       "agents": [
         {
           "_id": "690dc572931a2d61ba0b1c72",
@@ -80,12 +96,16 @@
         }
       ],
       "isAdvanced": false,
-      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-      "_id": "68a2e3314b46c47085f7295f"
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6adeeb9ce5f013a62a913b3c"
     },
     "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n      return []\n    })`\n  }\n})\n",
-    "transformer": "(async function (data, args, reqOptions) {\n  const empKey = await BeaconBar.executeFunction(\"employeeLeaveApplication\")();\n  const myHeaders = new Headers({\n    \"__cfafvalue\": window.csrf,\n    \"accept\": \"application/json, text/javascript, */*; q=0.01\",\n    \"accept-language\": \"en-US,en;q=0.9\",\n    \"Content-Type\": \"application/x-www-form-urlencoded\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n  });\n\n  const raw = new URLSearchParams({\n    EmpNumber: empKey,\n    LeaveYear: args.year,\n    IsReject: \"0\",\n    _search: \"false\",\n    nd: Date.now().toString(),\n    rows: \"1000\",\n    page: \"1\",\n    sidx: \"\",\n    sord: \"asc\"\n  }).toString();\n\n  const url = `${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveHistory/GetLeaveStatusDetails`;\n  const request = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw\n  };\n\n  const response = await fetch(url, request);\n  const datass = await response.json();\n\n  const summarDetails = datass.map(item => ({\n    fromDate: item.LDetail.FromDate,\n    toDate: item.LDetail.ToDate,\n    appliedDate: item.LDetail.EditDate,\n    leaveType: item.LeaveTypeName,\n    days: item.LDetail.LeaveAmountText,\n    status: item.Status.replace(/<\\/?[^>]+(>|$)/g, \"\"),\n    reasonForLeave: item.LeaveReason || item.Comment || \"\",\n    coveringEmployee: item.LeaveActingEmp\n  }));\n  return summarDetails;\n})\n",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (\n  !BeaconBar.user?.metaData?.menus?.some(menu =>\n    menu.includes(absence/ess/SubordinateLeaveSummary.aspx\")\n  )\n) {\n  return { error: true, message: \"You do not have access to Leave Summary Page. Please contact HR Admin.\" };\n}\n  const empKey = await BeaconBar.executeFunction(\"employeeLeaveApplication\")();\n  const myHeaders = new Headers({\n    \"__cfafvalue\": window.csrf,\n    \"accept\": \"application/json, text/javascript, */*; q=0.01\",\n    \"accept-language\": \"en-US,en;q=0.9\",\n    \"Content-Type\": \"application/x-www-form-urlencoded\",\n    \"x-requested-with\": \"XMLHttpRequest\"\n  });\n\n  const raw = new URLSearchParams({\n    EmpNumber: empKey,\n    LeaveYear: args.year,\n    IsReject: \"0\",\n    _search: \"false\",\n    nd: Date.now().toString(),\n    rows: \"1000\",\n    page: \"1\",\n    sidx: \"\",\n    sord: \"asc\"\n  }).toString();\n\n  const url = `${location.origin}/${reqOptions.sl}/AbsenceV9/api/LeaveHistory/GetLeaveStatusDetails`;\n  const request = {\n    method: \"POST\",\n    headers: myHeaders,\n    body: raw\n  };\n\n  const response = await fetch(url, request);\n  const datass = await response.json();\n\n  const summarDetails = datass.map(item => ({\n    fromDate: item.LDetail.FromDate,\n    toDate: item.LDetail.ToDate,\n    appliedDate: item.LDetail.EditDate,\n    leaveType: item.LeaveTypeName,\n    days: item.LDetail.LeaveAmountText,\n    status: item.Status.replace(/<\\/?[^>]+(>|$)/g, \"\"),\n    reasonForLeave: item.LeaveReason || item.Comment || \"\",\n    coveringEmployee: item.LeaveActingEmp\n  }));\n  return summarDetails;\n})\n",
     "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
-    "test": {}
+    "test": {
+      "sanity": {
+        "apiResponse": []
+      }
+    }
   }
 }

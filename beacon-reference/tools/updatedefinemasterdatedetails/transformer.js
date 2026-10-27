@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("Benefit/DefineMasterData.aspx")
+  )
+) {
+  return { error: true, message: "You do not have access to Define Master Data Page. Please contact HR Admin." };
+}
   const editResponse = await BeaconBar.executeFunction('module')({
     "RadScriptManager_HiddenField": "",
     "__EVENTTARGET": args.editKey,

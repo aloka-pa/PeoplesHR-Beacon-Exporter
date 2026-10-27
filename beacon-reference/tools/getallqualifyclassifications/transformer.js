@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("<MenuURL>")
+  )
+) {
+  return { error: true, message: "You do not have access to <screen>. Please contact HR Admin." };
+}
   const details = await BeaconBar.executeFunction("getApiList")("QualificationClassific");
 
   const myHeaders = new Headers();

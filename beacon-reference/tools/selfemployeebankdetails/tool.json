@@ -12,15 +12,15 @@
   "status": "live",
   "signature": "selfEmployeeBankDetails",
   "createdAt": "2025-08-26T13:00:37.666Z",
-  "updatedAt": "2025-11-10T12:13:54.634Z",
+  "updatedAt": "2026-10-26T06:02:11.994Z",
   "assignedAgents": [
     {
       "id": "690dc571931a2d61ba0b1bf4",
       "name": "Employee Information"
     }
   ],
-  "contentHash": "5e2eda8d44788271a745476576e513a2e1cfb9eb448163d299d77061c70f9a0c",
-  "lastExportedAt": "2026-10-07T06:32:16.558Z",
+  "contentHash": "fa42cfbbf36bef4319b9767e95e542d69ac0b2a67eff1f55502c1fd4672427a8",
+  "lastExportedAt": "2026-10-27T03:27:10.487Z",
   "raw": {
     "basic": {
       "_id": "690dc56c931a2d61ba0b1b3d",
@@ -37,12 +37,12 @@
         "name": "selfEmployeeBankDetails",
         "args": [],
         "isAdvanced": false,
-        "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-        "_id": "68adaff5437e30a0eeec62a5"
+        "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+        "_id": "6adeece301cc5127e6e3ff69"
       },
-      "by": "7337",
+      "by": "44101",
       "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return []\n      })`\n  };\n})",
-      "transformer": "(async function (data, args, reqOptions) {\n  const url = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIMV9/Bank/Bank?mvc=1&subordinate=0\")\n  const digest = await BeaconBar.executeFunction('getDigest')(url.updateParams);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${url.updateUrl}&digest=${digest.digest}&_=${Date.now()}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n  const details = await response.text();\n  const match = details.match(/var\\s+modelBank\\s*=\\s*(\\{[\\s\\S]*?\\});/);\n  const bank = JSON.parse(match[1]);\n  window.bankData = bank.EmpBankList\n  return {\n    bankDetails: bank.EmpBankList,\n    currecyList: bank.CurrencyList.map(x => ({\n      CurrencyId: x.CurrencyId,\n      CurrencyName: x.CurrencyName\n    })),\n    bankTypes: bank.BankAccTypList\n  };\n})",
+      "transformer": "(async function (data, args, reqOptions) {\n  if (\n  !BeaconBar.user?.metaData?.menus?.some(menu =>\n    menu.includes(\"EIM/AssignBankInformation.aspx\")\n  )\n) {\n  return { error: true, message: \"You do not have access to Bank Details Page. Please contact HR Admin.\" };\n}\n  const url = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIMV9/Bank/Bank?mvc=1&subordinate=0\")\n  const digest = await BeaconBar.executeFunction('getDigest')(url.updateParams);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${url.updateUrl}&digest=${digest.digest}&_=${Date.now()}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n  const details = await response.text();\n  const match = details.match(/var\\s+modelBank\\s*=\\s*(\\{[\\s\\S]*?\\});/);\n  const bank = JSON.parse(match[1]);\n  window.bankData = bank.EmpBankList\n  return {\n    bankDetails: bank.EmpBankList,\n    currecyList: bank.CurrencyList.map(x => ({\n      CurrencyId: x.CurrencyId,\n      CurrencyName: x.CurrencyName\n    })),\n    bankTypes: bank.BankAccTypList\n  };\n})",
       "groupName": "",
       "tags": [
         "Employee Information",
@@ -52,9 +52,25 @@
       "sourceConstructor": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
       "status": "live",
       "createdAt": "2025-08-26T13:00:37.666Z",
-      "updatedAt": "2025-11-10T12:13:54.634Z",
-      "__v": 1,
+      "updatedAt": "2026-10-26T06:02:11.994Z",
+      "__v": 2,
       "sampleRequest": {},
+      "apiConfig": {
+        "method": "GET"
+      },
+      "apiFlowConfig": {
+        "steps": []
+      },
+      "branch": {
+        "discardedByConflictResolution": false
+      },
+      "etl": false,
+      "isFromKG": false,
+      "sanity": {
+        "apiResponse": []
+      },
+      "strictToolUse": false,
+      "toolType": "code",
       "agents": [
         {
           "_id": "690dc571931a2d61ba0b1bf4",
@@ -67,14 +83,17 @@
       "name": "selfEmployeeBankDetails",
       "args": [],
       "isAdvanced": false,
-      "advancedArgs": "{\n  \"type\":  \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
-      "_id": "68adaff5437e30a0eeec62a5"
+      "advancedArgs": "{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"required\": []\n}",
+      "_id": "6adeece301cc5127e6e3ff69"
     },
     "fetcher": "(function (args, reqOptions) {\n  return {\n    code: `(function(){\n        return []\n      })`\n  };\n})",
-    "transformer": "(async function (data, args, reqOptions) {\n  const url = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIMV9/Bank/Bank?mvc=1&subordinate=0\")\n  const digest = await BeaconBar.executeFunction('getDigest')(url.updateParams);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${url.updateUrl}&digest=${digest.digest}&_=${Date.now()}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n  const details = await response.text();\n  const match = details.match(/var\\s+modelBank\\s*=\\s*(\\{[\\s\\S]*?\\});/);\n  const bank = JSON.parse(match[1]);\n  window.bankData = bank.EmpBankList\n  return {\n    bankDetails: bank.EmpBankList,\n    currecyList: bank.CurrencyList.map(x => ({\n      CurrencyId: x.CurrencyId,\n      CurrencyName: x.CurrencyName\n    })),\n    bankTypes: bank.BankAccTypList\n  };\n})",
+    "transformer": "(async function (data, args, reqOptions) {\n  if (\n  !BeaconBar.user?.metaData?.menus?.some(menu =>\n    menu.includes(\"EIM/AssignBankInformation.aspx\")\n  )\n) {\n  return { error: true, message: \"You do not have access to Bank Details Page. Please contact HR Admin.\" };\n}\n  const url = await BeaconBar.executeFunction(\"updateUrlParams\")(\"EIMV9/Bank/Bank?mvc=1&subordinate=0\")\n  const digest = await BeaconBar.executeFunction('getDigest')(url.updateParams);\n\n  const myHeaders = new Headers();\n  myHeaders.append(\"accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\");\n  myHeaders.append(\"accept-language\", \"en-US,en;q=0.9\");\n  myHeaders.append(\"x-requested-with\", \"XMLHttpRequest\");\n\n\n  const response = await fetch(`${location.origin}/${reqOptions.sl}/${url.updateUrl}&digest=${digest.digest}&_=${Date.now()}`, {\n    method: \"GET\",\n    headers: myHeaders,\n    redirect: \"follow\"\n  });\n  const details = await response.text();\n  const match = details.match(/var\\s+modelBank\\s*=\\s*(\\{[\\s\\S]*?\\});/);\n  const bank = JSON.parse(match[1]);\n  window.bankData = bank.EmpBankList\n  return {\n    bankDetails: bank.EmpBankList,\n    currecyList: bank.CurrencyList.map(x => ({\n      CurrencyId: x.CurrencyId,\n      CurrencyName: x.CurrencyName\n    })),\n    bankTypes: bank.BankAccTypList\n  };\n})",
     "source": "(function(data, args, reqOptions) {\n  return [\n    {\n      url: \"\",\n      title: \"\",\n      subTitle: \"\",\n      icon: \"\"\n    }\n  ];\n})",
     "test": {
-      "sampleRequest": {}
+      "sampleRequest": {},
+      "sanity": {
+        "apiResponse": []
+      }
     }
   }
 }

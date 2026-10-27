@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes(absence/ess/SubordinateLeaveSummary.aspx")
+  )
+) {
+  return { error: true, message: "You do not have access to Leave Summary Page. Please contact HR Admin." };
+}
   const empKey = await BeaconBar.executeFunction("employeeLeaveApplication")();
   const myHeaders = new Headers({
     "__cfafvalue": window.csrf,

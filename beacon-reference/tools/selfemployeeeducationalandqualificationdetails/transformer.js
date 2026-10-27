@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("EIM/AssignQualification.aspx")
+  )
+) {
+  return { error: true, message: "You do not have access to Employee Education and Qualification Details Page. Please contact HR Admin." };
+}
   const url = await BeaconBar.executeFunction("updateUrlParams")("EIMV9/Qualification/Qualification?mvc=1&subordinate=0")
   const digest = await BeaconBar.executeFunction('getDigest')(url.updateParams);
 

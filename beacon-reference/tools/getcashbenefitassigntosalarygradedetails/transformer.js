@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("EIM/AssignCashBenifit.aspx;")
+  )
+) {
+  return { error: true, message: "You do not have access to Cash Benefit Assign to Salary Grade Page. Please contact HR Admin." };
+}
   const details = await BeaconBar.executeFunction("getApiList")("AssignCashBenifit");
 
   const searchResponse = await BeaconBar.executeFunction("getEIMApii")({

@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("eimv9/employee/employee?mvc=1")
+  )
+) {
+  return { error: true, message: "You do not have access to Employee Information Details Page. Please contact HR Admin." };
+}
 
   const myHeaders = new Headers();
   myHeaders.append("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");

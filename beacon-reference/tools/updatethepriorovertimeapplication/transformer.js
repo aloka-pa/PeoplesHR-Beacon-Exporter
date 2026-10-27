@@ -1,4 +1,12 @@
 (async function (data, args, reqOptions) {
+  
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("TNA/OvertimeDefintion.aspx")
+  )
+) {
+  return { error: true, message: "You do not have access to Overtime Information Page. Please contact HR Admin." };
+}
   window.updatePrior.forEach(x => {
     args.updatePriorOvertimeApplication.forEach(y => {
       if (x.OutDateText === y.selectedDates) {

@@ -1,8 +1,48 @@
 [
   {
+    "toolId": "690dc56b931a2d61ba0b1b1b",
+    "toolName": "selfEmployeeEducationalAndQualificationDetails",
+    "path": "tools/selfemployeeeducationalandqualificationdetails"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b43",
+    "toolName": "updateSelfEmployeeEducationalAndQualificationDetails",
+    "path": "tools/updateselfemployeeeducationalandqualificationdetails"
+  },
+  {
+    "toolId": "690dc568931a2d61ba0b182a",
+    "toolName": "updateEmployeeInformationDetails",
+    "path": "tools/updateemployeeinformationdetails"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b5f",
+    "toolName": "updateSelfEmployeeWorkExperienceDetails",
+    "path": "tools/updateselfemployeeworkexperiencedetails"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b36",
+    "toolName": "selfEmployeeWorkExperienceDetails",
+    "path": "tools/selfemployeeworkexperiencedetails"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b40",
+    "toolName": "selfEmployeePassportAndOtherArticlesDetails",
+    "path": "tools/selfemployeepassportandotherarticlesdetails"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b39",
+    "toolName": "selfEmployeeMembershipDetails",
+    "path": "tools/selfemployeemembershipdetails"
+  },
+  {
     "toolId": "690dc56b931a2d61ba0b1b1e",
     "toolName": "selfEmployeeInformationDetails",
     "path": "tools/selfemployeeinformationdetails"
+  },
+  {
+    "toolId": "690dc56c931a2d61ba0b1b3d",
+    "toolName": "selfEmployeeBankDetails",
+    "path": "tools/selfemployeebankdetails"
   },
   {
     "toolId": "690dc567931a2d61ba0b17bc",
@@ -55,41 +95,6 @@
     "path": "tools/getmembershipdetails-2"
   },
   {
-    "toolId": "690dc56c931a2d61ba0b1b40",
-    "toolName": "selfEmployeePassportAndOtherArticlesDetails",
-    "path": "tools/selfemployeepassportandotherarticlesdetails"
-  },
-  {
-    "toolId": "690dc568931a2d61ba0b182a",
-    "toolName": "updateEmployeeInformationDetails",
-    "path": "tools/updateemployeeinformationdetails"
-  },
-  {
-    "toolId": "690dc56c931a2d61ba0b1b5f",
-    "toolName": "updateSelfEmployeeWorkExperienceDetails",
-    "path": "tools/updateselfemployeeworkexperiencedetails"
-  },
-  {
-    "toolId": "690dc56c931a2d61ba0b1b43",
-    "toolName": "updateSelfEmployeeEducationalAndQualificationDetails",
-    "path": "tools/updateselfemployeeeducationalandqualificationdetails"
-  },
-  {
-    "toolId": "690dc56c931a2d61ba0b1b3d",
-    "toolName": "selfEmployeeBankDetails",
-    "path": "tools/selfemployeebankdetails"
-  },
-  {
-    "toolId": "690dc56c931a2d61ba0b1b36",
-    "toolName": "selfEmployeeWorkExperienceDetails",
-    "path": "tools/selfemployeeworkexperiencedetails"
-  },
-  {
-    "toolId": "690dc56b931a2d61ba0b1b1b",
-    "toolName": "selfEmployeeEducationalAndQualificationDetails",
-    "path": "tools/selfemployeeeducationalandqualificationdetails"
-  },
-  {
     "toolId": "690dc567931a2d61ba0b1775",
     "toolName": "getEmployeePassportAndOtherArticlesDetails",
     "path": "tools/getemployeepassportandotherarticlesdetails"
@@ -103,11 +108,6 @@
     "toolId": "690dc567931a2d61ba0b1749",
     "toolName": "getEducationalAndProfessionalQualificationsDetails",
     "path": "tools/geteducationalandprofessionalqualificationsdetails"
-  },
-  {
-    "toolId": "690dc56c931a2d61ba0b1b39",
-    "toolName": "selfEmployeeMembershipDetails",
-    "path": "tools/selfemployeemembershipdetails"
   },
   {
     "toolId": "690dc56b931a2d61ba0b1a5f",

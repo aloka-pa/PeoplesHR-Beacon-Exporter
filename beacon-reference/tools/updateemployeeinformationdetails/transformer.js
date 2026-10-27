@@ -1,4 +1,5 @@
 (async function (data, args, reqOptions) {
+ 
   async function payload(url) {
     const updateurl = await BeaconBar.executeFunction("updateUrlParams")(url);
 

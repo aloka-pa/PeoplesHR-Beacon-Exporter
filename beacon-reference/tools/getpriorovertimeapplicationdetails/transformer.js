@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("/TNA/OvertimeDefintion.aspx")
+  )
+) {
+  return { error: true, message: "You do not have access to Overtime Inforamtion Page. Please contact HR Admin." };
+}
   
   const myHeaders = new Headers();
   myHeaders.append("accept", "*/*");

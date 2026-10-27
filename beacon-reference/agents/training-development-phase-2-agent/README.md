@@ -4,9 +4,11 @@ Training & Development is an AI-powered conversational assistant that helps empl
 
 ## Assigned tools
 
-- [adminEmployeeTrainingNeedApplication](../../tools/adminemployeetrainingneedapplication) (`6aa27002dfb18ee14844f2af`)
+- [getTrainingBudgetUtilization](../../tools/gettrainingbudgetutilization) (`69552f87921cbb106adf3556`)
+- [getTrainingBudgetAllocation](../../tools/gettrainingbudgetallocation) (`695524daa4e4f389f90f1d7a`)
 - [supervisorSubordinateTrainingNeedApplication](../../tools/supervisorsubordinatetrainingneedapplication) (`6aa03f3e0ca0292e49401900`)
 - [selfEmployeeTrainingNeedApplication](../../tools/selfemployeetrainingneedapplication) (`6aa036df3145f46f07ddf4c3`)
+- [adminEmployeeTrainingNeedApplication](../../tools/adminemployeetrainingneedapplication) (`6aa27002dfb18ee14844f2af`)
 - [selfEmployeeTrainingApplication](../../tools/selfemployeetrainingapplication) (`6a9ff76b2ea15b32b729515b`)
 - [getSelfEmployeeTrainingHistory](../../tools/getselfemployeetraininghistory) (`6a9e99f7311b3fda8a34b356`)
 - [adminEmployeeTrainingNomination](../../tools/adminemployeetrainingnomination) (`6a9fa2565d99ab2de2281eeb`)
@@ -23,6 +25,4 @@ Training & Development is an AI-powered conversational assistant that helps empl
 - [getSelfEmployeeParticipationConfirmation](../../tools/getselfemployeeparticipationconfirmation) (`6aa0dfc013562a7cd37f6871`)
 - [selfEmployeeParticipationConfirmation](../../tools/selfemployeeparticipationconfirmation) (`6aa0ec259b893ad58b73dbca`)
 - [getSelfEmployeeTrainings](../../tools/getselfemployeetrainings) (`6a9ee8841234b7562210320c`)
-- [getTrainingBudgetUtilization](../../tools/gettrainingbudgetutilization) (`69552f87921cbb106adf3556`)
-- [getTrainingBudgetAllocation](../../tools/gettrainingbudgetallocation) (`695524daa4e4f389f90f1d7a`)
 - [traininingDevCreateCourseDescFilling](../../tools/traininingdevcreatecoursedescfilling) (`6956293bab9dbe6266aec3e1`)

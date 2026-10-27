@@ -1,4 +1,11 @@
 (async function (data, args, reqOptions) {
+  if (
+  !BeaconBar.user?.metaData?.menus?.some(menu =>
+    menu.includes("<MenuURL>")
+  )
+) {
+  return { error: true, message: "You do not have access to <screen>. Please contact HR Admin." };
+}
   let params;
   if(window.empNumber12){
     params = `mvc=1&bs=4&empNumber=${args.ENCRYPT_EMP_NUMBER}&appId=${args.BET_APP_ID}&betCode=${args.BET_CODE}&mode=-1&isFIrstLoad=0&isAllHistory=1&SEmployee=${window.empNumber12 || ''}&SFrmDate=${args.fromDate}&SToDate=${args.toDate}&SBetCode=undefined&BetAppYear=${args.BET_APPY_DATE}`;
